@@ -5,6 +5,11 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
+using System.Windows.Input;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using Jarvis_Windows.Sources.MVVM.ViewModels;
+using Jarvis_Windows.Sources.Utils.Services;
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 public partial class MainView : Window
 {
@@ -18,6 +23,8 @@ public partial class MainView : Window
         get { return _sendEventGA4; }
         set { _sendEventGA4 = value; }
     }
+
+    public PopupDictionaryService PopupDictionaryService { get; internal set; }
 
     public MainView()
     {
@@ -42,6 +49,115 @@ public partial class MainView : Window
 
         _notifyIcon.ContextMenuStrip = _contextMenuStrip;
         _notifyIcon.Visible = true;
+    }
+
+    private System.Windows.Point _startPoint;
+    private System.Windows.Point _menuActionPoint;
+    private System.Windows.Point _jarvisButtonPoint;
+
+    private void JarvisButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        PopupDictionaryService.IsDragging = false;
+        _jarvisButtonPoint = e.GetPosition(null);
+    }
+
+    private void JarvisButton_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+
+        if (e.LeftButton == MouseButtonState.Pressed)
+        {
+            System.Windows.Point currentMousePosition = e.GetPosition(null);
+            double distance = (currentMousePosition - _jarvisButtonPoint).Length;
+
+            if (distance > 2)
+            {
+                PopupDictionaryService.HasPinnedJarvisButton = false;
+                PopupDictionaryService.IsDragging = true;
+                System.Windows.Point relative = e.GetPosition(null);
+                System.Windows.Point AbsolutePos = new System.Windows.Point(
+                    relative.X + jarvisActionPopup.HorizontalOffset,
+                    relative.Y + jarvisActionPopup.VerticalOffset);
+                jarvisActionPopup.VerticalOffset = AbsolutePos.Y - _jarvisButtonPoint.Y;
+                jarvisActionPopup.HorizontalOffset = AbsolutePos.X - _jarvisButtonPoint.X;
+
+                jarvisMenuPopup.VerticalOffset = AbsolutePos.Y - _jarvisButtonPoint.Y;
+                jarvisMenuPopup.HorizontalOffset = AbsolutePos.X - _jarvisButtonPoint.X;
+            }
+        }
+    }
+
+    private void Window_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _startPoint = e.GetPosition(null);
+    }
+
+    private void MenuAction_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _menuActionPoint = e.GetPosition(null);
+    }
+
+    private void MenuAction_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed)
+        {
+            System.Windows.Point relative = e.GetPosition(null);
+            System.Windows.Point AbsolutePos = new System.Windows.Point(relative.X + jarvisMenuPopup.HorizontalOffset, relative.Y + jarvisMenuPopup.VerticalOffset);
+            jarvisMenuPopup.VerticalOffset = AbsolutePos.Y - _menuActionPoint.Y;
+            jarvisMenuPopup.HorizontalOffset = AbsolutePos.X - _menuActionPoint.X;
+        }
+    }
+
+    private void Window_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed)
+        {
+            System.Windows.Point relative = e.GetPosition(null);
+            System.Windows.Point AbsolutePos = new System.Windows.Point(relative.X + this.Left, relative.Y + this.Top);
+            this.Top = AbsolutePos.Y - _startPoint.Y;
+            this.Left = AbsolutePos.X - _startPoint.X;
+        }
+    }
+
+    private void JarvisButton_PreviewMouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        jarvisActionPopup.HorizontalOffset = PopupDictionaryService.JarvisActionPosition.X;
+        jarvisActionPopup.VerticalOffset = PopupDictionaryService.JarvisActionPosition.Y;
+    }
+
+    public void PinJarvisButton()
+    {
+        jarvisActionPopup.HorizontalOffset = PopupDictionaryService.JarvisActionPosition.X;
+        jarvisActionPopup.VerticalOffset = PopupDictionaryService.JarvisActionPosition.Y;
+    }
+
+    public void ResetBinding()
+    {
+        System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            BindingOperations.ClearBinding(jarvisActionPopup, Popup.VerticalOffsetProperty);
+            BindingOperations.ClearBinding(jarvisActionPopup, Popup.HorizontalOffsetProperty);
+
+            System.Windows.Data.Binding verticalBinding = new System.Windows.Data.Binding("Y");
+            verticalBinding.Source = PopupDictionaryService.JarvisActionPosition;
+            jarvisActionPopup.SetBinding(Popup.VerticalOffsetProperty, verticalBinding);
+
+            System.Windows.Data.Binding horizontalBinding = new System.Windows.Data.Binding("X");
+            horizontalBinding.Source = PopupDictionaryService.JarvisActionPosition;
+            jarvisActionPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
+
+
+            BindingOperations.ClearBinding(jarvisMenuPopup, Popup.VerticalOffsetProperty);
+            BindingOperations.ClearBinding(jarvisMenuPopup, Popup.HorizontalOffsetProperty);
+
+            System.Windows.Data.Binding verticalBindingMenu = new System.Windows.Data.Binding("Y");
+            verticalBindingMenu.Source = PopupDictionaryService.MenuOperationsPosition;
+            jarvisMenuPopup.SetBinding(Popup.VerticalOffsetProperty, verticalBindingMenu);
+
+            System.Windows.Data.Binding horizontalBindingMenu = new System.Windows.Data.Binding("X");
+            horizontalBindingMenu.Source = PopupDictionaryService.MenuOperationsPosition;
+            jarvisMenuPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBindingMenu);
+
+        }));
     }
 
     private async void NotifyIcon_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -105,6 +221,4 @@ public partial class MainView : Window
             }
         }
     }
-
-
 }

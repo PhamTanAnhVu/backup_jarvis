@@ -1,6 +1,7 @@
 ﻿using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Jarvis_Windows.Sources.Utils.Core;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Media;
@@ -14,6 +15,7 @@ public class PopupDictionaryService : ObserveralObject
     private Point _jarvisActionPosition;
     private Point _menuOperationsPosition;
     private static String? _targetLanguage;
+    private Point _automationElementVisualPos;
 
     public static  String TargetLangguage
     {
@@ -66,6 +68,9 @@ public class PopupDictionaryService : ObserveralObject
     }
 
     public MainView MainWindow { get; set; }
+    public bool IsDragging { get; internal set; }
+    public Point AutomationElementVisualPos { get => _automationElementVisualPos; set => _automationElementVisualPos = value; }
+    public static bool HasPinnedJarvisButton = true;
 
     public PopupDictionaryService()
     {
@@ -90,10 +95,20 @@ public class PopupDictionaryService : ObserveralObject
             if (source != null)
             {
                 visualPos = source.CompositionTarget.TransformFromDevice.Transform(new Point(systemPoint.X, systemPoint.Y));
+                AutomationElementVisualPos = visualPos;
                 visualPos.X = visualPos.X - 22;
                 visualPos.Y = visualPos.Y - 22 / 2;
-                JarvisActionPosition = visualPos;
-                if(visualPos.Y < 1080/2)
+
+                int screenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
+                int screenHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
+
+                Point jarvisButtonPos = new Point(0, 0);
+                jarvisButtonPos.X = visualPos.X;
+                jarvisButtonPos.Y = (visualPos.Y < screenHeight / 2) ? visualPos.Y + 30 : visualPos.Y - 30;
+                JarvisActionPosition = jarvisButtonPos;
+
+
+                if (visualPos.Y < 1080 / 2)
                 {
                     visualPos.X = visualPos.X - 200;
                     visualPos.Y = visualPos.Y + 30;
@@ -102,20 +117,25 @@ public class PopupDictionaryService : ObserveralObject
                 {
                     visualPos.X = visualPos.X - 200;
                     visualPos.Y = visualPos.Y - 180;
-                    
+
                 }
-                
-                MenuOperationsPosition = visualPos;
+
+                MenuOperationsPosition = jarvisButtonPos;
             }    
         }));
 
         return visualPos;
     }
 
-    public void UpdateJarvisActionPosition(Point systemPoint)
+    public void UpdateJarvisActionPosition(Point systemPoint, Rect elementRectBounding)
     {
-        Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
-        JarvisActionPosition = visualPoint;
+        double screenHeight = SystemParameters.PrimaryScreenHeight;
+
+        Point jarvisButtonPos = new Point(0, 0);
+        jarvisButtonPos.X = systemPoint.X;
+        jarvisButtonPos.Y = (systemPoint.Y < screenHeight / 2) ? systemPoint.Y - elementRectBounding.Height * 2: systemPoint.Y - elementRectBounding.Height * 2;
+
+        JarvisActionPosition = jarvisButtonPos;
     }
 
     public void ShowMenuOperations(bool isShow)
@@ -123,9 +143,14 @@ public class PopupDictionaryService : ObserveralObject
         IsShowMenuOperations = isShow;
     }
 
-    public void UpdateMenuOperationsPosition(Point systemPoint)
+    public void UpdateMenuOperationsPosition(Point systemPoint, Rect elementRectBounding)
     {
-        Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
-        MenuOperationsPosition = visualPoint;
+        double screenHeight = SystemParameters.PrimaryScreenHeight;
+
+        Point menuAiActionsPos = new Point(0, 0);
+        menuAiActionsPos.X = systemPoint.X;
+        menuAiActionsPos.Y = (systemPoint.Y < screenHeight / 2) ? systemPoint.Y - elementRectBounding.Height * 2 : systemPoint.Y - elementRectBounding.Height * 2;
+
+        MenuOperationsPosition = menuAiActionsPos;
     }
 }

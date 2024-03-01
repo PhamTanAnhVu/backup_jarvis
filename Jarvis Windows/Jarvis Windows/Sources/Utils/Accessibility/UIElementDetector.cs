@@ -65,33 +65,33 @@ public class UIElementDetector
         tuningJarivsPositionThread.Start();*/
     }
 
-    //private void TunningPositionThread(object? obj)
-    //{
-    //    if (_popupDictionaryService != null)
-    //    {
-    //        try
-    //        {
-    //            while (true)
-    //            {
-    //                if (_focusingElement != null && IsUseAutoTuningPosition)
-    //                {
-    //                    _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation());
-    //                    _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation());
-    //                }
-    //                Thread.Sleep(33);
-    //            }
-    //        }
-    //        catch (ElementNotAvailableException)
-    //        {
-    //        }
-    //        catch (NullReferenceException)
-    //        {
-    //        }
-    //        catch (Exception)
-    //        {
-    //        }
-    //    }
-    //}
+    private void TunningPositionThread(object? obj)
+    {
+        /*if (_popupDictionaryService != null)
+        {
+            try
+            {
+                while (true)
+                {
+                    if (_focusingElement != null && IsUseAutoTuningPosition)
+                    {
+                        _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation());
+                        _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation());
+                    }
+                    Thread.Sleep(33);
+                }
+            }
+            catch (ElementNotAvailableException)
+            {
+            }
+            catch (NullReferenceException)
+            {
+            }
+            catch (Exception)
+            {
+            }
+        }*/
+    }
 
     public void UnSubscribeToElementFocusChanged()
     {
@@ -135,8 +135,9 @@ public class UIElementDetector
 
                 _popupDictionaryService.ShowJarvisAction(true);
                 _popupDictionaryService.ShowMenuOperations(false);
-                _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation());
-                _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation());
+                _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+                _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+                _popupDictionaryService.MainWindow.ResetBinding();
                 Debug.WriteLine("📩📩📩 Send GA4 Events Inject");
                 Task.Run(async () => await ExecuteSendEventInject());
             }
@@ -176,6 +177,14 @@ public class UIElementDetector
         }
     }
 
+    private static Rect GetElementRectBounding(AutomationElement? automationElement)
+    {
+        if (automationElement == null)
+            throw new NullReferenceException("GetElementRectBouding failed !!!");
+
+        return automationElement.Current.BoundingRectangle;
+    }
+
     private static Point CalculateElementLocation()
     {
         Point placementPoint = new Point(0, 0);
@@ -197,21 +206,9 @@ public class UIElementDetector
                     placementPoint.Y = elementRectBounding.Top + elementRectBounding.Height * 0.5;
                 }
             }
-            catch (NullReferenceException)
+            catch (Exception)
             {
-                Debug.WriteLine($"Null reference exception");
-            }
-            catch (ElementNotAvailableException ex)
-            {
-                Console.WriteLine($"Element is not available: {ex.Message}");
-                _popupDictionaryService.ShowJarvisAction(false);
-                _popupDictionaryService.ShowMenuOperations(false);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                _popupDictionaryService.ShowJarvisAction(false);
-                _popupDictionaryService.ShowMenuOperations(false);
+                throw;
             }
         }
         return placementPoint;
@@ -261,8 +258,8 @@ public class UIElementDetector
         if (e.Property == AutomationElement.BoundingRectangleProperty)
         {
             Debug.WriteLine($"🟧🟧🟧 {automationElement?.Current.Name} Bounding Rectangle Changed");
-            _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation());
-            _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation());
+            _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+            _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
         }
         else if (e.Property == AutomationElement.IsOffscreenProperty)
         {

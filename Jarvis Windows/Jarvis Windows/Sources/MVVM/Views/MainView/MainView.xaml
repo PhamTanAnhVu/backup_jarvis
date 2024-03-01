@@ -12,6 +12,8 @@
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
+        PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
+        PreviewMouseMove="Window_PreviewMouseMove"
         WindowStartupLocation="CenterScreen"
         Title="Jarvis MainView" Height="496" Width="820">
     <Window.Resources>
@@ -298,19 +300,24 @@
 
                 </Grid>
 
-                <Popup Name="jarvisActionPopup" Placement="Absolute" 
+                <Popup x:Name="jarvisActionPopup" Placement="AbsolutePoint" 
                        VerticalOffset="{Binding PopupDictionaryService.JarvisActionPosition.Y}" 
                        HorizontalOffset="{Binding PopupDictionaryService.JarvisActionPosition.X}" 
                        AllowsTransparency="True" 
+                       PreviewMouseLeftButtonDown="JarvisButton_PreviewMouseLeftButtonDown"
+                       PreviewMouseMove="JarvisButton_MouseMove"
+                       PreviewMouseRightButtonDown="JarvisButton_PreviewMouseRightButtonDown"
                        IsOpen="{Binding PopupDictionaryService.IsShowJarvisAction}"
-                       Width="22" Height="22" Margin="284,4,284,4">
+                       Width="50" Height="30">
                     <jarvisAction:JarvisActionView/>
                 </Popup>
 
-                <Popup Name="jarvisMenuPopup" Placement="Absolute"
+                <Popup x:Name="jarvisMenuPopup" Placement="AbsolutePoint"
                        VerticalOffset="{Binding PopupDictionaryService.MenuOperationsPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.MenuOperationsPosition.X}"
                        AllowsTransparency="True"
+                       PreviewMouseLeftButtonDown="MenuAction_PreviewMouseLeftButtonDown"
+                       PreviewMouseMove="MenuAction_PreviewMouseMove"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowMenuOperations}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">

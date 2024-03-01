@@ -39,6 +39,8 @@ public class MainViewModel : ViewModelBase
     public RelayCommand ExpandCommand { get; set; }
     public RelayCommand OpenSettingsCommand { get; set; }
     public RelayCommand QuitAppCommand { get; set; }
+    public RelayCommand PinJarvisButtonCommand { get; set; }
+
 
     public INavigationService NavigationService
     {
@@ -187,6 +189,7 @@ public class MainViewModel : ViewModelBase
         
         OpenSettingsCommand = new RelayCommand(ExecuteOpenSettingsCommand, o => true);
         QuitAppCommand = new RelayCommand(ExecuteQuitAppCommand, o => true);
+        PinJarvisButtonCommand = new RelayCommand(ExecutePinJarvisButtonCommand, o => true);
 
         string relativePath = Path.Combine("Appsettings", "Configs", "languages_supported.json");
         string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
@@ -299,6 +302,30 @@ public class MainViewModel : ViewModelBase
         throw new NotImplementedException();
     }
 
+    private void ExecutePinJarvisButtonCommand(object obj)
+    {
+        PopupDictionaryService.MainWindow.PinJarvisButton();
+        PopupDictionaryService.HasPinnedJarvisButton = true;
+    }
+
+    //private void GlobalHook_MouseDown(object sender, MouseEventArgs e)
+    //{
+        //if (e.Button == MouseButtons.Left && _popupDictionaryService.IsShowMenuOperations)
+        //{
+        //    PresentationSource source = PresentationSource.FromVisual(System.Windows.Application.Current.MainWindow);
+        //    Point mousePos = source.CompositionTarget.TransformFromDevice.Transform(new Point(e.X, e.Y));
+        //    // Point mousePos = new Point(e.X, e.Y);
+        //    Point JarvisMenuPosition = UIElementDetector.PopupDictionaryService.MenuOperationsPosition;
+
+        //    double X1 = JarvisMenuPosition.X;
+        //    double Y1 = JarvisMenuPosition.Y;
+        //    double X2 = X1 + 400;
+        //    double Y2 = Y1 + 165;
+        //    if ((mousePos.X < X1 || mousePos.X > X2 || mousePos.Y < Y1 || mousePos.Y > Y2) && (X1 != 0 && Y1 != 0))
+        //        HideMenuOperationsCommand.Execute(null);
+        //}
+    //}
+
     private async void ExecuteCheckUpdate()
     {
         // Checking App update here
@@ -313,20 +340,23 @@ public class MainViewModel : ViewModelBase
 
     public async void ExecuteShowMenuOperationsCommand(object obj)
     {
-        bool _menuShowStatus = PopupDictionaryService.IsShowMenuOperations;
-        PopupDictionaryService.ShowMenuOperations(!_menuShowStatus);
-        PopupDictionaryService.ShowJarvisAction(false);
-
-        if (_menuShowStatus == false)
+        if (!PopupDictionaryService.IsDragging)
         {
-            await Task.Run(async () =>
-            {
-                // Some processing before the await (if needed)
-                await Task.Delay(0); // This allows the method to yield to the caller
+            bool _menuShowStatus = PopupDictionaryService.IsShowMenuOperations;
+            PopupDictionaryService.ShowMenuOperations(!_menuShowStatus);
+            PopupDictionaryService.ShowJarvisAction(false);
 
-                await SendEventGA4.SendEvent("open_input_actions");
-            });
-        }
+            if (_menuShowStatus == false)
+            {
+                await Task.Run(async () =>
+                {
+                    // Some processing before the await (if needed)
+                    await Task.Delay(0); // This allows the method to yield to the caller
+
+                    await SendEventGA4.SendEvent("open_input_actions");
+                });
+            }
+        }    
     }
 
     private async void ExecuteExpandCommand(object parameter)

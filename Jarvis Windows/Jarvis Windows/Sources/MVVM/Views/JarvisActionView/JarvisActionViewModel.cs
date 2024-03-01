@@ -23,7 +23,13 @@ public class JarvisActionViewModel : ViewModelBase
     public JarvisActionViewModel(PopupDictionaryService popupDictionaryService)
     {
         PopupDictionaryService = popupDictionaryService;
-        ShowMenuOperationsCommand = new RelayCommand(o => { PopupDictionaryService.ShowMenuOperations(true); }, o => true);
+        ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuCommand, o => true);
+    }
+
+    private void ExecuteShowMenuCommand(object obj)
+    {
+        /*if(!PopupDictionaryService.IsDragging)
+            PopupDictionaryService.ShowMenuOperations(true);*/
     }
 
     public JarvisActionViewModel()

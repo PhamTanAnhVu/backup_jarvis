@@ -44,7 +44,8 @@ public partial class App : Application
         services.AddSingleton<MainView>(provider => new MainView
         {
             DataContext = provider.GetRequiredService<MainViewModel>(),
-            SendEventGA4 = provider.GetRequiredService<SendEventGA4>()
+            SendEventGA4 = provider.GetRequiredService<SendEventGA4>(),
+            PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>()
         });
 
         // Logging.Log("After MainView MainviewModel\n");
