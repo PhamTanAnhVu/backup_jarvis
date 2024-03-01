@@ -56,8 +56,4 @@ public class NativeUser32API
 
     [DllImport("user32.dll")]
     public static extern bool SetWindowSubclass(IntPtr hWnd, IntPtr pfnSubclass, uint uIdSubclass, UIntPtr dwRefData);
-
-    [DllImport("USER32.DLL")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool SetForegroundWindow(IntPtr hWnd);
 }

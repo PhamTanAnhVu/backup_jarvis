@@ -8,7 +8,7 @@ namespace Jarvis_Windows.Sources.DataAccess
     public static class DataConfiguration
     {
         private static string _appDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
+     
         #region Private Fields to get Configuration
 
         public static string GetEnvironment()
@@ -38,15 +38,18 @@ namespace Jarvis_Windows.Sources.DataAccess
         #endregion 
 
         // Debug mode only
-        public static void WriteValue(string key, object value)
+        private static string GenUniqueID()
         {
+            string newUID = Guid.NewGuid().ToString();            
             string jsonContent = File.ReadAllText(SettingFilePath);
             JObject jsonObj = JObject.Parse(jsonContent);
-            jsonObj[key] = JToken.FromObject(value);
+            jsonObj["ClientID"] = newUID;
+            jsonObj["UserID"] = newUID;
 
             File.WriteAllText(SettingFilePath, jsonObj.ToString(Newtonsoft.Json.Formatting.Indented));
-        }
 
+            return newUID;
+        }
 
         // Root app directory
         public static string AppDirectory
@@ -65,35 +68,8 @@ namespace Jarvis_Windows.Sources.DataAccess
             => GetConfiguration()["ApiSecret"];
 
         public static string ClientID
-        {
-            get
-            {
-                string clientID = GetConfiguration()["ClientID"];
-                if (string.IsNullOrEmpty(clientID))
-                    WriteValue("ClientID", Guid.NewGuid().ToString());
-                
-                return clientID;
-            }
-        }
-
+           => (GetConfiguration()["ClientID"] == "") ? GenUniqueID() : GetConfiguration()["ClientID"];
         public static string UserID
-        {
-            get
-            {
-                string userID = GetConfiguration()["UserID"];
-                if (string.IsNullOrEmpty(userID))
-                    WriteValue("UserID", Guid.NewGuid().ToString());
-
-                return userID;
-            }
-        }
-        public static string SessionID
-           => GetConfiguration()["SessionID"];
-        public static string SessionTimestamp
-           => GetConfiguration()["SessionTimestamp"];
-        public static string ApiHeaderID
-           => GetConfiguration()["ApiHeaderID"];
-        public static int ApiUsageRemaining
-           => int.Parse(GetConfiguration()["ApiUsageRemaining"]);
+           => (GetConfiguration()["UserID"] == "") ? GenUniqueID() : GetConfiguration()["UserID"];
     }
 }
