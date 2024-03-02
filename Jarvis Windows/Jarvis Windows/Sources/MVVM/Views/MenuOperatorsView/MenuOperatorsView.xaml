@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
              xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              Height="Auto" Width="420">
     <UserControl.Resources>
@@ -86,8 +87,31 @@
                     </Border>
                 </Grid>
 
-                <Grid Grid.Column="4">
 
+                <!--<Grid Grid.Column="3">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Style="{StaticResource JarvisNomalButton}" Command="{Binding UndoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanUndo}"
+                            Width="37" Height="37" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" Kind="Undo" Width="20" Height="20" VerticalAlignment="Center"/>
+                        </Button>
+
+                        <Button Style="{StaticResource JarvisNomalButton}" Command="{Binding RedoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanRedo}"
+                            Margin="5 0 5 0" Width="37" Height="37" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" Kind="Redo" Width="20" Height="20" VerticalAlignment="Center" />
+                        </Button>
+                    </StackPanel>
+                </Grid>-->
+
+                <!--<Grid Grid.Column="4" Width="37" Height="37">
+                    <Button x:Name="btnCloseIntroduction"
+                                Width="37"
+                                Height="37"
+                                Style="{StaticResource JarvisNomalButton}"
+                                Command="{Binding HideMenuOperationsCommand}">
+                        <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" Kind="Close" Width="20" Height="20" VerticalAlignment="Center" />
+                    </Button>
+                </Grid>-->
+                <Grid Grid.Column="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="8"/>
@@ -99,26 +123,26 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid Grid.Column="0">
-                        <Button Style="{StaticResource MenuUndoRedoButton}"
-                                Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center">
-
+                        <Button Style="{StaticResource MenuUndoRedoButton}" Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                Command="{Binding UndoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanUndo}">
                             <Button.Content>
                                 <Path Data="M5.921 11.9 1.353 8.62a.72.72 0 0 1 0-1.238L5.921 4.1A.716.716 0 0 1 7 4.719V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z"
-                                     VerticalAlignment="Center" HorizontalAlignment="Center"
-                                     Fill="#9CA3AF" Height="10" Stretch="Fill" Width="13"/>
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Fill="#1450A2" Height="10" Stretch="Fill" Width="13"/>
 
                             </Button.Content>
                         </Button>
                     </Grid>
 
                     <Grid Grid.Column="2">
-                        <Button Style="{StaticResource MenuUndoRedoButton}"
+                        <Button Style="{StaticResource MenuUndoRedoButton}" 
+                                Command="{Binding RedoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanRedo}"
                                 Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center">
 
                             <Button.Content>
                                 <Path Data="M5.921 11.9 1.353 8.62a.72.72 0 0 1 0-1.238L5.921 4.1A.716.716 0 0 1 7 4.719V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z"
-                                     VerticalAlignment="Center" HorizontalAlignment="Center"
-                                     Fill="#9CA3AF" Height="10" Stretch="Fill" Width="13" FlowDirection="RightToLeft"/>
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Fill="#1450A2" Height="10" Stretch="Fill" Width="13" FlowDirection="RightToLeft"/>
 
                             </Button.Content>
                         </Button>
@@ -126,13 +150,13 @@
 
                     <Grid Grid.Column="4">
                         <Button 
-                            Padding="8 0 8 0"
-                            Style="{StaticResource MenuTopButton}"
-                            Width="56.242" Height="30">
+                        Padding="8 0 8 0"
+                        Style="{StaticResource MenuTopButton}"
+                        Width="56.242" Height="30">
                             <Button.Content>
                                 <emoji:TextBlock Text="{Binding RemainingAPIUsage}" 
-                                                 FontFamily="sans-serif" FontSize="16" 
-                                                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                FontFamily="sans-serif" FontSize="16" 
+                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                             </Button.Content>
                         </Button>
@@ -141,15 +165,13 @@
                         <Rectangle Height="24" Width="1" Fill="Blue" Opacity="0.1"/>
                     </Grid>
                     <Grid Grid.Column="6">
-                        <Button x:Name="btnCloseIntroduction"
-                                    BorderThickness="0.25"
-                               
-                                    Style="{StaticResource MenuTopButton}"
-                                    Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                    Command="{Binding HideMenuOperationsCommand}">
+                        <Button x:Name="btnCloseIntroduction" BorderThickness="0.25"
+                      Style="{StaticResource MenuTopButton}"
+                                Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Command="{Binding HideMenuOperationsCommand}">
                             <Button.Content>
                                 <Image Source="../../../../Assets/Images/cross.png" 
-                                        Width="14" Height="14" />
+                                    Width="14" Height="14" />
                             </Button.Content>
 
                         </Button>
@@ -243,9 +265,6 @@
                                                 <TextBlock Text="{Binding Content}" FontFamily="sans-serif" FontSize="14" Foreground="#082041" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                             </StackPanel>
                                         </Button>
-
-
-
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -253,7 +272,6 @@
 
 
                     </Grid>
-
                 </Grid>
 
             </ScrollViewer>

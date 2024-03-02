@@ -8,8 +8,8 @@ using System.IO;
 using System.Windows.Input;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using Jarvis_Windows.Sources.MVVM.ViewModels;
 using Jarvis_Windows.Sources.Utils.Services;
+using System.Windows.Controls;
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 public partial class MainView : Window
 {
@@ -17,6 +17,8 @@ public partial class MainView : Window
     private NotifyIcon _notifyIcon;
     private ContextMenuStrip _contextMenuStrip;
     private SendEventGA4 _sendEventGA4;
+    private bool _isDragging;
+    private System.Windows.Point _startPoint;
 
     public SendEventGA4 SendEventGA4
     {
@@ -51,7 +53,6 @@ public partial class MainView : Window
         _notifyIcon.Visible = true;
     }
 
-    private System.Windows.Point _startPoint;
     private System.Windows.Point _menuActionPoint;
     private System.Windows.Point _jarvisButtonPoint;
 
@@ -207,6 +208,35 @@ public partial class MainView : Window
         });
     }
 
+    private void Window_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        // Kiểm tra nút chuột trái đã được bấm để bắt đầu quá trình kéo và thả
+        if (_isDragging)
+        {
+            System.Windows.Point mousePos = e.GetPosition(this);
+
+            // Di chuyển UserControl theo sự chênh lệch của chuột
+            double newLeft = mousePos.X - _startPoint.X;
+            double newTop = mousePos.Y - _startPoint.Y;
+            jarvisActionPopup.SetValue(Canvas.LeftProperty, newLeft);
+            jarvisActionPopup.SetValue(Canvas.TopProperty, newTop);
+
+            _startPoint = mousePos;
+        }
+    }
+
+    private void draggableUserControl_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        // Bắt đầu quá trình kéo và thả
+        _isDragging = true;
+        _startPoint = e.GetPosition(this);
+    }
+
+    private void Window_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        // Kết thúc quá trình kéo và thả
+        _isDragging = false;
+    }
 
     private class MyRenderer : ToolStripProfessionalRenderer
     {

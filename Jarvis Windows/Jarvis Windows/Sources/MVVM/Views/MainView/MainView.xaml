@@ -8,6 +8,7 @@
         xmlns:menuOperation="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView"
         xmlns:jarvisAction="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.JarvisActionView"
         xmlns:trayMenuPopup="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TrayMenuPopupView"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         WindowStyle="None"
         Background="Transparent"
@@ -15,7 +16,9 @@
         PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
         PreviewMouseMove="Window_PreviewMouseMove"
         WindowStartupLocation="CenterScreen"
-        Title="Jarvis MainView" Height="496" Width="820">
+        Title="Jarvis MainView" Height="496" Width="820"
+        MouseMove="Window_MouseMove" 
+        MouseUp="Window_MouseUp">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -52,52 +55,21 @@
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="37"/>
                 <RowDefinition Height="438"/>
             </Grid.RowDefinitions>
 
             <!-- Frame 10 -->
-            <Grid Grid.Row="0" Width="780" Height="18">
+            <Grid Grid.Row="0" Width="780" Height="37">
                 <DockPanel LastChildFill="False" VerticalAlignment="Center">
                     <Button
                         DockPanel.Dock="Right"
                         x:Name="btnCloseMainWindows"
-                        Width="20"
-                        Height="20"
-                        Padding="0"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Margin="0 0 10 0"
+                        Width="37"
+                        Height="37"
                         Click="btnCloseMainWindows_Click"
-                        Foreground="#303030">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="OverridesDefaultStyle" Value="True" />
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    BorderBrush="{TemplateBinding BorderBrush}">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="Transparent" />
-                                        <Setter Property="BorderBrush" Value="Transparent" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-
-                        <Button.Content>
-                            <Image Source="../../../../Assets/Images/cross.png"/>
-                        </Button.Content>
+                        Style="{StaticResource JarvisNomalButton}">
+                        <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" Kind="Close" Width="24" Height="24" VerticalAlignment="Center" />
                     </Button>
                 </DockPanel>
             </Grid>
@@ -117,6 +89,8 @@
                         <ColumnDefinition Width="86"/>
                         <ColumnDefinition Width="9"/>
                         <ColumnDefinition Width="43"/>
+                        <ColumnDefinition Width="119*"/>
+                        <ColumnDefinition Width="79*"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Frame 11 -->
@@ -141,7 +115,7 @@
                     </Grid>
 
                     <!-- Frame 21 -->
-                    <Grid Grid.Column="2" Width="43" Height="20">
+                    <Grid Grid.Column="2" Width="43" Height="20" Margin="0,8,0,9">
                         <Border Background="White" Width="43" Height="20" CornerRadius="12" >
                             <TextBlock 
                                 HorizontalAlignment="Center"
@@ -215,9 +189,9 @@
                             FontFamily="Ag"
                             FontSize="13"
                             
-                            
+                       
                             Visibility="Visible"
-                            Width="220" Height="50" Text="{Binding Path=MainWindowInputText, Mode=TwoWay}">
+                            Width="285" Height="50" Text="{Binding Path=MainWindowInputText, Mode=TwoWay}">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
                                     <Setter Property="BorderThickness" Value="0" />
@@ -230,12 +204,11 @@
                                                         <VisualBrush.Visual>
                                                             <TextBlock 
                                                                 FontFamily="Ag"
-                                                                FontSize="14"
+                                                                FontSize="16"
                                                                 Foreground="#9CA3AF">
-                                                                
-                                                                    Write anything here and tap on the <LineBreak/>
-                                                                    Translate, Revise, or Shorten button. <LineBreak/>
-                                                                    Jarvis will show you the magic
+                                                                    Write anything here and tap on the Translate, Revise<LineBreak/>
+                                                                    or Shorten button. <LineBreak/>
+                                                                    Jarvis will show you the magic !
                                                             </TextBlock>
                                                         </VisualBrush.Visual>
                                                     </VisualBrush>
@@ -246,27 +219,20 @@
                                 </Style>
                             </TextBox.Style>
                         </TextBox>
-                        
-                        <!--<Button Content="Process Text" Click="ProcessTextButton_Click" Width="20" Height="20" />-->
                     </Grid>
 
                 </Grid>
 
 
                 <!-- Frame 23 -->
-                <Grid Grid.Row="3" Width="145" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Margin="24,0,0,0">
-
+                <Grid Grid.Row="3" Width="145" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="24,0,0,0">
                     <Button 
-                        Background="#00428F"
+                        Background="#1450A3"
                         Foreground="White"       
-                        BorderBrush="#00428F"
-                        BorderThickness="1"
                         FontSize="13"
                         x:Name="btnMoreAtJarvis"
                         FontWeight="Bold"
                         Content="More at Jarvis" Click="btnMoreAtJarvis_Click">
-
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -296,8 +262,6 @@
                             </Style>
                         </Button.Resources>
                     </Button>
-
-
                 </Grid>
 
                 <Popup x:Name="jarvisActionPopup" Placement="AbsolutePoint" 
@@ -323,7 +287,7 @@
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <menuOperation:MenuOperatorsView/>
                 </Popup>
-                
+
                 <!--<Popup Name="trayMenuPopup" Placement="Absolute"
                        AllowsTransparency="True" 
                        Width="140" Height="55">

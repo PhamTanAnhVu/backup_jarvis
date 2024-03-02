@@ -3,6 +3,30 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008">
 
+    <SolidColorBrush x:Key="PrimaryBrushColor0.5">#AEC9EF</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBrushColor1">#9DBBE6</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBrushColor2">#7BA0D5</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBrushColor3">#5886C5</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBrushColor4">#366BB4</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBrushColor5">#1450A3</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBrushColor6">#104082</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBrushColor7">#0C3062</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBrushColor8">#082041</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBrushColor9">#041021</SolidColorBrush>
+    <SolidColorBrush x:Key="PrimaryBrushColor9.5">#020810</SolidColorBrush>
+
+    <Color x:Key="PrimaryColor0.5">#AEC9EF</Color>
+    <Color x:Key="PrimaryColor1">#9DBBE6</Color>
+    <Color x:Key="PrimaryColor2">#7BA0D5</Color>
+    <Color x:Key="PrimaryColor3">#5886C5</Color>
+    <Color x:Key="PrimaryColor4">#366BB4</Color>
+    <Color x:Key="PrimaryColor5">#1450A3</Color>
+    <Color x:Key="PrimaryColor6">#104082</Color>
+    <Color x:Key="PrimaryColor7">#0C3062</Color>
+    <Color x:Key="PrimaryColor8">#082041</Color>
+    <Color x:Key="PrimaryColor9">#041021</Color>
+    <Color x:Key="PrimaryColor9.5">#020810</Color>
+
     <Style x:Key="JarvisPrimaryButton" TargetType="Button">
         <Setter Property="Foreground" Value="#FFFFFF" />
         <Setter Property="Background" Value="#1450A3" />
@@ -77,6 +101,16 @@
                     </Setter.Value>
                 </Setter>
                 <Setter Property="BorderBrush" Value="#FFFFFF" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Offset="1" Color="#E6EEFA"/>
+                            <GradientStop Offset="0" Color="#9CA3AF"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -172,7 +206,7 @@
         </Setter>
     </Style>
 
-    <!--<Style x:Key="JarvisToggleButton" TargetType="ToggleButton">
+    <Style x:Key="JarvisNomalButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -186,10 +220,32 @@
                             CornerRadius="10">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Offset="0" Color="{StaticResource PrimaryColor1}"/>
+                                        <GradientStop Offset="1" Color="#E6EEFA"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Offset="0" Color="#CFD1D4"/>
+                                        <GradientStop Offset="1" Color="#E6EEFA"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>-->
+    </Style>
 
     <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
         <Grid>
@@ -254,15 +310,6 @@
                             ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Left" />
-                        <!--<TextBox x:Name="PART_EditableTextBox"
-                            Style="{x:Null}" 
-                            Template="{StaticResource ComboBoxTextBox}" 
-                            HorizontalAlignment="Left" 
-                            VerticalAlignment="Center" 
-                            Focusable="True" 
-                            Background="White"
-                            Visibility="Hidden"
-                            IsReadOnly="{TemplateBinding IsReadOnly}"/>-->
                         <Popup 
                             Name="Popup"
                             Placement="Bottom"
@@ -286,31 +333,9 @@
                             </Grid>
                         </Popup>
                     </Grid>
-                    <!--<ControlTemplate.Triggers>
-                        <Trigger Property="HasItems" Value="false">
-                            <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="Black"/>
-                        </Trigger>
-                        <Trigger Property="IsGrouping" Value="true">
-                            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
-                        </Trigger>
-                        <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="true">
-                            <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="0"/>
-                            <Setter TargetName="DropDownBorder" Property="Margin" Value="0,2,0,0"/>
-                        </Trigger>
-                        <Trigger Property="IsEditable"  Value="true">
-                            <Setter Property="IsTabStop" Value="false"/>
-                            <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/>
-                            <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>-->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers>
-        </Style.Triggers>
     </Style>
 
     <!--<Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">

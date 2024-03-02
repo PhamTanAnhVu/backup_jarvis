@@ -30,6 +30,8 @@ public class MainViewModel : ViewModelBase
     private double _scrollBarHeight;
     private ObservableCollection<ButtonViewModel> _fixedButtons;
     private ObservableCollection<ButtonViewModel> _dynamicButtons;
+    private string _previousTextFromInput;
+    private static IAutomationElementValueService _automationElementValueService;
 
     private SendEventGA4 _sendEventGA4;
     public List<Language> Languages { get; set; }
@@ -40,6 +42,8 @@ public class MainViewModel : ViewModelBase
     public RelayCommand OpenSettingsCommand { get; set; }
     public RelayCommand QuitAppCommand { get; set; }
     public RelayCommand PinJarvisButtonCommand { get; set; }
+    public RelayCommand UndoCommand { get; set; }
+    public RelayCommand RedoCommand { get; set; }
 
 
     public INavigationService NavigationService
@@ -72,7 +76,6 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    // Spinning Jarvis icon
     public bool IsSpinningJarvisIcon
     {
         get { return _isSpinningJarvisIcon; }
@@ -170,12 +173,22 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    public MainViewModel(INavigationService navigationService, PopupDictionaryService popupDictionaryService, UIElementDetector uIElementDetector, SendEventGA4 sendEventGA4)
+    public static IAutomationElementValueService AutomationElementValueService 
+    { 
+        get => _automationElementValueService; 
+        set => _automationElementValueService = value; 
+    }
+
+    public MainViewModel(INavigationService navigationService, 
+        PopupDictionaryService popupDictionaryService, 
+        UIElementDetector uIElementDetector, 
+        SendEventGA4 sendEventGA4, IAutomationElementValueService automationElementValueService)
     {
         NavigationService = navigationService;
         PopupDictionaryService = popupDictionaryService;
         UIElementDetector = uIElementDetector;
         SendEventGA4 = sendEventGA4;
+        AutomationElementValueService = automationElementValueService;
 
         RemainingAPIUsage = (AppStatus.IsPackaged) 
                                 ? $"{Windows.Storage.ApplicationData.Current.LocalSettings.Values["ApiUsageRemaining"]} 🔥"
@@ -190,6 +203,8 @@ public class MainViewModel : ViewModelBase
         OpenSettingsCommand = new RelayCommand(ExecuteOpenSettingsCommand, o => true);
         QuitAppCommand = new RelayCommand(ExecuteQuitAppCommand, o => true);
         PinJarvisButtonCommand = new RelayCommand(ExecutePinJarvisButtonCommand, o => true);
+        UndoCommand = new RelayCommand(ExecuteUndoCommand, o => true);
+        RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true);
 
         string relativePath = Path.Combine("Appsettings", "Configs", "languages_supported.json");
         string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
@@ -295,6 +310,29 @@ public class MainViewModel : ViewModelBase
 
             await SendEventGA4.SendEvent("quit_app");
         });
+    }
+
+    private void ExecuteUndoCommand(object obj)
+    {
+        try
+        {
+            AutomationElementValueService.Undo(UIElementDetector.GetInstance().GetFocusingElement());
+        }
+        catch { }
+        finally
+        {
+        }
+    }
+    private void ExecuteRedoCommand(object obj)
+    {
+        try
+        {
+            AutomationElementValueService.Redo(UIElementDetector.GetInstance().GetFocusingElement());
+        }
+        catch { }
+        finally
+        {
+        }
     }
 
     private void ExecuteOpenSettingsCommand(object obj)
@@ -425,6 +463,7 @@ public class MainViewModel : ViewModelBase
 
             if (_fromWindow != true) { UIElementDetector.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError); }
             else { MainWindowInputText = textFromAPI; }
+            AutomationElementValueService.StoreAction(UIElementDetector.GetFocusingElement(), textFromElement);
         }
         catch { }
         finally

@@ -18,6 +18,8 @@ public class UIElementDetector
     private static PopupDictionaryService? _popupDictionaryService;
     private static SendEventGA4? _sendEventGA4;
     private static bool _isUseAutoTuningPosition = true;
+    private static IAutomationElementValueService? _automationElementValueService;
+
     public PopupDictionaryService? PopupDictionaryService
     {
         get { return _popupDictionaryService; }
@@ -46,6 +48,11 @@ public class UIElementDetector
     {
         get { return _sendEventGA4; }
         set => _sendEventGA4 = value;
+    }
+
+    public IAutomationElementValueService AutomationElementValueService { 
+        get => _automationElementValueService;
+        set => _automationElementValueService = value; 
     }
 
     private UIElementDetector(PopupDictionaryService popupDictionaryService)
@@ -78,7 +85,7 @@ public class UIElementDetector
                         _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation());
                         _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation());
                     }
-                    Thread.Sleep(33);
+                    Thread.Sleep(100);
                 }
             }
             catch (ElementNotAvailableException)
@@ -140,6 +147,8 @@ public class UIElementDetector
                 _popupDictionaryService.MainWindow.ResetBinding();
                 Debug.WriteLine("📩📩📩 Send GA4 Events Inject");
                 Task.Run(async () => await ExecuteSendEventInject());
+
+                _automationElementValueService.CheckUndoRedo(_focusingElement);
             }
             else
             {
@@ -278,9 +287,10 @@ public class UIElementDetector
         return editElement;
     }
 
-    public void SetValueForFocusingEditElement(String? value)
+    public string SetValueForFocusingEditElement(String? value)
     {
         int timeoutMilliseconds = 200;
+        string strResult = String.Empty;
         if (_focusingElement != null)
         {
 
@@ -294,7 +304,10 @@ public class UIElementDetector
                 {
                     ValuePattern? valuePattern = _focusingElement.GetCurrentPattern(ValuePattern.Pattern) as ValuePattern;
                     if (valuePattern != null)
+                    {
+                        strResult = valuePattern.Current.Value.ToString();
                         valuePattern.SetValue(value);
+                    }    
                 }
                 catch (NullReferenceException)
                 {
@@ -313,9 +326,10 @@ public class UIElementDetector
             if (!setValueTask.Wait(timeoutMilliseconds, cancellationToken))
             {
                 cancellationTokenSource.Cancel();
-                throw new TimeoutException("The SetValueForFocusingEditElement operation has timed out.");
+                return String.Empty;
             }
         }
+        return strResult;
     }
 
     public string GetTextFromFocusingEditElement()
@@ -336,6 +350,61 @@ public class UIElementDetector
                     ValuePattern? valuePattern = null;
                     object valuePatternObj;
                     if (_focusingElement.TryGetCurrentPattern(ValuePattern.Pattern, out valuePatternObj))
+                    {
+                        valuePattern = valuePatternObj as ValuePattern;
+                        if (valuePattern != null)
+                            return valuePattern.Current.Value;
+                    }
+                }
+                catch (NullReferenceException)
+                {
+                    Debug.WriteLine($"Null reference exception");
+                }
+                catch (ElementNotAvailableException)
+                {
+                    Debug.WriteLine($"❌❌❌ Element is not available");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"❌❌❌ Exception: {ex.Message}");
+                }
+                return string.Empty;
+            });
+
+            if (!getValueTask.Wait(timeoutMilliseconds, cancellationToken))
+            {
+                cancellationTokenSource.Cancel();
+                throw new TimeoutException("The GetTextFromFocusingEditElement operation has timed out.");
+            }
+
+            result = getValueTask.Result;
+        }
+
+        return result;
+    }
+
+    internal AutomationElement? GetFocusingElement()
+    {
+        return _focusingElement;
+    }
+
+    internal string GetValueOf(AutomationElement? automationElement)
+    {
+        int timeoutMilliseconds = 200;
+        string result = string.Empty;
+
+        if (automationElement != null)
+        {
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+            Task<string> getValueTask = Task.Run(() =>
+            {
+                try
+                {
+                    ValuePattern? valuePattern = null;
+                    object valuePatternObj;
+                    if (automationElement.TryGetCurrentPattern(ValuePattern.Pattern, out valuePatternObj))
                     {
                         valuePattern = valuePatternObj as ValuePattern;
                         if (valuePattern != null)

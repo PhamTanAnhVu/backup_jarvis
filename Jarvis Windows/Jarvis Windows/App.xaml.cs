@@ -31,11 +31,13 @@ public partial class App : Application
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<PopupDictionaryService>();     
         services.AddSingleton<SendEventGA4>();
+        services.AddScoped<IAutomationElementValueService, AutomationElementValueService>();
 
         services.AddSingleton<UIElementDetector>(provider => new UIElementDetector
         {
-            PopupDictionaryService = _serviceProvider.GetRequiredService<PopupDictionaryService>(),
-            SendEventGA4 = provider.GetRequiredService<SendEventGA4>()
+            PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>(),
+            SendEventGA4 = provider.GetRequiredService<SendEventGA4>(),
+            AutomationElementValueService = provider.GetRequiredService<IAutomationElementValueService>()
         });
 
 
