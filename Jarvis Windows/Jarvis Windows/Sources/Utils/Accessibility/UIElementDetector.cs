@@ -145,6 +145,10 @@ public class UIElementDetector
                 _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
                 _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
                 _popupDictionaryService.MainWindow.ResetBinding();
+
+                _popupDictionaryService.UpdateTextMenuOperationsPosition(CalculateElementLocation());
+                _popupDictionaryService.UpdateTextMenuAPIPosition();
+
                 Debug.WriteLine("📩📩📩 Send GA4 Events Inject");
                 Task.Run(async () => await ExecuteSendEventInject());
 
@@ -269,6 +273,10 @@ public class UIElementDetector
             Debug.WriteLine($"🟧🟧🟧 {automationElement?.Current.Name} Bounding Rectangle Changed");
             _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
             _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+
+            _popupDictionaryService.UpdateTextMenuOperationsPosition(CalculateElementLocation());
+            _popupDictionaryService.UpdateTextMenuAPIPosition();
+
         }
         else if (e.Property == AutomationElement.IsOffscreenProperty)
         {

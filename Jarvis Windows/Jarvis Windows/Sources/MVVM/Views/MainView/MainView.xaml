@@ -7,6 +7,8 @@
         xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MainView"
         xmlns:menuOperation="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView"
         xmlns:jarvisAction="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.JarvisActionView"
+        xmlns:textMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuView"
+        xmlns:textMenuAPI="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView"
         xmlns:trayMenuPopup="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TrayMenuPopupView"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -283,9 +285,29 @@
                        PreviewMouseLeftButtonDown="MenuAction_PreviewMouseLeftButtonDown"
                        PreviewMouseMove="MenuAction_PreviewMouseMove"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
-                       IsOpen="{Binding PopupDictionaryService.IsShowMenuOperations}"
+                       IsOpen="false"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <menuOperation:MenuOperatorsView/>
+                </Popup>
+
+                <Popup Name="textMenuPopup" Placement="Absolute"
+                       VerticalOffset="{Binding PopupDictionaryService.TextMenuOperationsPosition.Y}"
+                       HorizontalOffset="{Binding PopupDictionaryService.TextMenuOperationsPosition.X}"
+                       AllowsTransparency="True"
+                       Focusable="True" ForceCursor="True" StaysOpen="True"
+                       IsOpen="{Binding PopupDictionaryService.IsShowTextMenuOperations}"
+                       Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
+                    <textMenu:TextMenuView/>
+                </Popup>
+
+                <Popup Name="textMenuAPIPopup" Placement="Absolute"
+                       VerticalOffset="{Binding PopupDictionaryService.TextMenuAPIPosition.Y}"
+                       HorizontalOffset="{Binding PopupDictionaryService.TextMenuAPIPosition.X}"
+                       AllowsTransparency="True"
+                       Focusable="True" ForceCursor="True" StaysOpen="True"
+                       IsOpen="{Binding PopupDictionaryService.IsShowTextMenuAPI}"
+                       Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
+                    <textMenuAPI:TextMenuAPIView/>
                 </Popup>
 
                 <!--<Popup Name="trayMenuPopup" Placement="Absolute"

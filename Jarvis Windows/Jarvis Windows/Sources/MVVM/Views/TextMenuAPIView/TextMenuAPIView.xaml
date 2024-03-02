@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView.TextMenuAPIView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView"
+             mc:Ignorable="d" 
+             MinHeight="88" MaxHeight="326" Width="398.742">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border CornerRadius="15" Background="#FFFFFF" Padding="8 8 8 8">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition MinHeight="68" MaxHeight="306"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" >
+                <Image x:Name="img" Source="../../../../Assets/Images/jarvis_logo.png" Width="24" Height="24" 
+                       Visibility="{Binding IsSpinningJarvisIconTextMenu ,Converter={StaticResource VisibilityConverter}}">
+
+                    <Image.RenderTransformOrigin>
+                        <Point X="0.5" Y="0.5"/>
+                    </Image.RenderTransformOrigin>
+
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="True">
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <RotateTransform Angle="360"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard Storyboard="{StaticResource SpinAnimation}" />
+                                    </DataTrigger.EnterActions>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="False">
+
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+
+                <ScrollViewer MinHeight="80" MaxHeight="300"
+                              VerticalScrollBarVisibility="Hidden">
+                    <TextBlock 
+                        TextWrapping="Wrap"
+                        Text="{Binding TextMenuAPI}" />
+                   
+                
+                </ScrollViewer>
+
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Button 
+                    Style="{StaticResource TextMenuButton}"
+                    HorizontalAlignment="Center"
+                    Command="{Binding HideTextMenuAPICommand}" 
+                    Content="Hide"/>
+            </Grid>
+        </Grid>
+    </Border>
+    
+</UserControl>

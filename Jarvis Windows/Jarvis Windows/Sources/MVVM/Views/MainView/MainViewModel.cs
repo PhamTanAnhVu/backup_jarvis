@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows;
 using Jarvis_Windows.Sources.DataAccess;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Jarvis_Windows.Sources.MVVM.ViewModels;
 
@@ -32,6 +33,19 @@ public class MainViewModel : ViewModelBase
     private ObservableCollection<ButtonViewModel> _dynamicButtons;
     private string _previousTextFromInput;
     private static IAutomationElementValueService _automationElementValueService;
+
+    private int _languageSelectedIndex;
+    private string _textMenuAPI;
+    private bool _isSpinningJarvisIconTextMenu;
+    private double _textMenuAPIscrollBarHeight;
+
+    private ObservableCollection<ButtonViewModel> _textMenuButtons;
+    public List<Language> TextMenuLanguages { get; set; }
+    public RelayCommand TextMenuAICommand { get; set; }
+    public RelayCommand ShowTextMenuOperationsCommand { get; set; }
+    public RelayCommand HideTextMenuAPICommand { get; set; }
+    public RelayCommand LanguageComboBoxCommand { get; set; }
+
 
     private SendEventGA4 _sendEventGA4;
     public List<Language> Languages { get; set; }
@@ -173,6 +187,58 @@ public class MainViewModel : ViewModelBase
         }
     }
 
+    public ObservableCollection<ButtonViewModel> TextMenuButtons
+    {
+        get { return _textMenuButtons; }
+        set
+        {
+            _textMenuButtons = value;
+            OnPropertyChanged();
+        }
+    }
+    public int LanguageSelectedIndex
+    {
+        get { return _languageSelectedIndex; }
+        set
+        {
+            if (_languageSelectedIndex != value)
+            {
+                _languageSelectedIndex = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public bool IsSpinningJarvisIconTextMenu
+    {
+        get { return _isSpinningJarvisIconTextMenu; }
+        set
+        {
+            _isSpinningJarvisIconTextMenu = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string TextMenuAPI
+    {
+        get { return _textMenuAPI; }
+        set
+        {
+            _textMenuAPI = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double TextMenuAPIscrollBarHeight
+    {
+        get { return _textMenuAPIscrollBarHeight; }
+        set
+        {
+            _textMenuAPIscrollBarHeight = value;
+            OnPropertyChanged();
+        }
+    }
+
     public static IAutomationElementValueService AutomationElementValueService 
     { 
         get => _automationElementValueService; 
@@ -206,12 +272,20 @@ public class MainViewModel : ViewModelBase
         UndoCommand = new RelayCommand(ExecuteUndoCommand, o => true);
         RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true);
 
+        TextMenuAICommand = new RelayCommand(ExecuteTextMenuAICommand, o => true);
+        ShowTextMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
+        HideTextMenuAPICommand = new RelayCommand(ExecuteHideTextMenuAPICommand, o => true);
+        LanguageComboBoxCommand = new RelayCommand(OnLanguageTextMenuSelectionChanged, o => true);
+
+
         string relativePath = Path.Combine("Appsettings", "Configs", "languages_supported.json");
         string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
         string jsonContent = "";
         jsonContent = File.ReadAllText(fullPath);
 
         Languages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
+        TextMenuLanguages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
+        LanguageSelectedIndex = 14;
 
         //Register Acceccibility service
         UIElementDetector.SubscribeToElementFocusChanged();
@@ -225,6 +299,7 @@ public class MainViewModel : ViewModelBase
         finally { ExecuteSendEventOpenMainWindow(); }
 
         InitializeButtons();
+        InitializeButtonsTextMenu();
     }
 
     private void UpdateButtonVisibility()
@@ -384,6 +459,9 @@ public class MainViewModel : ViewModelBase
             PopupDictionaryService.ShowMenuOperations(!_menuShowStatus);
             PopupDictionaryService.ShowJarvisAction(false);
 
+            AIActionTemplate aIActionTemplate = new AIActionTemplate();
+            TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
+
             if (_menuShowStatus == false)
             {
                 await Task.Run(async () =>
@@ -476,6 +554,100 @@ public class MainViewModel : ViewModelBase
 
             if (_aiAction == "translate")
                 eventParams.Add("ai_action_translate_to", PopupDictionaryService.TargetLangguage);
+            else if (_aiAction == "custom")
+                eventParams.Add("ai_action_custom", _actionType);
+
+            await SendEventGA4.SendEvent("do_ai_action", eventParams);
+        }
+    }
+
+    public async void OnLanguageTextMenuSelectionChanged(object sender)
+    {
+        TextMenuAICommand.Execute("Translate it");
+    }
+
+
+    public async void ExecuteHideTextMenuAPICommand(object obj)
+    {
+        PopupDictionaryService.ShowTextMenuAPIOperations(false);
+
+        AIActionTemplate aIActionTemplate = new AIActionTemplate();
+        TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
+    }
+
+    private void InitializeButtonsTextMenu()
+    {
+        AIActionTemplate aIActionTemplate = new AIActionTemplate();
+        TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
+    }
+
+    private void OnLanguageTextMenuSelectionChanged(object sender, EventArgs e)
+    {
+        TextMenuAICommand.Execute("Translate it");
+    }
+
+    public async void ExecuteTextMenuAICommand(object obj)
+    {
+        string _actionType = (string)obj;
+        string _aiAction = "custom";
+        string _targetLanguage = TextMenuLanguages[LanguageSelectedIndex].Value;
+
+        try
+        {
+            TextMenuAPI = "";
+            TextMenuAPIscrollBarHeight = 88;
+            IsSpinningJarvisIconTextMenu = true;
+            PopupDictionaryService.IsShowTextMenuAPI = true;
+
+            var textFromElement = "Jarvis AI Assistant, your all-in-one solution that harnesses the formidable capabilities of ChatGPT, which provides large and wide knowledge, GPT 4 for cutting-edge language understanding, Claude AI for advanced innovations, Llama 2 for next-level text generation, Bard for creative content creation, Bing Chat for seamless communication, Meta AI for deep learning potential, Chat GPT for conversational prowess, Chatting GPT for natural dialogue, GPT Chat for interactive communication, GPT4 for state-of-the-art language processing, and the transformative power of Ajax AI (also known as AjaxAI), OpenAI and latest AI model Gemini.";
+
+            var textFromAPI = "";
+
+            if (_actionType == "Translate it")
+            {
+                TextMenuButtons[0].Visibility = TextMenuButtons[1].Visibility = false;
+                textFromAPI = await JarvisApi.Instance.TranslateHandler(textFromElement, _targetLanguage);
+                _aiAction = "translate";
+            }
+
+            else if (_actionType == "Summarize it")
+            {
+                TextMenuButtons[0].Visibility = TextMenuButtons[2].Visibility = false;
+                TextMenuButtons[1].HorizontalAlignment = "Right";
+                TextMenuButtons[1].SeparateLineWidth = 0;
+
+                textFromAPI = await JarvisApi.Instance.ReviseHandler(textFromElement);
+            }
+
+            else
+            {
+                TextMenuButtons[1].Visibility = TextMenuButtons[2].Visibility = false;
+                TextMenuButtons[0].HorizontalAlignment = "Right";
+                TextMenuButtons[0].SeparateLineWidth = 0;
+
+                textFromAPI = await JarvisApi.Instance.AIHandler(textFromElement, _actionType);
+
+            }
+
+            if (textFromAPI == null)
+            {
+                Debug.WriteLine($"🆘🆘🆘 {ErrorConstant.translateError}");
+                return;
+            }
+
+            TextMenuAPI = textFromAPI;
+        }
+        catch { }
+        finally
+        {
+            IsSpinningJarvisIconTextMenu = false; // Stop spinning animation
+            var eventParams = new Dictionary<string, object>
+            {
+                { "ai_action", _aiAction }
+            };
+
+            if (_aiAction == "translate")
+                eventParams.Add("ai_action_translate_to", _targetLanguage);
             else if (_aiAction == "custom")
                 eventParams.Add("ai_action_custom", _actionType);
 

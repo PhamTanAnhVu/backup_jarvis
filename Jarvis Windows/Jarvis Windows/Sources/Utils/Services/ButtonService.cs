@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Jarvis_Windows.Sources.Utils.Services;
 public class ButtonViewModel : ViewModelBase
@@ -13,6 +14,8 @@ public class ButtonViewModel : ViewModelBase
     private double _width;
     private bool _visibility;
     private Thickness _margin;
+    private string _horizontalAlignment;
+    private double _separateLineWidth;
     public string Content
     {
         get { return _content; }
@@ -79,6 +82,26 @@ public class ButtonViewModel : ViewModelBase
         set
         {
             _margin = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string HorizontalAlignment
+    {
+        get { return _horizontalAlignment; }
+        set
+        {
+            _horizontalAlignment = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public double SeparateLineWidth
+    {
+        get { return _separateLineWidth; }
+        set
+        {
+            _separateLineWidth = value;
             OnPropertyChanged();
         }
     }
@@ -241,5 +264,40 @@ public class AIActionTemplate
             Width = 90,
             Margin = new Thickness(0, 0, 10, 10)
         },
+    };
+    public ObservableCollection<ButtonViewModel> TextMenuAIActionList { get; set; } = new ObservableCollection<ButtonViewModel>
+    {
+        new ButtonViewModel
+        {
+            Visibility = true,
+            HorizontalAlignment = "Left",
+            SeparateLineWidth = 1,
+            //Content = "Explain",
+            //Command = null,
+            //CommandParameter = "Revise it",
+            //Width = 77.92,
+            // argin = new Thickness(8, 0, 0, 0)
+        },
+        new ButtonViewModel
+        {
+            Visibility = true,
+            HorizontalAlignment = "Left",
+            SeparateLineWidth = 1
+            //Content = "Summarize",
+            //Command = null,
+            //CommandParameter = "Summarize it",
+            //Width = 102.8,
+            // Margin = new Thickness(69.9, 0, 0, 0)
+        },
+        new ButtonViewModel
+        {
+            Visibility = true,
+            HorizontalAlignment = "Left",
+            //Content = "Translate to",
+            //Command = null,
+            //CommandParameter = "Translate it",
+            //Width = 161.34,
+            //Margin = new Thickness(156.7, 0, 0, 0)
+        }
     };
 }

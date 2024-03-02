@@ -12,9 +12,15 @@ namespace Jarvis_Windows.Sources.Utils.Services;
 public class PopupDictionaryService : ObserveralObject
 {
     private bool _isShowJarvisAction;
-    private bool _isShowMenuOperations; 
+    private bool _isShowMenuOperations;
+    private bool _isShowTextMenuOperations;
+    private bool _isShowTextMenuAPI;
+
     private Point _jarvisActionPosition;
-    private Point _menuOperationsPosition;
+    private Point _menuOperationsPosition;    
+    private Point _textMenuOperationsPosition;
+    private Point _textMenuAPIPosition;
+
     private static String? _targetLanguage;
     private Point _automationElementVisualPos;
 
@@ -64,6 +70,44 @@ public class PopupDictionaryService : ObserveralObject
         set
         {
             _menuOperationsPosition = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsShowTextMenuOperations
+    {
+        get { return _isShowTextMenuOperations; }
+        set
+        {
+            _isShowTextMenuOperations = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool IsShowTextMenuAPI
+    {
+        get { return _isShowTextMenuAPI; }
+        set
+        {
+            _isShowTextMenuAPI = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public Point TextMenuOperationsPosition
+    {
+        get { return _textMenuOperationsPosition; }
+        set
+        {
+            _textMenuOperationsPosition = value;
+            OnPropertyChanged();
+        }
+    }
+    public Point TextMenuAPIPosition
+    {
+        get { return _textMenuAPIPosition; }
+        set
+        {
+            _textMenuAPIPosition = value;
             OnPropertyChanged();
         }
     }
@@ -142,6 +186,7 @@ public class PopupDictionaryService : ObserveralObject
     public void ShowMenuOperations(bool isShow)
     {
         IsShowMenuOperations = isShow;
+        IsShowTextMenuOperations = isShow;
     }
 
     public void UpdateMenuOperationsPosition(Point systemPoint, Rect elementRectBounding)
@@ -153,5 +198,29 @@ public class PopupDictionaryService : ObserveralObject
         menuAiActionsPos.Y = (systemPoint.Y < screenHeight / 2) ? systemPoint.Y - elementRectBounding.Height * 2 : systemPoint.Y - elementRectBounding.Height * 2;
 
         MenuOperationsPosition = menuAiActionsPos;
+    }
+
+    public void ShowTextMenuAPIOperations(bool isShow)
+    {
+        IsShowTextMenuAPI = isShow;
+    }
+
+    public void UpdateMenuOperationsPosition(Point systemPoint)
+    {
+        Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
+        MenuOperationsPosition = visualPoint;
+    }
+    public void UpdateTextMenuOperationsPosition(Point systemPoint)
+    {
+        Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
+        TextMenuOperationsPosition = MenuOperationsPosition;
+    }
+
+    public void UpdateTextMenuAPIPosition()
+    {
+        Point visualPoint = TextMenuOperationsPosition;
+        visualPoint.Y += 40;
+
+        TextMenuAPIPosition = visualPoint;
     }
 }
