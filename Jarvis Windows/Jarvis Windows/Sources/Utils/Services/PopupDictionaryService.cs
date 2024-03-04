@@ -175,12 +175,16 @@ public class PopupDictionaryService : ObserveralObject
     public void UpdateJarvisActionPosition(Point systemPoint, Rect elementRectBounding)
     {
         double screenHeight = SystemParameters.PrimaryScreenHeight;
+        double screenWidth = SystemParameters.PrimaryScreenWidth;
+        double horizontalScale = screenWidth / 1920;
+        double verticalScale = screenHeight / 1080;
 
         Point jarvisButtonPos = new Point(0, 0);
-        jarvisButtonPos.X = systemPoint.X;
-        jarvisButtonPos.Y = (systemPoint.Y < screenHeight / 2) ? systemPoint.Y - elementRectBounding.Height * 2: systemPoint.Y - elementRectBounding.Height * 2;
+        jarvisButtonPos.X = systemPoint.X * horizontalScale;
+        jarvisButtonPos.Y = (systemPoint.Y - elementRectBounding.Height * 2) * verticalScale;
 
         JarvisActionPosition = jarvisButtonPos;
+        MenuOperationsPosition = jarvisButtonPos;
     }
 
     public void ShowMenuOperations(bool isShow)
@@ -191,13 +195,13 @@ public class PopupDictionaryService : ObserveralObject
 
     public void UpdateMenuOperationsPosition(Point systemPoint, Rect elementRectBounding)
     {
-        double screenHeight = SystemParameters.PrimaryScreenHeight;
+        /*double screenHeight = SystemParameters.PrimaryScreenHeight;
 
         Point menuAiActionsPos = new Point(0, 0);
         menuAiActionsPos.X = systemPoint.X;
         menuAiActionsPos.Y = (systemPoint.Y < screenHeight / 2) ? systemPoint.Y - elementRectBounding.Height * 2 : systemPoint.Y - elementRectBounding.Height * 2;
 
-        MenuOperationsPosition = menuAiActionsPos;
+        MenuOperationsPosition = menuAiActionsPos;*/
     }
 
     public void ShowTextMenuAPIOperations(bool isShow)
