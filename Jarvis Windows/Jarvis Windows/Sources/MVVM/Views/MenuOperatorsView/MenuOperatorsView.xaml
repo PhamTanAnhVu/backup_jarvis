@@ -292,7 +292,6 @@
                                      FontFamily="sans-serif" FontSize="14"
                                      Padding="11.2 7.2 11.2 7.2"
                                      PreviewMouseDown="Jarvis_Custom_Action_TextBox_PreviewMouseDown"
-                                     LostFocus="Jarvis_Custom_Action_TextBox_LostFocus"
                                      x:Name="Jarvis_Custom_Action_TextBox" 
        
                                     Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"/>

@@ -285,7 +285,7 @@
                        PreviewMouseLeftButtonDown="MenuAction_PreviewMouseLeftButtonDown"
                        PreviewMouseMove="MenuAction_PreviewMouseMove"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
-                       IsOpen="false"
+                       IsOpen="{Binding PopupDictionaryService.IsShowMenuOperations}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <menuOperation:MenuOperatorsView/>
                 </Popup>

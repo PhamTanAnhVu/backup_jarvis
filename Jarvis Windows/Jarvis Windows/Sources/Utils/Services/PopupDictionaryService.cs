@@ -217,7 +217,7 @@ public class PopupDictionaryService : ObserveralObject
     public void UpdateTextMenuOperationsPosition(Point systemPoint)
     {
         Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
-        TextMenuOperationsPosition = MenuOperationsPosition;
+        // TextMenuOperationsPosition = MenuOperationsPosition;
     }
 
     public void UpdateTextMenuAPIPosition()

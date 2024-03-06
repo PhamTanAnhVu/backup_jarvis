@@ -164,7 +164,10 @@ public class UIElementDetector
                     {
                         if (foregroundApp.Current.Name.Equals("Jarvis MainView"))
                             return;
+                        if (foregroundApp.Current.ClassName.Equals("Popup"))
+                            return;
                     }
+
                     _focusingElement = null;
                     _popupDictionaryService.ShowJarvisAction(false);
                     _popupDictionaryService.ShowMenuOperations(false);
