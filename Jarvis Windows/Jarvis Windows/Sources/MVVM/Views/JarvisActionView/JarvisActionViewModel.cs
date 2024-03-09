@@ -1,5 +1,4 @@
-﻿using Jarvis_Windows.Sources.Utils.Accessibility;
-using Jarvis_Windows.Sources.Utils.Core;
+﻿using Jarvis_Windows.Sources.Utils.Core;
 using Jarvis_Windows.Sources.Utils.Services;
 using System;
 using System.Collections.Generic;
@@ -7,18 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jarvis_Windows.Sources.MVVM.Views.JarvisActionView;
-
-public class JarvisActionViewModel : ViewModelBase
+namespace Jarvis_Windows.Sources.MVVM.Views.JarvisActionView
 {
-    public RelayCommand ShowMenuOperationsCommand { get; set; }
-    private PopupDictionaryService _popupDictionaryService;
-
-    public PopupDictionaryService PopupDictionaryService
+    public class JarvisActionViewModel : ViewModelBase
     {
-        get { return _popupDictionaryService; }
-        set => _popupDictionaryService = value;
-    }
+        public RelayCommand ShowMenuOperationsCommand { get; set; }
+        private PopupDictionaryService _popupDictionaryService;
+
+        public PopupDictionaryService PopupDictionaryService
+        {
+            get { return _popupDictionaryService; }
+            set => _popupDictionaryService = value;
+        }
 
     public JarvisActionViewModel(PopupDictionaryService popupDictionaryService)
     {
@@ -32,7 +31,10 @@ public class JarvisActionViewModel : ViewModelBase
             PopupDictionaryService.ShowMenuOperations(true);*/
     }
 
-    public JarvisActionViewModel()
-    {
+        public JarvisActionViewModel()
+        {
+        }
     }
+
 }
+

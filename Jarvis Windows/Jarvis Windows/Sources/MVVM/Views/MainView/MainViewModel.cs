@@ -1,5 +1,4 @@
 ﻿using Jarvis_Windows.Sources.DataAccess.Network;
-using Jarvis_Windows.Sources.Utils.Accessibility;
 using Jarvis_Windows.Sources.Utils.Constants;
 using Jarvis_Windows.Sources.Utils.Core;
 using Jarvis_Windows.Sources.Utils.Services;
@@ -14,14 +13,15 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using Jarvis_Windows.Sources.DataAccess;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using Jarvis_Windows.Sources.Utils.Accessibility;
 
-namespace Jarvis_Windows.Sources.MVVM.ViewModels;
+namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 
 public class MainViewModel : ViewModelBase
 {
     private INavigationService? _navigationService;
     private PopupDictionaryService _popupDictionaryService;
-    private UIElementDetector _uIElementDetector;
+    private UIElementDetector _accessibilityService;
     private bool _isSpinningJarvisIcon; // Spinning Jarvis icon
     private string _remainingAPIUsage;
     private string _mainWindowInputText;
@@ -70,25 +70,25 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    public PopupDictionaryService PopupDictionaryService
-    {
-        get { return _popupDictionaryService; }
-        set
+        public PopupDictionaryService PopupDictionaryService
         {
-            _popupDictionaryService = value;
-            OnPropertyChanged();
+            get { return _popupDictionaryService; }
+            set
+            {
+                _popupDictionaryService = value;
+                OnPropertyChanged();
+            }
         }
-    }
 
-    public UIElementDetector UIElementDetector
-    {
-        get { return _uIElementDetector; }
-        set
+        public UIElementDetector AccessibilityService
         {
-            _uIElementDetector = value;
-            OnPropertyChanged();
+            get { return _accessibilityService; }
+            set
+            {
+                _accessibilityService = value;
+                OnPropertyChanged();
+            }
         }
-    }
 
     public bool IsSpinningJarvisIcon
     {
@@ -246,13 +246,13 @@ public class MainViewModel : ViewModelBase
     }
 
     public MainViewModel(INavigationService navigationService, 
-        PopupDictionaryService popupDictionaryService, 
-        UIElementDetector uIElementDetector, 
+        PopupDictionaryService popupDictionaryService,
+        UIElementDetector accessibilityService, 
         SendEventGA4 sendEventGA4, IAutomationElementValueService automationElementValueService)
     {
         NavigationService = navigationService;
         PopupDictionaryService = popupDictionaryService;
-        UIElementDetector = uIElementDetector;
+        AccessibilityService = accessibilityService;
         SendEventGA4 = sendEventGA4;
         AutomationElementValueService = automationElementValueService;
 
@@ -288,7 +288,7 @@ public class MainViewModel : ViewModelBase
         LanguageSelectedIndex = 14;
 
         //Register Acceccibility service
-        UIElementDetector.SubscribeToElementFocusChanged();
+        AccessibilityService.SubscribeToElementFocusChanged();
         EventAggregator.LanguageSelectionChanged += OnLanguageSelectionChanged;
         
         
@@ -375,17 +375,17 @@ public class MainViewModel : ViewModelBase
         AICommand.Execute("Translate it");
     }
 
-    private void ExecuteQuitAppCommand(object obj)
-    {
-        Process.GetCurrentProcess().Kill();
-        Task.Run(async () =>
+        private void ExecuteQuitAppCommand(object obj)
         {
-            // Some processing before the await (if needed)
-            await Task.Delay(0); // This allows the method to yield to the caller
+            Process.GetCurrentProcess().Kill();
+            Task.Run(async () =>
+            {
+                // Some processing before the await (if needed)
+                await Task.Delay(0); // This allows the method to yield to the caller
 
-            await SendEventGA4.SendEvent("quit_app");
-        });
-    }
+                await SendEventGA4.SendEvent("quit_app");
+            });
+        }
 
     private void ExecuteUndoCommand(object obj)
     {
@@ -439,17 +439,17 @@ public class MainViewModel : ViewModelBase
         //}
     //}
 
-    private async void ExecuteCheckUpdate()
-    {
-        // Checking App update here
-        await SendEventGA4.CheckVersion();
-    }
+        private async void ExecuteCheckUpdate()
+        {
+            // Checking App update here
+            await SendEventGA4.CheckVersion();
+        }
 
-    private async void ExecuteSendEventOpenMainWindow()
-    {
-        // Starting app
-        await SendEventGA4.SendEvent("open_main_window");
-    }
+        private async void ExecuteSendEventOpenMainWindow()
+        {
+            // Starting app
+            await SendEventGA4.SendEvent("open_main_window");
+        }
 
     public async void ExecuteShowMenuOperationsCommand(object obj)
     {
@@ -500,14 +500,14 @@ public class MainViewModel : ViewModelBase
 
             var textFromElement = "";
             var textFromAPI = "";
-            try { textFromElement = UIElementDetector.GetTextFromFocusingEditElement(); }
+            try { textFromElement = AccessibilityService.GetTextFromFocusingEditElement(); }
             catch
             {
                 textFromElement = this.MainWindowInputText;
                 _fromWindow = true;
             }
 
-            if (textFromElement == "") return;
+                if (textFromElement == "") return;
 
             if (_actionType == "Translate it")
             {
@@ -539,9 +539,9 @@ public class MainViewModel : ViewModelBase
                                 ? $"{Windows.Storage.ApplicationData.Current.LocalSettings.Values["ApiUsageRemaining"]} 🔥"
                                 : $"{DataConfiguration.ApiUsageRemaining} 🔥";
 
-            if (_fromWindow != true) { UIElementDetector.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError); }
+            if (_fromWindow != true) { AccessibilityService.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError); }
             else { MainWindowInputText = textFromAPI; }
-            AutomationElementValueService.StoreAction(UIElementDetector.GetFocusingElement(), textFromElement);
+            AutomationElementValueService.StoreAction(AccessibilityService.GetFocusingElement(), textFromElement);
         }
         catch { }
         finally
@@ -599,7 +599,7 @@ public class MainViewModel : ViewModelBase
             IsSpinningJarvisIconTextMenu = true;
             PopupDictionaryService.IsShowTextMenuAPI = true;
 
-            var textFromElement = "Jarvis AI Assistant, your all-in-one solution that harnesses the formidable capabilities of ChatGPT, which provides large and wide knowledge, GPT 4 for cutting-edge language understanding, Claude AI for advanced innovations, Llama 2 for next-level text generation, Bard for creative content creation, Bing Chat for seamless communication, Meta AI for deep learning potential, Chat GPT for conversational prowess, Chatting GPT for natural dialogue, GPT Chat for interactive communication, GPT4 for state-of-the-art language processing, and the transformative power of Ajax AI (also known as AjaxAI), OpenAI and latest AI model Gemini.";
+            var textFromElement = UIElementDetector.CurrentSelectedText;
 
             var textFromAPI = "";
 

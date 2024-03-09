@@ -1,30 +1,12 @@
 ﻿using Jarvis_Windows.Sources.MVVM.Models;
-using Jarvis_Windows.Sources.MVVM.ViewModels;
-using Jarvis_Windows.Sources.Utils.Core;
 using Jarvis_Windows.Sources.Utils.Services;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 using Jarvis_Windows.Sources.Utils.WindowsAPI;
 using System.Windows.Automation;
 using System.Windows.Interop;
-using System.Globalization;
-using System.Configuration;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView
 {

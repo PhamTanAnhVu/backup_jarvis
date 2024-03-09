@@ -1,5 +1,4 @@
-﻿using Jarvis_Windows.Sources.MVVM.ViewModels;
-using Jarvis_Windows.Sources.MVVM.Views.MainView;
+﻿using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Jarvis_Windows.Sources.Utils.Core;
 using System;
 using System.Diagnostics;
@@ -174,6 +173,7 @@ public class PopupDictionaryService : ObserveralObject
 
     public void UpdateJarvisActionPosition(Point systemPoint, Rect elementRectBounding)
     {
+
         double screenHeight = SystemParameters.PrimaryScreenHeight;
         double screenWidth = SystemParameters.PrimaryScreenWidth;
         double horizontalScale = screenWidth / 1920;
@@ -190,6 +190,10 @@ public class PopupDictionaryService : ObserveralObject
     public void ShowMenuOperations(bool isShow)
     {
         IsShowMenuOperations = isShow;
+    }
+
+    public void ShowMenuSelectionActions(bool isShow)
+    {
         IsShowTextMenuOperations = isShow;
     }
 
@@ -198,8 +202,8 @@ public class PopupDictionaryService : ObserveralObject
         /*double screenHeight = SystemParameters.PrimaryScreenHeight;
 
         Point menuAiActionsPos = new Point(0, 0);
-        menuAiActionsPos.X = systemPoint.X;
-        menuAiActionsPos.Y = (systemPoint.Y < screenHeight / 2) ? systemPoint.Y - elementRectBounding.Height * 2 : systemPoint.Y - elementRectBounding.Height * 2;
+        menuAiActionsPos.X = systemPoint.X * xScale;
+        menuAiActionsPos.Y = systemPoint.Y * yScale;
 
         MenuOperationsPosition = menuAiActionsPos;*/
     }
@@ -226,5 +230,10 @@ public class PopupDictionaryService : ObserveralObject
         visualPoint.Y += 40;
 
         TextMenuAPIPosition = visualPoint;
+    }
+
+    internal void ShowSelectionResponseView(bool bIsShow)
+    {
+        IsShowTextMenuAPI = bIsShow;
     }
 }

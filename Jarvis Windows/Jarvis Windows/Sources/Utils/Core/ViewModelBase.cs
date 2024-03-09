@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jarvis_Windows.Sources.Utils.Core;
-
-public class ViewModelBase : ObserveralObject
+namespace Jarvis_Windows.Sources.Utils.Core
 {
+    public class ViewModelBase : ObserveralObject
+    {
+    }
 }
+
+

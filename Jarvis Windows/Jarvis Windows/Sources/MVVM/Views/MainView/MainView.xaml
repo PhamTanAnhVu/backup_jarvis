@@ -294,7 +294,7 @@
                        VerticalOffset="{Binding PopupDictionaryService.TextMenuOperationsPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.TextMenuOperationsPosition.X}"
                        AllowsTransparency="True"
-                       Focusable="True" ForceCursor="True" StaysOpen="True"
+                       Focusable="True" ForceCursor="True" StaysOpen="False"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuOperations}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <textMenu:TextMenuView/>
@@ -304,7 +304,7 @@
                        VerticalOffset="{Binding PopupDictionaryService.TextMenuAPIPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.TextMenuAPIPosition.X}"
                        AllowsTransparency="True"
-                       Focusable="True" ForceCursor="True" StaysOpen="True"
+                       Focusable="True" ForceCursor="True" StaysOpen="False"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuAPI}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <textMenuAPI:TextMenuAPIView/>

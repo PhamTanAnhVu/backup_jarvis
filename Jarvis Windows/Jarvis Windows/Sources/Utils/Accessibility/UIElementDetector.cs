@@ -6,6 +6,11 @@ using Jarvis_Windows.Sources.Utils.WindowsAPI;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Windows.Automation.Text;
+using System.Windows.Forms;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Xml.Linq;
 
 namespace Jarvis_Windows.Sources.Utils.Accessibility;
 
@@ -19,12 +24,8 @@ public class UIElementDetector
     private static SendEventGA4? _sendEventGA4;
     private static bool _isUseAutoTuningPosition = true;
     private static IAutomationElementValueService? _automationElementValueService;
-
-    public PopupDictionaryService? PopupDictionaryService
-    {
-        get { return _popupDictionaryService; }
-        set => _popupDictionaryService = value;
-    }
+    private static string _currentSelectedText = String.Empty;
+    private static AutomationElement? _observerSelectionChangeElement;
 
     public static bool IsUseAutoTuningPosition { 
         get => _isUseAutoTuningPosition; 
@@ -50,9 +51,24 @@ public class UIElementDetector
         set => _sendEventGA4 = value;
     }
 
-    public IAutomationElementValueService AutomationElementValueService { 
+    public IAutomationElementValueService? AutomationElementValueService { 
         get => _automationElementValueService;
         set => _automationElementValueService = value; 
+    }
+    public static string CurrentSelectedText
+    {
+        get => _currentSelectedText; 
+        set => _currentSelectedText = value; 
+    }
+    public static AutomationElement? ObserverSelectionChangeElement 
+    {
+        get => _observerSelectionChangeElement; 
+        set => _observerSelectionChangeElement = value; 
+    }
+    public PopupDictionaryService? PopupDictionaryService 
+    { 
+        get => _popupDictionaryService; 
+        set => _popupDictionaryService = value; 
     }
 
     private UIElementDetector(PopupDictionaryService popupDictionaryService)
@@ -85,14 +101,8 @@ public class UIElementDetector
                         _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation());
                         _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation());
                     }
-                    Thread.Sleep(100);
+                    Thread.Sleep(500);
                 }
-            }
-            catch (ElementNotAvailableException)
-            {
-            }
-            catch (NullReferenceException)
-            {
             }
             catch (Exception)
             {
@@ -126,9 +136,13 @@ public class UIElementDetector
     private static void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
     {
         AutomationElement? newFocusElement = sender as AutomationElement;
+        if(newFocusElement != null)
+            RegisterSelectionChangedFor(newFocusElement);
 
         if (newFocusElement != null && newFocusElement != _focusingElement)
         {
+            //RegisterSelectionChangedFor(newFocusElement);
+            
             if (newFocusElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") ||
                 newFocusElement.Current.ControlType.ProgrammaticName.Equals("ControlType.Window") ||
                 newFocusElement.Current.ClassName.Equals(String.Empty))
@@ -146,8 +160,8 @@ public class UIElementDetector
                 _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
                 _popupDictionaryService.MainWindow.ResetBinding();
 
-                _popupDictionaryService.UpdateTextMenuOperationsPosition(CalculateElementLocation());
-                _popupDictionaryService.UpdateTextMenuAPIPosition();
+                /*_popupDictionaryService.UpdateTextMenuOperationsPosition(CalculateElementLocation());
+                _popupDictionaryService.UpdateTextMenuAPIPosition();*/
 
                 Debug.WriteLine("📩📩📩 Send GA4 Events Inject");
                 Task.Run(async () => await ExecuteSendEventInject());
@@ -251,20 +265,20 @@ public class UIElementDetector
         catch (NullReferenceException)
         {
             Debug.WriteLine($"Null reference exception");
-            _popupDictionaryService.ShowJarvisAction(false);
-            _popupDictionaryService.ShowMenuOperations(false);
+            PopupDictionaryService.ShowJarvisAction(false);
+            PopupDictionaryService.ShowMenuOperations(false);
         }
         catch (ElementNotAvailableException)
         {
             Debug.WriteLine($"Element is not available");
-            _popupDictionaryService.ShowJarvisAction(false);
-            _popupDictionaryService.ShowMenuOperations(false);
+            PopupDictionaryService.ShowJarvisAction(false);
+            PopupDictionaryService.ShowMenuOperations(false);
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"An error occurred: {ex.Message}");
-            _popupDictionaryService.ShowJarvisAction(false);
-            _popupDictionaryService.ShowMenuOperations(false);
+            PopupDictionaryService.ShowJarvisAction(false);
+            PopupDictionaryService.ShowMenuOperations(false);
         }
     }
 
@@ -274,18 +288,18 @@ public class UIElementDetector
         if (e.Property == AutomationElement.BoundingRectangleProperty)
         {
             Debug.WriteLine($"🟧🟧🟧 {automationElement?.Current.Name} Bounding Rectangle Changed");
-            _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
-            _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+            PopupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+            PopupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
 
-            _popupDictionaryService.UpdateTextMenuOperationsPosition(CalculateElementLocation());
-            _popupDictionaryService.UpdateTextMenuAPIPosition();
+            PopupDictionaryService.UpdateTextMenuOperationsPosition(CalculateElementLocation());
+            PopupDictionaryService.UpdateTextMenuAPIPosition();
 
         }
         else if (e.Property == AutomationElement.IsOffscreenProperty)
         {
             Debug.WriteLine($"👁️👁️👁️ {automationElement?.Current.ControlType.ProgrammaticName} Offscreen Property Changed");
-            _popupDictionaryService.ShowJarvisAction(false);
-            _popupDictionaryService.ShowMenuOperations(false);
+            PopupDictionaryService.ShowJarvisAction(false);
+            PopupDictionaryService.ShowMenuOperations(false);
         }
     }
 
@@ -448,4 +462,125 @@ public class UIElementDetector
 
         return result;
     }
+
+    private static void OnTextSelectionChange(object sender, AutomationEventArgs e)
+    {
+
+        AutomationElement? automationElement = sender as AutomationElement;
+        if (automationElement != null)
+        {
+            try
+            {
+                TextPattern? textPattern;
+                if (automationElement.TryGetCurrentPattern(TextPattern.Pattern, out object textPatternObj))
+                {
+                    textPattern = textPatternObj as TextPattern;
+                    if (textPattern != null)
+                    {
+                        if (textPattern.SupportedTextSelection == SupportedTextSelection.None)
+                        {
+                            //throw new NotSupportedException("TextSelection is not supported for this element.");
+                        }
+                        else
+                        {
+                            TextPatternRange[] selectedRanges = textPattern.GetSelection();
+                            if (selectedRanges != null && selectedRanges.Length > 0)
+                            {
+
+                                TextPatternRange selection = selectedRanges[0];
+                                if (selection != null)
+                                {
+                                    var rects = selection.GetBoundingRectangles();
+                                    if (rects != null && rects.Length > 0)
+                                    {
+                                        Rect boundingRect = rects[0];
+                                        _popupDictionaryService.ShowMenuSelectionActions(true);
+                                        _popupDictionaryService.ShowSelectionResponseView(false);
+                                        double screenHeight = SystemParameters.PrimaryScreenHeight;
+                                        double screenWidth = SystemParameters.PrimaryScreenWidth;
+                                        double xScale = screenWidth / 1920;
+                                        double yScale = screenHeight / 1080;
+                                        _popupDictionaryService.TextMenuOperationsPosition = new Point(boundingRect.X * xScale, boundingRect.Y * yScale + 20);
+                                        _popupDictionaryService.TextMenuAPIPosition = new Point(boundingRect.X * xScale, boundingRect.Y * yScale + 20);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                CurrentSelectedText = String.Empty;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+    }
+
+    public string GetSelectedText()
+    {
+        return CurrentSelectedText;
+    }
+
+    private static void RegisterSelectionChangedFor(AutomationElement automationElement)
+    {
+        //if(ObserverSelectionChangeElement != null)
+            //Automation.RemoveAutomationEventHandler(TextPattern.TextSelectionChangedEvent, ObserverSelectionChangeElement, OnTextSelectionChange);
+        ObserverSelectionChangeElement = automationElement;
+        Automation.AddAutomationEventHandler(TextPattern.TextSelectionChangedEvent, ObserverSelectionChangeElement, TreeScope.Element, OnTextSelectionChange);
+    }
+
+    private string GetTextFromFocusedControl()
+    {
+        try
+        {
+            int activeWinPtr = GetForegroundWindow().ToInt32();
+            int activeThreadId = 0, processId;
+            activeThreadId = GetWindowThreadProcessId(activeWinPtr, out processId);
+            int currentThreadId = GetCurrentThreadId();
+            if (activeThreadId != currentThreadId)
+                AttachThreadInput(activeThreadId, currentThreadId, true);
+            IntPtr activeCtrlId = GetFocus();
+
+            return GetText(activeCtrlId);
+        }
+        catch (Exception exp)
+        {
+            return exp.Message;
+        }
+    }
+
+    private string GetText(IntPtr handle)
+    {
+        int maxLength = 100;
+        IntPtr buffer = Marshal.AllocHGlobal((maxLength + 1) * 2);
+        SendMessageW(handle, WM_GETTEXT, maxLength, buffer);
+        string w = Marshal.PtrToStringUni(buffer);
+        Marshal.FreeHGlobal(buffer);
+        return w;
+    }
+
+    [DllImport("user32.dll", EntryPoint = "WindowFromPoint", CharSet = CharSet.Auto, ExactSpelling = true)]
+    public static extern IntPtr WindowFromPoint(Point pt);
+
+    [DllImport("user32.dll", EntryPoint = "SendMessageW")]
+    public static extern int SendMessageW([InAttribute] System.IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
+    public const int WM_GETTEXT = 13;
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+    internal static extern IntPtr GetForegroundWindow();
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+    internal static extern IntPtr GetFocus();
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    internal static extern int GetWindowThreadProcessId(int handle, out int processId);
+
+    [DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
+    internal static extern int AttachThreadInput(int idAttach, int idAttachTo, bool fAttach);
+    [DllImport("kernel32.dll")]
+    internal static extern int GetCurrentThreadId();
 }

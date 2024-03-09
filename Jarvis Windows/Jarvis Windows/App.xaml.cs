@@ -1,7 +1,5 @@
-﻿using Jarvis_Windows.Sources.MVVM.ViewModels;
-using Jarvis_Windows.Sources.MVVM.Views.JarvisActionView;
+﻿using Jarvis_Windows.Sources.MVVM.Views.JarvisActionView;
 using Jarvis_Windows.Sources.MVVM.Views.MainView;
-using Jarvis_Windows.Sources.Utils.Accessibility;
 using Jarvis_Windows.Sources.Utils.Core;
 using Jarvis_Windows.Sources.Utils.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,20 +10,22 @@ using Jarvis_Windows.Sources.DataAccess;
 using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
+using Jarvis_Windows.Sources.MVVM.Views;
+using Jarvis_Windows.Sources.Utils.Accessibility;
 
-namespace Jarvis_Windows;
-
-public partial class App : Application
+namespace Jarvis_Windows
 {
-    private ServiceProvider _serviceProvider;
-    private const string _uniqueEventName = "Jarvis Windows";
-    private EventWaitHandle _eventWaitHandle;
-
-    public App()
+    public partial class App : Application
     {
-        SingleInstanceWatcher();
+        private ServiceProvider _serviceProvider;
+        private const string _uniqueEventName = "Jarvis Windows";
+        private EventWaitHandle _eventWaitHandle;
 
-        IServiceCollection services = new ServiceCollection();
+        public App()
+        {
+            SingleInstanceWatcher();
+
+            IServiceCollection services = new ServiceCollection();
 
         services.AddSingleton<Func<Type, ViewModelBase>>(serviceProvider => viewModelType => (ViewModelBase)serviceProvider.GetRequiredService(viewModelType));
         services.AddSingleton<INavigationService, NavigationService>();
@@ -50,88 +50,91 @@ public partial class App : Application
             PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>()
         });
 
-        // Logging.Log("After MainView MainviewModel\n");
+            // Logging.Log("After MainView MainviewModel\n");
 
-        services.AddSingleton<JarvisActionViewModel>(provider => new JarvisActionViewModel
-        {
-            PopupDictionaryService = _serviceProvider.GetRequiredService<PopupDictionaryService>()
-        });
-
-        _serviceProvider = services.BuildServiceProvider();
-        SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
-    }
-
-
-    protected void OnStartup(object sender, StartupEventArgs e)
-    {
-        // Logging.Log("Before mainview OnStartup");
-        try
-        {
-            MainView mainView = _serviceProvider.GetRequiredService<MainView>();
-            // Logging.Log("After 1 mainview OnStartup");
-            mainView.Show();
-
-            // Logging.Log("After 2 mainview OnStartup");
-            _serviceProvider.GetRequiredService<PopupDictionaryService>().MainWindow = mainView;
-            // Logging.Log("After 3 mainview OnStartup");
-        }
-
-        catch (Exception ex)
-        {
-            
-        }
-    }
-
-    private void SingleInstanceWatcher()
-    {
-        try
-        {
-            this._eventWaitHandle = EventWaitHandle.OpenExisting(_uniqueEventName);
-            this._eventWaitHandle.Set();
-            this.Shutdown();
-        }
-        catch (WaitHandleCannotBeOpenedException)
-        {
-            this._eventWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, _uniqueEventName);
-        }
-
-        new Task(() =>
-        {
-            while (this._eventWaitHandle.WaitOne())
+            services.AddSingleton<JarvisActionViewModel>(provider => new JarvisActionViewModel
             {
-                Current.Dispatcher.BeginInvoke((Action)(() =>
-                {
-                    if (!Current.MainWindow.Equals(null))
-                    {
-                        var mw = Current.MainWindow;
+                PopupDictionaryService = _serviceProvider.GetRequiredService<PopupDictionaryService>()
+            });
 
-                        if (mw.WindowState == WindowState.Minimized || mw.Visibility != Visibility.Visible)
-                        {
-                            mw.Show();
-                            mw.WindowState = WindowState.Normal;
-                        }
-
-                        mw.Activate();
-                        mw.Topmost = true;
-                        mw.Topmost = false;
-                        mw.Focus();
-                    }
-                }));
-            }
-        })
-        .Start();
-    }
-
-
-    static void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
-    {
-        if (e.Mode == PowerModes.Suspend)
-        {
-            UIElementDetector.GetInstance().UnSubscribeToElementFocusChanged();
+            _serviceProvider = services.BuildServiceProvider();
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
         }
-        else if (e.Mode == PowerModes.Resume)
+
+
+        protected void OnStartup(object sender, StartupEventArgs e)
         {
-            UIElementDetector.GetInstance().SubscribeToElementFocusChanged();
+            // Logging.Log("Before mainview OnStartup");
+            try
+            {
+                MainView mainView = _serviceProvider.GetRequiredService<MainView>();
+                // Logging.Log("After 1 mainview OnStartup");
+                mainView.Show();
+
+                // Logging.Log("After 2 mainview OnStartup");
+                _serviceProvider.GetRequiredService<PopupDictionaryService>().MainWindow = mainView;
+                // Logging.Log("After 3 mainview OnStartup");
+            }
+
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void SingleInstanceWatcher()
+        {
+            try
+            {
+                this._eventWaitHandle = EventWaitHandle.OpenExisting(_uniqueEventName);
+                this._eventWaitHandle.Set();
+                this.Shutdown();
+            }
+            catch (WaitHandleCannotBeOpenedException)
+            {
+                this._eventWaitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, _uniqueEventName);
+            }
+
+            new Task(() =>
+            {
+                while (this._eventWaitHandle.WaitOne())
+                {
+                    Current.Dispatcher.BeginInvoke((Action)(() =>
+                    {
+                        if (!Current.MainWindow.Equals(null))
+                        {
+                            var mw = Current.MainWindow;
+
+                            if (mw.WindowState == WindowState.Minimized || mw.Visibility != Visibility.Visible)
+                            {
+                                mw.Show();
+                                mw.WindowState = WindowState.Normal;
+                            }
+
+                            mw.Activate();
+                            mw.Topmost = true;
+                            mw.Topmost = false;
+                            mw.Focus();
+                        }
+                    }));
+                }
+            })
+            .Start();
+        }
+
+
+        static void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            if (e.Mode == PowerModes.Suspend)
+            {
+                UIElementDetector.GetInstance().UnSubscribeToElementFocusChanged();
+            }
+            else if (e.Mode == PowerModes.Resume)
+            {
+                UIElementDetector.GetInstance().SubscribeToElementFocusChanged();
+            }
         }
     }
 }
+
+

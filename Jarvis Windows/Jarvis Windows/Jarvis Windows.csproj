@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows10.0.18362.0</TargetFramework>
+	  <TargetFramework>net8.0-windows10.0.20348.0</TargetFramework>
     <RootNamespace>Jarvis_Windows</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
@@ -14,6 +14,8 @@
     <Product>Jarvis AI</Product>
     <PackageId>JarvisAI</PackageId>
     <Title>Jarvis AI</Title>
+    <StartupObject>Jarvis_Windows.App</StartupObject>
+    <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -170,6 +172,10 @@
     <Resource Include="Assets\Images\scissors.png" />
     <Resource Include="Assets\Images\translate_img.png" />
     <Resource Include="Sources\MVVM\Views\Styles\JarvisStyle.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Sources\Utils\Accessibility\" />
   </ItemGroup>
 
 </Project>

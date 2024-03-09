@@ -54,6 +54,7 @@ public class SendEventGA4
 
     public async Task SendEvent(string eventName, Dictionary<string, object> eventParams = null)
     {
+        return;
         try
         {
             var body = CreateEventPayload(eventName, eventParams);
