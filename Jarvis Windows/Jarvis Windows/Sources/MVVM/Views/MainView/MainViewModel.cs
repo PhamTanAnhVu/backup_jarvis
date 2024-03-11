@@ -279,10 +279,8 @@ public class MainViewModel : ViewModelBase
         SendEventGA4 = sendEventGA4;
         AutomationElementValueService = automationElementValueService;
 
-        RemainingAPIUsage = (AppStatus.IsPackaged) 
-                                ? $"{Windows.Storage.ApplicationData.Current.LocalSettings.Values["ApiUsageRemaining"]} 🔥"
-                                : $"{DataConfiguration.ApiUsageRemaining} 🔥";
-        
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+
         IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
@@ -557,9 +555,7 @@ public class MainViewModel : ViewModelBase
             else
                 textFromAPI = await JarvisApi.Instance.AIHandler(textFromElement, _actionType);
 
-            RemainingAPIUsage = (AppStatus.IsPackaged)
-                                ? $"{Windows.Storage.ApplicationData.Current.LocalSettings.Values["ApiUsageRemaining"]} 🔥"
-                                : $"{DataConfiguration.ApiUsageRemaining} 🔥";
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
 
             IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
             IsNoAPIUsageRemain = !IsAPIUsageRemain;
@@ -570,8 +566,9 @@ public class MainViewModel : ViewModelBase
                 Debug.WriteLine($"🆘🆘🆘 {ErrorConstant.translateError}");
                 return;
             }
-
             
+
+
             if (_fromWindow != true) { AccessibilityService.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError); }
             else { MainWindowInputText = textFromAPI; }
             AutomationElementValueService.StoreAction(AccessibilityService.GetFocusingElement(), textFromElement);
@@ -662,9 +659,7 @@ public class MainViewModel : ViewModelBase
 
             }
 
-            RemainingAPIUsage = (AppStatus.IsPackaged)
-                                ? $"{Windows.Storage.ApplicationData.Current.LocalSettings.Values["ApiUsageRemaining"]} 🔥"
-                                : $"{DataConfiguration.ApiUsageRemaining} 🔥";
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
 
             IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
             IsNoAPIUsageRemain = !IsAPIUsageRemain;

@@ -1,10 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Net.Http;
+﻿using System;
 using System.Text;
+using Newtonsoft.Json;
+using System.Net.Http;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace Jarvis_Windows.Sources.DataAccess.Network;
 
@@ -15,15 +13,11 @@ public sealed class JarvisApi
 
     private static HttpClient? _client;
     private static string? _apiUrl;
-    private APILocalStorage APILocalStorage { get; set; }
-
+    private static string? _apiHeaderID;
     private JarvisApi()
     {
         _client = new HttpClient();
         _apiUrl = DataConfiguration.ApiUrl;
-
-        try { APILocalStorage = new APILocalStorage(); }
-        catch { }    
     }
 
     public static JarvisApi Instance
@@ -38,45 +32,16 @@ public sealed class JarvisApi
         }
     }
 
-    public void StoreUsageRemaining(int value)
-    {
-        if (AppStatus.IsPackaged)
-        {
-            APILocalStorage.ApiUsageRemaining = value;
-            APILocalStorage.WriteLocalStorage("ApiUsageRemaining", value.ToString());
-        }
-        else
-            DataConfiguration.WriteValue("ApiUsageRemaining", value);
-    }
-
     public async Task<string?> ApiHandler(string requestBody, string endPoint)
     {
-        string _apiHeaderID = "";
-        if (AppStatus.IsPackaged)
+        if (WindowLocalStorage.ReadLocalStorage("ApiHeaderID") == "")
         {
-            if (APILocalStorage.ApiHeaderID == "")
-            {
-                APILocalStorage.ApiHeaderID = Guid.NewGuid().ToString();
-                APILocalStorage.ApiUsageRemaining = 10;
-                APILocalStorage.WriteLocalStorage("ApiHeaderID", APILocalStorage.ApiHeaderID);
-                APILocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
-            }
-
-            _apiHeaderID = APILocalStorage.ApiHeaderID;
-
+            WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
+            WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
         }
-        else
-        {
-            _apiHeaderID = DataConfiguration.ApiHeaderID;
-            if (DataConfiguration.ApiHeaderID == "")
-            {
-                _apiHeaderID = Guid.NewGuid().ToString();
-                DataConfiguration.WriteValue("ApiUsageRemaining", 10);
-                DataConfiguration.WriteValue("ApiHeaderID", _apiHeaderID);
-            }
-            
-        }
-        
+
+        _apiHeaderID = WindowLocalStorage.ReadLocalStorage("ApiHeaderID");
+
         var contentData = new StringContent(requestBody, Encoding.UTF8, "application/json");
         try
         {
@@ -91,7 +56,7 @@ public sealed class JarvisApi
                 dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
 
                 int remainingUsage = responseObject.remainingUsage;
-                StoreUsageRemaining(remainingUsage);
+                WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
 
                 string finalMessage = responseObject.message;
                 return finalMessage;
@@ -105,9 +70,7 @@ public sealed class JarvisApi
         }
     }
 
-
     // ---------------------------------- Non custom AI Actions ---------------------------------- //
-
     public async Task<string?> TranslateHandler(String content, String lang)
     {
         var requestBody = JsonConvert.SerializeObject(new

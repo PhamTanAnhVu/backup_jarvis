@@ -1,19 +1,16 @@
 ﻿using System;
-using System.IO;
 using System.Text;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
-using Jarvis_Windows.Sources.DataAccess;
-using System.Text.Json;
+using Windows.ApplicationModel;
 using System.Collections.Generic;
-using System.Windows;
+using Jarvis_Windows.Sources.DataAccess;
 
 public class SendEventGA4
 {
     private const int DEFAULT_ENGAGEMENT_TIME_IN_MSEC = 100;
     private const int SESSION_EXPIRATION_IN_MIN = 30;
-    private GA4LocalStorage GA4LocalStorage { get; set; } // Package mode only
     
     private readonly HttpClient _httpClient;
     private readonly string _ga4Endpoint;
@@ -25,31 +22,17 @@ public class SendEventGA4
     private long _sessionTimestamp;
     private string _version; // App version, only available in package mode
 
-    
     public SendEventGA4()
     {
-        _httpClient = new HttpClient();
-        _ga4Endpoint = "https://www.google-analytics.com/mp/collect";
-        _measurementID = DataConfiguration.MeasurementID;
-        _apiSecret = DataConfiguration.ApiSecret;
-
-        try
-        {
-            GA4LocalStorage = new GA4LocalStorage();
-            _clientID = GA4LocalStorage.ClientID;
-            _userID = GA4LocalStorage.UserID;
-            _sessionID = GA4LocalStorage.SessionID;
-            _sessionTimestamp = GA4LocalStorage.SessionTimestamp;
-            _version = GA4LocalStorage.AppVersion;
-
-        }
-        catch
-        {
-            _clientID = DataConfiguration.ClientID;
-            _userID = DataConfiguration.UserID;
-            _sessionID = DataConfiguration.SessionID;
-            _sessionTimestamp = long.Parse(DataConfiguration.SessionTimestamp);
-        }
+        _httpClient         = new HttpClient();
+        _ga4Endpoint        = "https://www.google-analytics.com/mp/collect";
+        _measurementID      = DataConfiguration.MeasurementID;
+        _apiSecret          = DataConfiguration.ApiSecret;
+        _clientID           = WindowLocalStorage.ReadLocalStorage("ClientID");
+        _userID             = WindowLocalStorage.ReadLocalStorage("UserID");
+        _sessionID          = WindowLocalStorage.ReadLocalStorage("SessionID");
+        _sessionTimestamp   = long.Parse(WindowLocalStorage.ReadLocalStorage("SessionTimestamp"));
+        _version            = WindowLocalStorage.ReadLocalStorage("AppVersion");
     }
 
     public async Task SendEvent(string eventName, Dictionary<string, object> eventParams = null)
@@ -78,54 +61,21 @@ public class SendEventGA4
         if (!AppStatus.IsPackaged) return;
 
         string _recentVersion = "";
-        try { _recentVersion = GA4LocalStorage.GetAppVersion(); }
-        catch { return; }
+
+        Package package = Package.Current;
+        PackageVersion version = package.Id.Version;
+        _recentVersion = $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
         
-        if (_version == "")     
-            await SendEvent("windows_app_installed");
-        else if (_version != _recentVersion)
-            await SendEvent("windows_app_updated");
-        
-        GA4LocalStorage.WriteLocalStorage("AppVersion", _recentVersion);
+        if (_version == "")  await SendEvent("windows_app_installed");
+        else if (_version != _recentVersion) await SendEvent("windows_app_updated");
+
+        WindowLocalStorage.WriteLocalStorage("AppVersion", _recentVersion);
         _version = _recentVersion;
     }
 
     private JObject CreateEventPayload(string eventName, Dictionary<string, object> eventParams)
     {
-        if (AppStatus.IsPackaged)  // Package mode
-        {
-            GA4LocalStorage.GetOrCreateSessionData();
-            _sessionID = GA4LocalStorage.SessionID;
-            _sessionTimestamp = GA4LocalStorage.SessionTimestamp;
-
-            GA4LocalStorage.WriteLocalStorage("SessionID", _sessionID);
-            GA4LocalStorage.WriteLocalStorage("SessionTimeStamp", _sessionTimestamp.ToString());
-        }
-
-        else // Debug mode
-        {
-            long _currentTimeInMs = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
-            if (string.IsNullOrEmpty(_sessionID))
-            {
-                _sessionID = _currentTimeInMs.ToString();
-                _sessionTimestamp = _currentTimeInMs;
-            }
-
-            else if (!string.IsNullOrEmpty(_sessionID) && _sessionTimestamp != 0)
-            {
-                long _durationInMin = (_currentTimeInMs - _sessionTimestamp) / 60000;
-                if (_durationInMin > SESSION_EXPIRATION_IN_MIN)
-                {
-                    _sessionID = "";
-                    _sessionTimestamp = 0;
-                }
-                else _sessionTimestamp = _currentTimeInMs;
-            }
-            
-            DataConfiguration.WriteValue("SessionID", _sessionID);
-            DataConfiguration.WriteValue("SessionTimestamp", _sessionTimestamp);
-        }
-
+        GetOrCreateSessionData();
         var payload = JObject.FromObject(new
         {
             client_id = _clientID,
@@ -156,5 +106,30 @@ public class SendEventGA4
         }
 
         return payload;
+    }
+
+    private void GetOrCreateSessionData()
+    {
+        long _currentTimeInMs = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
+        
+        if (string.IsNullOrEmpty(_sessionID))
+        {
+            _sessionID = _currentTimeInMs.ToString();
+            _sessionTimestamp = _currentTimeInMs;
+        }
+
+        else if (!string.IsNullOrEmpty(_sessionID) && _sessionTimestamp != 0)
+        {
+            long _durationInMin = (_currentTimeInMs - _sessionTimestamp) / 60000;
+            if (_durationInMin > SESSION_EXPIRATION_IN_MIN)
+            {
+                _sessionID = "";
+                _sessionTimestamp = 0;
+            }
+            else _sessionTimestamp = _currentTimeInMs;
+        }
+
+        WindowLocalStorage.WriteLocalStorage("SessionID", _sessionID);
+        WindowLocalStorage.WriteLocalStorage("SessionTimeStamp", _sessionTimestamp.ToString());
     }
 }
