@@ -54,7 +54,7 @@ public sealed class JarvisApi
         string _apiHeaderID = "";
         if (AppStatus.IsPackaged)
         {
-            if (APILocalStorage.ApiUsageRemaining == 0)
+            if (APILocalStorage.ApiHeaderID == "")
             {
                 APILocalStorage.ApiHeaderID = Guid.NewGuid().ToString();
                 APILocalStorage.ApiUsageRemaining = 10;
@@ -67,11 +67,14 @@ public sealed class JarvisApi
         }
         else
         {
-            _apiHeaderID = (DataConfiguration.ApiHeaderID == "" || DataConfiguration.ApiUsageRemaining == 0) 
-                            ? Guid.NewGuid().ToString() : DataConfiguration.ApiHeaderID;
-
-            DataConfiguration.WriteValue("ApiHeaderID", _apiHeaderID);
-            DataConfiguration.WriteValue("ApiUsageRemaining", 10);
+            _apiHeaderID = DataConfiguration.ApiHeaderID;
+            if (DataConfiguration.ApiHeaderID == "")
+            {
+                _apiHeaderID = Guid.NewGuid().ToString();
+                DataConfiguration.WriteValue("ApiUsageRemaining", 10);
+                DataConfiguration.WriteValue("ApiHeaderID", _apiHeaderID);
+            }
+            
         }
         
         var contentData = new StringContent(requestBody, Encoding.UTF8, "application/json");

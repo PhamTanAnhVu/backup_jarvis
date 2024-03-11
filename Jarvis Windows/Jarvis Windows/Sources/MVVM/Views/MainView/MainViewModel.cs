@@ -38,6 +38,8 @@ public class MainViewModel : ViewModelBase
     private string _textMenuAPI;
     private bool _isSpinningJarvisIconTextMenu;
     private double _textMenuAPIscrollBarHeight;
+    private bool _isAPIUsageRemain;
+    private bool _isNoAPIUsageRemain;
 
     private ObservableCollection<ButtonViewModel> _textMenuButtons;
     public List<Language> TextMenuLanguages { get; set; }
@@ -58,6 +60,7 @@ public class MainViewModel : ViewModelBase
     public RelayCommand PinJarvisButtonCommand { get; set; }
     public RelayCommand UndoCommand { get; set; }
     public RelayCommand RedoCommand { get; set; }
+    public RelayCommand UpgradePlanCommand { get; set; }
 
 
     public INavigationService NavigationService
@@ -239,6 +242,26 @@ public class MainViewModel : ViewModelBase
         }
     }
 
+    public bool IsAPIUsageRemain
+    {
+        get { return _isAPIUsageRemain; }
+        set
+        {
+            _isAPIUsageRemain = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool IsNoAPIUsageRemain
+    {
+        get { return _isNoAPIUsageRemain; }
+        set
+        {
+            _isNoAPIUsageRemain = value;
+            OnPropertyChanged();
+        }
+    }
+
     public static IAutomationElementValueService AutomationElementValueService 
     { 
         get => _automationElementValueService; 
@@ -259,6 +282,9 @@ public class MainViewModel : ViewModelBase
         RemainingAPIUsage = (AppStatus.IsPackaged) 
                                 ? $"{Windows.Storage.ApplicationData.Current.LocalSettings.Values["ApiUsageRemaining"]} 🔥"
                                 : $"{DataConfiguration.ApiUsageRemaining} 🔥";
+        
+        IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
+        IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
         ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
         HideMenuOperationsCommand = new RelayCommand(o => { PopupDictionaryService.ShowMenuOperations(false); }, o => true);
@@ -276,6 +302,8 @@ public class MainViewModel : ViewModelBase
         ShowTextMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
         HideTextMenuAPICommand = new RelayCommand(ExecuteHideTextMenuAPICommand, o => true);
         LanguageComboBoxCommand = new RelayCommand(OnLanguageTextMenuSelectionChanged, o => true);
+
+        UpgradePlanCommand = new RelayCommand(ExecuteUpgradePlanCommand, o => true);
 
 
         string relativePath = Path.Combine("Appsettings", "Configs", "languages_supported.json");
@@ -529,16 +557,21 @@ public class MainViewModel : ViewModelBase
             else
                 textFromAPI = await JarvisApi.Instance.AIHandler(textFromElement, _actionType);
 
+            RemainingAPIUsage = (AppStatus.IsPackaged)
+                                ? $"{Windows.Storage.ApplicationData.Current.LocalSettings.Values["ApiUsageRemaining"]} 🔥"
+                                : $"{DataConfiguration.ApiUsageRemaining} 🔥";
+
+            IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
+            IsNoAPIUsageRemain = !IsAPIUsageRemain;
+
+
             if (textFromAPI == null)
             {
                 Debug.WriteLine($"🆘🆘🆘 {ErrorConstant.translateError}");
                 return;
             }
 
-            RemainingAPIUsage = (AppStatus.IsPackaged)
-                                ? $"{Windows.Storage.ApplicationData.Current.LocalSettings.Values["ApiUsageRemaining"]} 🔥"
-                                : $"{DataConfiguration.ApiUsageRemaining} 🔥";
-
+            
             if (_fromWindow != true) { AccessibilityService.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError); }
             else { MainWindowInputText = textFromAPI; }
             AutomationElementValueService.StoreAction(AccessibilityService.GetFocusingElement(), textFromElement);
@@ -574,7 +607,7 @@ public class MainViewModel : ViewModelBase
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
         TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
     }
-
+    
     private void InitializeButtonsTextMenu()
     {
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
@@ -629,6 +662,14 @@ public class MainViewModel : ViewModelBase
 
             }
 
+            RemainingAPIUsage = (AppStatus.IsPackaged)
+                                ? $"{Windows.Storage.ApplicationData.Current.LocalSettings.Values["ApiUsageRemaining"]} 🔥"
+                                : $"{DataConfiguration.ApiUsageRemaining} 🔥";
+
+            IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
+            IsNoAPIUsageRemain = !IsAPIUsageRemain;
+
+
             if (textFromAPI == null)
             {
                 Debug.WriteLine($"🆘🆘🆘 {ErrorConstant.translateError}");
@@ -654,4 +695,22 @@ public class MainViewModel : ViewModelBase
             await SendEventGA4.SendEvent("do_ai_action", eventParams);
         }
     }
+
+    public async void ExecuteUpgradePlanCommand(object obj)
+    {
+        try
+        {
+            string websiteUrl = "https://admin.jarvis.cx/pricing/overview";
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = websiteUrl,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            return;
+        }
+    }
+
 }

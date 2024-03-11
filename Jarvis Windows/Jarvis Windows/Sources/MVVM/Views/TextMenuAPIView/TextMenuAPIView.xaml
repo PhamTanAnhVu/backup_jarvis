@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
              xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView"
              mc:Ignorable="d" 
              MinHeight="88" MaxHeight="326" Width="398.742">
@@ -18,56 +19,95 @@
     <Border CornerRadius="15" Background="#FFFFFF" Padding="8 8 8 8">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition MinHeight="68" MaxHeight="306"/>
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" >
-                <Image x:Name="img" Source="../../../../Assets/Images/jarvis_logo.png" Width="24" Height="24" 
-                       Visibility="{Binding IsSpinningJarvisIconTextMenu ,Converter={StaticResource VisibilityConverter}}">
+            <Grid Grid.Row="0" Style="{StaticResource GridIsAPIUsageRemain}">
+                <Grid.RowDefinitions>
+                    <RowDefinition MinHeight="68" MaxHeight="306"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Image x:Name="img" Source="../../../../Assets/Images/jarvis_logo.png" Width="24" Height="24" 
+                           Visibility="{Binding IsSpinningJarvisIconTextMenu ,Converter={StaticResource VisibilityConverter}}">
 
-                    <Image.RenderTransformOrigin>
-                        <Point X="0.5" Y="0.5"/>
-                    </Image.RenderTransformOrigin>
+                        <Image.RenderTransformOrigin>
+                            <Point X="0.5" Y="0.5"/>
+                        </Image.RenderTransformOrigin>
 
-                    <Image.Style>
-                        <Style TargetType="Image">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="True">
-                                    <Setter Property="RenderTransform">
-                                        <Setter.Value>
-                                            <RotateTransform Angle="360"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <DataTrigger.EnterActions>
-                                        <BeginStoryboard Storyboard="{StaticResource SpinAnimation}" />
-                                    </DataTrigger.EnterActions>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="False">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="True">
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <RotateTransform Angle="360"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard Storyboard="{StaticResource SpinAnimation}" />
+                                        </DataTrigger.EnterActions>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="False">
 
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
 
-                <ScrollViewer MinHeight="80" MaxHeight="300"
-                              VerticalScrollBarVisibility="Hidden">
-                    <TextBlock 
-                        TextWrapping="Wrap"
-                        Text="{Binding TextMenuAPI}" />
-                   
-                
-                </ScrollViewer>
+                    <ScrollViewer MinHeight="80" MaxHeight="300"
+                                  VerticalScrollBarVisibility="Hidden">
+                        <TextBlock 
+                            TextWrapping="Wrap"
+                            Text="{Binding TextMenuAPI}" />
+                    </ScrollViewer>
+                </Grid>
 
+                <Grid Grid.Row="1">
+                    <Button 
+                        Style="{StaticResource TextMenuButton}"
+                        HorizontalAlignment="Center"
+                        Command="{Binding HideTextMenuAPICommand}" 
+                        Content="Hide"/>
+                </Grid>
             </Grid>
 
-            <Grid Grid.Row="1">
-                <Button 
-                    Style="{StaticResource TextMenuButton}"
-                    HorizontalAlignment="Center"
-                    Command="{Binding HideTextMenuAPICommand}" 
-                    Content="Hide"/>
+            <Grid Grid.Row="1" Style="{StaticResource GridIsNoAPIUsageRemain}">
+                <Border Background="White" CornerRadius="20" Width="287.74" Height="203" Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="58"/>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="44"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <emoji:TextBlock Text="🧯" FontFamily="sans-serif" FontSize="30" Height="36" 
+                                            HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <TextBlock Text="You have exhausted all of your DAILY tokens. Let get more tokens to fireeee!" 
+                                        Width="273" Height="40" FontFamily="sans-serif" FontSize="14" TextWrapping="Wrap" 
+                                        TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <Button Command="{Binding UpgradePlanCommand}"
+                                    FontFamily="sans-serif" FontSize="14"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Width="244.74" Height="44" Style="{StaticResource UpgradePlanButton}">
+                                <Button.Content>
+                                    <emoji:TextBlock Text="🔥Upgrade your plan now" FontFamily="sans-serif" FontSize="14"
+                                                    Foreground="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Border>
             </Grid>
         </Grid>
     </Border>

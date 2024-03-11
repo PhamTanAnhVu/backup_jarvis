@@ -96,6 +96,6 @@ public class APILocalStorage : WindowStorageService
     public APILocalStorage()
     {
         ApiHeaderID = InitializeAndWrite("ApiHeaderID", "");
-        ApiUsageRemaining = int.Parse(InitializeAndWrite("ApiUsageRemaining", "0"));
+        ApiUsageRemaining = int.Parse(InitializeAndWrite("ApiUsageRemaining", "10"));
     }
 }

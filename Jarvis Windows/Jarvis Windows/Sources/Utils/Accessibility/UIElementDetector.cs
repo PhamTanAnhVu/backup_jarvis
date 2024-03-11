@@ -501,7 +501,7 @@ public class UIElementDetector
                                         double xScale = screenWidth / 1920;
                                         double yScale = screenHeight / 1080;
                                         _popupDictionaryService.TextMenuOperationsPosition = new Point(boundingRect.X * xScale, boundingRect.Y * yScale + 20);
-                                        _popupDictionaryService.TextMenuAPIPosition = new Point(boundingRect.X * xScale, boundingRect.Y * yScale + 20);
+                                        _popupDictionaryService.TextMenuAPIPosition = new Point(boundingRect.X * xScale, boundingRect.Y * yScale + 60);
                                     }
                                 }
                             }

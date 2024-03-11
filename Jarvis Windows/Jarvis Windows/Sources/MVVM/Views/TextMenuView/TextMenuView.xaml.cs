@@ -32,7 +32,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.TextMenuView
 
         private async void MouseDoubleClicked(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            return;
+            // return;
             IDataObject tmpClipboard = System.Windows.Clipboard.GetDataObject();
             System.Windows.Clipboard.Clear();
 
