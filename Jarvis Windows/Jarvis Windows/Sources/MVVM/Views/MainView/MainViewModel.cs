@@ -14,6 +14,7 @@ using System.Windows;
 using Jarvis_Windows.Sources.DataAccess;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using Jarvis_Windows.Sources.Utils.Accessibility;
+using Windows.Devices.Enumeration;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 
@@ -282,6 +283,14 @@ public class MainViewModel : ViewModelBase
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
 
         IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
+
+        //TODO:Code test
+        if(IsAPIUsageRemain == false)
+        {
+            WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
+            WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
+            IsAPIUsageRemain = true;
+        }
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
         ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
@@ -526,7 +535,13 @@ public class MainViewModel : ViewModelBase
 
             var textFromElement = "";
             var textFromAPI = "";
-            try { textFromElement = AccessibilityService.GetTextFromFocusingEditElement(); }
+            try 
+            { 
+                textFromElement = (String.IsNullOrEmpty(UIElementDetector.CurrentSelectedText))? 
+                    AccessibilityService.GetTextFromFocusingEditElement() : 
+                    UIElementDetector.CurrentSelectedText;
+                Debug.WriteLine($"🎇🎇🎇 TEXT FROM ELEMENT {textFromElement}");
+            }
             catch
             {
                 textFromElement = this.MainWindowInputText;

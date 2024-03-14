@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml.Linq;
+using Windows.Graphics.Printing3D;
 
 namespace Jarvis_Windows.Sources.Utils.Accessibility;
 
@@ -136,16 +137,19 @@ public class UIElementDetector
     private static void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
     {
         AutomationElement? newFocusElement = sender as AutomationElement;
-        if(newFocusElement != null)
+        /*if(newFocusElement != null)
             RegisterSelectionChangedFor(newFocusElement);
+
+        AutomationElement? editElement = FindFirstElementType(newFocusElement, ControlType.Group);
+        if (editElement != null)
+        {
+            Debug.WriteLine($"EDIT ELEMENT {editElement.Current.Name}");
+        }*/
 
         if (newFocusElement != null && newFocusElement != _focusingElement)
         {
-            //RegisterSelectionChangedFor(newFocusElement);
-            
             if (newFocusElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") ||
-                newFocusElement.Current.ControlType.ProgrammaticName.Equals("ControlType.Window") ||
-                newFocusElement.Current.ClassName.Equals(String.Empty))
+                newFocusElement.Current.ControlType.ProgrammaticName.Equals("ControlType.Window"))
                 return;
 
             if (IsEditableElement(newFocusElement))
@@ -153,16 +157,11 @@ public class UIElementDetector
                 _focusingElement = newFocusElement;
                 // Publish Jarvis Action Position to EventAggregator
                 EventAggregator.PublishJarvisActionPositionChanged(_focusingElement.Current.AutomationId, EventArgs.Empty);
-
                 _popupDictionaryService.ShowJarvisAction(true);
                 _popupDictionaryService.ShowMenuOperations(false);
                 _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
                 _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
                 _popupDictionaryService.MainWindow.ResetBinding();
-
-                /*_popupDictionaryService.UpdateTextMenuOperationsPosition(CalculateElementLocation());
-                _popupDictionaryService.UpdateTextMenuAPIPosition();*/
-
                 Debug.WriteLine("📩📩📩 Send GA4 Events Inject");
                 Task.Run(async () => await ExecuteSendEventInject());
 
@@ -186,21 +185,9 @@ public class UIElementDetector
                     _popupDictionaryService.ShowJarvisAction(false);
                     _popupDictionaryService.ShowMenuOperations(false);
                 }
-                catch (ArgumentException)
+                catch (Exception)
                 {
-                    Debug.WriteLine($"❌❌❌ Argument Exception");
-                }
-                catch (NullReferenceException)
-                {
-                    Debug.WriteLine($"Null reference exception");
-                }
-                catch (ElementNotAvailableException)
-                {
-                    Debug.WriteLine($"❌❌❌ Element is not available");
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"❌❌❌ Exception: {ex.Message}");
+                    throw;
                 }
 
             }
@@ -318,33 +305,33 @@ public class UIElementDetector
         string strResult = String.Empty;
         if (_focusingElement != null)
         {
-
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
             CancellationToken cancellationToken = cancellationTokenSource.Token;
 
             Task setValueTask = Task.Run(() =>
             {
-                Debug.WriteLine($"❌❌❌ Set Value of {_focusingElement.Current.ClassName} {_focusingElement.Current.ControlType.ProgrammaticName}");
                 try
                 {
                     ValuePattern? valuePattern = _focusingElement.GetCurrentPattern(ValuePattern.Pattern) as ValuePattern;
                     if (valuePattern != null)
                     {
                         strResult = valuePattern.Current.Value.ToString();
-                        valuePattern.SetValue(value);
+
+                        if(String.IsNullOrEmpty(CurrentSelectedText))
+                        {
+                            valuePattern.SetValue(value);
+                        }
+                        else
+                        {
+                            strResult = strResult.Replace(CurrentSelectedText, value);
+                            valuePattern.SetValue(strResult);
+                            CurrentSelectedText = String.Empty;
+                        }
                     }    
                 }
-                catch (NullReferenceException)
+                catch (Exception)
                 {
-                    Debug.WriteLine($"Null reference exception");
-                }
-                catch (ElementNotAvailableException)
-                {
-                    Debug.WriteLine($"❌❌❌ Element is not available");
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"❌❌❌ Exception: {ex.Message}");
+                    throw;
                 }
             });
 
@@ -583,4 +570,34 @@ public class UIElementDetector
     internal static extern int AttachThreadInput(int idAttach, int idAttachTo, bool fAttach);
     [DllImport("kernel32.dll")]
     internal static extern int GetCurrentThreadId();
+
+    private static AutomationElement FindFirstElementType(AutomationElement automationElement, ControlType controlType)
+    {
+        AutomationElement? element = null;
+        try
+        {
+            IntPtr handle = NativeUser32API.GetForegroundWindow();
+            AutomationElement rootElement = AutomationElement.FromHandle(handle);
+            var elementColections = rootElement.FindAll(TreeScope.Subtree, new PropertyCondition(AutomationElement.ControlTypeProperty, controlType));
+            Debug.WriteLine("======================================================================================");
+            Debug.WriteLine("ROOT ELEMENT: " + rootElement.Current.Name);
+            Debug.WriteLine("GROUP ELEMENT COUNT: " + elementColections.Count);
+            if(elementColections.Count > 0)
+            {
+                foreach (AutomationElement groupElement in elementColections)
+                {
+                    AutomationElementCollection childs = groupElement.FindAll(TreeScope.Children, System.Windows.Automation.Condition.TrueCondition);
+                    foreach (AutomationElement child in childs)
+                    {
+                        Debug.WriteLine("CHILD ELEMENT: " + child.Current.ControlType.ProgrammaticName);
+                    }
+                }
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+        return element;
+    }
 }

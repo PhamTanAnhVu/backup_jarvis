@@ -246,6 +246,9 @@ public class TextMenuViewModel : ViewModelBase
                 return;
             }
 
+            //TODO: Test
+            UIElementDetector.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError);
+
             TextMenuAPI = textFromAPI;
         }
         catch { }
