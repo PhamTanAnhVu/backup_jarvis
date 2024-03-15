@@ -14,6 +14,11 @@ public class PopupDictionaryService : ObserveralObject
     private bool _isShowMenuOperations;
     private bool _isShowTextMenuOperations;
     private bool _isShowTextMenuAPI;
+    private bool _isShowSettingMenu;
+    private bool _jarvisActionVisibility;
+    private bool _textMenuSelectionVisibility;
+    private bool _aIChatSidebarVisibility;
+
 
     private Point _jarvisActionPosition;
     private Point _menuOperationsPosition;    
@@ -22,7 +27,7 @@ public class PopupDictionaryService : ObserveralObject
 
     private static String? _targetLanguage;
     private Point _automationElementVisualPos;
-
+    
     public static  String TargetLangguage
     {
         get { return _targetLanguage; }
@@ -52,7 +57,17 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-
+    
+    public bool IsShowSettingMenu
+    {
+        get { return _isShowSettingMenu; }
+        set
+        {
+            _isShowSettingMenu = value;
+            OnPropertyChanged();
+        }
+    }
+    
     public Point JarvisActionPosition
     {
         get { return _jarvisActionPosition; }
@@ -91,6 +106,34 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
+    public bool JarvisActionVisibility
+    {
+        get { return _jarvisActionVisibility; }
+        set
+        {
+            _jarvisActionVisibility = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool TextMenuSelectionVisibility
+    {
+        get { return _textMenuSelectionVisibility; }
+        set
+        {
+            _textMenuSelectionVisibility = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool AIChatSidebarVisibility
+    {
+        get { return _aIChatSidebarVisibility; }
+        set
+        {
+            _aIChatSidebarVisibility = value;
+            OnPropertyChanged();
+        }
+    }
 
     public Point TextMenuOperationsPosition
     {
@@ -126,7 +169,7 @@ public class PopupDictionaryService : ObserveralObject
 
     public void ShowJarvisAction(bool isShow)
     {
-        IsShowJarvisAction = isShow;
+        IsShowJarvisAction = isShow & JarvisActionVisibility;
     }
 
     private Point ConvertFromSystemCoorToVisualCoord(Point systemPoint)
@@ -189,12 +232,12 @@ public class PopupDictionaryService : ObserveralObject
 
     public void ShowMenuOperations(bool isShow)
     {
-        IsShowMenuOperations = isShow;
+        IsShowMenuOperations = isShow & JarvisActionVisibility;
     }
 
     public void ShowMenuSelectionActions(bool isShow)
     {
-        IsShowTextMenuOperations = isShow;
+        IsShowTextMenuOperations = isShow & TextMenuSelectionVisibility;
     }
 
     public void UpdateMenuOperationsPosition(Point systemPoint, Rect elementRectBounding)
@@ -221,7 +264,6 @@ public class PopupDictionaryService : ObserveralObject
     public void UpdateTextMenuOperationsPosition(Point systemPoint)
     {
         Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
-        // TextMenuOperationsPosition = MenuOperationsPosition;
     }
 
     public void UpdateTextMenuAPIPosition()

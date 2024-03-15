@@ -15,6 +15,11 @@ using Jarvis_Windows.Sources.DataAccess;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using Jarvis_Windows.Sources.Utils.Accessibility;
 using Windows.Devices.Enumeration;
+using System.Windows.Media;
+using System.Windows.Threading;
+using System.Windows.Documents;
+using Windows.ApplicationModel.Background;
+using System.Windows.Controls.Primitives;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 
@@ -32,7 +37,6 @@ public class MainViewModel : ViewModelBase
     private double _scrollBarHeight;
     private ObservableCollection<ButtonViewModel> _fixedButtons;
     private ObservableCollection<ButtonViewModel> _dynamicButtons;
-    private string _previousTextFromInput;
     private static IAutomationElementValueService _automationElementValueService;
 
     private int _languageSelectedIndex;
@@ -42,6 +46,9 @@ public class MainViewModel : ViewModelBase
     private bool _isAPIUsageRemain;
     private bool _isNoAPIUsageRemain;
 
+    private string _usernameFirstLetter;
+    private string _username;
+    private bool _isMainWindowInputTextEmpty;
     private ObservableCollection<ButtonViewModel> _textMenuButtons;
     public List<Language> TextMenuLanguages { get; set; }
     public RelayCommand TextMenuAICommand { get; set; }
@@ -62,8 +69,10 @@ public class MainViewModel : ViewModelBase
     public RelayCommand UndoCommand { get; set; }
     public RelayCommand RedoCommand { get; set; }
     public RelayCommand UpgradePlanCommand { get; set; }
-
-
+    public RelayCommand LoginCommand { get; set; }
+    public RelayCommand ShowSettingsCommand { get; set; }
+    public ObservableCollection<ToggleButtons> ToggleButtons { get; set; }
+    private List<DispatcherTimer> StopDotTimer { get; set; }
     public INavigationService NavigationService
     {
         get => _navigationService;
@@ -74,25 +83,25 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-        public PopupDictionaryService PopupDictionaryService
+    public PopupDictionaryService PopupDictionaryService
+    {
+        get { return _popupDictionaryService; }
+        set
         {
-            get { return _popupDictionaryService; }
-            set
-            {
-                _popupDictionaryService = value;
-                OnPropertyChanged();
-            }
+            _popupDictionaryService = value;
+            OnPropertyChanged();
         }
+    }
 
-        public UIElementDetector AccessibilityService
+    public UIElementDetector AccessibilityService
+    {
+        get { return _accessibilityService; }
+        set
         {
-            get { return _accessibilityService; }
-            set
-            {
-                _accessibilityService = value;
-                OnPropertyChanged();
-            }
+            _accessibilityService = value;
+            OnPropertyChanged();
         }
+    }
 
     public bool IsSpinningJarvisIcon
     {
@@ -104,6 +113,21 @@ public class MainViewModel : ViewModelBase
         }
     }
 
+    public bool IsMainWindowInputTextEmpty
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(MainWindowInputText)) _isMainWindowInputTextEmpty = true;
+            else _isMainWindowInputTextEmpty = false;
+            return _isMainWindowInputTextEmpty;
+        }
+        set
+        {
+            _isMainWindowInputTextEmpty = value;
+            OnPropertyChanged();
+        }
+    }
+
     public string MainWindowInputText
     {
         get { return _mainWindowInputText; }
@@ -111,6 +135,7 @@ public class MainViewModel : ViewModelBase
         {
             _mainWindowInputText = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(IsMainWindowInputTextEmpty));
         }
     }
     
@@ -243,6 +268,26 @@ public class MainViewModel : ViewModelBase
         }
     }
 
+    public string UsernameFirstLetter
+    {
+        get { return _usernameFirstLetter; }
+        set
+        {
+            _usernameFirstLetter = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public string Username
+    {
+        get { return _username; }
+        set
+        {
+            _username = value;
+            OnPropertyChanged();
+        }
+    }
+
     public bool IsAPIUsageRemain
     {
         get { return _isAPIUsageRemain; }
@@ -311,7 +356,8 @@ public class MainViewModel : ViewModelBase
         LanguageComboBoxCommand = new RelayCommand(OnLanguageTextMenuSelectionChanged, o => true);
 
         UpgradePlanCommand = new RelayCommand(ExecuteUpgradePlanCommand, o => true);
-
+        LoginCommand = new RelayCommand(ExecuteLoginCommand, o => true);
+        ShowSettingsCommand = new RelayCommand(o => { PopupDictionaryService.IsShowSettingMenu = !PopupDictionaryService.IsShowSettingMenu; }, o => true);
 
         string relativePath = Path.Combine("Appsettings", "Configs", "languages_supported.json");
         string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
@@ -335,6 +381,10 @@ public class MainViewModel : ViewModelBase
 
         InitializeButtons();
         InitializeButtonsTextMenu();
+        InitializeSettingToggleButtons();
+
+        Username = "Anh Vu";
+        UsernameFirstLetter = Username[0].ToString();
     }
 
     private void UpdateButtonVisibility()
@@ -474,17 +524,17 @@ public class MainViewModel : ViewModelBase
         //}
     //}
 
-        private async void ExecuteCheckUpdate()
-        {
-            // Checking App update here
-            await SendEventGA4.CheckVersion();
-        }
+    private async void ExecuteCheckUpdate()
+    {
+        // Checking App update here
+        await SendEventGA4.CheckVersion();
+    }
 
-        private async void ExecuteSendEventOpenMainWindow()
-        {
-            // Starting app
-            await SendEventGA4.SendEvent("open_main_window");
-        }
+    private async void ExecuteSendEventOpenMainWindow()
+    {
+        // Starting app
+        await SendEventGA4.SendEvent("open_main_window");
+    }
 
     public async void ExecuteShowMenuOperationsCommand(object obj)
     {
@@ -528,9 +578,8 @@ public class MainViewModel : ViewModelBase
         try
         {
             bool _fromWindow = false;
-            // Trigger here
             HideMenuOperationsCommand.Execute(null);
-            IsSpinningJarvisIcon = true; // Start spinning animation
+            IsSpinningJarvisIcon = true;
             PopupDictionaryService.ShowJarvisAction(true);
 
             var textFromElement = "";
@@ -544,7 +593,7 @@ public class MainViewModel : ViewModelBase
             }
             catch
             {
-                textFromElement = this.MainWindowInputText;
+                textFromElement = MainWindowInputText;
                 _fromWindow = true;
             }
 
@@ -583,7 +632,6 @@ public class MainViewModel : ViewModelBase
             }
             
 
-
             if (_fromWindow != true) { AccessibilityService.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError); }
             else { MainWindowInputText = textFromAPI; }
             AutomationElementValueService.StoreAction(AccessibilityService.GetFocusingElement(), textFromElement);
@@ -591,7 +639,7 @@ public class MainViewModel : ViewModelBase
         catch { }
         finally
         {
-            IsSpinningJarvisIcon = false; // Stop spinning animation
+            IsSpinningJarvisIcon = false;
             var eventParams = new Dictionary<string, object>
             {
                 { "ai_action", _aiAction }
@@ -722,5 +770,88 @@ public class MainViewModel : ViewModelBase
             return;
         }
     }
+    public async void ExecuteLoginCommand(object obj)
+    {
+        try
+        {
+            string websiteUrl = "https://admin.jarvis.cx/auth/login?redirect=%2Fdashboard%2Fsubscription";
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = websiteUrl,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            return;
+        }
+    }
 
+    private void InitializeSettingToggleButtons()
+    {
+        PopupDictionaryService.JarvisActionVisibility = true;
+        PopupDictionaryService.TextMenuSelectionVisibility = true;
+        PopupDictionaryService.AIChatSidebarVisibility = true;
+
+        StopDotTimer = new List<DispatcherTimer>();
+        ToggleButtons = new ToggleButtonTemplate().ToggleButtonList;
+
+        for (int i = 0; i < ToggleButtons.Count; i++)
+        {
+            ToggleButtons toggleButton = ToggleButtons[i];
+
+            toggleButton.Idx = i;
+            toggleButton.BarBackground = "#1450A3";
+            toggleButton.ToggleCommand = new RelayCommand(ExecuteToggleCommand, o => true);
+            toggleButton.DotMargin = $"{toggleButton.GridSize.Width - toggleButton.DotSize.Width - 3} 0 0 0";
+
+            DispatcherTimer timer = new DispatcherTimer();            
+            timer.Interval = TimeSpan.FromMilliseconds(10); 
+            timer.Tick += (sender, e) => Timer_Tick(sender, e, toggleButton.Idx);
+
+            StopDotTimer.Add(timer);
+        }
+    }
+
+    private void ExecuteToggleCommand(object obj)
+    {
+        int idx = (int)obj;
+        if (idx == 0) { PopupDictionaryService.JarvisActionVisibility = !PopupDictionaryService.JarvisActionVisibility; }
+        else if (idx == 1) { PopupDictionaryService.TextMenuSelectionVisibility = !PopupDictionaryService.TextMenuSelectionVisibility; }
+        else if (idx == 2) { PopupDictionaryService.AIChatSidebarVisibility = !PopupDictionaryService.AIChatSidebarVisibility; }
+
+        ToggleButtons[idx].IsOnline = !ToggleButtons[idx].IsOnline;
+        StopDotTimer[idx].Start();
+    }
+
+    private void Timer_Tick(object sender, EventArgs e, int idx)
+    {
+        ToggleButtons toggleButton = ToggleButtons[idx];
+        double curMarginX = double.Parse(toggleButton.DotMargin.Split(" ")[0]);
+        double minMargin = 3;
+        double maxMargin = toggleButton.GridSize.Width - toggleButton.DotSize.Width - minMargin;
+        if (toggleButton.IsOnline)
+        {
+            toggleButton.BarBackground = "#1450A3";
+            curMarginX += toggleButton.DotSpeed;
+            if (curMarginX >= maxMargin)
+            {
+                StopDotTimer[idx].Stop();
+                curMarginX = maxMargin;
+            }     
+        }
+        else
+        {
+            curMarginX -= toggleButton.DotSpeed;
+            toggleButton.BarBackground = "#CCCCCC";
+            if (curMarginX <= minMargin)
+            {
+                StopDotTimer[idx].Stop();
+                curMarginX = minMargin;
+            }
+        }
+
+        toggleButton.DotMargin = $"{curMarginX} 0 0 0";
+        OnPropertyChanged(nameof(ToggleButtons));
+    }
 }

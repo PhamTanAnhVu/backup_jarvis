@@ -137,14 +137,14 @@ public class UIElementDetector
     private static void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
     {
         AutomationElement? newFocusElement = sender as AutomationElement;
-        /*if(newFocusElement != null)
+        if (newFocusElement != null)
             RegisterSelectionChangedFor(newFocusElement);
 
         AutomationElement? editElement = FindFirstElementType(newFocusElement, ControlType.Group);
         if (editElement != null)
         {
             Debug.WriteLine($"EDIT ELEMENT {editElement.Current.Name}");
-        }*/
+        }
 
         if (newFocusElement != null && newFocusElement != _focusingElement)
         {

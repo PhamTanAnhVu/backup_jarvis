@@ -9,6 +9,7 @@
         xmlns:jarvisAction="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.JarvisActionView"
         xmlns:textMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuView"
         xmlns:textMenuAPI="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView"
+        xmlns:settingMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.SettingView"
         xmlns:trayMenuPopup="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TrayMenuPopupView"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -164,106 +165,105 @@
 
                     <!-- Frame 10 -->
                     <Grid Grid.Column="1" Width="366" Height="297">
-                        <Border 
-                            Background="White" 
-                            Width="326" Height="265" 
-                            CornerRadius="10" 
-                            Margin="40,16,0,16" Padding="20,20,20,20">
-                            <TextBlock                   
-                                FontSize="14"
-                                FontFamily="Ag"
-                                FontWeight="Medium"
-                                Foreground="#082041">Try it out!
-                            </TextBlock>
+                        <Border Background="White" CornerRadius="10" Margin="40 16 0 16" Padding="20">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                
+                                <TextBlock Grid.Row="0" FontSize="14" FontFamily="Ag" FontWeight="Medium" Foreground="#082041" Text="Try it out!"/>
+                                <Rectangle Grid.Row="1" Height="1" Fill="#AEC9EF" VerticalAlignment="Bottom"/>
+
+                                <Grid Grid.Row="3" VerticalAlignment="Top">
+                                    <TextBox Width="286" Height="150" BorderThickness="0" FontFamily="sans-serif" FontSize="14"                                  
+                                             TextWrapping="Wrap" Text="{Binding MainWindowInputText, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                    <TextBlock Text="Write anything here and choose an action. Jarvis will show you the magic!" 
+                                               Foreground="#9CA3AF" FontSize="14" FontFamily="sans-serif" Width="286"
+                                               TextWrapping="Wrap" IsHitTestVisible="False">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMainWindowInputTextEmpty}" Value="true">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsMainWindowInputTextEmpty}" Value="false">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Grid>
+                            </Grid>
                         </Border>
-
-                        <Line X1="60" Y1="76" X2="346" Y2="76" Stroke="#AEC9EF" StrokeThickness="1"/>
-
-
-                        <TextBox
-                            Margin="60,92,20,0"
-                            Name="GuidelineText"
-                            Foreground="#9CA3AF"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            TextWrapping="Wrap"
-                            
-                            FontFamily="Ag"
-                            FontSize="13"
-                            
-                       
-                            Visibility="Visible"
-                            Width="285" Height="50" Text="{Binding Path=MainWindowInputText, Mode=TwoWay}">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Setter Property="BorderThickness" Value="0" />
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Self}}" Value="">
-                                            <Setter Property="Background">
-                                                <Setter.Value>
-                                                    <VisualBrush>
-                                                        <VisualBrush.Visual>
-                                                            <TextBlock 
-                                                                FontFamily="Ag"
-                                                                FontSize="16"
-                                                                Foreground="#9CA3AF">
-                                                                    Write anything here and tap on the Translate, Revise<LineBreak/>
-                                                                    or Shorten button. <LineBreak/>
-                                                                    Jarvis will show you the magic !
-                                                            </TextBlock>
-                                                        </VisualBrush.Visual>
-                                                    </VisualBrush>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
                     </Grid>
 
                 </Grid>
 
 
                 <!-- Frame 23 -->
-                <Grid Grid.Row="3" Width="145" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="24,0,0,0">
-                    <Button 
-                        Background="#1450A3"
-                        Foreground="White"       
-                        FontSize="13"
-                        x:Name="btnMoreAtJarvis"
-                        FontWeight="Bold"
-                        Content="More at Jarvis" Click="btnMoreAtJarvis_Click">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="OverridesDefaultStyle" Value="True" />
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    BorderBrush="{TemplateBinding BorderBrush}">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="Transparent" />
-                                        <Setter Property="BorderBrush" Value="Transparent" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+                <Grid Grid.Row="3" Width="Auto" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="24"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="450"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Background="#1450A3" CornerRadius="10" Grid.Column="1" Padding="24 0 24 0">
+                        <Button Background="Transparent" BorderThickness="0"
+                                Foreground="White" FontSize="13" FontWeight="Bold" Content="More at Jarvis" Click="btnMoreAtJarvis_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="Transparent" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Border>
 
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="10"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                    <Grid Grid.Column="3" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Width="Auto" BorderThickness="0" Style="{StaticResource MenuTopButton}"
+                                Command="{Binding LoginCommand}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Width="28" Height="28" Margin="5 0 0 0">
+                                        <Grid Width="25" Height="25">
+                                            <Ellipse StrokeThickness="0" Fill="#6841EA"/>
+                                            <TextBlock HorizontalAlignment="Center" Text="{Binding UsernameFirstLetter}" FontSize="16" Foreground="White"
+                                                           TextAlignment="Center" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Viewbox>
+
+                                    <TextBlock Text="{Binding Username}" FontFamily ="sans-serif" Padding="7 5 5 5"
+                                                    FontSize="12" Foreground="#082041" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+
+                        <Button Grid.Column="1" Width="Auto" Height="Auto" Background="Transparent" BorderThickness="0" Margin="20 0 0 0"
+                                Command="{Binding ShowSettingsCommand}" Style="{StaticResource MenuTopButton}">
+                            <Button.ContentTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Path Data="M9.405,1.05c-.413-1.4-2.397-1.4-2.81,0l-.1,.34a1.464,1.464,0,0,1,-2.105,.872l-.31,-.17c-1.283,-.698-2.686,.705-1.987,1.987l.169,.311c.446,.82,.023,1.841,-.872,2.105l-.34,.1c-1.4,.413-1.4,2.397,0,2.81l.34,.1a1.464,1.464,0,0,1,.872,2.105l-.17,.31c-.698,1.283,.705,2.686,1.987,1.987l.311,-.169a1.464,1.464,0,0,1,2.105,.872l.1,.34c.413,1.4,2.397,1.4,2.81,0l.1,-.34a1.464,1.464,0,0,1,2.105,-.872l.31,.17c1.283,.698,2.686,-.705,1.987,-1.987l-.169,-.311a1.464,1.464,0,0,1,.872,-2.105l.34,-.1c1.4,-.413,1.4,-2.397,0,-2.81l-.34,-.1a1.464,1.464,0,0,1,-.872,-2.105l.17,-.31c.698,-1.283,-.705,-2.686,-1.987,-1.987l-.311,.169a1.464,1.464,0,0,1,-2.105,-.872zM8,10.93a2.929,2.929,0,1,1,0,-5.86a2.929,2.929,0,0,1,0,5.858z"
+                                            Fill="Transparent" Stroke="Black" Stretch="Uniform" Width="20" Height="20">
+                                        </Path>
+                                    </Grid>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                    </Grid>
                 </Grid>
 
                 <Popup x:Name="jarvisActionPopup" Placement="AbsolutePoint" 
@@ -310,11 +310,14 @@
                     <textMenuAPI:TextMenuAPIView/>
                 </Popup>
 
-                <!--<Popup Name="trayMenuPopup" Placement="Absolute"
-                       AllowsTransparency="True" 
-                       Width="140" Height="55">
-                    <trayMenuPopup:TrayMenuPopupView/>
-                </Popup>-->
+                <Popup Name="settingMenu" Placement="Center"
+                       AllowsTransparency="True"
+                       Focusable="True" ForceCursor="True" StaysOpen="False"
+                       IsOpen="{Binding PopupDictionaryService.IsShowSettingMenu}"
+                       Width="Auto" Height="Auto" Grid.RowSpan="3">
+                    <settingMenu:SettingView/>
+                </Popup>
+
             </Grid>
         </Grid>
     </Border>

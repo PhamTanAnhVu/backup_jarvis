@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.SettingView.SettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.SettingView"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             Height="400" Width="600">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border CornerRadius="15" Background="#FFFFFF" Padding="30 10 5 30">
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                
+                <Grid Grid.Column="0">
+                    <TextBlock Text="Settings" FontWeight="SemiBold" FontSize="20" Foreground="#1450A3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                </Grid>
+                
+                <Button Grid.Column="1" DockPanel.Dock="Right" Width="37" Height="37" HorizontalAlignment="Right"
+                        Command="{Binding ShowSettingsCommand}" Background="Transparent"
+                        Style="{StaticResource MenuTopButton}">
+                    <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor1}" Kind="Close" Width="24" Height="24" VerticalAlignment="Center" />
+                </Button>
+        
+            </Grid>
+
+            <Rectangle Grid.Row="1" Height="2" Fill="Gray" VerticalAlignment="Bottom"/>
+
+            <ScrollViewer Grid.Row="2" Margin="0 20 0 0">
+                <Grid Margin="0 0 20 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="10"/>
+                    </Grid.RowDefinitions>
+
+                    <!--<Grid Grid.Row="0">
+                        <TextBlock Text="Settings" FontSize="20" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0 0 0 20"/>
+                        <Rectangle Height="2" Fill="Gray" VerticalAlignment="Bottom"/>
+                    </Grid>-->
+
+                    <Grid Grid.Row="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <ItemsControl ItemsSource="{Binding ToggleButtons}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Vertical"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Grid.Row="0" Width="520" CornerRadius="10" Background="#D7E7F8" Padding="20" Margin="0 0 0 20">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="300"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{Binding Description}" 
+                                                            FontSize="13" Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                                                <Border Grid.Column="1" CornerRadius="15" HorizontalAlignment="Right"
+                                                        Height="{Binding GridSize.Height}" Width="{Binding GridSize.Width}" 
+                                                        Background="{Binding BarBackground}">
+                                                    
+                                                    <ToggleButton Background="Transparent" Width="{Binding GridSize.Width}" 
+                                                                  Style="{StaticResource NoMouseOverStyle}"
+                                                                  Command="{Binding ToggleCommand}" CommandParameter="{Binding Idx}">
+                                                        
+                                                        <Grid Height="{Binding GridSize.Height}" Width="{Binding GridSize.Width}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                            <Border BorderBrush="White" CornerRadius="50" Height="{Binding DotSize.Height}" Width="{Binding DotSize.Width}" 
+                                                                    Background="White" HorizontalAlignment="Left" Margin="{Binding DotMargin}"/>
+                                                        </Grid>
+                                                    </ToggleButton>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <Grid Grid.Row="1" Margin="0 20 0 0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Foreground="#1450A3" FontWeight="SemiBold" Text="Contact Us" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                <Rectangle Grid.Row="2" Height="2" Fill="Gray" VerticalAlignment="Top"/>
+                                <Border Grid.Row="4" CornerRadius="10" Background="#D7E7F8" Padding="20">
+                                    <TextBlock FontSize="13" Foreground="Black" FontWeight="SemiBold" HorizontalAlignment="Left" VerticalAlignment="Center" Text="hello@jarvis.cx"/>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>

@@ -284,7 +284,7 @@
                         <Grid Grid.Column="0">
                             <TextBox Height="32" Width="332.812" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="0"
                                      FontFamily="sans-serif" FontSize="14"
-                                     Padding="11.2 7.2 11.2 7.2"
+                                     Padding="11.2 7.2 11.2 7.2" TextWrapping="Wrap"
                                      PreviewMouseDown="Jarvis_Custom_Action_TextBox_PreviewMouseDown"
                                      x:Name="Jarvis_Custom_Action_TextBox" 
        
@@ -292,7 +292,7 @@
 
                                 <TextBlock Text="Ask Jarvis to..." Foreground="#FF104082" Opacity="0.7"
                                         VerticalAlignment="Center" HorizontalAlignment="Left" 
-                                        FontSize="14" FontFamily="inherit"
+                                        FontSize="14" FontFamily="inherit" TextWrapping="Wrap"
                                         Margin="11.2 7.2 11.2 7.2" Padding="0" IsHitTestVisible="False">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
