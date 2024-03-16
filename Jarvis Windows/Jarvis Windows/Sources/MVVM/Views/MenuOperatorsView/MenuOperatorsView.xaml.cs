@@ -27,7 +27,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView
                 }
             };
 
-            EventAggregator.JarvisActionPositionChanged += OnJarvisActionPositionChanged;
         }
 
         private void languageComboBox_SelectionChanged(object sender, EventArgs e)
@@ -46,13 +45,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView
                     _isInit = true;
                 }
             }
-        }
-
-        private void OnJarvisActionPositionChanged(object sender, EventArgs e)
-        {
-            string objID = (string)sender;
-            if (objID == "GuidelineText") _isWindowClosed = false;
-            else _isWindowClosed = true;
         }
 
         private void Jarvis_Custom_Action_TextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)

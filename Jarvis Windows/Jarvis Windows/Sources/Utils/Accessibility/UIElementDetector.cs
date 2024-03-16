@@ -155,8 +155,6 @@ public class UIElementDetector
             if (IsEditableElement(newFocusElement))
             {
                 _focusingElement = newFocusElement;
-                // Publish Jarvis Action Position to EventAggregator
-                EventAggregator.PublishJarvisActionPositionChanged(_focusingElement.Current.AutomationId, EventArgs.Empty);
                 _popupDictionaryService.ShowJarvisAction(true);
                 _popupDictionaryService.ShowMenuOperations(false);
                 _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));

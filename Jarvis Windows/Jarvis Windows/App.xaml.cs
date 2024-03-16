@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using Jarvis_Windows.Sources.MVVM.Views;
 using Jarvis_Windows.Sources.Utils.Accessibility;
+using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
+using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 
 namespace Jarvis_Windows
 {
@@ -42,7 +44,6 @@ namespace Jarvis_Windows
 
 
         services.AddSingleton<MainViewModel>();
-        // Logging.Log("Before MainView MainviewModel");
         services.AddSingleton<MainView>(provider => new MainView
         {
             DataContext = provider.GetRequiredService<MainViewModel>(),

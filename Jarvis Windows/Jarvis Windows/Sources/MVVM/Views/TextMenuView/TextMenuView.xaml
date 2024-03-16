@@ -28,10 +28,9 @@
                     Width="20" Height="20" HorizontalAlignment="Left"
                     Source="../../../../Assets/Images/jarvis_logo.png"/>
 
-                <TextBlock 
-                    Margin="26 4 0 0" Width="44.69" Height="20" HorizontalAlignment="Left"
-                    FontSize="14" FontFamily="sans-serif" FontWeight="Bold" Foreground="#104082">Jarvis
-                </TextBlock>
+                <TextBox Margin="26 4 0 0" Width="44.69" Height="20" HorizontalAlignment="Left"
+                         FontSize="14" FontFamily="sans-serif" FontWeight="Bold" Foreground="#104082" Text="Jarvis" 
+                         Style="{StaticResource TextBoxStyle}"/>
             </Grid>
 
             <Grid Grid.Column="1">

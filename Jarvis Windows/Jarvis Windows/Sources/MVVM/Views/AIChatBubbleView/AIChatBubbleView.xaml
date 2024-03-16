@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView.AIChatBubbleView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView"
+        mc:Ignorable="d"
+        Height="38" Width="Auto" HorizontalAlignment="Right">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+        <Button Style="{StaticResource AIBubbleButton}"
+                    Command="{Binding ShowAIChatSidebarCommand}">
+        <Button.Content>
+            <Image Source="../../../../Assets/Icons/jarvis_icon.ico" Width="24" Height="24" HorizontalAlignment="Center"/>
+        </Button.Content>
+    </Button>
+     
+</UserControl>

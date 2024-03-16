@@ -27,11 +27,85 @@
     <Color x:Key="PrimaryColor9">#041021</Color>
     <Color x:Key="PrimaryColor9.5">#020810</Color>
 
+    <!--Allow text selection for static text-->
+    <Style x:Key="TextBoxStyle" TargetType="TextBox">
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
     <Style x:Key="JarvisPrimaryButton" TargetType="Button">
         <Setter Property="Foreground" Value="#FFFFFF" />
         <Setter Property="Background" Value="#1450A3" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="BorderBrush" Value="{x:Null}" />
+    </Style>
+
+    <Style x:Key="AIBubbleButton" TargetType="Button">
+        <Setter Property="Width" Value="38"/>
+        <Setter Property="Opacity" Value="0.6"/>
+        <Setter Property="Background" Value="#D7E7F8"/>
+        <Setter Property="BorderBrush" Value="#FFFFFF"/>
+        <Setter Property="BorderThickness" Value="1.75"/>
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Padding="4 4 4 6"
+                                CornerRadius="12 0 0 12">
+                            <ContentPresenter HorizontalAlignment="Center" />
+                        </Border>
+
+                        <Popup IsOpen="{TemplateBinding IsMouseOver}" PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}" 
+                               HorizontalOffset="-11" VerticalOffset="9" Placement="Top" AllowsTransparency="True">
+                            <Button Command="{Binding HideAIChatBubbleCommand}" CommandParameter="false">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Width" Value="16"/>
+                                        <Setter Property="Height" Value="16"/>
+                                        <Setter Property="Background" Value="#D7E7F8"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            CornerRadius="20">
+                                                        <ContentPresenter HorizontalAlignment="Center" />
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#E6EEFA"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <Button.Content>
+                                    <Image Source="../../../../Assets/Images/cross.png" Width="12" Height="12"/>
+                                </Button.Content>
+                            </Button>
+                            
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#D7E7F8"/>
+                <Setter Property="Width" Value="42"/>
+                <Setter Property="Opacity" Value="1"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="MenuUndoRedoButton" TargetType="Button">
@@ -384,6 +458,25 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="AIChatButtonBorder" TargetType="Border">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsTextEmptyAIChat}" Value="True">
+                <Setter Property="Background" Value="#9CA3AF"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsTextEmptyAIChat}" Value="False">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Offset="0.142" Color="#1450A2"/>
+                            <GradientStop Offset="0.858" Color="#4495FB"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="AskButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -402,6 +495,32 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Storyboard x:Key="SpinAnimation">
+        <DoubleAnimation
+        Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+        From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+    </Storyboard>
+
+    <Style x:Key="AIChatMessageBorder" TargetType="Border">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsBorderVisible}" Value="True">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Offset="0" Color="#08FFFFFF" />
+                            <GradientStop Offset="0.426" Color="#FFF" />
+                            <GradientStop Offset="0.526" Color="#FFF" />
+                            <GradientStop Offset="1" Color="#08FFFFFF" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsBorderVisible}" Value="False">
+                <Setter Property="Background" Value="Transparent" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="TextMenuButton" TargetType="Button">
@@ -430,11 +549,8 @@
         </Style.Triggers>
     </Style>
 
-    <Storyboard x:Key="SpinAnimation">
-        <DoubleAnimation
-            Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
-            From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
-    </Storyboard>
+
+
 
     <Style x:Key="UpgradePlanButton" TargetType="Button">
         <Setter Property="Background">

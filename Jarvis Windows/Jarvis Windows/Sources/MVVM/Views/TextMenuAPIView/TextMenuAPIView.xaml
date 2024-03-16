@@ -60,9 +60,7 @@
 
                     <ScrollViewer MinHeight="80" MaxHeight="300"
                                   VerticalScrollBarVisibility="Hidden">
-                        <TextBlock 
-                            TextWrapping="Wrap"
-                            Text="{Binding TextMenuAPI}" />
+                        <TextBox TextWrapping="Wrap" Text="{Binding TextMenuAPI}" Style="{StaticResource TextBoxStyle}" />
                     </ScrollViewer>
                 </Grid>
 
@@ -90,9 +88,10 @@
                         </Grid>
 
                         <Grid Grid.Row="1">
-                            <TextBlock Text="You have exhausted all of your DAILY tokens. Let get more tokens to fireeee!" 
+                            <TextBox Text="You have exhausted all of your DAILY tokens. Let get more tokens to fireeee!" 
                                         Width="273" Height="40" FontFamily="sans-serif" FontSize="14" TextWrapping="Wrap" 
-                                        TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                                        TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" 
+                                        Style="{StaticResource TextBoxStyle}"/>
                         </Grid>
 
                         <Grid Grid.Row="2">

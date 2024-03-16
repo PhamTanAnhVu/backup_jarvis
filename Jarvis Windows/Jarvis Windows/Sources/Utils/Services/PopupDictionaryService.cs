@@ -1,4 +1,7 @@
-﻿using Jarvis_Windows.Sources.MVVM.Views.MainView;
+﻿using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
+using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
+using Jarvis_Windows.Sources.MVVM.ViewModels;
+using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Jarvis_Windows.Sources.Utils.Core;
 using System;
 using System.Diagnostics;
@@ -17,14 +20,16 @@ public class PopupDictionaryService : ObserveralObject
     private bool _isShowSettingMenu;
     private bool _jarvisActionVisibility;
     private bool _textMenuSelectionVisibility;
-    private bool _aIChatSidebarVisibility;
-
+    private bool _isShowAIBubbleFromTrayMenu;
+    private bool _isShowAIChatBubble; 
+    private bool _isShowAIChatSidebar; 
 
     private Point _jarvisActionPosition;
     private Point _menuOperationsPosition;    
     private Point _textMenuOperationsPosition;
     private Point _textMenuAPIPosition;
-
+    private Point _aIChatBubblePosition;
+    private Point _aIChatSidebarPosition;
     private static String? _targetLanguage;
     private Point _automationElementVisualPos;
     
@@ -36,7 +41,6 @@ public class PopupDictionaryService : ObserveralObject
             _targetLanguage = value;
         }
     }
-
 
     public bool IsShowJarvisAction
     {
@@ -68,6 +72,25 @@ public class PopupDictionaryService : ObserveralObject
         }
     }
     
+    public bool IsShowAIChatBubble
+    {
+        get { return _isShowAIChatBubble; }
+        set
+        {
+            _isShowAIChatBubble = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool IsShowAIChatSidebar
+    {
+        get { return _isShowAIChatSidebar; }
+        set
+        {
+            _isShowAIChatSidebar = value;
+            OnPropertyChanged();
+        }
+    }
+
     public Point JarvisActionPosition
     {
         get { return _jarvisActionPosition; }
@@ -84,6 +107,24 @@ public class PopupDictionaryService : ObserveralObject
         set
         {
             _menuOperationsPosition = value;
+            OnPropertyChanged();
+        }
+    }
+    public Point AIChatBubblePosition
+    {
+        get { return _aIChatBubblePosition; }
+        set
+        {
+            _aIChatBubblePosition = value;
+            OnPropertyChanged();
+        }
+    }
+    public Point AIChatSidebarPosition
+    {
+        get { return _aIChatSidebarPosition; }
+        set
+        {
+            _aIChatSidebarPosition = value;
             OnPropertyChanged();
         }
     }
@@ -125,12 +166,12 @@ public class PopupDictionaryService : ObserveralObject
         }
     }
     
-    public bool AIChatSidebarVisibility
+    public bool IsShowAIBubbleFromTrayMenu
     {
-        get { return _aIChatSidebarVisibility; }
+        get { return _isShowAIBubbleFromTrayMenu; }
         set
         {
-            _aIChatSidebarVisibility = value;
+            _isShowAIBubbleFromTrayMenu = value;
             OnPropertyChanged();
         }
     }
@@ -163,10 +204,15 @@ public class PopupDictionaryService : ObserveralObject
     {
         IsShowJarvisAction = false;
         IsShowMenuOperations = false;
+        IsShowAIChatBubble = true;
+        IsShowAIChatSidebar = false;
+
         JarvisActionPosition = new Point(0, 0);
         MenuOperationsPosition = new Point(0, 0);
+        AIChatBubblePosition = new Point((SystemParameters.WorkArea.Right - 30), (SystemParameters.WorkArea.Bottom - 30) / 2);
+        AIChatSidebarPosition = new Point((SystemParameters.WorkArea.Right - 520), (SystemParameters.WorkArea.Bottom - 700) / 2);
+        
     }
-
     public void ShowJarvisAction(bool isShow)
     {
         IsShowJarvisAction = isShow & JarvisActionVisibility;
@@ -272,6 +318,28 @@ public class PopupDictionaryService : ObserveralObject
         visualPoint.Y += 40;
 
         TextMenuAPIPosition = visualPoint;
+    }
+    
+    public void ShowAIChatBubble(bool isShow)
+    {
+        IsShowAIChatBubble = isShow;
+    }
+
+    public void UpdateAIChatBubblePosition(Point systemPoint)
+    {
+        Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
+        AIChatBubblePosition = visualPoint;
+    }
+    
+    public void ShowAIChatSidebar(bool isShow)
+    {
+        IsShowAIChatSidebar = isShow & IsShowAIChatBubble;
+    }
+
+    public void UpdateAIChatSidebarPosition(Point systemPoint)
+    {
+        Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
+        AIChatSidebarPosition = visualPoint;
     }
 
     internal void ShowSelectionResponseView(bool bIsShow)

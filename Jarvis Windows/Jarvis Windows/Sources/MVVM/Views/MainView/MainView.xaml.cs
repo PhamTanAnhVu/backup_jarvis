@@ -20,11 +20,11 @@ public partial class MainView : Window
     private bool _isDragging;
     private System.Windows.Point _startPoint;
 
-        public SendEventGA4 SendEventGA4
-        {
-            get { return _sendEventGA4; }
-            set { _sendEventGA4 = value; }
-        }
+    public SendEventGA4 SendEventGA4
+    {
+        get { return _sendEventGA4; }
+        set { _sendEventGA4 = value; }
+    }
 
     public PopupDictionaryService PopupDictionaryService { get; internal set; }
 
@@ -34,23 +34,25 @@ public partial class MainView : Window
         InitTrayIcon();
     }
 
-        private void InitTrayIcon()
-        {
-            _notifyIcon = new NotifyIcon();
-            _contextMenuStrip = new ContextMenuStrip();
+    private void InitTrayIcon()
+    {
+        _notifyIcon = new NotifyIcon();
+        _contextMenuStrip = new ContextMenuStrip();
 
-            string relativePath = Path.Combine("Assets", "Icons", "jarvis_logo_large.ico");
-            string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
-            _notifyIcon.Icon = new System.Drawing.Icon(fullPath);
+        string relativePath = Path.Combine("Assets", "Icons", "jarvis_logo_large.ico");
+        string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
+        _notifyIcon.Icon = new System.Drawing.Icon(fullPath);
 
 
-            _notifyIcon.MouseClick += NotifyIcon_MouseClick;
-            _contextMenuStrip.Renderer = new MyRenderer();
+        _notifyIcon.MouseClick += NotifyIcon_MouseClick;
+        _contextMenuStrip.Renderer = new MyRenderer();
 
-            _contextMenuStrip.Items.Add("Quit Jarvis", null, QuitMenuItem_Click);
+        _contextMenuStrip.Items.Add("Sidebar", null, Sidebar_Click);
+        _contextMenuStrip.Items.Add("Settings", null, Setting_Click);
+        _contextMenuStrip.Items.Add("Quit Jarvis", null, QuitMenuItem_Click);
 
-        _notifyIcon.ContextMenuStrip = _contextMenuStrip;
-        _notifyIcon.Visible = true;
+    _notifyIcon.ContextMenuStrip = _contextMenuStrip;
+    _notifyIcon.Visible = true;
     }
 
     private System.Windows.Point _menuActionPoint;
@@ -171,42 +173,54 @@ public partial class MainView : Window
                 await SendEventGA4.SendEvent("open_main_window");
 
                 _isMainWindowOpened = true;
-            }
+        }
+    }
+
+    private async void Sidebar_Click(object sender, EventArgs e)
+    {
+        EventAggregator.PublishAIChatBubbleStatusChanged(this, EventArgs.Empty);
+    }
+    private async void Setting_Click(object sender, EventArgs e)
+    {
+        PopupDictionaryService.IsShowSettingMenu = true;
+    }
+
+    private async void QuitMenuItem_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            await SendEventGA4.SendEvent("quit_app");
+            Process.GetCurrentProcess().Kill(); //DaiTT fix
         }
 
-        private async void QuitMenuItem_Click(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            try
-            {
-                await SendEventGA4.SendEvent("quit_app");
-                Process.GetCurrentProcess().Kill(); //DaiTT fix
-            }
+            System.Windows.MessageBox.Show(ex.Message);
+        }
+    }
 
-            catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show(ex.Message);
-            }
-        }
-        private void OnExit(object sender, ExitEventArgs e)
-        {
-            _notifyIcon.Visible = false;
-            _notifyIcon.Dispose();
-        }
 
-        private void btnCloseMainWindows_Click(object sender, RoutedEventArgs e)
-        {
-            _isMainWindowOpened = false;
-            this.Hide();
-        }
 
-        private void btnMoreAtJarvis_Click(object sender, RoutedEventArgs e)
+    private void OnExit(object sender, ExitEventArgs e)
+    {
+        _notifyIcon.Visible = false;
+        _notifyIcon.Dispose();
+    }
+
+    private void btnCloseMainWindows_Click(object sender, RoutedEventArgs e)
+    {
+        _isMainWindowOpened = false;
+        this.Hide();
+    }
+
+    private void btnMoreAtJarvis_Click(object sender, RoutedEventArgs e)
+    {
+        System.Diagnostics.Process.Start(new ProcessStartInfo
         {
-            System.Diagnostics.Process.Start(new ProcessStartInfo
-            {
-                FileName = "https://jarvis.cx/",
-                UseShellExecute = true
-            });
-        }
+            FileName = "https://jarvis.cx/",
+            UseShellExecute = true
+        });
+    }
 
     private void Window_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
     {

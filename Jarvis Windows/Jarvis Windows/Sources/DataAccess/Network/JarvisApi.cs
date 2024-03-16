@@ -3,17 +3,25 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Net;
+using Windows.ApplicationModel.Chat;
+using System.Collections.ObjectModel;
+using Jarvis_Windows.Sources.MVVM.Views.MainView;
+using System.Collections.Generic;
 
 namespace Jarvis_Windows.Sources.DataAccess.Network;
 
 public sealed class JarvisApi
 {
     private static JarvisApi? _instance;
-    const string _endpoint = "/api/v1/ai-action/";
+    const string _endpoint = "/api/v1";
+    const string _actionEndpoint = $"{_endpoint}/ai-action/";
+    const string _chatEndpoint = $"{_endpoint}/ai-chat/";
 
     private static HttpClient? _client;
     private static string? _apiUrl;
     private static string? _apiHeaderID;
+
     private JarvisApi()
     {
         _client = new HttpClient();
@@ -56,6 +64,15 @@ public sealed class JarvisApi
                 dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
 
                 int remainingUsage = responseObject.remainingUsage;
+                //try
+                //{
+                //    remainingUsage = responseObject.remainingUsage;
+                //}
+                //catch
+                //{
+                //    remainingUsage = int.Parse(WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")) - 1;
+                //}
+
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
 
                 string finalMessage = responseObject.message;
@@ -83,7 +100,7 @@ public sealed class JarvisApi
             }
         });
 
-        return await ApiHandler(requestBody, _endpoint);
+        return await ApiHandler(requestBody, _actionEndpoint);
     }
 
     public async Task<string?> ReviseHandler(String content)
@@ -94,7 +111,7 @@ public sealed class JarvisApi
             content = content
         });
 
-        return await ApiHandler(requestBody, _endpoint);
+        return await ApiHandler(requestBody, _actionEndpoint);
     }
 
     public async Task<string?> AskHandler(String content, string action)
@@ -106,8 +123,41 @@ public sealed class JarvisApi
             action = action
         });
 
-        return await ApiHandler(requestBody, _endpoint);
+        return await ApiHandler(requestBody, _actionEndpoint);
     }
+
+    public async Task<string?> ChatHandler(string content, ObservableCollection<AIChatMessage> ChatHistory)
+    {
+        List<Dictionary<string, string>> messages = new List<Dictionary<string, string>>();
+
+        for (int i = 1; i < ChatHistory.Count - 2; i++)
+        {
+            string chatMessage = ChatHistory[i].Message;
+            string role = (i % 2 == 0) ? "user" : "assistant";
+            var messageDict = new Dictionary<string, string>
+            {
+                { "role", role },
+                { "content", chatMessage }
+            };
+
+            messages.Add(messageDict);
+        }
+
+        var requestBody = JsonConvert.SerializeObject(new
+        {
+            content = content,
+            metadata = new
+            {
+                conversation = new
+                {
+                    messages = messages
+                }
+            }
+        });
+
+        return await ApiHandler(requestBody, _chatEndpoint);
+    }
+
 
     public async Task<string?> AIHandler(string content, string action)
     {
@@ -133,7 +183,7 @@ public sealed class JarvisApi
         }
 
 
-        return await ApiHandler(requestBody, _endpoint);
+        return await ApiHandler(requestBody, _actionEndpoint);
     }
 
     // ---------------------------------- Custom AI Actions ---------------------------------- //

@@ -2,6 +2,10 @@
 using Jarvis_Windows.Sources.Utils.Constants;
 using Jarvis_Windows.Sources.Utils.Core;
 using Jarvis_Windows.Sources.Utils.Services;
+using Jarvis_Windows.Sources.Utils.Accessibility;
+using Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView;
+using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
+using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 using System;
 using System.Diagnostics;
 using Newtonsoft.Json;
@@ -38,6 +42,8 @@ public class MainViewModel : ViewModelBase
     private ObservableCollection<ButtonViewModel> _fixedButtons;
     private ObservableCollection<ButtonViewModel> _dynamicButtons;
     private static IAutomationElementValueService _automationElementValueService;
+    private bool _isTextEmptyAIChat;
+    private string _aIChatMessageInput;
 
     private int _languageSelectedIndex;
     private string _textMenuAPI;
@@ -268,6 +274,49 @@ public class MainViewModel : ViewModelBase
         }
     }
 
+    public RelayCommand ShowAIChatBubbleCommand { get; set; }
+    public RelayCommand ShowAIChatSidebarCommand { get; set; }
+    public RelayCommand AIChatSendCommand { get; set; }
+    public RelayCommand NewAIChatCommand { get; set; }
+    public RelayCommand HideAIChatSidebarCommand { get; set; }
+
+
+    private ObservableCollection<AIChatMessage> _aIChatMessages;
+    public ObservableCollection<AIChatMessage> AIChatMessages
+    {
+        get { return _aIChatMessages; }
+        set
+        {
+            _aIChatMessages = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool IsTextEmptyAIChat
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(AIChatMessageInput)) _isTextEmptyAIChat = true;
+            else _isTextEmptyAIChat = false;
+            return _isTextEmptyAIChat;
+        }
+        set
+        {
+            _isTextEmptyAIChat = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string AIChatMessageInput
+    {
+        get { return _aIChatMessageInput; }
+        set
+        {
+            _aIChatMessageInput = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsTextEmptyAIChat));
+        }
+    }
+
     public string UsernameFirstLetter
     {
         get { return _usernameFirstLetter; }
@@ -371,8 +420,8 @@ public class MainViewModel : ViewModelBase
         //Register Acceccibility service
         AccessibilityService.SubscribeToElementFocusChanged();
         EventAggregator.LanguageSelectionChanged += OnLanguageSelectionChanged;
-        
-        
+        EventAggregator.AIChatBubbleStatusChanged += OnAIChatBubbleStatusChanged;
+
         // Checking App update here
         try { ExecuteCheckUpdate(); }
 
@@ -381,6 +430,15 @@ public class MainViewModel : ViewModelBase
 
         InitializeButtons();
         InitializeButtonsTextMenu();
+
+        ShowAIChatBubbleCommand = new RelayCommand(ExecuteShowAIChatBubbleCommand, o => true);
+        ShowAIChatSidebarCommand = new RelayCommand(ExecuteShowAIChatSidebarCommand, o => true);
+        HideAIChatSidebarCommand = new RelayCommand(ExecuteHideAIChatSidebarCommand, o => true);
+        AIChatSendCommand = new RelayCommand(ExecuteAIChatSendCommand, o => true);
+        NewAIChatCommand = new RelayCommand(o => { AIChatMessagesClear(); }, o => true);
+
+        AIChatMessages = new ObservableCollection<AIChatMessage>();
+        AIChatMessagesClear();
         InitializeSettingToggleButtons();
 
         Username = "Anh Vu";
@@ -460,17 +518,19 @@ public class MainViewModel : ViewModelBase
         AICommand.Execute("Translate it");
     }
 
-        private void ExecuteQuitAppCommand(object obj)
-        {
-            Process.GetCurrentProcess().Kill();
-            Task.Run(async () =>
-            {
-                // Some processing before the await (if needed)
-                await Task.Delay(0); // This allows the method to yield to the caller
+    
 
-                await SendEventGA4.SendEvent("quit_app");
-            });
-        }
+    private void ExecuteQuitAppCommand(object obj)
+    {
+        Process.GetCurrentProcess().Kill();
+        Task.Run(async () =>
+        {
+            // Some processing before the await (if needed)
+            await Task.Delay(0); // This allows the method to yield to the caller
+
+            await SendEventGA4.SendEvent("quit_app");
+        });
+    }
 
     private void ExecuteUndoCommand(object obj)
     {
@@ -770,6 +830,7 @@ public class MainViewModel : ViewModelBase
             return;
         }
     }
+
     public async void ExecuteLoginCommand(object obj)
     {
         try
@@ -791,7 +852,6 @@ public class MainViewModel : ViewModelBase
     {
         PopupDictionaryService.JarvisActionVisibility = true;
         PopupDictionaryService.TextMenuSelectionVisibility = true;
-        PopupDictionaryService.AIChatSidebarVisibility = true;
 
         StopDotTimer = new List<DispatcherTimer>();
         ToggleButtons = new ToggleButtonTemplate().ToggleButtonList;
@@ -812,13 +872,19 @@ public class MainViewModel : ViewModelBase
             StopDotTimer.Add(timer);
         }
     }
-
+   
     private void ExecuteToggleCommand(object obj)
     {
         int idx = (int)obj;
         if (idx == 0) { PopupDictionaryService.JarvisActionVisibility = !PopupDictionaryService.JarvisActionVisibility; }
         else if (idx == 1) { PopupDictionaryService.TextMenuSelectionVisibility = !PopupDictionaryService.TextMenuSelectionVisibility; }
-        else if (idx == 2) { PopupDictionaryService.AIChatSidebarVisibility = !PopupDictionaryService.AIChatSidebarVisibility; }
+        
+        else if (idx == 2) 
+        {
+
+            PopupDictionaryService.IsShowAIChatBubble = (PopupDictionaryService.IsShowAIChatSidebar) ? false : !PopupDictionaryService.IsShowAIChatBubble;
+            PopupDictionaryService.IsShowAIChatSidebar = false; 
+        }
 
         ToggleButtons[idx].IsOnline = !ToggleButtons[idx].IsOnline;
         StopDotTimer[idx].Start();
@@ -838,7 +904,7 @@ public class MainViewModel : ViewModelBase
             {
                 StopDotTimer[idx].Stop();
                 curMarginX = maxMargin;
-            }     
+            }
         }
         else
         {
@@ -854,4 +920,99 @@ public class MainViewModel : ViewModelBase
         toggleButton.DotMargin = $"{curMarginX} 0 0 0";
         OnPropertyChanged(nameof(ToggleButtons));
     }
+
+    public async void ExecuteShowAIChatBubbleCommand(object obj)
+    {
+        string tmp = (string)obj;
+        bool status = (tmp == "false") ? false : true;
+        PopupDictionaryService.ShowAIChatBubble(status);
+    }
+
+    public async void ExecuteShowAIChatSidebarCommand(object obj)
+    {
+        PopupDictionaryService.ShowAIChatSidebar(true);
+        PopupDictionaryService.ShowAIChatBubble(false);
+    }
+    
+    private async void ExecuteHideAIChatSidebarCommand(object obj)
+    {
+        PopupDictionaryService.ShowAIChatSidebar(false);
+        PopupDictionaryService.ShowAIChatBubble(true);
+        AIChatMessagesClear();
+    }
+
+    private void OnAIChatBubbleStatusChanged(object sender, EventArgs e)
+    {
+        ExecuteToggleCommand(2);
+    }
+
+    void AIChatMessagesClear()
+    {
+        AIChatMessages.Clear();
+        AIChatMessages.Add(new AIChatMessage
+        {
+            // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
+            IsUser = false,
+            IsJarvis = true,
+            Message = "Hi, I am Jarvis, your powerful AI assistant. How can I help you?",
+            IsLoading = false,
+            IsBorderVisible = true
+        });
+    }
+
+    private async void ExecuteAIChatSendCommand(object obj)
+    {
+        AIChatMessages.Add(new AIChatMessage
+        {
+            // ImageSource = "../../../../Assets/Images/pencil.png",
+            IsUser = true,
+            IsJarvis = false,
+            Message = AIChatMessageInput,
+            IsLoading = false,
+            IsBorderVisible = false
+        });
+
+        string tmpMessage = AIChatMessageInput;
+
+        AIChatMessages.Add(new AIChatMessage
+        {
+            // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
+            IsUser = false,
+            IsJarvis = true,
+            Message = "",
+            IsLoading = true,
+            IsBorderVisible = true
+        });
+
+
+        AIChatMessageInput = "";
+
+        int lastIndex = AIChatMessages.Count - 1;
+        string responseMessage = await JarvisApi.Instance.ChatHandler(tmpMessage, AIChatMessages);
+
+        AIChatMessages.RemoveAt(lastIndex);
+        AIChatMessages.Add(new AIChatMessage
+        {
+            // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
+            IsUser = false,
+            IsJarvis = true,
+            Message = responseMessage,
+            IsLoading = false,
+            IsBorderVisible = true
+        });
+
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+    }
 }
+
+
+public class AIChatMessage
+{
+    public bool IsUser { get; set; }
+    public bool IsJarvis { get; set; }
+    public string Message { get; set; }
+    public bool IsLoading { get; set; }
+    public bool IsBorderVisible { get; set; }
+}
+
+          

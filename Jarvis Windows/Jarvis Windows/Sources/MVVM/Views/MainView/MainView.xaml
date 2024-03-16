@@ -9,6 +9,8 @@
         xmlns:jarvisAction="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.JarvisActionView"
         xmlns:textMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuView"
         xmlns:textMenuAPI="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView"
+        xmlns:aIChatBubble="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView"
+        xmlns:aIChatSidebar="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView"
         xmlns:settingMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.SettingView"
         xmlns:trayMenuPopup="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TrayMenuPopupView"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -104,30 +106,32 @@
                             Width="24" Height="24"
                             HorizontalAlignment="Left"/>
 
-                        <TextBlock 
+                        <TextBox 
                             Margin="32,4.5,0,4.5"
-                            Width="54"
+                            Width="56"
                             Height="28"
                             Padding="3,3,3,3"
                             
                             FontSize="18"
                             FontFamily="Ag"
                             FontWeight="Bold"
-                            Foreground="#1450A3">Jarvis</TextBlock>
+                            Foreground="#1450A3"
+                            Text="Jarvis"
+                            Style="{StaticResource TextBoxStyle}"/>
 
                     </Grid>
 
                     <!-- Frame 21 -->
                     <Grid Grid.Column="2" Width="43" Height="20" Margin="0,8,0,9">
                         <Border Background="White" Width="43" Height="20" CornerRadius="12" >
-                            <TextBlock 
+                            <TextBox 
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                
+                                Style="{StaticResource TextBoxStyle}"
                                 FontSize="12"
                                 FontFamily="Inter"
                                 FontWeight="Medium"
-                                Foreground="#9CA3AF">Beta</TextBlock>
+                                Foreground="#9CA3AF" Text="Beta"/>
                         </Border>
                     </Grid>
                 </Grid>
@@ -141,26 +145,20 @@
 
                     <!-- Frame 9 -->
                     <Grid Grid.Column="0" Width="366" Height="297">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="88.5"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                        <TextBlock      
-                            Padding="2,88.5,0,88.5"
-                            
-                            FontSize="24"
-                            FontFamily="Ag"
-                            FontWeight="Bold"
-                            Foreground="#082041">
-                            Jarvis is up <LineBreak/> and running
-                        </TextBlock>
+                        <TextBox Grid.Row="1" Margin="2 0 0 0" Text="Jarvis is up&#x0a;and running"         
+                                FontSize="24" FontFamily="Ag" FontWeight="Bold" Foreground="#082041"
+                                Style="{StaticResource TextBoxStyle}" />
 
-                        <TextBlock 
-                            Padding="2,168.5,0,168.5"
-    
-                            FontSize="14"
-                            FontFamily="Ag"
-                            FontWeight="Normal"
-                            Foreground="#6B7280">
-                            Start typing in app or on a website, and you’ll see<LineBreak/>Jarvis appear
-                        </TextBlock>
+                        <TextBox Grid.Row="3" Margin="2 0 0 0" Text="Start typing in app or on a website, and you’ll see &#x0a;Jarvis appear"
+                                FontSize="14" FontFamily="Ag" FontWeight="Normal" Foreground="#6B7280"
+                                Style="{StaticResource TextBoxStyle}"/>
                     </Grid>
 
                     <!-- Frame 10 -->
@@ -174,7 +172,8 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 
-                                <TextBlock Grid.Row="0" FontSize="14" FontFamily="Ag" FontWeight="Medium" Foreground="#082041" Text="Try it out!"/>
+                                <TextBox Grid.Row="0" FontSize="14" FontFamily="Ag" FontWeight="Medium" Foreground="#082041" Text="Try it out!"
+                                           Style="{StaticResource TextBoxStyle}"/>
                                 <Rectangle Grid.Row="1" Height="1" Fill="#AEC9EF" VerticalAlignment="Bottom"/>
 
                                 <Grid Grid.Row="3" VerticalAlignment="Top">
@@ -240,13 +239,14 @@
                                     <Viewbox Width="28" Height="28" Margin="5 0 0 0">
                                         <Grid Width="25" Height="25">
                                             <Ellipse StrokeThickness="0" Fill="#6841EA"/>
-                                            <TextBlock HorizontalAlignment="Center" Text="{Binding UsernameFirstLetter}" FontSize="16" Foreground="White"
-                                                           TextAlignment="Center" VerticalAlignment="Center"/>
+                                            <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding UsernameFirstLetter}" 
+                                                     HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"
+                                                     FontSize="16" Foreground="White"/>
                                         </Grid>
                                     </Viewbox>
 
-                                    <TextBlock Text="{Binding Username}" FontFamily ="sans-serif" Padding="7 5 5 5"
-                                                    FontSize="12" Foreground="#082041" VerticalAlignment="Center"/>
+                                    <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding Username}" 
+                                             FontFamily ="sans-serif" Padding="7 5 5 5" FontSize="12" Foreground="#082041" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button.Content>
                         </Button>
@@ -318,6 +318,26 @@
                     <settingMenu:SettingView/>
                 </Popup>
 
+
+                <Popup Name="aIChatBubblePopup" Placement="Absolute"
+                       VerticalOffset="{Binding PopupDictionaryService.AIChatBubblePosition.Y}"
+                       HorizontalOffset="{Binding PopupDictionaryService.AIChatBubblePosition.X}"
+                       AllowsTransparency="True"
+                       Focusable="True" ForceCursor="True" StaysOpen="True"
+                       IsOpen="{Binding PopupDictionaryService.IsShowAIChatBubble}"
+                       Width="Auto" Height="Auto" Grid.RowSpan="3">
+                    <aIChatBubble:AIChatBubbleView/>
+                </Popup>
+
+                <Popup Name="aIChatSidebarPopup" Placement="Absolute"
+                       VerticalOffset="{Binding PopupDictionaryService.AIChatSidebarPosition.Y}"
+                       HorizontalOffset="{Binding PopupDictionaryService.AIChatSidebarPosition.X}"
+                       AllowsTransparency="True"
+                       Focusable="True" ForceCursor="True" StaysOpen="True"
+                       IsOpen="{Binding PopupDictionaryService.IsShowAIChatSidebar}"
+                       Width="Auto" Height="Auto" Grid.RowSpan="3">
+                    <aIChatSidebar:AIChatSidebarView/>
+                </Popup>
             </Grid>
         </Grid>
     </Border>
