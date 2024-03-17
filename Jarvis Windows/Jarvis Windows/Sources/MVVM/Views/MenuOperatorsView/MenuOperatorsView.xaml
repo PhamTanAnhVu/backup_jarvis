@@ -57,12 +57,20 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <Image Source="../../../../Assets/Images/jarvis_logo.png" Margin="0 0 8 0" Width="22" Height="22" HorizontalAlignment="Left"/>
+                    <Image 
+                        Source="../../../../Assets/Images/jarvis_logo.png" 
+                        Margin="0 0 8 0"
+                        Width="22" Height="22"
+                        HorizontalAlignment="Left"/>
 
-                    <TextBox Margin="30 0 0 0" VerticalAlignment="Center"
-                             FontSize="16" FontFamily="sans-serif" FontWeight="Bold"
-                             Foreground="#1450A3" Text="Jarvis"
-                             Style="{StaticResource TextBoxStyle}"/>
+                    <TextBlock 
+                        Margin="30 0 0 0"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        FontFamily="sans-serif"
+                        FontWeight="Bold"
+                        Foreground="#1450A3">Jarvis
+                    </TextBlock>
 
                 </Grid>
 
@@ -169,7 +177,7 @@
                 </Grid.RowDefinitions>
 
                 <ScrollViewer Grid.Row="0" Height="{Binding ScrollBarHeight}" Margin="0 3 0 3"
-                            VerticalScrollBarVisibility="Hidden" Width="400">
+                            VerticalScrollBarVisibility="Auto" Width="400">
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -201,8 +209,7 @@
                                             <ComboBox Width="79" SelectionChanged="languageComboBox_SelectionChanged" 
                                                     FontFamily ="sans-serif" Style="{StaticResource JarvisComboBox}" 
                                                     Name="languageComboBox" ItemsSource="{Binding Languages}" 
-                                                    DisplayMemberPath="Value">
-                                            </ComboBox>
+                                                    DisplayMemberPath="Value"/>
                                         </StackPanel>
                                     </Button>
                                 </Border>

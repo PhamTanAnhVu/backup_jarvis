@@ -5,8 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
              xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView"
+             xmlns:popupTextMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.PopupTextMenuView"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"     
              mc:Ignorable="d" 
-             MinHeight="88" MaxHeight="326" Width="398.742">
+             Height="Auto" Width="398"
+             Name="TextMenuAPIViews">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -16,65 +19,211 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border CornerRadius="15" Background="#FFFFFF" Padding="8 8 8 8">
+    <Border CornerRadius="15" Padding="8 8 8 8">
+        <Border.Background>
+            <LinearGradientBrush MappingMode="RelativeToBoundingBox" 
+                                StartPoint="0,1" EndPoint="0,0">
+                <LinearGradientBrush.RelativeTransform>
+                    <TransformGroup>
+                        <RotateTransform CenterY="0.5" CenterX="0.5" Angle="86"/>
+                        <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                        <TranslateTransform Y="0.5"/>
+                    </TransformGroup>
+                </LinearGradientBrush.RelativeTransform>
+                <LinearGradientBrush.GradientStops>
+                    <GradientStopCollection>
+                        <GradientStop Color="#FFF" Offset="0.1222"/>
+                        <GradientStop Color="#E6EEFA" Offset="0.2964"/>
+                        <GradientStop Color="#E6EEFA" Offset="0.5804"/>
+                        <GradientStop Color="#D3E3F9" Offset="0.9623"/>
+                    </GradientStopCollection>
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+        </Border.Background>
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="46"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Style="{StaticResource GridIsAPIUsageRemain}">
-                <Grid.RowDefinitions>
-                    <RowDefinition MinHeight="68" MaxHeight="306"/>
-                    <RowDefinition Height="20"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Image x:Name="img" Source="../../../../Assets/Images/jarvis_logo.png" Width="24" Height="24" 
-                           Visibility="{Binding IsSpinningJarvisIconTextMenu ,Converter={StaticResource VisibilityConverter}}">
+            <Grid Grid.Row="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="210"/>
+                        <ColumnDefinition Width="105"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
-                        <Image.RenderTransformOrigin>
-                            <Point X="0.5" Y="0.5"/>
-                        </Image.RenderTransformOrigin>
+                    <Grid Grid.Row="0">
+                        <Border Background="Transparent" Padding="10 10 10 12">
+                            <Button Background="Transparent" Style="{StaticResource AskButton}"
+                                BorderThickness="0" Width="100" HorizontalAlignment="Left" FontSize="14" FontWeight="Bold" 
+                                Foreground="#232329" FontFamily="monica-ext-font_YIBBBFG, -apple-system, 'system-ui', 'Segoe UI'"
+                                Command="{Binding TextMenuAPIHeaderActionCommand}">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding TextMenuAPIHeaderActionName}"/>
+                                        <Path Stroke="#232329" Width="8" Height="10" Stretch="Uniform" Margin="5 0 0 0"
+                                            Data="M26.666 10.667 16 21.333 5.333 10.667"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </Border>
 
-                        <Image.Style>
-                            <Style TargetType="Image">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="True">
-                                        <Setter Property="RenderTransform">
-                                            <Setter.Value>
-                                                <RotateTransform Angle="360"/>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <DataTrigger.EnterActions>
-                                            <BeginStoryboard Storyboard="{StaticResource SpinAnimation}" />
-                                        </DataTrigger.EnterActions>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="False">
+                        <Popup Name="PopupTextMenu" IsOpen="{Binding IsTextMenuAPIHeaderAction}" 
+                            Placement="Bottom" VerticalOffset="-15" HorizontalOffset="+10"
+                            AllowsTransparency="True" ForceCursor="True" StaysOpen="False"
+                            Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
+                            <popupTextMenu:PopupTextMenuView/>
+                        </Popup>
+                    </Grid>
 
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                    <Grid Grid.Column="1" Visibility="{Binding IsActionTranslate, Converter={StaticResource VisibilityConverter}}">
+                        <Border Background="#FFFFFF" CornerRadius="16" Height="32" Padding="10 0 5 0">
+                            <ComboBox Width="85" FontFamily ="sans-serif" Style="{StaticResource JarvisComboBox}" 
+                                  Name="textMenuLanguageComboBox" ItemsSource="{Binding TextMenuLanguages}" 
+                                  DisplayMemberPath="Value" SelectedIndex="{Binding LanguageSelectedIndex}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding TextMenuAICommand}" CommandParameter="0"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ComboBox>
+                        </Border>
+                    </Grid>
 
-                    <ScrollViewer MinHeight="80" MaxHeight="300"
-                                  VerticalScrollBarVisibility="Hidden">
-                        <TextBox TextWrapping="Wrap" Text="{Binding TextMenuAPI}" Style="{StaticResource TextBoxStyle}" />
-                    </ScrollViewer>
-                </Grid>
+                    <Grid Grid.Column="3" Background="Transparent">
+                        <Button Width="24" Height="24" HorizontalAlignment="Left"                            
+                                Style="{StaticResource PopupMenuButtonPin}"
+                                Command="{Binding TextMenuPinCommand}" CommandParameter="-1">
+                            <Button.Content>
+                                <Path Stroke="#232329" StrokeThickness="0.5" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
+                                            Fill="{Binding TextMenuPinColor}" Width="14" Height="14" VerticalAlignment="Center" Stretch="Uniform"/>
+                            </Button.Content>
+                        </Button>
 
-                <Grid Grid.Row="1">
-                    <Button 
-                        Style="{StaticResource TextMenuButton}"
-                        HorizontalAlignment="Center"
-                        Command="{Binding HideTextMenuAPICommand}" 
-                        Content="Hide"/>
+                        <Button Width="24" Height="24" Margin="27 0 0 0" 
+                                Style="{StaticResource PopupMenuButtonPin}"
+                                Command="{Binding HideTextMenuAPICommand}">
+                            <Button.Content>
+                                <Path Fill="#8A939D" Data="M5.536 4.475a.75.75 0 1 0-1.072 1.05l4.47 4.566-4.46 4.373a.75.75 0 0 0 1.05 1.072L10 11.146l4.475 4.389a.75.75 0 1 0 1.05-1.072l-4.46-4.373 4.47-4.566a.75.75 0 0 0-1.071-1.05L10 9.035l-4.464-4.56Z"
+                                    Width="13" Height="14" ClipToBounds="True" Stretch="Uniform"/>
+
+                            </Button.Content>
+                        </Button>
+                    </Grid>
                 </Grid>
             </Grid>
 
-            <Grid Grid.Row="1" Style="{StaticResource GridIsNoAPIUsageRemain}">
-                <Border Background="White" CornerRadius="20" Width="287.74" Height="203" Padding="20">
+            <Grid Grid.Row="1" Style="{StaticResource GridIsAPIUsageRemain}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="46"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Width="382">
+                    <Border Background="#FFFFFF" CornerRadius="12 12 0 0" Padding="12" Visibility="{Binding IsSpinningJarvisIconTextMenu ,Converter={StaticResource VisibilityConverter}}">
+                        <Image x:Name="img" Source="../../../../Assets/Icons/jarvis_icon.ico" Width="20" Height="20" VerticalAlignment="Bottom"
+                        Visibility="{Binding IsSpinningJarvisIconTextMenu ,Converter={StaticResource VisibilityConverter}}" HorizontalAlignment="Left">
+
+                            <Image.RenderTransformOrigin>
+                                <Point X="0.5" Y="0.5"/>
+                            </Image.RenderTransformOrigin>
+
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="True">
+                                            <Setter Property="RenderTransform">
+                                                <Setter.Value>
+                                                    <RotateTransform Angle="360"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard Storyboard="{StaticResource SpinAnimation}" />
+                                            </DataTrigger.EnterActions>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="False">
+
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                    </Border>
+
+                    <Border Background="#FFFFFF" MinHeight="24" MaxHeight="300" CornerRadius="12 12 0 0" Padding="12 10 0 12">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TextBox FontSize="14" Foreground="#24292F" FontFamily="sans-serif"
+                                     TextWrapping="Wrap" Margin="0 0 5 0" Text="{Binding TextMenuAPI}"
+                                     Style="{StaticResource TextBoxStyle}"/>
+                        </ScrollViewer>
+
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsSpinningJarvisIconTextMenu}" Value="False">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
+                </Grid>
+
+                <Grid Grid.Row="1" Width="382" Margin=" 0 3 0 0">
+                    <Border Background="#FFFFFF" CornerRadius="0 0 12 12" Padding="10 12 12 12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="24"/>
+                                <ColumnDefinition Width="24"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" Name="Copy" Margin="0 0 4 0" Background="Transparent" BorderThickness="0" 
+                                    Style="{StaticResource TextMenuAPIButton}" Command="{Binding CopyToClipboardCommand}">
+                                <Button.Content>
+                                    <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="16" Height="16">
+                                        <Path Data="M6.125 2C5.089 2 4.25 2.84 4.25 3.875v.375h-.375C2.839 4.25 2 5.09 2 6.125v6C2 13.161 2.84 14 3.875 14h6c1.036 0 1.875-.84 1.875-1.875v-.375h.375c1.036 0 1.875-.84 1.875-1.875v-6C14 2.839 13.16 2 12.125 2h-6Zm5.625 8.5h.375c.345 0 .625-.28.625-.625v-6a.625.625 0 0 0-.625-.625h-6a.625.625 0 0 0-.625.625v.375h4.375c1.036 0 1.875.84 1.875 1.875V10.5Zm-8.5-4.375c0-.345.28-.625.625-.625h6c.345 0 .625.28.625.625v6c0 .345-.28.625-.625.625h-6a.625.625 0 0 1-.625-.625v-6Z" Fill="Black"/>
+                                    </Canvas>
+                                </Button.Content>
+                            </Button>
+
+                            <Button Grid.Column="1" Name="Regenerate" Margin="0 0 4 0" Background="Transparent" BorderThickness="0" 
+                                    Style="{StaticResource TextMenuAPIButton}" Command="{Binding TextMenuAICommand}" CommandParameter="{Binding PreviousCommandIdx}">
+                                <Button.Content>
+                                    <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="15" Height="15">
+                                        <Path Data="M13.688 2.313a.625.625 0 0 0-.626.624v1.5h-1.5a.625.625 0 1 0 0 1.25h2.126c.345 0 .624-.28.624-.625V2.938a.625.625 0 0 0-.624-.624Z" Fill="Black"/>
+                                        <Path Data="M13.738 4.686a6.625 6.625 0 1 0 .807 4.348.625.625 0 0 0-1.235-.193A5.377 5.377 0 0 1 2.625 8a5.375 5.375 0 0 1 10.031-2.688.625.625 0 1 0 1.082-.626Z" Fill="Black"/>
+                                    </Canvas>
+                                </Button.Content>
+                            </Button>
+
+                            <Grid Grid.Column="2" HorizontalAlignment="Right">
+                                <Image 
+                                    Source="../../../../Assets/Images/jarvis_logo.png" 
+                                    Margin="0 0 8 0"
+                                    Width="14" Height="14"
+                                    HorizontalAlignment="Left"/>
+
+                                <TextBox Margin="20 0 0 0" VerticalAlignment="Center"
+                                        FontSize="10" FontFamily="sans-serif" FontWeight="Bold"
+                                        Foreground="#1450A3" Text="Powered by Jarvis"
+                                        Style="{StaticResource TextBoxStyle}"/> 
+
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="2" Style="{StaticResource GridIsNoAPIUsageRemain}">
+                <Border Background="White" CornerRadius="20" Width="290" Height="203" Padding="20">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="58"/>
@@ -110,5 +259,4 @@
             </Grid>
         </Grid>
     </Border>
-    
 </UserControl>

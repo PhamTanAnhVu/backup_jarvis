@@ -21,9 +21,9 @@
         PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
         PreviewMouseMove="Window_PreviewMouseMove"
         WindowStartupLocation="CenterScreen"
-        Title="Jarvis MainView" Height="496" Width="820"
         MouseMove="Window_MouseMove" 
-        MouseUp="Window_MouseUp">
+        MouseUp="Window_MouseUp"
+        Title="Jarvis MainView" Height="496" Width="820">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -294,9 +294,9 @@
                        VerticalOffset="{Binding PopupDictionaryService.TextMenuOperationsPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.TextMenuOperationsPosition.X}"
                        AllowsTransparency="True"
-                       Focusable="True" ForceCursor="True" StaysOpen="False"
+                       Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuOperations}"
-                       Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
+                       Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <textMenu:TextMenuView/>
                 </Popup>
 
@@ -304,7 +304,7 @@
                        VerticalOffset="{Binding PopupDictionaryService.TextMenuAPIPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.TextMenuAPIPosition.X}"
                        AllowsTransparency="True"
-                       Focusable="True" ForceCursor="True" StaysOpen="False"
+                       Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuAPI}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <textMenuAPI:TextMenuAPIView/>

@@ -29,18 +29,18 @@ namespace Jarvis_Windows
 
             IServiceCollection services = new ServiceCollection();
 
-        services.AddSingleton<Func<Type, ViewModelBase>>(serviceProvider => viewModelType => (ViewModelBase)serviceProvider.GetRequiredService(viewModelType));
-        services.AddSingleton<INavigationService, NavigationService>();
-        services.AddSingleton<PopupDictionaryService>();     
-        services.AddSingleton<SendEventGA4>();
-        services.AddScoped<IAutomationElementValueService, AutomationElementValueService>();
+            services.AddSingleton<Func<Type, ViewModelBase>>(serviceProvider => viewModelType => (ViewModelBase)serviceProvider.GetRequiredService(viewModelType));
+            services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<PopupDictionaryService>();     
+            services.AddSingleton<SendEventGA4>();
+            services.AddScoped<IAutomationElementValueService, AutomationElementValueService>();
 
-        services.AddSingleton<UIElementDetector>(provider => new UIElementDetector
-        {
-            PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>(),
-            SendEventGA4 = provider.GetRequiredService<SendEventGA4>(),
-            AutomationElementValueService = provider.GetRequiredService<IAutomationElementValueService>()
-        });
+            services.AddSingleton<UIElementDetector>(provider => new UIElementDetector
+            {
+                PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>(),
+                SendEventGA4 = provider.GetRequiredService<SendEventGA4>(),
+                AutomationElementValueService = provider.GetRequiredService<IAutomationElementValueService>()
+            });
 
 
         services.AddSingleton<MainViewModel>();

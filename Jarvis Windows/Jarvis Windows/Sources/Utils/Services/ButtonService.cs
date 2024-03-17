@@ -7,15 +7,30 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 namespace Jarvis_Windows.Sources.Utils.Services;
 public class ButtonViewModel : ViewModelBase
 {
+    private int _idx;
     private string _content;
     private string _icon;
     private string _commandParameter;
     private RelayCommand _command;
+    private RelayCommand _pinCommand;
+    private string _pinColor;
     private double _width;
     private bool _visibility;
+    private bool _extraIconVisibility;
     private Thickness _margin;
     private string _horizontalAlignment;
+    private string _cornerRadius;
     private double _separateLineWidth;
+    public int Idx
+    {
+        get { return _idx; }
+        set
+        {
+            _idx = value;
+            OnPropertyChanged();
+        }
+    }
+    
     public string Content
     {
         get { return _content; }
@@ -45,6 +60,16 @@ public class ButtonViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    
+    public bool ExtraIconVisibility
+    {
+        get { return _extraIconVisibility; }
+        set
+        {
+            _extraIconVisibility = value;
+            OnPropertyChanged();
+        }
+    }
 
     public RelayCommand Command
     {
@@ -55,6 +80,16 @@ public class ButtonViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    
+    public RelayCommand PinCommand
+    {
+        get { return _pinCommand; }
+        set
+        {
+            _pinCommand = value;
+            OnPropertyChanged();
+        }
+    }
 
     public string CommandParameter
     {
@@ -62,6 +97,15 @@ public class ButtonViewModel : ViewModelBase
         set
         {
             _commandParameter = value;
+            OnPropertyChanged();
+        }
+    }
+    public string PinColor
+    {
+        get { return _pinColor; }
+        set
+        {
+            _pinColor = value;
             OnPropertyChanged();
         }
     }
@@ -92,6 +136,16 @@ public class ButtonViewModel : ViewModelBase
         set
         {
             _horizontalAlignment = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public string CornerRadius
+    {
+        get { return _cornerRadius; }
+        set
+        {
+            _cornerRadius = value;
             OnPropertyChanged();
         }
     }
@@ -269,35 +323,89 @@ public class AIActionTemplate
     {
         new ButtonViewModel
         {
+            Icon = "🌐",
             Visibility = true,
-            HorizontalAlignment = "Left",
-            SeparateLineWidth = 1,
-            //Content = "Explain",
-            //Command = null,
-            //CommandParameter = "Revise it",
-            //Width = 77.92,
-            // argin = new Thickness(8, 0, 0, 0)
+            Command = null,
+            PinCommand = null,
+            CommandParameter = "Translate it",
+            Content = "Translate",
+            CornerRadius = "16 0 0 16",
+            PinColor = "#6841EA"
         },
         new ButtonViewModel
         {
+            Icon = "✏️",
             Visibility = true,
-            HorizontalAlignment = "Left",
-            SeparateLineWidth = 1
-            //Content = "Summarize",
-            //Command = null,
-            //CommandParameter = "Summarize it",
-            //Width = 102.8,
-            // Margin = new Thickness(69.9, 0, 0, 0)
+            Command = null,
+            PinCommand = null,
+            CommandParameter = "Revise it",
+            Content = "Revise",
+            CornerRadius = "0",
+            PinColor = "#6841EA"
         },
         new ButtonViewModel
         {
-            Visibility = true,
-            HorizontalAlignment = "Left",
-            //Content = "Translate to",
-            //Command = null,
-            //CommandParameter = "Translate it",
-            //Width = 161.34,
-            //Margin = new Thickness(156.7, 0, 0, 0)
+            Icon = "📌",
+            Visibility = false,
+            Command = null,
+            PinCommand = null,
+            CommandParameter = "Extract the main information",
+            Content = "Extract",
+            CornerRadius = "0"
+        },   
+        new ButtonViewModel
+        {
+            Icon = "👋",
+            Visibility = false,
+            Command = null,
+            CommandParameter = "Make it constructive",
+            Content = "Constructive",
+            CornerRadius = "0"
+        },
+        new ButtonViewModel
+        {
+            Icon = "🖼️",
+            Visibility = false,
+            Command = null,
+            CommandParameter = "Make it more detailed",
+            Content = "Detail",
+            CornerRadius = "0"
+        },
+        new ButtonViewModel
+        {
+            Icon = "🎯",
+            Visibility = false,
+            Command = null,
+            CommandParameter = "Make it persuasive",
+            Content = "Persuasive",
+            CornerRadius = "0"
+        },
+        new ButtonViewModel
+        {
+            Icon = "🖋️",
+            Visibility = false,
+            Command = null,
+            CommandParameter = "Paraphrase it",
+            Content = "Paraphrase",
+            CornerRadius = "0"
+        },
+        new ButtonViewModel
+        {
+            Icon = "📝",
+            Visibility = false,
+            Command = null,
+            CommandParameter = "Summarize it",
+            Content = "Summarize",
+            CornerRadius = "0"
+        },
+        new ButtonViewModel
+        {
+            Icon = "✂️",
+            Visibility = false,
+            Command = null,
+            CommandParameter = "Simplify it",
+            Content = "Simplify",
+            CornerRadius = "0"
         }
     };
 }

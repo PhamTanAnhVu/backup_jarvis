@@ -23,11 +23,15 @@ public class PopupDictionaryService : ObserveralObject
     private bool _isShowAIBubbleFromTrayMenu;
     private bool _isShowAIChatBubble; 
     private bool _isShowAIChatSidebar; 
+    private bool _isShowPinTextMenuAPI;
+    private bool _isShowPopupTextMenu;
 
     private Point _jarvisActionPosition;
     private Point _menuOperationsPosition;    
     private Point _textMenuOperationsPosition;
     private Point _textMenuAPIPosition;
+    private Point _popupTextMenuPosition;
+
     private Point _aIChatBubblePosition;
     private Point _aIChatSidebarPosition;
     private static String? _targetLanguage;
@@ -91,22 +95,31 @@ public class PopupDictionaryService : ObserveralObject
         }
     }
 
-    public Point JarvisActionPosition
+    public bool IsShowTextMenuOperations
     {
-        get { return _jarvisActionPosition; }
+        get { return _isShowTextMenuOperations; }
         set
         {
-            _jarvisActionPosition = value;
+            _isShowTextMenuOperations = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool IsShowTextMenuAPI
+    {
+        get { return _isShowTextMenuAPI; }
+        set
+        {
+            _isShowTextMenuAPI = value;
             OnPropertyChanged();
         }
     }
 
-    public Point MenuOperationsPosition
+    public bool IsShowPinTextMenuAPI
     {
-        get { return _menuOperationsPosition; }
+        get { return _isShowPinTextMenuAPI; }
         set
         {
-            _menuOperationsPosition = value;
+            _isShowPinTextMenuAPI = value;
             OnPropertyChanged();
         }
     }
@@ -129,21 +142,22 @@ public class PopupDictionaryService : ObserveralObject
         }
     }
 
-    public bool IsShowTextMenuOperations
+    public bool IsShowPopupTextMenu
     {
-        get { return _isShowTextMenuOperations; }
+        get { return _isShowPopupTextMenu; }
         set
         {
-            _isShowTextMenuOperations = value;
+            _isShowPopupTextMenu = value;
             OnPropertyChanged();
         }
     }
-    public bool IsShowTextMenuAPI
+
+    public Point JarvisActionPosition
     {
-        get { return _isShowTextMenuAPI; }
+        get { return _jarvisActionPosition; }
         set
         {
-            _isShowTextMenuAPI = value;
+            _jarvisActionPosition = value;
             OnPropertyChanged();
         }
     }
@@ -176,6 +190,16 @@ public class PopupDictionaryService : ObserveralObject
         }
     }
 
+    public Point MenuOperationsPosition
+    {
+        get { return _menuOperationsPosition; }
+        set
+        {
+            _menuOperationsPosition = value;
+            OnPropertyChanged();
+        }
+    }  
+
     public Point TextMenuOperationsPosition
     {
         get { return _textMenuOperationsPosition; }
@@ -191,6 +215,15 @@ public class PopupDictionaryService : ObserveralObject
         set
         {
             _textMenuAPIPosition = value;
+            OnPropertyChanged();
+        }
+    }
+    public Point PopupTextMenuPosition
+    {
+        get { return _popupTextMenuPosition; }
+        set
+        {
+            _popupTextMenuPosition = value;
             OnPropertyChanged();
         }
     }
@@ -299,7 +332,7 @@ public class PopupDictionaryService : ObserveralObject
 
     public void ShowTextMenuAPIOperations(bool isShow)
     {
-        IsShowTextMenuAPI = isShow;
+        IsShowTextMenuAPI = isShow & TextMenuSelectionVisibility;
     }
 
     public void UpdateMenuOperationsPosition(Point systemPoint)

@@ -18,6 +18,8 @@ using System.Windows;
 using Jarvis_Windows.Sources.DataAccess;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using Jarvis_Windows.Sources.Utils.Accessibility;
+using Gma.System.MouseKeyHook;
+using System.Windows.Controls;
 using Windows.Devices.Enumeration;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -51,6 +53,11 @@ public class MainViewModel : ViewModelBase
     private double _textMenuAPIscrollBarHeight;
     private bool _isAPIUsageRemain;
     private bool _isNoAPIUsageRemain;
+    private string _textMenuPinColor;
+    private string _textMenuAPIHeaderActionName;
+    private bool _isTextMenuAPIHeaderAction;
+    private bool _isActionTranslate;
+    private int _previousCommandIdx;
 
     private string _usernameFirstLetter;
     private string _username;
@@ -60,8 +67,6 @@ public class MainViewModel : ViewModelBase
     public RelayCommand TextMenuAICommand { get; set; }
     public RelayCommand ShowTextMenuOperationsCommand { get; set; }
     public RelayCommand HideTextMenuAPICommand { get; set; }
-    public RelayCommand LanguageComboBoxCommand { get; set; }
-
 
     private SendEventGA4 _sendEventGA4;
     public List<Language> Languages { get; set; }
@@ -79,6 +84,11 @@ public class MainViewModel : ViewModelBase
     public RelayCommand ShowSettingsCommand { get; set; }
     public ObservableCollection<ToggleButtons> ToggleButtons { get; set; }
     private List<DispatcherTimer> StopDotTimer { get; set; }
+    public RelayCommand TextMenuPinCommand { get; set; }
+    public RelayCommand PopupTextMenuCommand { get; set; }
+    public RelayCommand TextMenuAPIHeaderActionCommand { get; set; }
+    public RelayCommand CopyToClipboardCommand { get; set; }
+
     public INavigationService NavigationService
     {
         get => _navigationService;
@@ -357,6 +367,55 @@ public class MainViewModel : ViewModelBase
         }
     }
 
+    public string TextMenuPinColor
+    {
+        get { return _textMenuPinColor; }
+        set
+        {
+            _textMenuPinColor = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string TextMenuAPIHeaderActionName
+    {
+        get { return _textMenuAPIHeaderActionName; }
+        set
+        {
+            _textMenuAPIHeaderActionName = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool IsTextMenuAPIHeaderAction
+    {
+        get { return _isTextMenuAPIHeaderAction; }
+        set
+        {
+            _isTextMenuAPIHeaderAction = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool IsActionTranslate
+    {
+        get { return _isActionTranslate; }
+        set
+        {
+            _isActionTranslate = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public int PreviousCommandIdx
+    {
+        get { return _previousCommandIdx; }
+        set
+        {
+            _previousCommandIdx = value;
+            OnPropertyChanged();
+        }
+    }
+
     public static IAutomationElementValueService AutomationElementValueService 
     { 
         get => _automationElementValueService; 
@@ -402,11 +461,14 @@ public class MainViewModel : ViewModelBase
         TextMenuAICommand = new RelayCommand(ExecuteTextMenuAICommand, o => true);
         ShowTextMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
         HideTextMenuAPICommand = new RelayCommand(ExecuteHideTextMenuAPICommand, o => true);
-        LanguageComboBoxCommand = new RelayCommand(OnLanguageTextMenuSelectionChanged, o => true);
-
+       
         UpgradePlanCommand = new RelayCommand(ExecuteUpgradePlanCommand, o => true);
         LoginCommand = new RelayCommand(ExecuteLoginCommand, o => true);
         ShowSettingsCommand = new RelayCommand(o => { PopupDictionaryService.IsShowSettingMenu = !PopupDictionaryService.IsShowSettingMenu; }, o => true);
+        TextMenuPinCommand = new RelayCommand(ExecuteTextMenuPinCommand, o => true);
+        PopupTextMenuCommand = new RelayCommand(ExecutePopupTextMenuCommand, o => true);
+        TextMenuAPIHeaderActionCommand = new RelayCommand(ExecuteTextMenuAPIHeaderActionCommand, o => true);
+        CopyToClipboardCommand = new RelayCommand(o => { Clipboard.SetText(TextMenuAPI); }, o => true);
 
         string relativePath = Path.Combine("Appsettings", "Configs", "languages_supported.json");
         string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
@@ -604,9 +666,6 @@ public class MainViewModel : ViewModelBase
             PopupDictionaryService.ShowMenuOperations(!_menuShowStatus);
             PopupDictionaryService.ShowJarvisAction(false);
 
-            AIActionTemplate aIActionTemplate = new AIActionTemplate();
-            TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
-
             if (_menuShowStatus == false)
             {
                 await Task.Run(async () =>
@@ -656,8 +715,6 @@ public class MainViewModel : ViewModelBase
                 textFromElement = MainWindowInputText;
                 _fromWindow = true;
             }
-
-                if (textFromElement == "") return;
 
             if (_actionType == "Translate it")
             {
@@ -713,88 +770,85 @@ public class MainViewModel : ViewModelBase
             await SendEventGA4.SendEvent("do_ai_action", eventParams);
         }
     }
-
-    public async void OnLanguageTextMenuSelectionChanged(object sender)
-    {
-        TextMenuAICommand.Execute("Translate it");
-    }
-
-
     public async void ExecuteHideTextMenuAPICommand(object obj)
     {
         PopupDictionaryService.ShowTextMenuAPIOperations(false);
-
-        AIActionTemplate aIActionTemplate = new AIActionTemplate();
-        TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
+        PopupDictionaryService.IsShowPinTextMenuAPI = false;
+        TextMenuPinColor = "Transparent";
+    }
+    
+    public async void ExecutePopupTextMenuCommand(object obj)
+    {
+        PopupDictionaryService.IsShowPopupTextMenu = !PopupDictionaryService.IsShowPopupTextMenu;
+        if (!PopupDictionaryService.IsShowPinTextMenuAPI) PopupDictionaryService.IsShowTextMenuAPI = false;
     }
     
     private void InitializeButtonsTextMenu()
     {
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
         TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
-    }
-
-    private void OnLanguageTextMenuSelectionChanged(object sender, EventArgs e)
-    {
-        TextMenuAICommand.Execute("Translate it");
+        TextMenuPinColor = "Transparent";
+        int idx = 0;
+        foreach (var action in TextMenuButtons)
+        {
+            action.Command = new RelayCommand(ExecuteTextMenuAICommand, o => true);
+            action.PinCommand = new RelayCommand(ExecuteTextMenuPinCommand, o => true);
+            action.Idx = idx++;
+            action.ExtraIconVisibility = true;
+            if(action.PinColor == "") action.PinColor = "Transparent";
+        }
     }
 
     public async void ExecuteTextMenuAICommand(object obj)
     {
-        string _actionType = (string)obj;
+        int idx = 0;
+        try { idx = (int)obj; }
+        catch { idx = int.Parse((string)obj); }
         string _aiAction = "custom";
         string _targetLanguage = TextMenuLanguages[LanguageSelectedIndex].Value;
 
+        PreviousCommandIdx = idx;
+        IsActionTranslate = (idx == 0) ? true : false;
+        PopupDictionaryService.IsShowPopupTextMenu = IsTextMenuAPIHeaderAction = false;
         try
         {
             TextMenuAPI = "";
             TextMenuAPIscrollBarHeight = 88;
             IsSpinningJarvisIconTextMenu = true;
+            TextMenuAPIHeaderActionName = TextMenuButtons[idx].Content;
             PopupDictionaryService.IsShowTextMenuAPI = true;
 
             var textFromElement = UIElementDetector.CurrentSelectedText;
-
             var textFromAPI = "";
+            
+            if (textFromElement == "") return;
 
-            if (_actionType == "Translate it")
+            if (TextMenuButtons[idx].CommandParameter == "Translate it")
             {
-                TextMenuButtons[0].Visibility = TextMenuButtons[1].Visibility = false;
                 textFromAPI = await JarvisApi.Instance.TranslateHandler(textFromElement, _targetLanguage);
                 _aiAction = "translate";
             }
 
-            else if (_actionType == "Summarize it")
+            else if (TextMenuButtons[idx].CommandParameter == "Revise it")
             {
-                TextMenuButtons[0].Visibility = TextMenuButtons[2].Visibility = false;
-                TextMenuButtons[1].HorizontalAlignment = "Right";
-                TextMenuButtons[1].SeparateLineWidth = 0;
-
                 textFromAPI = await JarvisApi.Instance.ReviseHandler(textFromElement);
+                _aiAction = "revise";
+            }
+            else if (TextMenuButtons[idx].CommandParameter == "Ask")
+            {
+                textFromAPI = await JarvisApi.Instance.AskHandler(textFromElement, FilterText);
+                _aiAction = "ask";
             }
 
             else
-            {
-                TextMenuButtons[1].Visibility = TextMenuButtons[2].Visibility = false;
-                TextMenuButtons[0].HorizontalAlignment = "Right";
-                TextMenuButtons[0].SeparateLineWidth = 0;
+                textFromAPI = await JarvisApi.Instance.AIHandler(textFromElement, TextMenuButtons[idx].CommandParameter);
 
-                textFromAPI = await JarvisApi.Instance.AIHandler(textFromElement, _actionType);
-
-            }
+            TextMenuAPI = textFromAPI;
 
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
 
             IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
             IsNoAPIUsageRemain = !IsAPIUsageRemain;
-
-
-            if (textFromAPI == null)
-            {
-                Debug.WriteLine($"🆘🆘🆘 {ErrorConstant.translateError}");
-                return;
-            }
-
-            TextMenuAPI = textFromAPI;
         }
         catch { }
         finally
@@ -808,11 +862,52 @@ public class MainViewModel : ViewModelBase
             if (_aiAction == "translate")
                 eventParams.Add("ai_action_translate_to", _targetLanguage);
             else if (_aiAction == "custom")
-                eventParams.Add("ai_action_custom", _actionType);
+                eventParams.Add("ai_action_custom", TextMenuButtons[idx].CommandParameter);
 
             await SendEventGA4.SendEvent("do_ai_action", eventParams);
         }
     }
+
+    private async void ExecuteTextMenuPinCommand(object obj)
+    {
+        string[] colors = ["Transparent", "#6841EA"];
+        int idx = 0;
+        try { idx = (int)obj; }
+        catch { idx = int.Parse((string)obj); }
+        if (idx == -1)
+        {
+            PopupDictionaryService.IsShowPinTextMenuAPI = !PopupDictionaryService.IsShowPinTextMenuAPI;
+            TextMenuPinColor = colors[Convert.ToInt32(PopupDictionaryService.IsShowPinTextMenuAPI)];
+            return;
+        }
+
+        bool visibilityStatus = !TextMenuButtons[idx].Visibility;
+        int sizeChanged = (visibilityStatus) ? -32 : 32;
+        TextMenuButtons[idx].Visibility = visibilityStatus;
+        
+        // Add buttons and expand to the left, the problem is the UI will reload everytime -> not smooth
+        //PopupDictionaryService.TextMenuOperationsPosition = new Point
+        //(
+        //    PopupDictionaryService.TextMenuOperationsPosition.X + sizeChanged, PopupDictionaryService.TextMenuOperationsPosition.Y
+        //);
+
+        TextMenuButtons[idx].PinColor = colors[Convert.ToInt32(visibilityStatus)];
+        OnPropertyChanged(nameof(TextMenuButtons));
+    }
+    
+    private async void ExecuteTextMenuAPIHeaderActionCommand(object obj)
+    {
+        IsTextMenuAPIHeaderAction = !IsTextMenuAPIHeaderAction;
+        foreach (var action in TextMenuButtons)
+        {
+            action.ExtraIconVisibility = !IsTextMenuAPIHeaderAction;
+        }
+    }
+
+    //public async void ExecuteCopyToClipboardCommand(object obj)
+    //{
+    //    Clipboard.SetText(TextMenuAPI);
+    //}
 
     public async void ExecuteUpgradePlanCommand(object obj)
     {

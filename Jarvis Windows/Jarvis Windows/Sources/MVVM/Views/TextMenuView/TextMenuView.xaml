@@ -5,8 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuView"
+             xmlns:popupTextMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.PopupTextMenuView"
              mc:Ignorable="d" 
-             Height="32" Width="398.742">
+             Height="30" 
+             MinWidth="0" MaxWidth="2068"
+             Name="TextMenuViews">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -16,82 +19,61 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border CornerRadius="15" Background="#FFFFFF" Padding="6 4 0 4">
+    <Border CornerRadius="16" Background="#FFFFFF">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="79.69"/>
-                <ColumnDefinition Width="310"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="32"/>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
-                <Image 
-                    Width="20" Height="20" HorizontalAlignment="Left"
-                    Source="../../../../Assets/Images/jarvis_logo.png"/>
+                <ItemsControl ItemsSource="{Binding TextMenuButtons}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
 
-                <TextBox Margin="26 4 0 0" Width="44.69" Height="20" HorizontalAlignment="Left"
-                         FontSize="14" FontFamily="sans-serif" FontWeight="Bold" Foreground="#104082" Text="Jarvis" 
-                         Style="{StaticResource TextBoxStyle}"/>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Width="32" Height="30" HorizontalAlignment="Left"   
+                                        Style="{StaticResource TextMenuButton}"
+                                        Command="{Binding Command}" CommandParameter="{Binding Idx}"
+                                        Visibility="{Binding Visibility, Converter={StaticResource VisibilityConverter}}">
+                                <Button.Content>
+                                    <TextBlock Text="{Binding Icon}" FontFamily="sans-serif" 
+                                         Width="Auto" Height="16" HorizontalAlignment="Center" 
+                                         VerticalAlignment="Center"/>
+                                </Button.Content>
+
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
 
             <Grid Grid.Column="1">
-                <Button Width="Auto" Height="20" Margin="8 0 0 0" HorizontalAlignment="{Binding TextMenuButtons[0].HorizontalAlignment}"
-                        Style="{StaticResource TextMenuButton}"
-                        Command="{Binding TextMenuAICommand}" CommandParameter="Extract the main information"
-                        Visibility="{Binding TextMenuButtons[0].Visibility, Converter={StaticResource VisibilityConverter}}">
-
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="{Binding TextMenuButtons[0].HorizontalAlignment}">
-                        <TextBlock Text="Explain" FontFamily ="sans-serif" FontSize="14" Foreground="#082041" 
-                                   VerticalAlignment="Center"/>
-
-                        <Rectangle Width="{Binding TextMenuButtons[0].SeparateLineWidth}" Height="24" Fill="#E5E7EB" Margin="8 0 0 0"/>
-                    </StackPanel>
-
-
+                <Button Width="32" Height="30"
+                        Style="{StaticResource AskButton}"
+                        Command="{Binding PopupTextMenuCommand}" CommandParameter="{Binding CommandParameter}">
+                    <Button.Content>
+                        <Path Data="M6.667 12.667a1.333 1.333 0 1 0 2.666 0 1.333 1.333 0 0 0-2.666 0Zm.39-8.39A1.333 1.333 0 1 1 8.943 2.39a1.333 1.333 0 0 1-1.886 1.885Zm0 4.666a1.333 1.333 0 1 1 1.886-1.886 1.333 1.333 0 0 1-1.886 1.886Z"
+                                     Width="16" Height="16" Fill="#082041"/>
+                    </Button.Content>
                 </Button>
 
-                <Button Width="Auto" Height="20" Margin="69.9 0 0 0" 
-                        HorizontalAlignment="{Binding TextMenuButtons[1].HorizontalAlignment}"
-                        Style="{StaticResource TextMenuButton}"
-                        Command="{Binding TextMenuAICommand}" CommandParameter="Summarize it"
-                        Visibility="{Binding TextMenuButtons[1].Visibility, Converter={StaticResource VisibilityConverter}}">
-
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="{Binding TextMenuButtons[1].HorizontalAlignment}">
-                        <TextBlock Text="Summarize" FontFamily ="sans-serif" FontSize="14" Foreground="#082041" 
-                                    VerticalAlignment="Center"/>
-
-                        <Rectangle Width="{Binding TextMenuButtons[1].SeparateLineWidth}" Height="24" Fill="#E5E7EB" Margin="8 0 0 0"/>
-                    </StackPanel>
-                </Button>
-
-                <Button Width="146" Height="20" Margin="156.7 0 0 0" HorizontalAlignment="{Binding TextMenuButtons[2].HorizontalAlignment}"
-                        Style="{StaticResource TextMenuButton}"
-                        Command="{Binding TextMenuAICommand}" CommandParameter="Translate it"
-                        Visibility="{Binding TextMenuButtons[2].Visibility, Converter={StaticResource VisibilityConverter}}">
-
-                    <StackPanel Orientation="Horizontal" Background="Transparent">
-                        <TextBlock Text="Translate to " FontFamily ="sans-serif" 
-                                    FontSize="14" Foreground="#082041" VerticalAlignment="Center"/>
-                        <!--<ComboBox Width="Auto" 
-                                  FontFamily="sans-serif" Style="{StaticResource JarvisComboBox}"
-                                  Name="textMenuLanguageComboBox" ItemsSource="{Binding TextMenuLanguages}"
-                                  DisplayMemberPath="Value">
-                        </ComboBox>-->
-
-                        <ComboBox Width="Auto"
-                                  FontFamily ="sans-serif" Style="{StaticResource JarvisComboBox}" 
-                                  Name="textMenuLanguageComboBox" ItemsSource="{Binding TextMenuLanguages}" 
-                                  DisplayMemberPath="Value" SelectedIndex="{Binding LanguageSelectedIndex}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding LanguageComboBoxCommand}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </ComboBox>
-                    </StackPanel>
-                </Button>
+                <Popup Name="PopupTextMenu" IsOpen="{Binding PopupDictionaryService.IsShowPopupTextMenu}" 
+                        Placement="Absolute"
+                        VerticalOffset="{Binding PopupDictionaryService.PopupTextMenuPosition.Y}"
+                        HorizontalOffset="{Binding PopupDictionaryService.PopupTextMenuPosition.X}"
+                        AllowsTransparency="True"
+                        Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
+                    <popupTextMenu:PopupTextMenuView/>
+                </Popup>
             </Grid>
-        </Grid>
 
+        </Grid>
     </Border>
+
 
 </UserControl>

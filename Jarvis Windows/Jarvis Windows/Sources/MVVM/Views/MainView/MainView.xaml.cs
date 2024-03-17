@@ -51,8 +51,8 @@ public partial class MainView : Window
         _contextMenuStrip.Items.Add("Settings", null, Setting_Click);
         _contextMenuStrip.Items.Add("Quit Jarvis", null, QuitMenuItem_Click);
 
-    _notifyIcon.ContextMenuStrip = _contextMenuStrip;
-    _notifyIcon.Visible = true;
+        _notifyIcon.ContextMenuStrip = _contextMenuStrip;
+        _notifyIcon.Visible = true;
     }
 
     private System.Windows.Point _menuActionPoint;
@@ -178,6 +178,7 @@ public partial class MainView : Window
 
     private async void Sidebar_Click(object sender, EventArgs e)
     {
+        if (PopupDictionaryService.IsShowAIChatBubble) return;
         EventAggregator.PublishAIChatBubbleStatusChanged(this, EventArgs.Empty);
     }
     private async void Setting_Click(object sender, EventArgs e)

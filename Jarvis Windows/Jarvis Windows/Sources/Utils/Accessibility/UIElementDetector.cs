@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml.Linq;
 using Windows.Graphics.Printing3D;
+using System.IO;
 
 namespace Jarvis_Windows.Sources.Utils.Accessibility;
 
@@ -275,10 +276,6 @@ public class UIElementDetector
             Debug.WriteLine($"🟧🟧🟧 {automationElement?.Current.Name} Bounding Rectangle Changed");
             PopupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
             PopupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
-
-            PopupDictionaryService.UpdateTextMenuOperationsPosition(CalculateElementLocation());
-            PopupDictionaryService.UpdateTextMenuAPIPosition();
-
         }
         else if (e.Property == AutomationElement.IsOffscreenProperty)
         {
@@ -480,13 +477,21 @@ public class UIElementDetector
                                     {
                                         Rect boundingRect = rects[0];
                                         _popupDictionaryService.ShowMenuSelectionActions(true);
-                                        _popupDictionaryService.ShowSelectionResponseView(false);
+                                        _popupDictionaryService.IsShowPopupTextMenu = false;
                                         double screenHeight = SystemParameters.PrimaryScreenHeight;
                                         double screenWidth = SystemParameters.PrimaryScreenWidth;
                                         double xScale = screenWidth / 1920;
                                         double yScale = screenHeight / 1080;
-                                        _popupDictionaryService.TextMenuOperationsPosition = new Point(boundingRect.X * xScale, boundingRect.Y * yScale + 20);
-                                        _popupDictionaryService.TextMenuAPIPosition = new Point(boundingRect.X * xScale, boundingRect.Y * yScale + 60);
+                                        Point selectedTextPosition = new Point(boundingRect.X * xScale - 20, boundingRect.Y * yScale);
+                                        _popupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 20);
+                                        
+                                        Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 55);
+                                        _popupDictionaryService.PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);
+                                        if (!_popupDictionaryService.IsShowPinTextMenuAPI)
+                                        {
+                                            _popupDictionaryService.ShowSelectionResponseView(false);
+                                            _popupDictionaryService.TextMenuAPIPosition = new Point(newPosition.X, newPosition.Y);
+                                        }
                                     }
                                 }
                             }
