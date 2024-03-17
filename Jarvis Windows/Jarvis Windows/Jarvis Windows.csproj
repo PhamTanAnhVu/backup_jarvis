@@ -71,6 +71,7 @@
 
   <ItemGroup>
     <!--<None Remove="Assets\Icons\jarvis_icon.png" />-->
+    <None Remove="AppSettings\Configs\supported_apps.json" />
     <None Remove="Assets\Icons\jarvis_logo_large.ico" />
     <None Remove="Assets\Images\close.png" />
     <None Remove="Assets\Images\cross.png" />
@@ -85,6 +86,12 @@
 
   <ItemGroup>
     <Page Remove="Sources\MVVM\Views\Styles\JarvisStyle.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="AppSettings\Configs\supported_apps.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

@@ -14,6 +14,7 @@ using Jarvis_Windows.Sources.MVVM.Views;
 using Jarvis_Windows.Sources.Utils.Accessibility;
 using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
 using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
+using Jarvis_Windows.Sources.DataAccess.Local;
 
 namespace Jarvis_Windows
 {
@@ -34,12 +35,14 @@ namespace Jarvis_Windows
             services.AddSingleton<PopupDictionaryService>();     
             services.AddSingleton<SendEventGA4>();
             services.AddScoped<IAutomationElementValueService, AutomationElementValueService>();
+            services.AddSingleton<ISupportedAppService, SupportedAppService>();
 
             services.AddSingleton<UIElementDetector>(provider => new UIElementDetector
             {
                 PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>(),
                 SendEventGA4 = provider.GetRequiredService<SendEventGA4>(),
-                AutomationElementValueService = provider.GetRequiredService<IAutomationElementValueService>()
+                AutomationElementValueService = provider.GetRequiredService<IAutomationElementValueService>(),
+                SupportedAppService = provider.GetRequiredService<ISupportedAppService>()
             });
 
 

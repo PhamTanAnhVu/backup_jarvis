@@ -13,6 +13,7 @@ using System.Text;
 using System.Xml.Linq;
 using Windows.Graphics.Printing3D;
 using System.IO;
+using Jarvis_Windows.Sources.DataAccess.Local;
 
 namespace Jarvis_Windows.Sources.Utils.Accessibility;
 
@@ -28,6 +29,7 @@ public class UIElementDetector
     private static IAutomationElementValueService? _automationElementValueService;
     private static string _currentSelectedText = String.Empty;
     private static AutomationElement? _observerSelectionChangeElement;
+    private static ISupportedAppService? _supportedAppSerice;
 
     public static bool IsUseAutoTuningPosition { 
         get => _isUseAutoTuningPosition; 
@@ -71,6 +73,11 @@ public class UIElementDetector
     { 
         get => _popupDictionaryService; 
         set => _popupDictionaryService = value; 
+    }
+    public ISupportedAppService SupportedAppService 
+    { 
+        get => _supportedAppSerice;
+        set => _supportedAppSerice = value;
     }
 
     private UIElementDetector(PopupDictionaryService popupDictionaryService)
@@ -135,16 +142,42 @@ public class UIElementDetector
         await _sendEventGA4.SendEvent("inject_input_actions");       
     }
 
+    [DllImport("user32.dll")]
+static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
+    private static string GetActiveWindowTitle()
+    {
+        const int nChars = 256;
+        StringBuilder Buff = new StringBuilder(nChars);
+        IntPtr handle = GetForegroundWindow();
+
+        if (GetWindowText(handle, Buff, nChars) > 0)
+        {
+            return Buff.ToString();
+        }
+        return null;
+    }
+
     private static void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
     {
         AutomationElement? newFocusElement = sender as AutomationElement;
         if (newFocusElement != null)
             RegisterSelectionChangedFor(newFocusElement);
 
-        AutomationElement? editElement = FindFirstElementType(newFocusElement, ControlType.Group);
+        /*AutomationElement? editElement = FindFirstElementType(newFocusElement, ControlType.Group);
         if (editElement != null)
         {
             Debug.WriteLine($"EDIT ELEMENT {editElement.Current.Name}");
+        }*/
+
+
+        Debug.WriteLine("FOREGROUND APP: " + GetActiveWindowTitle());
+        if (_supportedAppSerice != null)
+        {
+            if (!_supportedAppSerice.IsSupportedApp(GetActiveWindowTitle()))
+            {
+                return;
+            }
         }
 
         if (newFocusElement != null && newFocusElement != _focusingElement)
