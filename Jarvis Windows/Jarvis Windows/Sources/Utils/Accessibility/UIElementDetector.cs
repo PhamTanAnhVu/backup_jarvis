@@ -14,6 +14,8 @@ using System.Xml.Linq;
 using Windows.Graphics.Printing3D;
 using System.IO;
 using Jarvis_Windows.Sources.DataAccess.Local;
+using System.Windows.Media.Imaging;
+//using System.Drawing;
 
 namespace Jarvis_Windows.Sources.Utils.Accessibility;
 
@@ -509,16 +511,25 @@ static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
                                     if (rects != null && rects.Length > 0)
                                     {
                                         Rect boundingRect = rects[0];
-                                        _popupDictionaryService.ShowMenuSelectionActions(true);
+                                        if (boundingRect == Rect.Empty)
+                                        {
+                                            _popupDictionaryService.ShowMenuSelectionActions(false);
+                                            _popupDictionaryService.IsShowPopupTextMenu = false;
+                                        }
+                                        _popupDictionaryService.ShowMenuSelectionActions(false);
                                         _popupDictionaryService.IsShowPopupTextMenu = false;
                                         double screenHeight = SystemParameters.PrimaryScreenHeight;
                                         double screenWidth = SystemParameters.PrimaryScreenWidth;
                                         double xScale = screenWidth / 1920;
                                         double yScale = screenHeight / 1080;
-                                        Point selectedTextPosition = new Point(boundingRect.X * xScale - 20, boundingRect.Y * yScale);
-                                        _popupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 20);
-                                        
-                                        Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 55);
+
+                                        System.Drawing.Point lpPoint;
+                                        NativeUser32API.GetCursorPos(out lpPoint);
+                                        Debug.WriteLine($"📌📌📌 Cursor Position: {lpPoint.X} - {lpPoint.Y}");
+                                        //Point selectedTextPosition = new Point(boundingRect.X * xScale - 20, boundingRect.Y * yScale + boundingRect.Height * 1.5f);
+                                        Point selectedTextPosition = new Point(lpPoint.X * xScale, lpPoint.Y * yScale);
+                                        _popupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
+                                        Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y +50);
                                         _popupDictionaryService.PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);
                                         if (!_popupDictionaryService.IsShowPinTextMenuAPI)
                                         {

@@ -63,6 +63,7 @@ public class MainViewModel : ViewModelBase
     private string _username;
     private bool _isMainWindowInputTextEmpty;
     private ObservableCollection<ButtonViewModel> _textMenuButtons;
+    private IKeyboardMouseEvents _globalMouseHook;
     public List<Language> TextMenuLanguages { get; set; }
     public RelayCommand TextMenuAICommand { get; set; }
     public RelayCommand ShowTextMenuOperationsCommand { get; set; }
@@ -505,6 +506,10 @@ public class MainViewModel : ViewModelBase
 
         Username = "Anh Vu";
         UsernameFirstLetter = Username[0].ToString();
+
+        _globalMouseHook = Hook.GlobalEvents();
+        _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
+        _globalMouseHook.MouseDragFinished += MouseDragFinished;
     }
 
     private void UpdateButtonVisibility()
@@ -1097,6 +1102,53 @@ public class MainViewModel : ViewModelBase
         });
 
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+    }
+
+    private async void MouseDoubleClicked(object sender, System.Windows.Forms.MouseEventArgs e)
+    {
+        IDataObject tmpClipboard = System.Windows.Clipboard.GetDataObject();
+        System.Windows.Clipboard.Clear();
+
+        await Task.Delay(50);
+
+        // Send Ctrl+C, which is "copy"
+        System.Windows.Forms.SendKeys.SendWait("^c");
+
+        await Task.Delay(50);
+
+        if (System.Windows.Clipboard.ContainsText())
+        {
+            string text = System.Windows.Clipboard.GetText();
+            UIElementDetector.CurrentSelectedText = text;
+            PopupDictionaryService.ShowMenuSelectionActions(true);
+        }
+        else
+        {
+            System.Windows.Clipboard.SetDataObject(tmpClipboard);
+        }
+    }
+
+    private async void MouseDragFinished(object sender, System.Windows.Forms.MouseEventArgs e)
+    {
+        IDataObject tmpClipboard = System.Windows.Clipboard.GetDataObject();
+        System.Windows.Clipboard.Clear();
+        await Task.Delay(50);
+
+        // Send Ctrl+C, which is "copy"
+        System.Windows.Forms.SendKeys.SendWait("^c");
+
+        await Task.Delay(50);
+
+        if (System.Windows.Clipboard.ContainsText())
+        {
+            string text = System.Windows.Clipboard.GetText();
+            UIElementDetector.CurrentSelectedText = text;
+            PopupDictionaryService.ShowMenuSelectionActions(true);
+        }
+        else
+        {
+            System.Windows.Clipboard.SetDataObject(tmpClipboard);
+        }
     }
 }
 

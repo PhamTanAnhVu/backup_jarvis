@@ -145,8 +145,6 @@ public class TextMenuViewModel : ViewModelBase
         TextMenuLanguages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
         LanguageSelectedIndex = 14;
 
-        UIElementDetector.SubscribeToElementFocusChanged();
-
         InitializeButtons();
     }
 

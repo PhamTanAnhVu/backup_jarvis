@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jarvis_Windows.Sources.Utils.WindowsAPI
 {
@@ -60,5 +56,8 @@ namespace Jarvis_Windows.Sources.Utils.WindowsAPI
         [DllImport("USER32.DLL")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern bool GetCursorPos(out System.Drawing.Point lpPoint);
     }
 }

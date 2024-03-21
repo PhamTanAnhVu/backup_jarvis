@@ -19,7 +19,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border CornerRadius="16" Background="#FFFFFF">
+    <Border CornerRadius="16" Background="#FFFFFF" BorderThickness="0.5" BorderBrush="{StaticResource PrimaryBrushColor5}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -38,11 +38,13 @@
                         <DataTemplate>
                             <Button Width="32" Height="30" HorizontalAlignment="Left"   
                                         Style="{StaticResource TextMenuButton}"
+                                    Foreground="{StaticResource PrimaryBrushColor6}"
                                         Command="{Binding Command}" CommandParameter="{Binding Idx}"
                                         Visibility="{Binding Visibility, Converter={StaticResource VisibilityConverter}}">
                                 <Button.Content>
                                     <TextBlock Text="{Binding Icon}" FontFamily="sans-serif" 
                                          Width="Auto" Height="16" HorizontalAlignment="Center" 
+                                               Foreground="{StaticResource PrimaryBrushColor6}"
                                          VerticalAlignment="Center"/>
                                 </Button.Content>
 
@@ -58,7 +60,7 @@
                         Command="{Binding PopupTextMenuCommand}" CommandParameter="{Binding CommandParameter}">
                     <Button.Content>
                         <Path Data="M6.667 12.667a1.333 1.333 0 1 0 2.666 0 1.333 1.333 0 0 0-2.666 0Zm.39-8.39A1.333 1.333 0 1 1 8.943 2.39a1.333 1.333 0 0 1-1.886 1.885Zm0 4.666a1.333 1.333 0 1 1 1.886-1.886 1.333 1.333 0 0 1-1.886 1.886Z"
-                                     Width="16" Height="16" Fill="#082041"/>
+                                     Width="16" Height="16" Fill="{StaticResource PrimaryBrushColor5}"/>
                     </Button.Content>
                 </Button>
 
