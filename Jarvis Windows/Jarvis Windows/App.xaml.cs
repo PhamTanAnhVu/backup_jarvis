@@ -68,22 +68,10 @@ namespace Jarvis_Windows
 
         protected void OnStartup(object sender, StartupEventArgs e)
         {
-            // Logging.Log("Before mainview OnStartup");
-            try
-            {
-                MainView mainView = _serviceProvider.GetRequiredService<MainView>();
-                // Logging.Log("After 1 mainview OnStartup");
-                mainView.Show();
+            MainView mainView = _serviceProvider.GetRequiredService<MainView>();
+            mainView.Show();
 
-                // Logging.Log("After 2 mainview OnStartup");
-                _serviceProvider.GetRequiredService<PopupDictionaryService>().MainWindow = mainView;
-                // Logging.Log("After 3 mainview OnStartup");
-            }
-
-            catch (Exception ex)
-            {
-
-            }
+            _serviceProvider.GetRequiredService<PopupDictionaryService>().MainWindow = mainView;        
         }
 
         private void SingleInstanceWatcher()

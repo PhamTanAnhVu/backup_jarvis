@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              Height="30" 
              MinWidth="0" MaxWidth="2068"
-             Name="TextMenuViews">
+             Name="JarvisTextMenuView">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -23,6 +23,7 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="32"/>
                 <ColumnDefinition Width="32"/>
             </Grid.ColumnDefinitions>
 
@@ -55,12 +56,78 @@
             </Grid>
 
             <Grid Grid.Column="1">
+                <Button HorizontalAlignment="Left"                                  
+                        Command="{Binding TextMenuPinCommand}" CommandParameter="-2">
+                    <Button.Content>
+                        <Path Stroke="{StaticResource PrimaryBrushColor6}" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
+                            Width="14" Height="14" VerticalAlignment="Center" Stretch="Uniform"/>
+                    </Button.Content>
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Margin" Value="6 0 0 0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Grid>
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                                    Width="32" Height="30">
+                                                <ContentPresenter VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <Popup Name="PopupMessage" Placement="Center" VerticalOffset="-32" AllowsTransparency="True">
+                                                <Border CornerRadius="10" Background="#202020" Width="Auto" Height="28" Padding="7 6 7 6" 
+                                                        VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                    <TextBlock Text="Unpin Response" Foreground="White"
+                                                                FontFamily="monica-ext-font_YIBBBFG, -apple-system, 'system-ui', 'Segoe UI'"/>
+                                                </Border>
+                                            </Popup>
+
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="PopupMessage" Property="IsOpen" Value="True"/>
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="False">
+                                                <Setter TargetName="PopupMessage" Property="IsOpen" Value="False"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Popup Name="PopupMessage" PlacementTarget="{Binding ElementName=Button}" Placement="Center" VerticalOffset="-32" AllowsTransparency="True">
+                    <Border CornerRadius="10" Background="#202020" Width="Auto" Height="28" Padding="7 6 7 6" 
+                            VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="Unpin response panel" Foreground="White"
+                     FontFamily="monica-ext-font_YIBBBFG, -apple-system, 'system-ui', 'Segoe UI'"/>
+                    </Border>
+                    <Popup.Style>
+                        <Style TargetType="Popup">
+                            <Style.Triggers>
+                                <Trigger Property="Button.IsMouseOver" Value="True">
+                                    <Setter Property="IsOpen" Value="True"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Popup.Style>
+                </Popup>
+            </Grid>
+
+            <Grid Grid.Column="2">
                 <Button Width="32" Height="30"
                         Style="{StaticResource AskButton}"
                         Command="{Binding PopupTextMenuCommand}" CommandParameter="{Binding CommandParameter}">
                     <Button.Content>
                         <Path Data="M6.667 12.667a1.333 1.333 0 1 0 2.666 0 1.333 1.333 0 0 0-2.666 0Zm.39-8.39A1.333 1.333 0 1 1 8.943 2.39a1.333 1.333 0 0 1-1.886 1.885Zm0 4.666a1.333 1.333 0 1 1 1.886-1.886 1.333 1.333 0 0 1-1.886 1.886Z"
-                                     Width="16" Height="16" Fill="{StaticResource PrimaryBrushColor5}"/>
+                                     Width="16" Height="16" Fill="{StaticResource PrimaryBrushColor6}"/>
                     </Button.Content>
                 </Button>
 

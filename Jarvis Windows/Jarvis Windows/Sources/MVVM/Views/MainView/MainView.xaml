@@ -21,8 +21,7 @@
         PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
         PreviewMouseMove="Window_PreviewMouseMove"
         WindowStartupLocation="CenterScreen"
-        MouseMove="Window_MouseMove" 
-        MouseUp="Window_MouseUp"
+        
         Title="Jarvis MainView" Height="496" Width="820">
     <Window.Resources>
         <ResourceDictionary>
@@ -68,11 +67,8 @@
             <Grid Grid.Row="0" Width="780" Height="37">
                 <DockPanel LastChildFill="False" VerticalAlignment="Center">
                     <Button
-                        DockPanel.Dock="Right"
-                        x:Name="btnCloseMainWindows"
-                        Width="37"
-                        Height="37"
-                        Click="btnCloseMainWindows_Click"
+                        DockPanel.Dock="Right" x:Name="btnCloseMainWindows"
+                        Width="37" Height="37" Click="btnCloseMainWindows_Click"
                         Style="{StaticResource JarvisNomalButton}">
                         <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" Kind="Close" Width="24" Height="24" VerticalAlignment="Center" />
                     </Button>
@@ -284,6 +280,7 @@
                        AllowsTransparency="True"
                        PreviewMouseLeftButtonDown="MenuAction_PreviewMouseLeftButtonDown"
                        PreviewMouseMove="MenuAction_PreviewMouseMove"
+                       PreviewMouseLeftButtonUp="MenuAction_PreviewMouseLeftButtonUp"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowMenuOperations}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
@@ -294,6 +291,8 @@
                        VerticalOffset="{Binding PopupDictionaryService.TextMenuOperationsPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.TextMenuOperationsPosition.X}"
                        AllowsTransparency="True"
+                       PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
+                       PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuOperations}"
                        Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
@@ -304,6 +303,9 @@
                        VerticalOffset="{Binding PopupDictionaryService.TextMenuAPIPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.TextMenuAPIPosition.X}"
                        AllowsTransparency="True"
+                       PreviewMouseLeftButtonDown="TextMenuAPI_PreviewMouseLeftButtonDown"
+                       MouseMove="TextMenuAPI_PreviewMouseMove"
+                       PreviewMouseLeftButtonUp="TextMenuAPI_PreviewMouseLeftButtonUp"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuAPI}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
@@ -323,6 +325,8 @@
                        VerticalOffset="{Binding PopupDictionaryService.AIChatBubblePosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.AIChatBubblePosition.X}"
                        AllowsTransparency="True"
+                       PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
+                       PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowAIChatBubble}"
                        Width="Auto" Height="Auto" Grid.RowSpan="3">
@@ -333,6 +337,8 @@
                        VerticalOffset="{Binding PopupDictionaryService.AIChatSidebarPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.AIChatSidebarPosition.X}"
                        AllowsTransparency="True"
+                       PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
+                       PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowAIChatSidebar}"
                        Width="Auto" Height="Auto" Grid.RowSpan="3">

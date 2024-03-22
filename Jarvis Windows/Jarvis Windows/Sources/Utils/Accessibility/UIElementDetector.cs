@@ -16,6 +16,7 @@ using System.IO;
 using Jarvis_Windows.Sources.DataAccess.Local;
 using System.Windows.Media.Imaging;
 //using System.Drawing;
+using System.Windows.Media.Animation;
 
 namespace Jarvis_Windows.Sources.Utils.Accessibility;
 
@@ -32,6 +33,8 @@ public class UIElementDetector
     private static string _currentSelectedText = String.Empty;
     private static AutomationElement? _observerSelectionChangeElement;
     private static ISupportedAppService? _supportedAppSerice;
+
+    private static bool _isMouseOverAIChat;
 
     public static bool IsUseAutoTuningPosition { 
         get => _isUseAutoTuningPosition; 
@@ -85,10 +88,16 @@ public class UIElementDetector
     private UIElementDetector(PopupDictionaryService popupDictionaryService)
     {
         PopupDictionaryService = popupDictionaryService;
+        EventAggregator.MouseOverAIChatPanelChanged += (sender, e) => {
+            _isMouseOverAIChat = (bool)sender;
+        };
     }
 
     public UIElementDetector()
     {
+        EventAggregator.MouseOverAIChatPanelChanged += (sender, e) => {
+            _isMouseOverAIChat = (bool)sender;
+        };
     }
 
     public void SubscribeToElementFocusChanged()
@@ -145,7 +154,7 @@ public class UIElementDetector
     }
 
     [DllImport("user32.dll")]
-static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+    static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
     private static string GetActiveWindowTitle()
     {
@@ -484,8 +493,12 @@ static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
     {
 
         AutomationElement? automationElement = sender as AutomationElement;
-        if (automationElement != null)
-        {
+        if (automationElement != null && 
+            !automationElement.Current.AutomationId.Equals("TextMenuAPI_Result_Text") &&
+            !automationElement.Current.AutomationId.Equals("AIChatSidebar_ChatPanel") &&
+            !automationElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox") &&
+            !automationElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") && !_isMouseOverAIChat)
+        {      
             try
             {
                 TextPattern? textPattern;

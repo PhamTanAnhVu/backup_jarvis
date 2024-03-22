@@ -1,0 +1,112 @@
+[1mdiff --git a/Jarvis Windows/Jarvis Windows/App.xaml.cs b/Jarvis Windows/Jarvis Windows/App.xaml.cs[m
+[1mindex e16ba01..7e4070c 100644[m
+[1m--- a/Jarvis Windows/Jarvis Windows/App.xaml.cs[m	
+[1m+++ b/Jarvis Windows/Jarvis Windows/App.xaml.cs[m	
+[36m@@ -68,22 +68,10 @@[m [mnamespace Jarvis_Windows[m
+ [m
+         protected void OnStartup(object sender, StartupEventArgs e)[m
+         {[m
+[31m-            // Logging.Log("Before mainview OnStartup");[m
+[31m-            try[m
+[31m-            {[m
+[31m-                MainView mainView = _serviceProvider.GetRequiredService<MainView>();[m
+[31m-                // Logging.Log("After 1 mainview OnStartup");[m
+[31m-                mainView.Show();[m
+[32m+[m[32m            MainView mainView = _serviceProvider.GetRequiredService<MainView>();[m[41m[m
+[32m+[m[32m            mainView.Show();[m[41m[m
+ [m
+[31m-                // Logging.Log("After 2 mainview OnStartup");[m
+[31m-                _serviceProvider.GetRequiredService<PopupDictionaryService>().MainWindow = mainView;[m
+[31m-                // Logging.Log("After 3 mainview OnStartup");[m
+[31m-            }[m
+[31m-[m
+[31m-            catch (Exception ex)[m
+[31m-            {[m
+[31m-[m
+[31m-            }[m
+[32m+[m[32m            _serviceProvider.GetRequiredService<PopupDictionaryService>().MainWindow = mainView;[m[41m        [m
+         }[m
+ [m
+         private void SingleInstanceWatcher()[m
+[1mdiff --git a/Jarvis Windows/Jarvis Windows/Sources/MVVM/Views/TextMenuView/TextMenuView.xaml.cs b/Jarvis Windows/Jarvis Windows/Sources/MVVM/Views/TextMenuView/TextMenuView.xaml.cs[m
+[1mindex 1770ba2..8d6d9c1 100644[m
+[1m--- a/Jarvis Windows/Jarvis Windows/Sources/MVVM/Views/TextMenuView/TextMenuView.xaml.cs[m	
+[1m+++ b/Jarvis Windows/Jarvis Windows/Sources/MVVM/Views/TextMenuView/TextMenuView.xaml.cs[m	
+[36m@@ -4,6 +4,7 @@[m [musing Jarvis_Windows.Sources.Utils.WindowsAPI;[m
+ using System;[m
+ using System.Collections.Generic;[m
+ using System.Diagnostics;[m
+[32m+[m[32musing System.IO;[m
+ using System.Linq;[m
+ using System.Text;[m
+ using System.Threading.Tasks;[m
+[36m@@ -38,12 +39,12 @@[m [mnamespace Jarvis_Windows.Sources.MVVM.Views.TextMenuView[m
+             { [m
+                 System.Windows.Clipboard.Clear();[m
+ [m
+[31m-                Task.Delay(150).Wait();[m
+[32m+[m[32m                Task.Delay(50).Wait();[m
+ [m
+                 // Send Ctrl+C, which is "copy"[m
+                 System.Windows.Forms.SendKeys.SendWait("^c");[m
+ [m
+[31m-                Task.Delay(150).Wait();[m
+[32m+[m[32m                Task.Delay(50).Wait();[m
+ [m
+                 if (System.Windows.Clipboard.ContainsText())[m
+                 {[m
+[36m@@ -56,9 +57,9 @@[m [mnamespace Jarvis_Windows.Sources.MVVM.Views.TextMenuView[m
+                     [m
+                 }[m
+             }[m
+[31m-            catch[m
+[32m+[m[32m            catch (Exception ex)[m
+             {[m
+[31m-                throw;[m
+[32m+[m[32m                Logging.Log($"Double: {ex}");[m
+             }[m
+         }[m
+ [m
+[36m@@ -68,12 +69,12 @@[m [mnamespace Jarvis_Windows.Sources.MVVM.Views.TextMenuView[m
+             {[m
+                 System.Windows.Clipboard.Clear();[m
+ [m
+[31m-                Task.Delay(150).Wait();[m
+[32m+[m[32m                Task.Delay(50).Wait();[m
+ [m
+                 // Send Ctrl+C, which is "copy"[m
+                 System.Windows.Forms.SendKeys.SendWait("^c");[m
+ [m
+[31m-                Task.Delay(150).Wait();[m
+[32m+[m[32m                Task.Delay(50).Wait();[m
+ [m
+                 if (System.Windows.Clipboard.ContainsText())[m
+                 {[m
+[36m@@ -85,10 +86,10 @@[m [mnamespace Jarvis_Windows.Sources.MVVM.Views.TextMenuView[m
+                     System.Windows.Clipboard.SetDataObject(System.Windows.Clipboard.GetDataObject());[m
+                 }[m
+             }[m
+[31m-            catch[m
+[32m+[m[32m            catch (Exception ex)[m
+             {[m
+[31m-                throw;[m
+[32m+[m[32m                Logging.Log($"Drag: {ex}");[m
+             }[m
+         }[m
+     }[m
+[31m-}[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/Jarvis Windows/Jarvis Windows/Sources/Utils/Accessibility/UIElementDetector.cs b/Jarvis Windows/Jarvis Windows/Sources/Utils/Accessibility/UIElementDetector.cs[m
+[1mindex 3cd0e3c..b19b966 100644[m
+[1m--- a/Jarvis Windows/Jarvis Windows/Sources/Utils/Accessibility/UIElementDetector.cs[m	
+[1m+++ b/Jarvis Windows/Jarvis Windows/Sources/Utils/Accessibility/UIElementDetector.cs[m	
+[36m@@ -509,7 +509,7 @@[m [mstatic extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);[m
+                                     if (rects != null && rects.Length > 0)[m
+                                     {[m
+                                         Rect boundingRect = rects[0];[m
+[31m-                                        // _popupDictionaryService.ShowMenuSelectionActions(true);[m
+[32m+[m[32m                                        _popupDictionaryService.ShowMenuSelectionActions(true);[m[41m[m
+                                         _popupDictionaryService.IsShowPopupTextMenu = false;[m
+                                         double screenHeight = SystemParameters.PrimaryScreenHeight;[m
+                                         double screenWidth = SystemParameters.PrimaryScreenWidth;[m

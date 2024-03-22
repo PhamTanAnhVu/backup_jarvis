@@ -58,10 +58,12 @@ public class MainViewModel : ViewModelBase
     private bool _isTextMenuAPIHeaderAction;
     private bool _isActionTranslate;
     private int _previousCommandIdx;
-
+    private double _chatPanel_Height;
     private string _usernameFirstLetter;
     private string _username;
     private bool _isMainWindowInputTextEmpty;
+    private static bool _isExecutingAIChatMessage;
+
     private ObservableCollection<ButtonViewModel> _textMenuButtons;
     private IKeyboardMouseEvents _globalMouseHook;
     public List<Language> TextMenuLanguages { get; set; }
@@ -338,6 +340,16 @@ public class MainViewModel : ViewModelBase
         }
     }
     
+    public double ChatPanel_Height
+    {
+        get { return _chatPanel_Height; }
+        set
+        {
+            _chatPanel_Height = value;
+            OnPropertyChanged();
+        }
+    }
+    
     public string Username
     {
         get { return _username; }
@@ -354,7 +366,13 @@ public class MainViewModel : ViewModelBase
         set
         {
             _isAPIUsageRemain = value;
+            if (_isAPIUsageRemain)
+            {
+                ChatPanel_Height = 518;
+            }
+
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ChatPanel_Height));
         }
     }
     
@@ -364,7 +382,13 @@ public class MainViewModel : ViewModelBase
         set
         {
             _isNoAPIUsageRemain = value;
+            if (_isNoAPIUsageRemain)
+            {
+                ChatPanel_Height = 240;
+            }
+
             OnPropertyChanged();
+            OnPropertyChanged(nameof(ChatPanel_Height));
         }
     }
 
@@ -448,7 +472,7 @@ public class MainViewModel : ViewModelBase
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
         ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
-        HideMenuOperationsCommand = new RelayCommand(o => { PopupDictionaryService.ShowMenuOperations(false); }, o => true);
+        HideMenuOperationsCommand = new RelayCommand(ExecuteHideMenuOperationsCommand, o => true);
         
         AICommand = new RelayCommand(ExecuteAICommand, o => true);
         ExpandCommand = new RelayCommand(ExecuteExpandCommand, o => true);
@@ -502,6 +526,7 @@ public class MainViewModel : ViewModelBase
 
         AIChatMessages = new ObservableCollection<AIChatMessage>();
         AIChatMessagesClear();
+        ChatPanel_Height = 518;
         InitializeSettingToggleButtons();
 
         Username = "Anh Vu";
@@ -585,7 +610,14 @@ public class MainViewModel : ViewModelBase
         AICommand.Execute("Translate it");
     }
 
-    
+    private void ExecuteHideMenuOperationsCommand(object obj)
+    {
+        PopupDictionaryService.ShowMenuOperations(false);
+        if ((string)obj == "ClickUI")
+        {
+            PopupDictionaryService.ShowJarvisAction(true);
+        }
+    }
 
     private void ExecuteQuitAppCommand(object obj)
     {
@@ -632,24 +664,6 @@ public class MainViewModel : ViewModelBase
         PopupDictionaryService.MainWindow.PinJarvisButton();
         PopupDictionaryService.HasPinnedJarvisButton = true;
     }
-
-    //private void GlobalHook_MouseDown(object sender, MouseEventArgs e)
-    //{
-        //if (e.Button == MouseButtons.Left && _popupDictionaryService.IsShowMenuOperations)
-        //{
-        //    PresentationSource source = PresentationSource.FromVisual(System.Windows.Application.Current.MainWindow);
-        //    Point mousePos = source.CompositionTarget.TransformFromDevice.Transform(new Point(e.X, e.Y));
-        //    // Point mousePos = new Point(e.X, e.Y);
-        //    Point JarvisMenuPosition = UIElementDetector.PopupDictionaryService.MenuOperationsPosition;
-
-        //    double X1 = JarvisMenuPosition.X;
-        //    double Y1 = JarvisMenuPosition.Y;
-        //    double X2 = X1 + 400;
-        //    double Y2 = Y1 + 165;
-        //    if ((mousePos.X < X1 || mousePos.X > X2 || mousePos.Y < Y1 || mousePos.Y > Y2) && (X1 != 0 && Y1 != 0))
-        //        HideMenuOperationsCommand.Execute(null);
-        //}
-    //}
 
     private async void ExecuteCheckUpdate()
     {
@@ -886,6 +900,13 @@ public class MainViewModel : ViewModelBase
             return;
         }
 
+        else if (idx == -2)
+        {
+            PopupDictionaryService.IsShowPinTextMenuAPI = false;
+            TextMenuPinColor = colors[0];
+            return;
+        }
+
         bool visibilityStatus = !TextMenuButtons[idx].Visibility;
         int sizeChanged = (visibilityStatus) ? -32 : 32;
         TextMenuButtons[idx].Visibility = visibilityStatus;
@@ -1038,7 +1059,7 @@ public class MainViewModel : ViewModelBase
     {
         PopupDictionaryService.ShowAIChatSidebar(false);
         PopupDictionaryService.ShowAIChatBubble(true);
-        AIChatMessagesClear();
+        // AIChatMessagesClear();
     }
 
     private void OnAIChatBubbleStatusChanged(object sender, EventArgs e)
@@ -1062,6 +1083,9 @@ public class MainViewModel : ViewModelBase
 
     private async void ExecuteAIChatSendCommand(object obj)
     {
+        if (string.IsNullOrEmpty(AIChatMessageInput) || _isExecutingAIChatMessage || RemainingAPIUsage == "0 🔥") return;
+
+        _isExecutingAIChatMessage = true;
         AIChatMessages.Add(new AIChatMessage
         {
             // ImageSource = "../../../../Assets/Images/pencil.png",
@@ -1102,6 +1126,9 @@ public class MainViewModel : ViewModelBase
         });
 
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+        IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
+        IsNoAPIUsageRemain = !IsAPIUsageRemain;
+        _isExecutingAIChatMessage = false;
     }
 
     private async void MouseDoubleClicked(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -1161,5 +1188,3 @@ public class AIChatMessage
     public bool IsLoading { get; set; }
     public bool IsBorderVisible { get; set; }
 }
-
-          

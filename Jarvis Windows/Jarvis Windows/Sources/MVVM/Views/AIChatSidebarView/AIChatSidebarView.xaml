@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView"
         xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+        xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
         xmlns:li="http://github.com/zeluisping/loadingIndicators/xaml/controls"
         mc:Ignorable="d"
         Height="Auto" Width="520">
@@ -13,11 +14,13 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/MarkdownStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border CornerRadius="20" BorderBrush="White" BorderThickness="1">
+    <Border CornerRadius="20" BorderBrush="White" BorderThickness="1"
+            PreviewMouseDown="AIChat_Sidebar_Grid_PreviewMouseDown">
         <Border.Background>
             <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
                 <LinearGradientBrush.RelativeTransform>
@@ -42,11 +45,15 @@
             </LinearGradientBrush>
         </Border.Background>
 
-        <Grid Margin="12 12 12 0">
+        <Grid Margin="12 12 12 0"
+              MouseEnter="AIChat_Sidebar_Grid_MouseEnter"
+              MouseLeave="AIChat_Sidebar_Grid_MouseLeave">
+            
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
                 <RowDefinition Height="10"/>
-                <RowDefinition Height="518"/>
+                <RowDefinition Height="{Binding ChatPanel_Height}"/>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="10"/>
@@ -61,9 +68,8 @@
 
                 <Grid Grid.Column="0">
                     <Image  Source="../../../../Assets/Images/jarvis_logo.png" Margin="0 0 8 0" Width="22" Height="22" HorizontalAlignment="Left"/>
-                    <TextBox Text="Jarvis"  Margin="30 0 0 0" VerticalAlignment="Center"
-                            FontSize="16" FontFamily="sans-serif" FontWeight="Bold" Foreground="#1450A3" 
-                            Style="{StaticResource TextBoxStyle}"/>
+                    <TextBlock Text="Jarvis"  Margin="30 0 0 0" VerticalAlignment="Center"
+                            FontSize="16" FontFamily="sans-serif" FontWeight="Bold" Foreground="#1450A3" />
                 </Grid>
 
                 <Grid Grid.Column="2">
@@ -106,11 +112,11 @@
             <Grid Grid.Row="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="240"/>
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Style="{StaticResource GridIsAPIUsageRemain}">
-                    <ScrollViewer VerticalScrollBarVisibility="Hidden" Height="Auto" ScrollChanged="AIChat_Main_ScrollViewer_ScrollChanged">
+                    <ScrollViewer x:Name="AIChatSidebar_ScrollViewer" MaxHeight="500" ScrollChanged="AIChat_Main_ScrollViewer_ScrollChanged">
                         <ItemsControl ItemsSource="{Binding AIChatMessages}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -151,9 +157,15 @@
                                                 </Canvas>
                                             </Border>
 
-                                            <TextBox Grid.Column="2" Text="{Binding Message}" Padding="0 6 0 0"
-                                                    TextWrapping="Wrap" FontSize="14" FontFamily="sans-serif"
-                                                     Style="{StaticResource TextBoxStyle}"/>
+                                            <Grid Grid.Column="2">
+                                                <mdxam:MarkdownScrollViewer x:Name="AIChatSidebar_ChatPanel" xml:space="preserve" 
+                                                                            Padding="0 6 0 0" FontSize="14" FontFamily="sans-serif"
+                                                                            ClickAction="DisplayWithRelativePath"                                                                        
+                                                                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                                                            Markdown="{Binding Message}" 
+                                                                            MarkdownStyle="{StaticResource DocumentStyleCompact}"/>
+                                                <local:TransparentPanel/>      
+                                            </Grid>
 
                                             <li:LoadingIndicator Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#1450A3"
                                                                 SpeedRatio="1.5" IsActive="{Binding IsLoading}" Mode="ThreeDots">
@@ -170,34 +182,33 @@
                 </Grid>
 
                 <Grid Grid.Row="1" Style="{StaticResource GridIsNoAPIUsageRemain}">
-                    <Border Background="White" CornerRadius="20" Width="390" Height="300" Padding="20" Margin="0 80 0 0">
+                    <Border Background="White" CornerRadius="20" Width="490" Height="203" Padding="20">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="98"/>
+                                <RowDefinition Height="68"/>
                                 <RowDefinition Height="50"/>
-                                <RowDefinition Height="94"/>
+                                <RowDefinition Height="44"/>
                             </Grid.RowDefinitions>
 
                             <Grid Grid.Row="0">
-                                <emoji:TextBlock Text="🧯" FontFamily="sans-serif" FontSize="50" Height="78" 
-                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <emoji:TextBlock Text="🧯" FontFamily="sans-serif" FontSize="40" Height="56" 
+                                                HorizontalAlignment="Center" VerticalAlignment="Top"/>
                             </Grid>
 
                             <Grid Grid.Row="1">
-                                <TextBox Text="You have exhausted all of your DAILY tokens. Let get more tokens to fireeee!" 
-                                        Width="300" Height="50" FontFamily="sans-serif" FontSize="17" TextWrapping="Wrap" 
-                                        TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" 
-                                        Style="{StaticResource TextBoxStyle}"/>
+                                <TextBlock Text="You have exhausted all of your DAILY tokens. Let get more tokens to fireeee!" 
+                                        Width="450" Height="40" FontFamily="sans-serif" FontSize="14" TextWrapping="Wrap" 
+                                        TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                             </Grid>
 
                             <Grid Grid.Row="2">
                                 <Button Command="{Binding UpgradePlanCommand}"
                                         FontFamily="sans-serif" FontSize="14"
                                         HorizontalAlignment="Center" VerticalAlignment="Center"
-                                        Width="280" Height="50" Style="{StaticResource UpgradePlanButton}">
+                                        Width="440" Height="44" Style="{StaticResource UpgradePlanButton}">
                                     <Button.Content>
-                                        <emoji:TextBlock Text="🔥Upgrade your plan now" FontFamily="sans-serif" FontSize="17"
-                                                Foreground="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                        <emoji:TextBlock Text="🔥Upgrade your plan now" FontFamily="sans-serif" FontSize="14"
+                                                        Foreground="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                                     </Button.Content>
                                 </Button>
                             </Grid>
@@ -229,13 +240,17 @@
 
                         <Grid Grid.Column="0" Height="Auto">
                             <TextBox Height="Auto" Width="429.61" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="0"
-                                    FontFamily="sans-serif" FontSize="14" Padding="11.2 7.2 11.2 7.2" TextWrapping="Wrap" 
-                                    PreviewMouseDown="AI_Sidebar_TextBox_PreviewMouseDown"
-                                    Text="{Binding AIChatMessageInput, UpdateSourceTrigger=PropertyChanged}">
+                                     FontFamily="sans-serif" FontSize="14" Padding="11.2 7.2 11.2 7.2" TextWrapping="Wrap" 
+                                     AcceptsReturn="True" x:Name="AIChatSidebar_InputTextbox"                    
+                                     PreviewMouseDown="AIChat_Sidebar_InputTextBox_PreviewMouseDown"                                 
+                                     MouseEnter="AIChat_Sidebar_InputTextbox_MouseEnter"
+                                     MouseLeave="AIChat_Sidebar_InputTextbox_MouseLeave"
+                                     Text="{Binding AIChatMessageInput, UpdateSourceTrigger=PropertyChanged}">
                                 <TextBox.InputBindings>
                                     <KeyBinding Command="{Binding AIChatSendCommand}" Key="Return"/>
                                 </TextBox.InputBindings>
                             </TextBox>
+
 
                             <TextBlock Text="Chat anything with Jarvis ..." Foreground="#FF104082" Opacity="0.7"
                                     VerticalAlignment="Center" HorizontalAlignment="Left" 
@@ -257,7 +272,7 @@
                         </Grid>
 
                         <Grid Grid.Column="2">
-                            <Border CornerRadius="12" Width="32" Height="32" VerticalAlignment="Bottom" Margin="0 0 0 9" Style="{StaticResource AIChatButtonBorder}">
+                            <Border CornerRadius="12" Width="32" Height="32" VerticalAlignment="Bottom" Margin="0 0 0 8" Style="{StaticResource AIChatButtonBorder}">
                                 <Button Width="32" Height="32" Style="{StaticResource AskButton}"
                                         Command="{Binding AIChatSendCommand}" CommandParameter="Ask">
                                     <Button.Content>
