@@ -63,6 +63,7 @@ public class MainViewModel : ViewModelBase
     private string _username;
     private bool _isMainWindowInputTextEmpty;
     private static bool _isExecutingAIChatMessage;
+    private static bool _isMouseOver_AppUI;
 
     private ObservableCollection<ButtonViewModel> _textMenuButtons;
     private IKeyboardMouseEvents _globalMouseHook;
@@ -458,18 +459,21 @@ public class MainViewModel : ViewModelBase
         SendEventGA4 = sendEventGA4;
         AutomationElementValueService = automationElementValueService;
 
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+        // Reset APIUsage daily
+        Task.Run(async () => await ResetAPIUsageDaily()).Wait();
 
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
         IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
+        IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
         //TODO:Code test
-        if(IsAPIUsageRemain == false)
-        {
-            WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
-            WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
-            IsAPIUsageRemain = true;
-        }
-        IsNoAPIUsageRemain = !IsAPIUsageRemain;
+        //if(IsAPIUsageRemain == false)
+        //{
+        //    WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
+        //    WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
+        //    IsAPIUsageRemain = true;
+        //}
+
 
         ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
         HideMenuOperationsCommand = new RelayCommand(ExecuteHideMenuOperationsCommand, o => true);
@@ -515,6 +519,9 @@ public class MainViewModel : ViewModelBase
         catch { }
         finally { ExecuteSendEventOpenMainWindow(); }
 
+        try { ExecuteGetUserGeoLocation(); }
+        catch { }
+
         InitializeButtons();
         InitializeButtonsTextMenu();
 
@@ -522,7 +529,10 @@ public class MainViewModel : ViewModelBase
         ShowAIChatSidebarCommand = new RelayCommand(ExecuteShowAIChatSidebarCommand, o => true);
         HideAIChatSidebarCommand = new RelayCommand(ExecuteHideAIChatSidebarCommand, o => true);
         AIChatSendCommand = new RelayCommand(ExecuteAIChatSendCommand, o => true);
-        NewAIChatCommand = new RelayCommand(o => { AIChatMessagesClear(); }, o => true);
+        NewAIChatCommand = new RelayCommand(async o => {
+            AIChatMessagesClear();
+            await SendEventGA4.SendEvent("start_new_chat");
+        }, o => true);
 
         AIChatMessages = new ObservableCollection<AIChatMessage>();
         AIChatMessagesClear();
@@ -535,6 +545,19 @@ public class MainViewModel : ViewModelBase
         _globalMouseHook = Hook.GlobalEvents();
         _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
         _globalMouseHook.MouseDragFinished += MouseDragFinished;
+
+        EventAggregator.MouseOverAppUIChanged += (sender, e) => {
+            _isMouseOver_AppUI = (bool)sender;
+        };
+    }
+
+    private async Task ResetAPIUsageDaily()
+    {
+        int currentDate = DateTime.Now.Day;
+        if (currentDate.ToString() != WindowLocalStorage.ReadLocalStorage("RecentDate"))
+        {
+            await JarvisApi.Instance.APIUsageHandler();
+        }
     }
 
     private void UpdateButtonVisibility()
@@ -669,6 +692,11 @@ public class MainViewModel : ViewModelBase
     {
         // Checking App update here
         await SendEventGA4.CheckVersion();
+    }
+    private async void ExecuteGetUserGeoLocation()
+    {
+        // Checking App update here
+        await SendEventGA4.GetUserGeoLocation();
     }
 
     private async void ExecuteSendEventOpenMainWindow()
@@ -875,7 +903,8 @@ public class MainViewModel : ViewModelBase
             IsSpinningJarvisIconTextMenu = false; // Stop spinning animation
             var eventParams = new Dictionary<string, object>
             {
-                { "ai_action", _aiAction }
+                { "ai_action", _aiAction },
+                { "text_selection_action_count", "" }
             };
 
             if (_aiAction == "translate")
@@ -897,6 +926,11 @@ public class MainViewModel : ViewModelBase
         {
             PopupDictionaryService.IsShowPinTextMenuAPI = !PopupDictionaryService.IsShowPinTextMenuAPI;
             TextMenuPinColor = colors[Convert.ToInt32(PopupDictionaryService.IsShowPinTextMenuAPI)];
+            if (TextMenuPinColor == colors[1])
+            {
+                await SendEventGA4.SendEvent("pin_inject_selection_actions_response");              
+            }
+
             return;
         }
 
@@ -994,21 +1028,33 @@ public class MainViewModel : ViewModelBase
         }
     }
    
-    private void ExecuteToggleCommand(object obj)
+    private async void ExecuteToggleCommand(object obj)
     {
         int idx = (int)obj;
-        if (idx == 0) { PopupDictionaryService.JarvisActionVisibility = !PopupDictionaryService.JarvisActionVisibility; }
-        else if (idx == 1) { PopupDictionaryService.TextMenuSelectionVisibility = !PopupDictionaryService.TextMenuSelectionVisibility; }
+        string ga4EventName = "";
+        if (idx == 0) 
+        { 
+            PopupDictionaryService.JarvisActionVisibility = !PopupDictionaryService.JarvisActionVisibility;
+            ga4EventName = (PopupDictionaryService.JarvisActionVisibility) ? "turn_on_inject_input_actions" : "turn_off_inject_input_actions";
+        }
+        else if (idx == 1) 
+        { 
+            PopupDictionaryService.TextMenuSelectionVisibility = !PopupDictionaryService.TextMenuSelectionVisibility;
+            ga4EventName = (PopupDictionaryService.TextMenuSelectionVisibility) ? "turn_on_inject_selection_actions" : "turn_off_inject_selection_actions";
+        }
         
         else if (idx == 2) 
         {
 
             PopupDictionaryService.IsShowAIChatBubble = (PopupDictionaryService.IsShowAIChatSidebar) ? false : !PopupDictionaryService.IsShowAIChatBubble;
-            PopupDictionaryService.IsShowAIChatSidebar = false; 
+            PopupDictionaryService.IsShowAIChatSidebar = false;
+            ga4EventName = (PopupDictionaryService.IsShowAIChatBubble) ? "turn_on_sidebar_chat" : "turn_off_sidebar_chat";
         }
 
         ToggleButtons[idx].IsOnline = !ToggleButtons[idx].IsOnline;
         StopDotTimer[idx].Start();
+
+        // await SendEventGA4.SendEvent(ga4EventName);
     }
 
     private void Timer_Tick(object sender, EventArgs e, int idx)
@@ -1053,6 +1099,7 @@ public class MainViewModel : ViewModelBase
     {
         PopupDictionaryService.ShowAIChatSidebar(true);
         PopupDictionaryService.ShowAIChatBubble(false);
+        await SendEventGA4.SendEvent("open_sidebar_chat");
     }
     
     private async void ExecuteHideAIChatSidebarCommand(object obj)
@@ -1064,7 +1111,8 @@ public class MainViewModel : ViewModelBase
 
     private void OnAIChatBubbleStatusChanged(object sender, EventArgs e)
     {
-        ExecuteToggleCommand(2);
+        if (!PopupDictionaryService.IsShowAIChatBubble && !PopupDictionaryService.IsShowAIChatSidebar) ExecuteToggleCommand(2);
+        if (!PopupDictionaryService.IsShowAIChatSidebar) ShowAIChatSidebarCommand.Execute(null); // Avoid sending GA4 event again if Chat already show up
     }
 
     void AIChatMessagesClear()
@@ -1129,12 +1177,20 @@ public class MainViewModel : ViewModelBase
         IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
         _isExecutingAIChatMessage = false;
+
+        await SendEventGA4.SendEvent("send_chat_message");
     }
 
     private async void MouseDoubleClicked(object sender, System.Windows.Forms.MouseEventArgs e)
     {
         IDataObject tmpClipboard = System.Windows.Clipboard.GetDataObject();
         System.Windows.Clipboard.Clear();
+
+        if (_isMouseOver_AppUI)
+        {
+            PopupDictionaryService.ShowMenuSelectionActions(false);
+            return;
+        }
 
         await Task.Delay(50);
 
@@ -1148,6 +1204,7 @@ public class MainViewModel : ViewModelBase
             string text = System.Windows.Clipboard.GetText();
             UIElementDetector.CurrentSelectedText = text;
             PopupDictionaryService.ShowMenuSelectionActions(true);
+            await SendEventGA4.SendEvent("inject_selection_actions");
         }
         else
         {
@@ -1159,6 +1216,13 @@ public class MainViewModel : ViewModelBase
     {
         IDataObject tmpClipboard = System.Windows.Clipboard.GetDataObject();
         System.Windows.Clipboard.Clear();
+
+        if (_isMouseOver_AppUI)
+        {
+            PopupDictionaryService.ShowMenuSelectionActions(false);
+            return;
+        }
+
         await Task.Delay(50);
 
         // Send Ctrl+C, which is "copy"
@@ -1171,6 +1235,7 @@ public class MainViewModel : ViewModelBase
             string text = System.Windows.Clipboard.GetText();
             UIElementDetector.CurrentSelectedText = text;
             PopupDictionaryService.ShowMenuSelectionActions(true);
+            await SendEventGA4.SendEvent("inject_selection_actions");
         }
         else
         {

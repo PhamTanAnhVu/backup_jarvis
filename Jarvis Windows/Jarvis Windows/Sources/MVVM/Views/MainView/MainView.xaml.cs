@@ -73,11 +73,22 @@ public partial class MainView : Window
         }
     }
 
+    private async void App_MouseEnter(object sender, EventArgs e)
+    {
+        EventAggregator.PublishMouseOverAppUIChanged(true, EventArgs.Empty);
+    }
+
+    private async void App_MouseLeave(object sender, EventArgs e)
+    {
+        EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
+    }
+
     private async void Sidebar_Click(object sender, EventArgs e)
     {
-        if (PopupDictionaryService.IsShowAIChatBubble) return;
         EventAggregator.PublishAIChatBubbleStatusChanged(this, EventArgs.Empty);
     }
+    
+    
     private async void Setting_Click(object sender, EventArgs e)
     {
         PopupDictionaryService.IsShowSettingMenu = true;
@@ -125,13 +136,13 @@ public partial class MainView : Window
 
     private void Window_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (e.LeftButton == MouseButtonState.Pressed && !_isDraggingMenuOperators && !_isDraggingTextMenuAPI && !PopupDictionaryService.IsDragging && !_isClickingPopup)
-        {
-            System.Windows.Point relative = e.GetPosition(null);
-            System.Windows.Point AbsolutePos = new System.Windows.Point(relative.X + this.Left, relative.Y + this.Top);
-            this.Top = AbsolutePos.Y - _mainWindowPoint.Y;
-            this.Left = AbsolutePos.X - _mainWindowPoint.X;
-        }
+        //if (e.LeftButton == MouseButtonState.Pressed && !_isDraggingMenuOperators && !_isDraggingTextMenuAPI && !PopupDictionaryService.IsDragging && !_isClickingPopup)
+        //{
+        //    System.Windows.Point relative = e.GetPosition(null);
+        //    System.Windows.Point AbsolutePos = new System.Windows.Point(relative.X + this.Left, relative.Y + this.Top);
+        //    //this.Top = AbsolutePos.Y - _mainWindowPoint.Y;
+        //    //this.Left = AbsolutePos.X - _mainWindowPoint.X;
+        //}
     }
 
     private void JarvisButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

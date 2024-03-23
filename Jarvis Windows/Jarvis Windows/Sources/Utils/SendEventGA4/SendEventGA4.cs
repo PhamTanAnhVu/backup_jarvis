@@ -21,7 +21,7 @@ public class SendEventGA4
     private string _sessionID;
     private long _sessionTimestamp;
     private string _version; // App version, only available in package mode
-
+    private string _recentDate;
     public SendEventGA4()
     {
         _httpClient         = new HttpClient();
@@ -37,7 +37,6 @@ public class SendEventGA4
 
     public async Task SendEvent(string eventName, Dictionary<string, object> eventParams = null)
     {
-        return;
         try
         {
             var body = CreateEventPayload(eventName, eventParams);
@@ -72,6 +71,30 @@ public class SendEventGA4
         WindowLocalStorage.WriteLocalStorage("AppVersion", _recentVersion);
         _version = _recentVersion;
     }
+
+    public async Task GetUserGeoLocation()
+    {
+        string userCountry = WindowLocalStorage.ReadLocalStorage("UserCountry");
+        if (!string.IsNullOrEmpty(userCountry))
+            return;
+
+        dynamic geoLocation = await UserGeolocationService.GetUserGeoLocation();
+        if (geoLocation == null)
+            return;
+
+        string country = geoLocation.country;
+        country = country.ToLower().Replace(" ", "_");
+        string city = geoLocation.city;
+        city = city.ToLower().Replace(" ", "_");
+        var eventParams = new Dictionary<string, object>
+        {
+            { $"{country}", city }
+        };
+
+        WindowLocalStorage.WriteLocalStorage("UserCountry", country);
+        await SendEvent("user_country", eventParams);
+    }
+
 
     private JObject CreateEventPayload(string eventName, Dictionary<string, object> eventParams)
     {

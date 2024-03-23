@@ -56,7 +56,9 @@ public static class WindowLocalStorage
         { "SessionTimestamp", "0" },
         { "AppVersion", "" },
         { "ApiHeaderID", Guid.NewGuid().ToString() },
-        { "ApiUsageRemaining", "10" }
+        { "ApiUsageRemaining", "" },
+        { "RecentDate", "" },
+        { "UserCountry", "" }
     };
 
     public static void InitValue(string key)

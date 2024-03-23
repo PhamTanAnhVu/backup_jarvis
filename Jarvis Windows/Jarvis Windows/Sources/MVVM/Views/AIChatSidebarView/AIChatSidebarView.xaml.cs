@@ -17,16 +17,6 @@ public partial class AIChatSidebarView : UserControl
 
     }
 
-    private void AIChat_Sidebar_Grid_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        EventAggregator.PublishMouseOverAIChatPanelChanged(true, EventArgs.Empty);
-    }
-
-    private void AIChat_Sidebar_Grid_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        EventAggregator.PublishMouseOverAIChatPanelChanged(false, EventArgs.Empty);
-    }
-
     private void AIChat_Sidebar_InputTextbox_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
         EventAggregator.PublishMouseOverAIChatInputTextboxChanged(true, EventArgs.Empty);

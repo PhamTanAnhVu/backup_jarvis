@@ -34,7 +34,7 @@ public class UIElementDetector
     private static AutomationElement? _observerSelectionChangeElement;
     private static ISupportedAppService? _supportedAppSerice;
 
-    private static bool _isMouseOverAIChat;
+    private static bool _isMouseOverAppUI;
 
     public static bool IsUseAutoTuningPosition { 
         get => _isUseAutoTuningPosition; 
@@ -88,15 +88,15 @@ public class UIElementDetector
     private UIElementDetector(PopupDictionaryService popupDictionaryService)
     {
         PopupDictionaryService = popupDictionaryService;
-        EventAggregator.MouseOverAIChatPanelChanged += (sender, e) => {
-            _isMouseOverAIChat = (bool)sender;
+        EventAggregator.MouseOverAppUIChanged += (sender, e) => {
+            _isMouseOverAppUI = (bool)sender;
         };
     }
 
     public UIElementDetector()
     {
-        EventAggregator.MouseOverAIChatPanelChanged += (sender, e) => {
-            _isMouseOverAIChat = (bool)sender;
+        EventAggregator.MouseOverAppUIChanged += (sender, e) => {
+            _isMouseOverAppUI = (bool)sender;
         };
     }
 
@@ -497,7 +497,7 @@ public class UIElementDetector
             !automationElement.Current.AutomationId.Equals("TextMenuAPI_Result_Text") &&
             !automationElement.Current.AutomationId.Equals("AIChatSidebar_ChatPanel") &&
             !automationElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox") &&
-            !automationElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") && !_isMouseOverAIChat)
+            !automationElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") && !_isMouseOverAppUI)
         {      
             try
             {

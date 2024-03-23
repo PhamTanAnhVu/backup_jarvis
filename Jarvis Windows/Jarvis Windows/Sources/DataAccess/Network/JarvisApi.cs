@@ -17,6 +17,7 @@ public sealed class JarvisApi
     const string _endpoint = "/api/v1";
     const string _actionEndpoint = $"{_endpoint}/ai-action/";
     const string _chatEndpoint = $"{_endpoint}/ai-chat/";
+    const string _apiUserUsageEndpoint = $"{_endpoint}/user/usage/";
 
     private static HttpClient? _client;
     private static string? _apiUrl;
@@ -26,6 +27,7 @@ public sealed class JarvisApi
     {
         _client = new HttpClient();
         _apiUrl = DataConfiguration.ApiUrl;
+        _apiHeaderID = WindowLocalStorage.ReadLocalStorage("ApiHeaderID");
     }
 
     public static JarvisApi Instance
@@ -40,16 +42,43 @@ public sealed class JarvisApi
         }
     }
 
-    public async Task<string?> ApiHandler(string requestBody, string endPoint)
+    public async Task<string>? APIUsageHandler()
     {
-        if (WindowLocalStorage.ReadLocalStorage("ApiHeaderID") == "")
+        try
         {
             WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
-            WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
+            _apiHeaderID = WindowLocalStorage.ReadLocalStorage("ApiHeaderID");
+
+            var request = new HttpRequestMessage(HttpMethod.Get, _apiUrl + _apiUserUsageEndpoint);
+            request.Headers.Add("x-jarvis-guid", _apiHeaderID);
+            HttpResponseMessage response = await _client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseContent = response.Content.ReadAsStringAsync().Result;
+                dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
+
+                int remainingUsage = responseObject.totalTokens;
+                string dateString = responseObject.date;
+                int dateTime = DateTime.Parse(dateString).Day;
+                
+                WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
+                WindowLocalStorage.WriteLocalStorage("RecentDate", dateTime.ToString());
+
+                string finalMessage = responseObject.message;
+                return finalMessage;
+            }
+
+            return null;
         }
+        catch (Exception ex)
+        {
+            throw ex.GetBaseException();
+        }
+    }
 
-        _apiHeaderID = WindowLocalStorage.ReadLocalStorage("ApiHeaderID");
-
+    public async Task<string?> ApiHandler(string requestBody, string endPoint)
+    {
         var contentData = new StringContent(requestBody, Encoding.UTF8, "application/json");
         try
         {
@@ -64,14 +93,6 @@ public sealed class JarvisApi
                 dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
 
                 int remainingUsage = responseObject.remainingUsage;
-                //try
-                //{
-                //    remainingUsage = responseObject.remainingUsage;
-                //}
-                //catch
-                //{
-                //    remainingUsage = int.Parse(WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")) - 1;
-                //}
 
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
 

@@ -366,7 +366,7 @@ public class PopupDictionaryService : ObserveralObject
     
     public void ShowAIChatSidebar(bool isShow)
     {
-        IsShowAIChatSidebar = isShow & IsShowAIChatBubble;
+        IsShowAIChatSidebar = isShow;
     }
 
     public void UpdateAIChatSidebarPosition(Point systemPoint)

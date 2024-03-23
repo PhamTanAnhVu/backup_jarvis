@@ -31,7 +31,9 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Border CornerRadius="20" BorderBrush="White" BorderThickness="1"  Padding="20,20">
+    <Border CornerRadius="20" BorderBrush="White" BorderThickness="1" Padding="20,20"
+            MouseEnter="App_MouseEnter"
+            MouseLeave="App_MouseLeave">
         <Border.Background>
             <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
                 <LinearGradientBrush.RelativeTransform>
@@ -267,8 +269,10 @@
                        HorizontalOffset="{Binding PopupDictionaryService.JarvisActionPosition.X}" 
                        AllowsTransparency="True" 
                        PreviewMouseLeftButtonDown="JarvisButton_PreviewMouseLeftButtonDown"
-                       PreviewMouseMove="JarvisButton_MouseMove"
                        PreviewMouseRightButtonDown="JarvisButton_PreviewMouseRightButtonDown"
+                       PreviewMouseMove="JarvisButton_MouseMove"
+                       MouseEnter="App_MouseEnter"
+                       MouseLeave="App_MouseLeave"
                        IsOpen="{Binding PopupDictionaryService.IsShowJarvisAction}"
                        Width="50" Height="30">
                     <jarvisAction:JarvisActionView/>
@@ -279,8 +283,10 @@
                        HorizontalOffset="{Binding PopupDictionaryService.MenuOperationsPosition.X}"
                        AllowsTransparency="True"
                        PreviewMouseLeftButtonDown="MenuAction_PreviewMouseLeftButtonDown"
-                       PreviewMouseMove="MenuAction_PreviewMouseMove"
                        PreviewMouseLeftButtonUp="MenuAction_PreviewMouseLeftButtonUp"
+                       PreviewMouseMove="MenuAction_PreviewMouseMove"
+                       MouseEnter="App_MouseEnter"
+                       MouseLeave="App_MouseLeave"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowMenuOperations}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
@@ -304,8 +310,10 @@
                        HorizontalOffset="{Binding PopupDictionaryService.TextMenuAPIPosition.X}"
                        AllowsTransparency="True"
                        PreviewMouseLeftButtonDown="TextMenuAPI_PreviewMouseLeftButtonDown"
-                       MouseMove="TextMenuAPI_PreviewMouseMove"
                        PreviewMouseLeftButtonUp="TextMenuAPI_PreviewMouseLeftButtonUp"
+                       MouseMove="TextMenuAPI_PreviewMouseMove"
+                       MouseEnter="App_MouseEnter"
+                       MouseLeave="App_MouseLeave"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuAPI}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
@@ -314,6 +322,10 @@
 
                 <Popup Name="settingMenu" Placement="Center"
                        AllowsTransparency="True"
+                       MouseEnter="App_MouseEnter"
+                       MouseLeave="App_MouseLeave"      
+                       PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
+                       PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
                        Focusable="True" ForceCursor="True" StaysOpen="False"
                        IsOpen="{Binding PopupDictionaryService.IsShowSettingMenu}"
                        Width="Auto" Height="Auto" Grid.RowSpan="3">
@@ -326,7 +338,9 @@
                        HorizontalOffset="{Binding PopupDictionaryService.AIChatBubblePosition.X}"
                        AllowsTransparency="True"
                        PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
-                       PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
+                       PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"                      
+                       MouseEnter="App_MouseEnter"
+                       MouseLeave="App_MouseLeave"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowAIChatBubble}"
                        Width="Auto" Height="Auto" Grid.RowSpan="3">
@@ -339,6 +353,8 @@
                        AllowsTransparency="True"
                        PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
                        PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
+                       MouseEnter="App_MouseEnter"
+                       MouseLeave="App_MouseLeave"                      
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowAIChatSidebar}"
                        Width="Auto" Height="Auto" Grid.RowSpan="3">

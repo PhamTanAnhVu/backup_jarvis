@@ -45,11 +45,7 @@
             </LinearGradientBrush>
         </Border.Background>
 
-        <Grid Margin="12 12 12 0"
-              MouseEnter="AIChat_Sidebar_Grid_MouseEnter"
-              MouseLeave="AIChat_Sidebar_Grid_MouseLeave">
-            
-            
+        <Grid Margin="12 12 12 0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
                 <RowDefinition Height="10"/>
