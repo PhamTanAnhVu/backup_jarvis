@@ -82,6 +82,16 @@ public partial class MainView : Window
     {
         EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
     }
+    
+    private async void AIChatSidebar_MouseEnter(object sender, EventArgs e)
+    {
+        EventAggregator.PublishMouseOverAIChatPanelChanged(true, EventArgs.Empty);
+    }
+
+    private async void AIChatSidebar_MouseLeave(object sender, EventArgs e)
+    {
+        EventAggregator.PublishMouseOverAIChatPanelChanged(false, EventArgs.Empty);
+    }
 
     private async void Sidebar_Click(object sender, EventArgs e)
     {

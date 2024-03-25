@@ -353,8 +353,8 @@
                        AllowsTransparency="True"
                        PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
                        PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
-                       MouseEnter="App_MouseEnter"
-                       MouseLeave="App_MouseLeave"                      
+                       MouseEnter="AIChatSidebar_MouseEnter"
+                       MouseLeave="AIChatSidebar_MouseLeave"                      
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowAIChatSidebar}"
                        Width="Auto" Height="Auto" Grid.RowSpan="3">

@@ -10,7 +10,8 @@ public static class EventAggregator
     public static event EventHandler<EventArgs> AIChatBubbleStatusChanged;
     public static event EventHandler<EventArgs> MouseOverAIChatInputTextboxChanged;
     public static event EventHandler<EventArgs> MouseOverAppUIChanged;
-    public static event EventHandler<EventArgs> MouseOverTextSelectionMenu;
+    public static event EventHandler<EventArgs> MouseOverTextSelectionMenuChanged;
+    public static event EventHandler<EventArgs> MouseOverAIChatPanelChanged;
 
     // Notify Language Changed to MainViewModel -> Execute TranslateCommand
     // Publish in MenuOperatorsView.xaml.cs
@@ -34,9 +35,13 @@ public static class EventAggregator
     {
         MouseOverAppUIChanged?.Invoke(sender, e);
     }
-
-    public static void PublishMouseOverTextSelectionMenu(object sender, EventArgs e)
+    public static void PublishMouseOverAIChatPanelChanged(object sender, EventArgs e)
     {
-        MouseOverTextSelectionMenu?.Invoke(sender, e);
+        MouseOverAIChatPanelChanged?.Invoke(sender, e);
+    }
+
+    public static void PublishMouseOverTextSelectionMenuChanged(object sender, EventArgs e)
+    {
+        MouseOverTextSelectionMenuChanged?.Invoke(sender, e);
     }
 }

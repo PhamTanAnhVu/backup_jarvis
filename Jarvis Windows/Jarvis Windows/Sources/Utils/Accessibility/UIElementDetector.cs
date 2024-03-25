@@ -98,6 +98,10 @@ public class UIElementDetector
         EventAggregator.MouseOverAppUIChanged += (sender, e) => {
             _isMouseOverAppUI = (bool)sender;
         };
+        
+        EventAggregator.MouseOverAIChatPanelChanged += (sender, e) => {
+            _isMouseOverAppUI |= (bool)sender;
+        };
     }
 
     public void SubscribeToElementFocusChanged()

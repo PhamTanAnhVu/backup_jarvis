@@ -9,6 +9,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView
         private IKeyboardMouseEvents globalMouseHook;
         private bool IsMouseOver_AppUI;
         private bool IsMouseOver_AIChatSidebar_InputTextbox;
+        private bool IsMouseOver_AIChatPanel;
 
         public TransparentPanel()
         {
@@ -21,7 +22,11 @@ namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView
             EventAggregator.MouseOverAppUIChanged += (sender, e) => {
                 IsMouseOver_AppUI= (bool)sender;
             };
-            
+
+            EventAggregator.MouseOverAIChatPanelChanged += (sender, e) => {
+                IsMouseOver_AIChatPanel = (bool)sender;
+            };
+
             EventAggregator.MouseOverAIChatInputTextboxChanged += (sender, e) => {
                 IsMouseOver_AIChatSidebar_InputTextbox = (bool)sender;
             };
@@ -29,7 +34,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView
 
         private void GlobalMouseHook_MouseWheelExt(object sender, MouseEventExtArgs e)
         {
-            if (!IsMouseOver_AppUI || IsMouseOver_AIChatSidebar_InputTextbox) return; 
+            if (IsMouseOver_AppUI || IsMouseOver_AIChatSidebar_InputTextbox || !IsMouseOver_AIChatPanel) return; 
             var parentScrollViewer = FindParentScrollViewer(this);
             if (parentScrollViewer != null)
             {
