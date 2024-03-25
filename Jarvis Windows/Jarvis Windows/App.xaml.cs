@@ -15,6 +15,12 @@ using Jarvis_Windows.Sources.Utils.Accessibility;
 using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
 using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 using Jarvis_Windows.Sources.DataAccess.Local;
+using System.Diagnostics;
+using System.Reflection;
+using System.IO.Packaging;
+using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel;
+using Package = Windows.ApplicationModel.Package;
 
 namespace Jarvis_Windows
 {
@@ -66,12 +72,47 @@ namespace Jarvis_Windows
         }
 
 
+        /*protected async void OnStartup(object sender, StartupEventArgs e)
+        {
+            try
+            {
+                MainView mainView = _serviceProvider.GetRequiredService<MainView>();
+                mainView.Show();
+
+                _serviceProvider.GetRequiredService<PopupDictionaryService>().MainWindow = mainView;
+                // Logging.Log("After 3 mainview OnStartup");
+
+                *//*bool isRegistered = await StartupManager.RegisterStartupAsync();
+                if(isRegistered)
+                {
+                    Debug.WriteLine("REGISTER START UP WITH BOOT");
+                }*//*
+
+                //Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                //Assembly curAssembly = Assembly.GetExecutingAssembly();
+                //key.SetValue("Jarvis AI: Chat GPT Bot Assistant & AI Copilot", WindowLocalStorage.);
+                // Lấy đường dẫn tới tệp tin thực thi của ứng dụng
+                //string appPath = Package.Current.InstalledLocation.Path;
+
+                // Thêm ứng dụng vào danh sách khởi động cùng với Windows
+                *//*StartupTask startupTask = await StartupTask.GetAsync(_uniqueEventName);
+                if (startupTask.State != StartupTaskState.Enabled)
+                {
+                    StartupTaskState state = await startupTask.RequestEnableAsync();
+                }*//*
+            }
+            catch (Exception)
+            {
+
+            }
+        }*/
+
         protected void OnStartup(object sender, StartupEventArgs e)
         {
             MainView mainView = _serviceProvider.GetRequiredService<MainView>();
             mainView.Show();
 
-            _serviceProvider.GetRequiredService<PopupDictionaryService>().MainWindow = mainView;        
+            _serviceProvider.GetRequiredService<PopupDictionaryService>().MainWindow = mainView;
         }
 
         private void SingleInstanceWatcher()

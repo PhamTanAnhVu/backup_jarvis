@@ -1,299 +1,267 @@
 ﻿using System;
 using System.Windows.Automation;
 using System.Windows;
+using Jarvis_Windows.Sources.Utils.Services;
 using Jarvis_Windows.Sources.Utils.WindowsAPI;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
-using System.Security.RightsManagement;
 using System.Windows.Automation.Text;
+using System.Windows.Forms;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Xml.Linq;
+using Windows.Graphics.Printing3D;
+using System.IO;
+using Jarvis_Windows.Sources.DataAccess.Local;
+using System.Windows.Media.Imaging;
+//using System.Drawing;
+using System.Windows.Media.Animation;
 
-namespace Jarvis_Windows.Sources.Utils.Services
+namespace Jarvis_Windows.Sources.Utils.Accessibility;
+
+public class UIElementDetector
 {
-    public class AccessibilityService_
+    private static UIElementDetector? Instance;
+    private static AutomationElement? _focusingElement;
+    private static AutomationFocusChangedEventHandler? _focusChangedEventHandler = new AutomationFocusChangedEventHandler(OnElementFocusChanged);
+
+    private static PopupDictionaryService? _popupDictionaryService;
+    private static SendEventGA4? _sendEventGA4;
+    private static bool _isUseAutoTuningPosition = true;
+    private static IAutomationElementValueService? _automationElementValueService;
+    private static string _currentSelectedText = String.Empty;
+    private static AutomationElement? _observerSelectionChangeElement;
+    private static ISupportedAppService? _supportedAppSerice;
+
+    private static bool _isMouseOverAppUI;
+
+    public static bool IsUseAutoTuningPosition { 
+        get => _isUseAutoTuningPosition; 
+        set => _isUseAutoTuningPosition = value; 
+    }
+
+    public AutomationFocusChangedEventHandler? FocusChangedEventHandler
     {
-        private static AccessibilityService_? Instance;
-        private static AutomationElement? _focusingElement;
-        private static AutomationFocusChangedEventHandler? _focusChangedEventHandler = new AutomationFocusChangedEventHandler(OnElementFocusChanged);
+        get { return _focusChangedEventHandler; }
+        set => _focusChangedEventHandler = value;
+    }
 
-        private static PopupDictionaryService? _popupDictionaryService;
-        private static SendEventGA4? _sendEventGA4;
-        private static bool _isUseAutoTuningPosition = true;
-        private static IAutomationElementValueService? _automationElementValueService;
-        public PopupDictionaryService? PopupDictionaryService
+    public static UIElementDetector GetInstance()
+    {
+        if (Instance == null)
+            Instance = new UIElementDetector();
+        return Instance;
+    }
+
+    public SendEventGA4? SendEventGA4
+    {
+        get { return _sendEventGA4; }
+        set => _sendEventGA4 = value;
+    }
+
+    public IAutomationElementValueService? AutomationElementValueService { 
+        get => _automationElementValueService;
+        set => _automationElementValueService = value; 
+    }
+    public static string CurrentSelectedText
+    {
+        get => _currentSelectedText; 
+        set => _currentSelectedText = value; 
+    }
+    public static AutomationElement? ObserverSelectionChangeElement 
+    {
+        get => _observerSelectionChangeElement; 
+        set => _observerSelectionChangeElement = value; 
+    }
+    public PopupDictionaryService? PopupDictionaryService 
+    { 
+        get => _popupDictionaryService; 
+        set => _popupDictionaryService = value; 
+    }
+    public ISupportedAppService SupportedAppService 
+    { 
+        get => _supportedAppSerice;
+        set => _supportedAppSerice = value;
+    }
+
+    private UIElementDetector(PopupDictionaryService popupDictionaryService)
+    {
+        PopupDictionaryService = popupDictionaryService;
+        EventAggregator.MouseOverAppUIChanged += (sender, e) => {
+            _isMouseOverAppUI = (bool)sender;
+        };
+
+        EventAggregator.MouseOverAIChatPanelChanged += (sender, e) => {
+            _isMouseOverAppUI |= (bool)sender;
+        };
+    }
+
+    public UIElementDetector()
+    {
+        /*EventAggregator.MouseOverAppUIChanged += (sender, e) => {
+            _isMouseOverAppUI = (bool)sender;
+        };*/
+
+        /*EventAggregator.MouseOverAIChatPanelChanged += (sender, e) => {
+            _isMouseOverAppUI |= (bool)sender;
+        };*/
+    }
+
+    public void SubscribeToElementFocusChanged()
+    {
+        Automation.AddAutomationFocusChangedEventHandler(_focusChangedEventHandler);
+        /*Thread tuningJarivsPositionThread = new Thread(TunningPositionThread);
+        tuningJarivsPositionThread.Name = "Jarvis Position Tuning";
+        tuningJarivsPositionThread.Start();*/
+    }
+
+    private void TunningPositionThread(object? obj)
+    {
+        /*if (_popupDictionaryService != null)
         {
-            get { return _popupDictionaryService; }
-            set => _popupDictionaryService = value;
-        }
-
-        public static bool IsUseAutoTuningPosition
-        {
-            get => _isUseAutoTuningPosition;
-            set => _isUseAutoTuningPosition = value;
-        }
-
-        public AutomationFocusChangedEventHandler? FocusChangedEventHandler
-        {
-            get { return _focusChangedEventHandler; }
-            set => _focusChangedEventHandler = value;
-        }
-
-        public static AccessibilityService_ GetInstance()
-        {
-            if (Instance == null)
-                Instance = new AccessibilityService_();
-            return Instance;
-        }
-
-        public SendEventGA4? SendEventGA4
-        {
-            get { return _sendEventGA4; }
-            set => _sendEventGA4 = value;
-        }
-
-        public IAutomationElementValueService? AutomationElementValueService { get => _automationElementValueService; set => _automationElementValueService = value; }
-
-        private AccessibilityService_(PopupDictionaryService popupDictionaryService)
-        {
-            PopupDictionaryService = popupDictionaryService;
-        }
-
-        public AccessibilityService_()
-        {
-        }
-
-        public void SubscribeToElementFocusChanged()
-        {
-            Automation.AddAutomationFocusChangedEventHandler(_focusChangedEventHandler);
-            Thread tuningJarivsPositionThread = new Thread(TunningPositionThread);
-            tuningJarivsPositionThread.Name = "Jarvis Position Tuning";
-            //tuningJarivsPositionThread.Start();
-        }
-
-        private void TunningPositionThread(object? obj)
-        {
-            if (_popupDictionaryService != null)
+            try
             {
-                try
+                while (true)
                 {
-                    while (true)
+                    if (_focusingElement != null && IsUseAutoTuningPosition)
                     {
-                        if (_focusingElement != null && IsUseAutoTuningPosition)
-                        {
-                            _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
-                            _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
-                        }
-                        Thread.Sleep(33);
+                        _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation());
+                        _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation());
                     }
-                }
-                catch (Exception)
-                {
-                    throw;
+                    Thread.Sleep(500);
                 }
             }
-        }
-
-        public void UnSubscribeToElementFocusChanged()
-        {
-            _focusChangedEventHandler = new AutomationFocusChangedEventHandler(OnElementFocusChanged);
-            Automation.RemoveAutomationFocusChangedEventHandler(_focusChangedEventHandler);
-        }
-
-        private static bool IsEditableElement(AutomationElement? automationElement)
-        {
-            if (automationElement != null)
+            catch (Exception)
             {
-                if (automationElement.Current.ControlType.ProgrammaticName.Equals("ControlType.Edit"))
-                    return true;
-                else if (automationElement.Current.ControlType.ProgrammaticName.Equals("ControlType.Custom"))
-                    return true;
-                /*else if (automationElement.Current.ControlType.ProgrammaticName.Equals("ControlType.Document"))
-                    return true;*/
             }
-            return false;
-        }
+        }*/
+    }
 
-        private static async Task ExecuteSendEventInject()
+    public void UnSubscribeToElementFocusChanged()
+    {
+        _focusChangedEventHandler = new AutomationFocusChangedEventHandler(OnElementFocusChanged);
+        Automation.RemoveAutomationFocusChangedEventHandler(_focusChangedEventHandler);
+    }
+
+    private static bool IsEditableElement(AutomationElement? automationElement)
+    {
+        if (automationElement != null)
         {
-            await _sendEventGA4.SendEvent("inject_input_actions");
+            if (automationElement.Current.ControlType.ProgrammaticName.Equals("ControlType.Edit"))
+                return true;
+            else if (automationElement.Current.ControlType.ProgrammaticName.Equals("ControlType.Custom"))
+                return true;
         }
+        return false;
+    }
 
-        private static void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
+    private static void ExecuteSendEventInject()
+    {   
+        if(_sendEventGA4 != null)
+            _ = _sendEventGA4.SendEvent("inject_input_actions");       
+    }
+
+    [DllImport("user32.dll")]
+    static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
+    private static string GetActiveWindowTitle()
+    {
+        const int nChars = 256;
+        StringBuilder Buff = new StringBuilder(nChars);
+        IntPtr handle = GetForegroundWindow();
+
+        if (GetWindowText(handle, Buff, nChars) > 0)
         {
-            AutomationElement? newFocusElement = sender as AutomationElement;
+            return Buff.ToString();
+        }
+        return String.Empty;
+    }
 
-            if(newFocusElement != null && _popupDictionaryService != null)
+    private static void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
+    {
+        AutomationElement? newFocusElement = sender as AutomationElement;
+        if (newFocusElement != null)
+            RegisterSelectionChangedFor(newFocusElement);
+
+        if (_supportedAppSerice != null)
+            if (!_supportedAppSerice.IsSupportedApp(GetActiveWindowTitle()))
+                return;
+
+        if (newFocusElement != null && newFocusElement != _focusingElement)
+        {
+            if (newFocusElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") ||
+                newFocusElement.Current.ControlType.ProgrammaticName.Equals("ControlType.Window"))
+                return;
+
+            if (IsEditableElement(newFocusElement))
             {
-                try
+                _focusingElement = newFocusElement;
+                if(_popupDictionaryService != null && _automationElementValueService != null)
                 {
-                    /*TextPattern? textPattern = newFocusElement.GetCurrentPattern(TextPattern.Pattern) as TextPattern;
-                    if (textPattern != null)
-                    {
-
-                        TextPatternRange[] selections = textPattern.GetSelection();
-
-                        if (selections != null && selections.Length > 0)
-                        {
-                            TextPatternRange selection = selections[0];
-                            Rect boundingRect = selection.GetBoundingRectangles()[0];
-
-                            _popupDictionaryService.ShowJarvisAction(true);
-                            _popupDictionaryService.ShowMenuOperations(false);
-                            _popupDictionaryService.UpdateJarvisActionPosition(new Point(boundingRect.X, boundingRect.Y), boundingRect);
-                            _popupDictionaryService.UpdateMenuOperationsPosition(new Point(boundingRect.X, boundingRect.Y), boundingRect);
-                        }
-                    }*/
-                }
-                catch (Exception)
-                {
-                    
-                }
-            }
-
-            if (newFocusElement != null /*&& newFocusElement != _focusingElement*/)
-            {
-                if(_focusingElement != null)
-                {
-                    Automation.RemoveAutomationEventHandler(TextPattern.TextSelectionChangedEvent, _focusingElement, OnTextSelectionChange);
-                    Automation.AddAutomationEventHandler(TextPattern.TextSelectionChangedEvent, _focusingElement, TreeScope.Element, OnTextSelectionChange);
-                }
-
-                if (IsEditableElement(newFocusElement))
-                {
-                    _focusingElement = newFocusElement;
-
-                    
-
                     _popupDictionaryService.ShowJarvisAction(true);
                     _popupDictionaryService.ShowMenuOperations(false);
                     _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
                     _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
-                    Task.Run(async () => await ExecuteSendEventInject());
-                }
-                else if(IsSuportedTextPattern(newFocusElement))
-                {
-                    /*TextPattern textPattern = newFocusElement.GetCurrentPattern(TextPattern.Pattern) as TextPattern;
-                    if (textPattern != null)
-                    {
-                        TextPatternRange[] selections = textPattern.GetSelection();
-                        if (selections != null && selections.Length > 0)
-                        {
-                            TextPatternRange selection = selections[0];
-                            Rect boundingRect = selection.GetBoundingRectangles()[0];
-                            Debug.WriteLine("Tọa độ bắt đầu của đoạn text: X = " + boundingRect.X + ", Y = " + boundingRect.Y);
-                        }
-                    }*/
-                    /*_popupDictionaryService.ShowJarvisAction(true);
-                    _popupDictionaryService.ShowMenuOperations(false);
-                    _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(newFocusElement));
-                    _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(newFocusElement));*/
-                }
-                else
-                {
-                    try
-                    {
-                        nint currentAppHandle = NativeUser32API.GetForegroundWindow();
-                        AutomationElement foregroundApp = AutomationElement.FromHandle(currentAppHandle);
-                        if (foregroundApp != null)
-                        {
-                            if (foregroundApp.Current.Name.Equals("Jarvis MainView"))
-                                return;
-                        }
-                        _focusingElement = null;
-                        _popupDictionaryService.ShowJarvisAction(false);
-                        _popupDictionaryService.ShowMenuOperations(false);
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
-
+                    _popupDictionaryService.MainWindow.ResetBinding();
+                    ExecuteSendEventInject();
+                    _automationElementValueService.CheckUndoRedo(_focusingElement);
                 }
             }
-        }
-
-        private static bool IsSuportedTextPattern(AutomationElement newFocusElement)
-        {
-            if (newFocusElement != null)
-            {
-                TextPattern? textPattern;
-                if (newFocusElement.TryGetCurrentPattern(TextPattern.Pattern, out object textPatternObj))
-                {
-                    textPattern = textPatternObj as TextPattern;
-                    if (textPattern != null)
-                        return true;
-                }
-                else if (newFocusElement.TryGetCurrentPattern(ValuePattern.Pattern, out object valuePatternObj))
-                {
-                    var valuePattern = valuePatternObj as ValuePattern;
-                    if(valuePattern != null)
-                        return true;
-                }
-            }
-            return false;
-        }
-
-        private static void OnTextSelectionChange(object sender, AutomationEventArgs e)
-        {
-            GetSelectedText(_focusingElement);
-        }
-
-        private static Rect GetElementRectBounding(AutomationElement? automationElement)
-        {
-            if (automationElement == null)
-            {
-                return new Rect(0, 0, 0, 0);
-            }
-
-            return automationElement.Current.BoundingRectangle;
-        }
-
-        private static Point CalculateElementLocation()
-        {
-            Point placementPoint = new Point(0, 0);
-            if (_focusingElement != null)
+            else
             {
                 try
                 {
-                    Rect elementRectBounding = _focusingElement.Current.BoundingRectangle;
-                    if (elementRectBounding.X < 0 || elementRectBounding.Y < 0)
+                    IntPtr currentAppHandle = NativeUser32API.GetForegroundWindow();
+                    AutomationElement foregroundApp = AutomationElement.FromHandle(currentAppHandle);
+                    if (foregroundApp != null)
                     {
-                        _popupDictionaryService.ShowJarvisAction(false);
-                        _popupDictionaryService.ShowMenuOperations(false);
-                        placementPoint.X = 0;
-                        placementPoint.Y = 0;
+                        if (foregroundApp.Current.Name.Equals("Jarvis MainView"))
+                            return;
+                        if (foregroundApp.Current.ClassName.Equals("Popup"))
+                            return;
                     }
-                    else
-                    {
-                        placementPoint.X = elementRectBounding.Left/* + elementRectBounding.Width*/;
-                        placementPoint.Y = elementRectBounding.Top/* + elementRectBounding.Height * 0.5*/;
-                    }
+
+                    _focusingElement = null;
+                    _popupDictionaryService?.ShowJarvisAction(false);
+                    _popupDictionaryService?.ShowMenuOperations(false);
                 }
                 catch (Exception)
                 {
                     throw;
                 }
-            }
-            return placementPoint;
-        }
 
-        private void SubscribeToElementPropertyChanged(AutomationElement? trackingElement, AutomationProperty? trackingProperty)
+            }
+        }
+    }
+
+    private static Rect GetElementRectBounding(AutomationElement? automationElement)
+    {
+        if (automationElement == null)
+            throw new NullReferenceException("GetElementRectBouding failed !!!");
+
+        return automationElement.Current.BoundingRectangle;
+    }
+
+    private static Point CalculateElementLocation()
+    {
+        Point placementPoint = new Point(0, 0);
+        if (_focusingElement != null)
         {
             try
             {
-                if (trackingElement != null)
+                Rect elementRectBounding = _focusingElement.Current.BoundingRectangle;
+                if(elementRectBounding.X <0 || elementRectBounding.Y < 0)
                 {
-                    TreeScope treeScope = TreeScope.Element;
-                    if (trackingProperty == AutomationElement.BoundingRectangleProperty)
-                        treeScope = TreeScope.Parent;
-                    else if (trackingProperty == AutomationElement.IsOffscreenProperty)
-                        treeScope = TreeScope.Ancestors;
-                    else if (trackingProperty == AutomationElement.IsKeyboardFocusableProperty)
-                        treeScope = TreeScope.Element;
-
-                    AutomationPropertyChangedEventHandler propertyChangedHandler = new AutomationPropertyChangedEventHandler(OnElementPropertyChanged);
-                    Automation.AddAutomationPropertyChangedEventHandler(trackingElement, treeScope, propertyChangedHandler, trackingProperty);
+                    _popupDictionaryService.ShowJarvisAction(false);
+                    _popupDictionaryService.ShowMenuOperations(false);
+                    placementPoint.X = 0;
+                    placementPoint.Y = 0;
+                }
+                else
+                {
+                    placementPoint.X = elementRectBounding.Left + elementRectBounding.Width;
+                    placementPoint.Y = elementRectBounding.Top + elementRectBounding.Height * 0.5;
                 }
             }
             catch (Exception)
@@ -301,187 +269,393 @@ namespace Jarvis_Windows.Sources.Utils.Services
                 throw;
             }
         }
+        return placementPoint;
+    }
 
-        private void OnElementPropertyChanged(object sender, AutomationPropertyChangedEventArgs e)
+    private void SubscribeToElementPropertyChanged(AutomationElement? trackingElement, AutomationProperty? trackingProperty)
+    {
+        try
         {
-            var automationElement = sender as AutomationElement;
-            if (e.Property == AutomationElement.BoundingRectangleProperty)
+            if (trackingElement != null)
             {
-                _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
-                _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
-            }
-            else if (e.Property == AutomationElement.IsOffscreenProperty)
-            {
-                _popupDictionaryService.ShowJarvisAction(false);
-                _popupDictionaryService.ShowMenuOperations(false);
-            }
-        }
+                TreeScope treeScope = TreeScope.Element;
+                if (trackingProperty == AutomationElement.BoundingRectangleProperty)
+                    treeScope = TreeScope.Parent;
+                else if (trackingProperty == AutomationElement.IsOffscreenProperty)
+                    treeScope = TreeScope.Ancestors;
+                else if (trackingProperty == AutomationElement.IsKeyboardFocusableProperty)
+                    treeScope = TreeScope.Element;
 
-        private AutomationElement FindChildEditElement(AutomationElement parrentElement)
-        {
-            System.Windows.Automation.Condition editCondition = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit);
-
-            AutomationElement editElement = parrentElement.FindFirst(TreeScope.Descendants, editCondition);
-
-            return editElement;
-        }
-
-        public void SetValueForFocusingEditElement(string? value)
-        {
-            int timeoutMilliseconds = 200;
-            if (_focusingElement != null)
-            {
-
-                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                CancellationToken cancellationToken = cancellationTokenSource.Token;
-
-                Task setValueTask = Task.Run(() =>
-                {
-                    try
-                    {
-                        ValuePattern? valuePattern = _focusingElement.GetCurrentPattern(ValuePattern.Pattern) as ValuePattern;
-                        if (valuePattern != null)
-                            valuePattern.SetValue(value);
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
-                });
-
-                if (!setValueTask.Wait(timeoutMilliseconds, cancellationToken))
-                {
-                    cancellationTokenSource.Cancel();
-                    throw new TimeoutException("The SetValueForFocusingEditElement operation has timed out.");
-                }
+                AutomationPropertyChangedEventHandler propertyChangedHandler = new AutomationPropertyChangedEventHandler(OnElementPropertyChanged);
+                Automation.AddAutomationPropertyChangedEventHandler(trackingElement, treeScope, propertyChangedHandler, trackingProperty);
             }
         }
-
-        public string GetTextFromFocusingEditElement()
+        catch (NullReferenceException)
         {
-            int timeoutMilliseconds = 200;
-            string result = string.Empty;
-
-            if (_focusingElement != null)
-            {
-                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                CancellationToken cancellationToken = cancellationTokenSource.Token;
-
-                Task<string> getValueTask = Task.Run(() =>
-                {
-                    Debug.WriteLine($"❌❌❌ Get Value of {_focusingElement.Current.ClassName} {_focusingElement.Current.ControlType.ProgrammaticName}");
-                    try
-                    {
-                        ValuePattern? valuePattern = null;
-                        object valuePatternObj;
-                        if (_focusingElement.TryGetCurrentPattern(ValuePattern.Pattern, out valuePatternObj))
-                        {
-                            valuePattern = valuePatternObj as ValuePattern;
-                            if (valuePattern != null)
-                                return valuePattern.Current.Value;
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
-                    return string.Empty;
-                });
-
-                if (!getValueTask.Wait(timeoutMilliseconds, cancellationToken))
-                {
-                    cancellationTokenSource.Cancel();
-                    throw new TimeoutException("The GetTextFromFocusingEditElement operation has timed out.");
-                }
-
-                result = getValueTask.Result;
-            }
-
-            return result;
+            Debug.WriteLine($"Null reference exception");
+            PopupDictionaryService.ShowJarvisAction(false);
+            PopupDictionaryService.ShowMenuOperations(false);
         }
-
-        public static String GetSelectedText(AutomationElement? automationElement)
+        catch (ElementNotAvailableException)
         {
-           String selectedText = String.Empty;
-            if(automationElement != null)
+            Debug.WriteLine($"Element is not available");
+            PopupDictionaryService.ShowJarvisAction(false);
+            PopupDictionaryService.ShowMenuOperations(false);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"An error occurred: {ex.Message}");
+            PopupDictionaryService.ShowJarvisAction(false);
+            PopupDictionaryService.ShowMenuOperations(false);
+        }
+    }
+
+    private void OnElementPropertyChanged(object sender, AutomationPropertyChangedEventArgs e)
+    {
+        var automationElement = sender as AutomationElement;
+        if (e.Property == AutomationElement.BoundingRectangleProperty)
+        {
+            Debug.WriteLine($"🟧🟧🟧 {automationElement?.Current.Name} Bounding Rectangle Changed");
+            PopupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+            PopupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+        }
+        else if (e.Property == AutomationElement.IsOffscreenProperty)
+        {
+            Debug.WriteLine($"👁️👁️👁️ {automationElement?.Current.ControlType.ProgrammaticName} Offscreen Property Changed");
+            PopupDictionaryService.ShowJarvisAction(false);
+            PopupDictionaryService.ShowMenuOperations(false);
+        }
+    }
+
+    private AutomationElement FindChildEditElement(AutomationElement parrentElement)
+    {
+        System.Windows.Automation.Condition editCondition = new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Edit);
+
+        AutomationElement editElement = parrentElement.FindFirst(TreeScope.Descendants, editCondition);
+
+        return editElement;
+    }
+
+    public string SetValueForFocusingEditElement(String? value)
+    {
+        int timeoutMilliseconds = 200;
+        string strResult = String.Empty;
+        if (_focusingElement != null)
+        {
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+            Task setValueTask = Task.Run(() =>
             {
                 try
                 {
-                    TextPattern? textPattern;
-                    if(automationElement.TryGetCurrentPattern(TextPattern.Pattern, out object textPatternObj))
+                    ValuePattern? valuePattern = _focusingElement.GetCurrentPattern(ValuePattern.Pattern) as ValuePattern;
+                    if (valuePattern != null)
                     {
-                        textPattern = textPatternObj as TextPattern;
-                        if (textPattern != null)
+                        strResult = valuePattern.Current.Value.ToString();
+
+                        if(String.IsNullOrEmpty(CurrentSelectedText))
                         {
-                            if (textPattern.SupportedTextSelection == SupportedTextSelection.None)
-                            {
-                                Debug.WriteLine("Selected text is not supported for this element.");
-                            }
-                            else
-                            {
-                                TextPatternRange[] selectedRanges = textPattern.GetSelection();
-                                if (selectedRanges != null && selectedRanges.Length > 0)
-                                {
-
-                                    TextPatternRange selection = selectedRanges[0];
-                                    if(selection != null)
-                                    {
-                                        var rects = selection.GetBoundingRectangles();
-                                        if(rects != null && rects.Length > 0)
-                                        {
-                                            Rect boundingRect = rects[0];
-
-                                            _popupDictionaryService.ShowMenuSelectionActions(true);
-                                            _popupDictionaryService.ShowSelectionResponseView(false);
-                                            double screenHeight = SystemParameters.PrimaryScreenHeight;
-                                            double screenWidth = SystemParameters.PrimaryScreenWidth;
-                                            double xScale = screenWidth / 1920;
-                                            double yScale = screenHeight / 1080;
-                                            _popupDictionaryService.TextMenuOperationsPosition = new Point(boundingRect.X * xScale, boundingRect.Y * yScale + 20);
-                                            _popupDictionaryService.TextMenuAPIPosition = new Point(boundingRect.X * xScale, boundingRect.Y * yScale + 20);
-
-                                            /*//selectedText = selectedRanges[0].GetText(1);
-                                            selectedRanges[0].MoveEndpointByUnit(TextPatternRangeEndpoint.Start, TextUnit.Document, 1);
-                                            selectedText = selectedRanges[0].GetText(-1);
-                                            Debug.WriteLine("Selected text: " + selectedText);*/
-                                        }
-
-                                        //selection.GetText(-1);
-
-                                    }
-                                }
-                                else
-                                {
-                                    selectedText = string.Empty;
-                                    Debug.WriteLine("No text selected.");
-                                }
-                            }
+                            valuePattern.SetValue(value);
                         }
                         else
                         {
-                            Debug.WriteLine("TextPattern is not supported for this element.");
+                            strResult = strResult.Replace(CurrentSelectedText, value);
+                            valuePattern.SetValue(strResult);
+                            CurrentSelectedText = String.Empty;
                         }
-                    }
+                    }    
                 }
                 catch (Exception)
                 {
                     throw;
                 }
+            });
+
+            if (!setValueTask.Wait(timeoutMilliseconds, cancellationToken))
+            {
+                cancellationTokenSource.Cancel();
+                return String.Empty;
+            }
+        }
+        return strResult;
+    }
+
+    public string GetTextFromFocusingEditElement()
+    {
+        int timeoutMilliseconds = 200;
+        string result = string.Empty;
+
+        if (_focusingElement != null)
+        {
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+            Task<string> getValueTask = Task.Run(() =>
+            {
+                Debug.WriteLine($"❌❌❌ Get Value of {_focusingElement.Current.ClassName} {_focusingElement.Current.ControlType.ProgrammaticName}");
+                try
+                {
+                    ValuePattern? valuePattern = null;
+                    object valuePatternObj;
+                    if (_focusingElement.TryGetCurrentPattern(ValuePattern.Pattern, out valuePatternObj))
+                    {
+                        valuePattern = valuePatternObj as ValuePattern;
+                        if (valuePattern != null)
+                            return valuePattern.Current.Value;
+                    }
+                }
+                catch (NullReferenceException)
+                {
+                    Debug.WriteLine($"Null reference exception");
+                }
+                catch (ElementNotAvailableException)
+                {
+                    Debug.WriteLine($"❌❌❌ Element is not available");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"❌❌❌ Exception: {ex.Message}");
+                }
+                return string.Empty;
+            });
+
+            if (!getValueTask.Wait(timeoutMilliseconds, cancellationToken))
+            {
+                cancellationTokenSource.Cancel();
+                throw new TimeoutException("The GetTextFromFocusingEditElement operation has timed out.");
             }
 
-            return selectedText;
+            result = getValueTask.Result;
         }
 
-        internal AutomationElement? GetFocusingElement()
+        return result;
+    }
+
+    internal AutomationElement? GetFocusingElement()
+    {
+        return _focusingElement;
+    }
+
+    internal string GetValueOf(AutomationElement? automationElement)
+    {
+        int timeoutMilliseconds = 200;
+        string result = string.Empty;
+
+        if (automationElement != null)
         {
-            return _focusingElement;
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+            Task<string> getValueTask = Task.Run(() =>
+            {
+                try
+                {
+                    ValuePattern? valuePattern = null;
+                    object valuePatternObj;
+                    if (automationElement.TryGetCurrentPattern(ValuePattern.Pattern, out valuePatternObj))
+                    {
+                        valuePattern = valuePatternObj as ValuePattern;
+                        if (valuePattern != null)
+                            return valuePattern.Current.Value;
+                    }
+                }
+                catch (NullReferenceException)
+                {
+                    Debug.WriteLine($"Null reference exception");
+                }
+                catch (ElementNotAvailableException)
+                {
+                    Debug.WriteLine($"❌❌❌ Element is not available");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"❌❌❌ Exception: {ex.Message}");
+                }
+                return string.Empty;
+            });
+
+            if (!getValueTask.Wait(timeoutMilliseconds, cancellationToken))
+            {
+                cancellationTokenSource.Cancel();
+                throw new TimeoutException("The GetTextFromFocusingEditElement operation has timed out.");
+            }
+
+            result = getValueTask.Result;
         }
 
-        private void RegisterSelectionChangedFor(AutomationElement automationElement)
-        {
-            Automation.RemoveAutomationEventHandler(TextPattern.TextSelectionChangedEvent, automationElement, OnTextSelectionChange);
-            Automation.AddAutomationEventHandler(TextPattern.TextSelectionChangedEvent, automationElement, TreeScope.Element, OnTextSelectionChange);
+        return result;
+    }
+
+    private static void OnTextSelectionChange(object sender, AutomationEventArgs e)
+    {
+
+        AutomationElement? automationElement = sender as AutomationElement;
+        if (automationElement != null && 
+            !automationElement.Current.AutomationId.Equals("TextMenuAPI_Result_Text") &&
+            !automationElement.Current.AutomationId.Equals("AIChatSidebar_ChatPanel") &&
+            !automationElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox") &&
+            !automationElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") && !_isMouseOverAppUI)
+        {      
+            try
+            {
+                TextPattern? textPattern;
+                if (automationElement.TryGetCurrentPattern(TextPattern.Pattern, out object textPatternObj))
+                {
+                    textPattern = textPatternObj as TextPattern;
+                    if (textPattern != null)
+                    {
+                        if (textPattern.SupportedTextSelection == SupportedTextSelection.None)
+                        {
+                            //throw new NotSupportedException("TextSelection is not supported for this element.");
+                        }
+                        else
+                        {
+                            TextPatternRange[] selectedRanges = textPattern.GetSelection();
+                            if (selectedRanges != null && selectedRanges.Length > 0)
+                            {
+
+                                TextPatternRange selection = selectedRanges[0];
+                                if (selection != null)
+                                {
+                                    var rects = selection.GetBoundingRectangles();
+                                    if (rects != null && rects.Length > 0)
+                                    {
+                                        Rect boundingRect = rects[0];
+                                        if (boundingRect == Rect.Empty)
+                                        {
+                                            _popupDictionaryService.ShowMenuSelectionActions(false);
+                                            _popupDictionaryService.IsShowPopupTextMenu = false;
+                                        }
+                                        _popupDictionaryService.ShowMenuSelectionActions(false);
+                                        _popupDictionaryService.IsShowPopupTextMenu = false;
+                                        double screenHeight = SystemParameters.PrimaryScreenHeight;
+                                        double screenWidth = SystemParameters.PrimaryScreenWidth;
+                                        double xScale = screenWidth / 1920;
+                                        double yScale = screenHeight / 1080;
+
+                                        System.Drawing.Point lpPoint;
+                                        NativeUser32API.GetCursorPos(out lpPoint);
+                                        Debug.WriteLine($"📌📌📌 Cursor Position: {lpPoint.X} - {lpPoint.Y}");
+                                        //Point selectedTextPosition = new Point(boundingRect.X * xScale - 20, boundingRect.Y * yScale + boundingRect.Height * 1.5f);
+                                        Point selectedTextPosition = new Point(lpPoint.X * xScale, lpPoint.Y * yScale);
+                                        _popupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
+                                        Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y +50);
+                                        _popupDictionaryService.PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);
+                                        if (!_popupDictionaryService.IsShowPinTextMenuAPI)
+                                        {
+                                            _popupDictionaryService.ShowSelectionResponseView(false);
+                                            _popupDictionaryService.TextMenuAPIPosition = new Point(newPosition.X, newPosition.Y);
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                CurrentSelectedText = String.Empty;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
-}
 
+    public string GetSelectedText()
+    {
+        return CurrentSelectedText;
+    }
+
+    private static void RegisterSelectionChangedFor(AutomationElement automationElement)
+    {
+        //if(ObserverSelectionChangeElement != null)
+            //Automation.RemoveAutomationEventHandler(TextPattern.TextSelectionChangedEvent, ObserverSelectionChangeElement, OnTextSelectionChange);
+        ObserverSelectionChangeElement = automationElement;
+        Automation.AddAutomationEventHandler(TextPattern.TextSelectionChangedEvent, ObserverSelectionChangeElement, TreeScope.Element, OnTextSelectionChange);
+    }
+
+    private string GetTextFromFocusedControl()
+    {
+        try
+        {
+            int activeWinPtr = GetForegroundWindow().ToInt32();
+            int activeThreadId = 0, processId;
+            activeThreadId = GetWindowThreadProcessId(activeWinPtr, out processId);
+            int currentThreadId = GetCurrentThreadId();
+            if (activeThreadId != currentThreadId)
+                AttachThreadInput(activeThreadId, currentThreadId, true);
+            IntPtr activeCtrlId = GetFocus();
+
+            return GetText(activeCtrlId);
+        }
+        catch (Exception exp)
+        {
+            return exp.Message;
+        }
+    }
+
+    private string GetText(IntPtr handle)
+    {
+        int maxLength = 100;
+        IntPtr buffer = Marshal.AllocHGlobal((maxLength + 1) * 2);
+        SendMessageW(handle, WM_GETTEXT, maxLength, buffer);
+        string w = Marshal.PtrToStringUni(buffer);
+        Marshal.FreeHGlobal(buffer);
+        return w;
+    }
+
+    [DllImport("user32.dll", EntryPoint = "WindowFromPoint", CharSet = CharSet.Auto, ExactSpelling = true)]
+    public static extern IntPtr WindowFromPoint(Point pt);
+
+    [DllImport("user32.dll", EntryPoint = "SendMessageW")]
+    public static extern int SendMessageW([InAttribute] System.IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
+    public const int WM_GETTEXT = 13;
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+    internal static extern IntPtr GetForegroundWindow();
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+    internal static extern IntPtr GetFocus();
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    internal static extern int GetWindowThreadProcessId(int handle, out int processId);
+
+    [DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
+    internal static extern int AttachThreadInput(int idAttach, int idAttachTo, bool fAttach);
+    [DllImport("kernel32.dll")]
+    internal static extern int GetCurrentThreadId();
+
+    private static AutomationElement FindFirstElementType(AutomationElement automationElement, ControlType controlType)
+    {
+        AutomationElement? element = null;
+        try
+        {
+            IntPtr handle = NativeUser32API.GetForegroundWindow();
+            AutomationElement rootElement = AutomationElement.FromHandle(handle);
+            var elementColections = rootElement.FindAll(TreeScope.Subtree, new PropertyCondition(AutomationElement.ControlTypeProperty, controlType));
+            Debug.WriteLine("======================================================================================");
+            Debug.WriteLine("ROOT ELEMENT: " + rootElement.Current.Name);
+            Debug.WriteLine("GROUP ELEMENT COUNT: " + elementColections.Count);
+            if(elementColections.Count > 0)
+            {
+                foreach (AutomationElement groupElement in elementColections)
+                {
+                    AutomationElementCollection childs = groupElement.FindAll(TreeScope.Children, System.Windows.Automation.Condition.TrueCondition);
+                    foreach (AutomationElement child in childs)
+                    {
+                        Debug.WriteLine("CHILD ELEMENT: " + child.Current.ControlType.ProgrammaticName);
+                    }
+                }
+            }
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+        return element;
+    }
+}

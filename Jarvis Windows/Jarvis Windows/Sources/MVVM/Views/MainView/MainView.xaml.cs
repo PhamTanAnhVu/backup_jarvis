@@ -8,11 +8,11 @@ using System.Windows.Input;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using Jarvis_Windows.Sources.Utils.Services;
+using Jarvis_Windows.Sources.MVVM.Views.ContextMenuView;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 public partial class MainView : Window
 {
-    private ContextMenuStrip _contextMenuStrip;
     private SendEventGA4 _sendEventGA4;
     private NotifyIcon _notifyIcon;
 
@@ -41,26 +41,15 @@ public partial class MainView : Window
 
     private void InitTrayIcon()
     {
-        _notifyIcon = new NotifyIcon();
-        _contextMenuStrip = new ContextMenuStrip();
-
         string relativePath = Path.Combine("Assets", "Icons", "jarvis_logo_large.ico");
         string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
-        _notifyIcon.Icon = new System.Drawing.Icon(fullPath);
-
-
+        _notifyIcon = new NotifyIcon();
+        _notifyIcon.Icon = new Icon(fullPath);
         _notifyIcon.MouseClick += NotifyIcon_MouseClick;
-        _contextMenuStrip.Renderer = new MyRenderer();
-
-        _contextMenuStrip.Items.Add("Sidebar", null, Sidebar_Click);
-        _contextMenuStrip.Items.Add("Settings", null, Setting_Click);
-        _contextMenuStrip.Items.Add("Quit Jarvis", null, QuitMenuItem_Click);
-
-        _notifyIcon.ContextMenuStrip = _contextMenuStrip;
         _notifyIcon.Visible = true;
     }
 
-    private async void NotifyIcon_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
+    private async void NotifyIcon_MouseClick(object? sender, System.Windows.Forms.MouseEventArgs e)
     {
         if (e.Button == MouseButtons.Left)
         {
@@ -71,14 +60,21 @@ public partial class MainView : Window
 
             _isMainWindowOpened = true;
         }
+        else if (e.Button == MouseButtons.Right)
+        {
+            if(_notifyIcon.ContextMenuStrip == null)
+            {
+                _notifyIcon.ContextMenuStrip = new CustomContextMenuView(PopupDictionaryService, SendEventGA4);
+            }
+        }
     }
 
-    private async void App_MouseEnter(object sender, EventArgs e)
+    private void App_MouseEnter(object sender, EventArgs e)
     {
         EventAggregator.PublishMouseOverAppUIChanged(true, EventArgs.Empty);
     }
 
-    private async void App_MouseLeave(object sender, EventArgs e)
+    private void App_MouseLeave(object sender, EventArgs e)
     {
         EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
     }
@@ -93,13 +89,13 @@ public partial class MainView : Window
         EventAggregator.PublishMouseOverAIChatPanelChanged(false, EventArgs.Empty);
     }
 
-    private async void Sidebar_Click(object sender, EventArgs e)
+    private void Sidebar_Click(object sender, EventArgs e)
     {
         EventAggregator.PublishAIChatBubbleStatusChanged(this, EventArgs.Empty);
     }
-    
-    
-    private async void Setting_Click(object sender, EventArgs e)
+
+
+    private void Setting_Click(object sender, EventArgs e)
     {
         PopupDictionaryService.IsShowSettingMenu = true;
     }

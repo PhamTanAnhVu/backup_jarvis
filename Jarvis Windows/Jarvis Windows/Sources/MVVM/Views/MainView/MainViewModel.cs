@@ -3,9 +3,6 @@ using Jarvis_Windows.Sources.Utils.Constants;
 using Jarvis_Windows.Sources.Utils.Core;
 using Jarvis_Windows.Sources.Utils.Services;
 using Jarvis_Windows.Sources.Utils.Accessibility;
-using Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView;
-using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
-using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 using System;
 using System.Diagnostics;
 using Newtonsoft.Json;
@@ -15,17 +12,8 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows;
-using Jarvis_Windows.Sources.DataAccess;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using Jarvis_Windows.Sources.Utils.Accessibility;
 using Gma.System.MouseKeyHook;
-using System.Windows.Controls;
-using Windows.Devices.Enumeration;
-using System.Windows.Media;
 using System.Windows.Threading;
-using System.Windows.Documents;
-using Windows.ApplicationModel.Background;
-using System.Windows.Controls.Primitives;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 
@@ -460,7 +448,7 @@ public class MainViewModel : ViewModelBase
         AutomationElementValueService = automationElementValueService;
 
         // Reset APIUsage daily
-        Task.Run(async () => await ResetAPIUsageDaily()).Wait();
+        //Task.Run(async () => await ResetAPIUsageDaily()).Wait();
 
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
         IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
@@ -1232,10 +1220,14 @@ public class MainViewModel : ViewModelBase
 
         if (System.Windows.Clipboard.ContainsText())
         {
-            string text = System.Windows.Clipboard.GetText();
-            UIElementDetector.CurrentSelectedText = text;
-            PopupDictionaryService.ShowMenuSelectionActions(true);
-            await SendEventGA4.SendEvent("inject_selection_actions");
+            try
+            {
+                string text = System.Windows.Clipboard.GetText();
+                UIElementDetector.CurrentSelectedText = text;
+                PopupDictionaryService.ShowMenuSelectionActions(true);
+                await SendEventGA4.SendEvent("inject_selection_actions");
+            }
+            catch { }
         }
         else
         {

@@ -16,6 +16,7 @@
     <Title>Jarvis AI</Title>
     <StartupObject>Jarvis_Windows.App</StartupObject>
     <UseWindowsForms>True</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -183,10 +184,6 @@
     <Resource Include="Assets\Images\scissors.png" />
     <Resource Include="Assets\Images\translate_img.png" />
     <Resource Include="Sources\MVVM\Views\Styles\JarvisStyle.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Sources\Utils\Accessibility\" />
   </ItemGroup>
 
 </Project>
