@@ -1046,7 +1046,7 @@ public class MainViewModel : ViewModelBase
     {
         try
         {
-            await AuthenService.SignOut();
+            /*await AuthenService.SignOut();
             await AuthenService.SignIn("trongdaitran0903@gmail.com", "Devtest1@");
             string token = WindowLocalStorage.ReadLocalStorage("access_token");
             Account = await AuthenService.GetMe();
@@ -1054,15 +1054,15 @@ public class MainViewModel : ViewModelBase
             _ = await JarvisApi.Instance.APIUsageHandler();
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
             IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥");
-            IsNoAPIUsageRemain = !IsAPIUsageRemain;
+            IsNoAPIUsageRemain = !IsAPIUsageRemain;*/
 
-            //string websiteUrl = _authUrl;
-            //System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            //{
-            //    FileName = websiteUrl,
-            //    UseShellExecute = true
-            //});
-            // Application.Current.Shutdown();
+            string websiteUrl = _authUrl;
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = websiteUrl,
+                UseShellExecute = true
+            });
+            Application.Current.Shutdown();
         }
         catch (Exception)
         {}
