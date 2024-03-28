@@ -1,118 +1,60 @@
-﻿using Jarvis_Windows.Sources.MVVM.Views.JarvisActionView;
-using Jarvis_Windows.Sources.MVVM.Views.MainView;
-using Jarvis_Windows.Sources.Utils.Core;
+﻿using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Jarvis_Windows.Sources.Utils.Services;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using System;
 using System.Windows;
-using Jarvis_Windows.Sources.DataAccess;
-using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
-using Jarvis_Windows.Sources.MVVM.Views;
 using Jarvis_Windows.Sources.Utils.Accessibility;
-using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
-using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
-using Jarvis_Windows.Sources.DataAccess.Local;
-using System.Diagnostics;
+using Jarvis_Windows.Sources.DataAccess.Network;
+using System.Web;
+using Jarvis_Windows.Sources.MVVM.Models;
 using System.Reflection;
-using System.IO.Packaging;
-using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel;
-using Package = Windows.ApplicationModel.Package;
 
 namespace Jarvis_Windows
 {
     public partial class App : Application
     {
-        private ServiceProvider _serviceProvider;
         private const string _uniqueEventName = "Jarvis Windows";
-        private EventWaitHandle _eventWaitHandle;
+        private EventWaitHandle? _eventWaitHandle;
 
         public App()
         {
             SingleInstanceWatcher();
-
-            IServiceCollection services = new ServiceCollection();
-
-            services.AddSingleton<Func<Type, ViewModelBase>>(serviceProvider => viewModelType => (ViewModelBase)serviceProvider.GetRequiredService(viewModelType));
-            services.AddSingleton<INavigationService, NavigationService>();
-            services.AddSingleton<PopupDictionaryService>();     
-            services.AddSingleton<SendEventGA4>();
-            services.AddScoped<IAutomationElementValueService, AutomationElementValueService>();
-            services.AddSingleton<ISupportedAppService, SupportedAppService>();
-
-            services.AddSingleton<UIElementDetector>(provider => new UIElementDetector
-            {
-                PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>(),
-                SendEventGA4 = provider.GetRequiredService<SendEventGA4>(),
-                AutomationElementValueService = provider.GetRequiredService<IAutomationElementValueService>(),
-                SupportedAppService = provider.GetRequiredService<ISupportedAppService>()
-            });
-
-
-        services.AddSingleton<MainViewModel>();
-        services.AddSingleton<MainView>(provider => new MainView
-        {
-            DataContext = provider.GetRequiredService<MainViewModel>(),
-            SendEventGA4 = provider.GetRequiredService<SendEventGA4>(),
-            PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>()
-        });
-
-            // Logging.Log("After MainView MainviewModel\n");
-
-            services.AddSingleton<JarvisActionViewModel>(provider => new JarvisActionViewModel
-            {
-                PopupDictionaryService = _serviceProvider.GetRequiredService<PopupDictionaryService>()
-            });
-
-            _serviceProvider = services.BuildServiceProvider();
+            //RegisterUriScheme("jarvis-windows");
+            DependencyInjection.RegisterServices();
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
         }
 
-
-        /*protected async void OnStartup(object sender, StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
-            try
-            {
-                MainView mainView = _serviceProvider.GetRequiredService<MainView>();
-                mainView.Show();
-
-                _serviceProvider.GetRequiredService<PopupDictionaryService>().MainWindow = mainView;
-                // Logging.Log("After 3 mainview OnStartup");
-
-                *//*bool isRegistered = await StartupManager.RegisterStartupAsync();
-                if(isRegistered)
-                {
-                    Debug.WriteLine("REGISTER START UP WITH BOOT");
-                }*//*
-
-                //Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                //Assembly curAssembly = Assembly.GetExecutingAssembly();
-                //key.SetValue("Jarvis AI: Chat GPT Bot Assistant & AI Copilot", WindowLocalStorage.);
-                // Lấy đường dẫn tới tệp tin thực thi của ứng dụng
-                //string appPath = Package.Current.InstalledLocation.Path;
-
-                // Thêm ứng dụng vào danh sách khởi động cùng với Windows
-                *//*StartupTask startupTask = await StartupTask.GetAsync(_uniqueEventName);
-                if (startupTask.State != StartupTaskState.Enabled)
-                {
-                    StartupTaskState state = await startupTask.RequestEnableAsync();
-                }*//*
-            }
-            catch (Exception)
-            {
-
-            }
-        }*/
-
-        protected void OnStartup(object sender, StartupEventArgs e)
-        {
-            MainView mainView = _serviceProvider.GetRequiredService<MainView>();
+            MainView mainView = DependencyInjection.GetService<MainView>();
             mainView.Show();
+            DependencyInjection.GetService<PopupDictionaryService>().MainWindow = mainView;
 
-            _serviceProvider.GetRequiredService<PopupDictionaryService>().MainWindow = mainView;
+            //URI Activation
+            if (e.Args.Length > 0)
+            {
+                UriBuilder builder = new UriBuilder(e.Args[0]);
+                var result = HttpUtility.ParseQueryString(builder.Query);
+                var source = result["source"];
+                var accessToken = result["token"];
+                var refreshToken = result["refreshToken"];
+                if (!String.IsNullOrEmpty(accessToken) && !String.IsNullOrEmpty(refreshToken))
+                {
+                    WindowLocalStorage.WriteLocalStorage("access_token", accessToken);
+                    WindowLocalStorage.WriteLocalStorage("refresh_token", refreshToken);
+                    AuthenticationService? authService = DependencyInjection.GetService<IAuthenticationService>() as AuthenticationService;
+                    authService.RefreshTokens();
+                    MainViewModel mainViewModel = DependencyInjection.GetService<MainViewModel>();
+                    Task<Account?> account = authService.GetMe();
+                    if (account != null)
+                    {
+                        mainViewModel.Account = account.Result;
+                    }
+                }
+                DependencyInjection.GetService<MainView>().Show();
+            }
         }
 
         private void SingleInstanceWatcher()
@@ -135,7 +77,7 @@ namespace Jarvis_Windows
                     Current.Dispatcher.BeginInvoke((Action)(() =>
                     {
                         if (!Current.MainWindow.Equals(null))
-                        {
+                        {                            
                             var mw = Current.MainWindow;
 
                             if (mw.WindowState == WindowState.Minimized || mw.Visibility != Visibility.Visible)
@@ -143,7 +85,6 @@ namespace Jarvis_Windows
                                 mw.Show();
                                 mw.WindowState = WindowState.Normal;
                             }
-
                             mw.Activate();
                             mw.Topmost = true;
                             mw.Topmost = false;
@@ -165,6 +106,28 @@ namespace Jarvis_Windows
             else if (e.Mode == PowerModes.Resume)
             {
                 UIElementDetector.GetInstance().SubscribeToElementFocusChanged();
+            }
+        }
+
+        private void RegisterUriScheme(string scheme)
+        {
+            string executablePath = Assembly.GetExecutingAssembly().Location;
+            string friendlyName = "jarvis-windows";
+
+            using (RegistryKey key = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\Classes\\{scheme}"))
+            {
+                key.SetValue("", $"URL:{friendlyName}");
+                key.SetValue("URL Protocol", "");
+
+                using (RegistryKey defaultIconKey = key.CreateSubKey("DefaultIcon"))
+                {
+                    defaultIconKey.SetValue("", $"\"{executablePath}\",1");
+                }
+
+                using (RegistryKey commandKey = key.CreateSubKey(@"shell\open\command"))
+                {
+                    commandKey.SetValue("", $"\"{executablePath}\" \"%1\"");
+                }
             }
         }
     }

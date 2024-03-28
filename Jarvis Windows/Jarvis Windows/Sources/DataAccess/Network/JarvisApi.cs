@@ -8,6 +8,10 @@ using Windows.ApplicationModel.Chat;
 using System.Collections.ObjectModel;
 using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net.Http.Headers;
+using Jarvis_Windows.Sources.DataAccess.Local;
+using Windows.Media.Protection.PlayReady;
 
 namespace Jarvis_Windows.Sources.DataAccess.Network;
 
@@ -17,17 +21,38 @@ public sealed class JarvisApi
     const string _endpoint = "/api/v1";
     const string _actionEndpoint = $"{_endpoint}/ai-action/";
     const string _chatEndpoint = $"{_endpoint}/ai-chat/";
-    const string _apiUserUsageEndpoint = $"{_endpoint}/user/usage/";
+    const string _apiUserUsageEndpoint = $"{_endpoint}/tokens/usage/";
 
     private static HttpClient? _client;
     private static string? _apiUrl;
     private static string? _apiHeaderID;
 
-    private JarvisApi()
+    public JarvisApi(IAuthenticationService authenticationService)
     {
         _client = new HttpClient();
         _apiUrl = DataConfiguration.ApiUrl;
-        _apiHeaderID = WindowLocalStorage.ReadLocalStorage("ApiHeaderID");
+
+        /*if(AuthenticationService.AuthenState == AUTHEN_STATE.AUTHENTICATED)
+        {
+            _apiHeaderID = WindowLocalStorage.ReadLocalStorage("AccessToken");
+        }
+        else if(AuthenticationService.AuthenState == AUTHEN_STATE.NOT_AUTHENTICATED)
+        {
+            var localApiHeaderID = WindowLocalStorage.ReadLocalStorage("ApiHeaderID");
+            if (String.IsNullOrEmpty(localApiHeaderID))
+            {
+                _apiHeaderID = Guid.NewGuid().ToString();
+                WindowLocalStorage.WriteLocalStorage("ApiHeaderID", _apiHeaderID);
+                WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
+            }
+            else
+            {
+                _apiHeaderID = localApiHeaderID;
+            }
+        }*/
+        //_apiHeaderID = WindowLocalStorage.ReadLocalStorage("ClientID");
+        _apiHeaderID = DependencyInjection.GetService<ITokenLocalService>().GetUUID();
+        AuthenService = authenticationService;
     }
 
     public static JarvisApi Instance
@@ -36,34 +61,45 @@ public sealed class JarvisApi
         {
             if (_instance == null)
             {
-                _instance = new JarvisApi();
+                _instance = new JarvisApi(DependencyInjection.GetService<IAuthenticationService>());
             }
             return _instance;
         }
     }
 
+    public IAuthenticationService AuthenService { get; set; }
+
     public async Task<string>? APIUsageHandler()
     {
         try
         {
-            WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
-            _apiHeaderID = WindowLocalStorage.ReadLocalStorage("ApiHeaderID");
-
-            var request = new HttpRequestMessage(HttpMethod.Get, _apiUrl + _apiUserUsageEndpoint);
-            request.Headers.Add("x-jarvis-guid", _apiHeaderID);
-            HttpResponseMessage response = await _client.SendAsync(request);
+            HttpResponseMessage response;
+            if (AuthenticationService.AuthenState == AUTHEN_STATE.AUTHENTICATED)
+            {
+                var token = DependencyInjection.GetService<ITokenLocalService>().GetAccessToken();
+                _client.DefaultRequestHeaders.Add("x-jarvis-guid", _apiHeaderID);
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                response = await _client.GetAsync(_apiUrl + _apiUserUsageEndpoint);
+            }
+            else
+            {               
+                var request = new HttpRequestMessage(HttpMethod.Get, _apiUrl + _apiUserUsageEndpoint);
+                request.Headers.Add("x-jarvis-guid", _apiHeaderID);
+                response = await _client.SendAsync(request);
+            }
 
             if (response.IsSuccessStatusCode)
             {
                 string responseContent = response.Content.ReadAsStringAsync().Result;
                 dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
-
-                int remainingUsage = responseObject.totalTokens;
+                int remainingUsage = responseObject.availableTokens;
                 string dateString = responseObject.date;
-                int dateTime = DateTime.Parse(dateString).Day;
-                
+                if (DateTime.TryParseExact(dateString, "MM/dd/yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out DateTime dateTime))
+                {
+                    WindowLocalStorage.WriteLocalStorage("RecentDate", dateTime.Day.ToString());
+                }
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
-                WindowLocalStorage.WriteLocalStorage("RecentDate", dateTime.ToString());
+                //WindowLocalStorage.WriteLocalStorage("IsAuthenticated", "true");
 
                 string finalMessage = responseObject.message;
                 return finalMessage;
@@ -82,10 +118,21 @@ public sealed class JarvisApi
         var contentData = new StringContent(requestBody, Encoding.UTF8, "application/json");
         try
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, _apiUrl + endPoint);
-            request.Content = contentData;
-            request.Headers.Add("x-jarvis-guid", _apiHeaderID);
-            HttpResponseMessage response = await _client.SendAsync(request);
+            HttpResponseMessage response;
+            if (AuthenticationService.AuthenState == AUTHEN_STATE.AUTHENTICATED)
+            {
+                var token = DependencyInjection.GetService<ITokenLocalService>().GetAccessToken();
+                _client.DefaultRequestHeaders.Add("x-jarvis-guid", _apiHeaderID);
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                response = await _client.PostAsync(_apiUrl + endPoint, contentData);
+            }
+            else
+            {
+                var request = new HttpRequestMessage(HttpMethod.Post, _apiUrl + endPoint);
+                request.Content = contentData;
+                request.Headers.Add("x-jarvis-guid", _apiHeaderID);
+                response = await _client.SendAsync(request);
+            }
 
             if (response.IsSuccessStatusCode)
             {
@@ -98,6 +145,18 @@ public sealed class JarvisApi
 
                 string finalMessage = responseObject.message;
                 return finalMessage;
+            }
+            else
+            {
+                var refreshResult = await AuthenService.Refresh();
+                if(!String.IsNullOrEmpty(refreshResult) && refreshResult.Equals("refreshed_success"))
+                {
+                    return await ApiHandler(requestBody, endPoint);
+                }
+                else if(!String.IsNullOrEmpty(refreshResult) &&  refreshResult.Equals("signed_out"))
+                {
+                    Process.GetCurrentProcess().Kill();
+                }
             }
 
             return null;

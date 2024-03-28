@@ -57,6 +57,12 @@ public static class WindowLocalStorage
         { "AppVersion", "" },
         { "ApiHeaderID", Guid.NewGuid().ToString() },
         { "ApiUsageRemaining", "" },
+        { "access_token", ""},
+        { "refresh_token", ""},
+        { "Username", ""},
+        { "Email", ""},
+        { "Role", ""},
+        { "IsAuthenticated", "false" },
         { "RecentDate", "" },
         { "UserCountry", "" }
     };
@@ -81,6 +87,16 @@ public static class WindowLocalStorage
         else
         {
             LocalStorageUnpackage.Store(key, value);
+            LocalStorageUnpackage.Persist();
+        }
+    }
+
+    public static void RemoveLocalStorage(string key)
+    {
+        if (_isPackaged) LocalStoragePackage.Values.Remove(key);
+        else
+        {
+            LocalStorageUnpackage.Remove(key);
             LocalStorageUnpackage.Persist();
         }
     }

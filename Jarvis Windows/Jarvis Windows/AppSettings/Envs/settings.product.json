@@ -1,5 +1,6 @@
 {
   "ApiUrl": "https://api.jarvis.cx",
   "MeasurementID": "G-G4K7FPG782",
-  "ApiSecret": "klurR_9CQiSt8cyyeNxaqA"
+  "ApiSecret": "klurR_9CQiSt8cyyeNxaqA",
+  "AuthUrl": "https://admin.jarvis.cx/auth/login?flow=OAuth&client_id=jarvis-windows&redirect=jarvis-windows:?source=jarvis-admin"
 }

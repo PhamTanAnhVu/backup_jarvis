@@ -46,5 +46,8 @@ namespace Jarvis_Windows.Sources.DataAccess
 
         public static string ApiSecret
             => GetConfiguration()["ApiSecret"];
+
+        public static string AuthUrl
+            => GetConfiguration()["AuthUrl"];
     }
 }

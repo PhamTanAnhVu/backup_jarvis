@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using Gma.System.MouseKeyHook;
 using System.Windows.Threading;
+using Jarvis_Windows.Sources.DataAccess;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 
@@ -31,7 +32,8 @@ public class MainViewModel : ViewModelBase
     private double _scrollBarHeight;
     private ObservableCollection<ButtonViewModel> _fixedButtons;
     private ObservableCollection<ButtonViewModel> _dynamicButtons;
-    private static IAutomationElementValueService _automationElementValueService;
+    private static IAutomationElementValueService? _automationElementValueService;
+    private IAuthenticationService _authenticationService;
     private bool _isTextEmptyAIChat;
     private string _aIChatMessageInput;
 
@@ -48,12 +50,15 @@ public class MainViewModel : ViewModelBase
     private int _previousCommandIdx;
     private double _chatPanel_Height;
     private string _usernameFirstLetter;
-    private string _username;
+    //private string _username;
     private bool _isMainWindowInputTextEmpty;
     private static bool _isExecutingAIChatMessage;
     private static bool _isMouseOver_AppUI;
+    private bool _isShowUsernameFirstLetter;
+    private string _authUrl;
 
     private ObservableCollection<ButtonViewModel> _textMenuButtons;
+    private Account? _account;
     private IKeyboardMouseEvents _globalMouseHook;
     public List<Language> TextMenuLanguages { get; set; }
     public RelayCommand TextMenuAICommand { get; set; }
@@ -281,6 +286,7 @@ public class MainViewModel : ViewModelBase
     public RelayCommand AIChatSendCommand { get; set; }
     public RelayCommand NewAIChatCommand { get; set; }
     public RelayCommand HideAIChatSidebarCommand { get; set; }
+    public RelayCommand LoginOrUserInfoCommand { get; set; }
 
 
     private ObservableCollection<AIChatMessage> _aIChatMessages;
@@ -339,7 +345,7 @@ public class MainViewModel : ViewModelBase
         }
     }
     
-    public string Username
+    /*public string Username
     {
         get { return _username; }
         set
@@ -347,7 +353,7 @@ public class MainViewModel : ViewModelBase
             _username = value;
             OnPropertyChanged();
         }
-    }
+    }*/
 
     public bool IsAPIUsageRemain
     {
@@ -435,20 +441,67 @@ public class MainViewModel : ViewModelBase
         get => _automationElementValueService; 
         set => _automationElementValueService = value; 
     }
+    public Account Account 
+    { 
+        get => _account;
+        set
+        {
+            _account = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public IAuthenticationService AuthenService 
+    { 
+        get => _authenticationService; 
+        set => _authenticationService = value; 
+    }
+    public bool IsShowUsernameFirstLetter 
+    {
+        get => _isShowUsernameFirstLetter;
+        set
+        {
+            _isShowUsernameFirstLetter = value;
+            OnPropertyChanged();
+        }
+    }
 
     public MainViewModel(INavigationService navigationService, 
         PopupDictionaryService popupDictionaryService,
         UIElementDetector accessibilityService, 
-        SendEventGA4 sendEventGA4, IAutomationElementValueService automationElementValueService)
+        SendEventGA4 sendEventGA4, 
+        IAutomationElementValueService automationElementValueService,
+        IAuthenticationService authenticationService)
     {
         NavigationService = navigationService;
         PopupDictionaryService = popupDictionaryService;
         AccessibilityService = accessibilityService;
         SendEventGA4 = sendEventGA4;
         AutomationElementValueService = automationElementValueService;
+        AuthenService = authenticationService;
+
+
+        Account = new Account();
+        Account.Username = WindowLocalStorage.ReadLocalStorage("Username");
+        Account.Email = WindowLocalStorage.ReadLocalStorage("Email");
+        Account.Role = WindowLocalStorage.ReadLocalStorage("Role");
+        if (Account.Username == "")
+            Account = AuthenService.GetMe().Result;
+        if(AuthenticationService.AuthenState == AUTHEN_STATE.NOT_AUTHENTICATED
+            && Account != null)
+        {
+            AuthenService.SignOut();
+            Account.Username = "Login";
+            Account.Email = "example@gmail.com";
+            IsShowUsernameFirstLetter = false;
+        }
+        else
+        {
+            IsShowUsernameFirstLetter = true;
+        }
 
         // Reset APIUsage daily
-        //Task.Run(async () => await ResetAPIUsageDaily()).Wait();
+        Task.Run(async () => await ResetAPIUsageDaily()).Wait();
 
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
         IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
@@ -495,6 +548,7 @@ public class MainViewModel : ViewModelBase
         Languages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
         TextMenuLanguages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
         LanguageSelectedIndex = 14;
+        _authUrl = DataConfiguration.AuthUrl;
 
         //Register Acceccibility service
         AccessibilityService.SubscribeToElementFocusChanged();
@@ -521,14 +575,16 @@ public class MainViewModel : ViewModelBase
             AIChatMessagesClear();
             await SendEventGA4.SendEvent("start_new_chat");
         }, o => true);
+        LoginOrUserInfoCommand = new RelayCommand(ExecuteLoginOrUserInfoCommand, o => true);
 
         AIChatMessages = new ObservableCollection<AIChatMessage>();
         AIChatMessagesClear();
         ChatPanel_Height = 518;
         InitializeSettingToggleButtons();
 
-        Username = "Anh Vu";
-        UsernameFirstLetter = Username[0].ToString();
+        //Username = "Anh Vu";
+        UsernameFirstLetter = (Account.Username.Equals("Login")) ? "" : Account?.Username[0].ToString();
+
 
         _globalMouseHook = Hook.GlobalEvents();
         _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
@@ -539,10 +595,21 @@ public class MainViewModel : ViewModelBase
         };
     }
 
+    private void ExecuteLoginOrUserInfoCommand(object obj)
+    {
+        string authenUrl = "https://admin.dev.jarvis.cx/auth/login?flow=OAuth&client_id=jarvis-windows&redirect=jarvis-windows:?source=jarvis-admin";
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = authenUrl,
+            UseShellExecute = true
+        });
+        Application.Current.Shutdown();
+    }
+
     private async Task ResetAPIUsageDaily()
     {
         int currentDate = DateTime.Now.Day;
-        if (currentDate.ToString() != WindowLocalStorage.ReadLocalStorage("RecentDate"))
+        //if (currentDate.ToString() != WindowLocalStorage.ReadLocalStorage("RecentDate"))
         {
             await JarvisApi.Instance.APIUsageHandler();
         }
@@ -961,12 +1028,13 @@ public class MainViewModel : ViewModelBase
     {
         try
         {
-            string websiteUrl = "https://admin.jarvis.cx/pricing/overview";
+            string websiteUrl = _authUrl;
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
             {
                 FileName = websiteUrl,
                 UseShellExecute = true
             });
+            // Application.Current.Shutdown();
         }
         catch (Exception ex)
         {
@@ -978,17 +1046,26 @@ public class MainViewModel : ViewModelBase
     {
         try
         {
-            string websiteUrl = "https://admin.jarvis.cx/auth/login?redirect=%2Fdashboard%2Fsubscription";
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = websiteUrl,
-                UseShellExecute = true
-            });
+            await AuthenService.SignOut();
+            await AuthenService.SignIn("trongdaitran0903@gmail.com", "Devtest1@");
+            string token = WindowLocalStorage.ReadLocalStorage("access_token");
+            Account = await AuthenService.GetMe();
+            UsernameFirstLetter = Account.Username[0].ToString();
+            _ = await JarvisApi.Instance.APIUsageHandler();
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+            IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥");
+            IsNoAPIUsageRemain = !IsAPIUsageRemain;
+
+            //string websiteUrl = _authUrl;
+            //System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            //{
+            //    FileName = websiteUrl,
+            //    UseShellExecute = true
+            //});
+            // Application.Current.Shutdown();
         }
-        catch (Exception ex)
-        {
-            return;
-        }
+        catch (Exception)
+        {}
     }
 
     private void InitializeSettingToggleButtons()
