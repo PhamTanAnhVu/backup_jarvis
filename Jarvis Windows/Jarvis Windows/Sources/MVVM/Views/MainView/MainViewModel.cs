@@ -507,13 +507,14 @@ public class MainViewModel : ViewModelBase
         IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
-        //TODO:Code test
-        //if(IsAPIUsageRemain == false)
-        //{
-        //    WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
-        //    WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
-        //    IsAPIUsageRemain = true;
-        //}
+        //TEST AUTO RESET API USAGE
+        if(IsAPIUsageRemain == false)
+        {
+            WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
+            WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+            IsAPIUsageRemain = true;
+        }
 
 
         ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
@@ -603,7 +604,7 @@ public class MainViewModel : ViewModelBase
             FileName = authenUrl,
             UseShellExecute = true
         });
-        Application.Current.Shutdown();
+        //Application.Current.Shutdown();
     }
 
     private async Task ResetAPIUsageDaily()
@@ -1062,7 +1063,7 @@ public class MainViewModel : ViewModelBase
                 FileName = websiteUrl,
                 UseShellExecute = true
             });
-            Application.Current.Shutdown();
+            //Application.Current.Shutdown();
         }
         catch (Exception)
         {}
@@ -1264,17 +1265,21 @@ public class MainViewModel : ViewModelBase
 
         await Task.Delay(50);
 
-        if (System.Windows.Clipboard.ContainsText())
+        try
         {
-            string text = System.Windows.Clipboard.GetText();
-            UIElementDetector.CurrentSelectedText = text;
-            PopupDictionaryService.ShowMenuSelectionActions(true);
-            await SendEventGA4.SendEvent("inject_selection_actions");
+            if (System.Windows.Clipboard.ContainsText())
+            {
+                string text = System.Windows.Clipboard.GetText();
+                UIElementDetector.CurrentSelectedText = text;
+                PopupDictionaryService.ShowMenuSelectionActions(true);
+                await SendEventGA4.SendEvent("inject_selection_actions");
+            }
+            else
+            {
+                System.Windows.Clipboard.SetDataObject(tmpClipboard);
+            }
         }
-        else
-        {
-            System.Windows.Clipboard.SetDataObject(tmpClipboard);
-        }
+        catch { }
     }
 
     private async void MouseDragFinished(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -1295,21 +1300,21 @@ public class MainViewModel : ViewModelBase
 
         await Task.Delay(50);
 
-        if (System.Windows.Clipboard.ContainsText())
+        try
         {
-            try
+            if (System.Windows.Clipboard.ContainsText())
             {
                 string text = System.Windows.Clipboard.GetText();
                 UIElementDetector.CurrentSelectedText = text;
                 PopupDictionaryService.ShowMenuSelectionActions(true);
                 await SendEventGA4.SendEvent("inject_selection_actions");
             }
-            catch { }
+            else
+            {
+                System.Windows.Clipboard.SetDataObject(tmpClipboard);
+            }
         }
-        else
-        {
-            System.Windows.Clipboard.SetDataObject(tmpClipboard);
-        }
+        catch { }
     }
 }
 

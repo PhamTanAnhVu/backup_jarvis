@@ -17,6 +17,7 @@ using Jarvis_Windows.Sources.DataAccess.Local;
 using System.Windows.Media.Imaging;
 //using System.Drawing;
 using System.Windows.Media.Animation;
+using Point = System.Drawing.Point;
 
 namespace Jarvis_Windows.Sources.Utils.Accessibility;
 
@@ -185,14 +186,23 @@ public class UIElementDetector
             RegisterSelectionChangedFor(newFocusElement);
 
         if (_supportedAppSerice != null)
-            if (!_supportedAppSerice.IsSupportedApp(GetActiveWindowTitle()))
+            if (!_supportedAppSerice.IsSupportedInjectionApp(GetActiveWindowTitle()))
+            {
+                _popupDictionaryService.ShowJarvisAction(false);
+                _popupDictionaryService.ShowMenuOperations(false);
                 return;
+            }
 
         if (newFocusElement != null && newFocusElement != _focusingElement)
         {
             if (newFocusElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") ||
                 newFocusElement.Current.ControlType.ProgrammaticName.Equals("ControlType.Window"))
+            {
+                _popupDictionaryService.ShowJarvisAction(false);
+                _popupDictionaryService.ShowMenuOperations(false);
                 return;
+            }
+                
 
             if (IsEditableElement(newFocusElement))
             {
@@ -230,7 +240,6 @@ public class UIElementDetector
                 {
                     throw;
                 }
-
             }
         }
     }
@@ -260,8 +269,8 @@ public class UIElementDetector
                 }
                 else
                 {
-                    placementPoint.X = elementRectBounding.Left + elementRectBounding.Width;
-                    placementPoint.Y = elementRectBounding.Top + elementRectBounding.Height * 0.5;
+                    placementPoint.X = (int)(elementRectBounding.Left/* + elementRectBounding.Width*/);
+                    placementPoint.Y = (int)(elementRectBounding.Top /*+ elementRectBounding.Height * 0.5*/);
                 }
             }
             catch (Exception)
@@ -538,7 +547,7 @@ public class UIElementDetector
                                         NativeUser32API.GetCursorPos(out lpPoint);
                                         Debug.WriteLine($"📌📌📌 Cursor Position: {lpPoint.X} - {lpPoint.Y}");
                                         //Point selectedTextPosition = new Point(boundingRect.X * xScale - 20, boundingRect.Y * yScale + boundingRect.Height * 1.5f);
-                                        Point selectedTextPosition = new Point(lpPoint.X * xScale, lpPoint.Y * yScale);
+                                        Point selectedTextPosition = new Point((int)(lpPoint.X * xScale), (int)(lpPoint.Y * yScale));
                                         _popupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
                                         Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y +50);
                                         _popupDictionaryService.PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);

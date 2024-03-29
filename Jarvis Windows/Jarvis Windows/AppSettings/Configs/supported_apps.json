@@ -1,10 +1,14 @@
-﻿[
-    { "Name":  "Telegram" },
-    { "Name":  "Messenger" },
+﻿{
+  "injection": [
+    { "Name": "Telegram" },
+    { "Name": "Messenger" },
     { "Name": "Slack" },
     { "Name": "Zalo" },
     { "Name": "Discord" },
-    { "Name":  "WhatApps" },
-    { "Name":  "Microsoft Word" },
-    { "Name":  "Notepad" }
-]
+    { "Name": "WhatApps" },
+    { "Name": "Microsoft Word" },
+    { "Name": "Notepad" },
+    { "Name": "Outlook" },
+    { "Name": "Skype" }
+  ]
+}

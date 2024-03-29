@@ -9,6 +9,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using Jarvis_Windows.Sources.Utils.Services;
 using Jarvis_Windows.Sources.MVVM.Views.ContextMenuView;
+using Point = System.Drawing.Point;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 public partial class MainView : Window
@@ -239,7 +240,7 @@ public partial class MainView : Window
             double newX = Math.Min(Math.Max(AbsolutePos.X - _textMenuAPIPoint.X, screenBounds.Left), maxX);
             double newY = Math.Min(Math.Max(AbsolutePos.Y - _textMenuAPIPoint.Y, screenBounds.Top), maxY);
 
-            PopupDictionaryService.TextMenuAPIPosition = new System.Windows.Point(newX, newY);
+            PopupDictionaryService.TextMenuAPIPosition = new System.Drawing.Point((int)newX, (int)newY);
         }
     }
 

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Media;
+using Point = System.Drawing.Point;
 
 namespace Jarvis_Windows.Sources.Utils.Services;
 
@@ -242,8 +243,8 @@ public class PopupDictionaryService : ObserveralObject
 
         JarvisActionPosition = new Point(0, 0);
         MenuOperationsPosition = new Point(0, 0);
-        AIChatBubblePosition = new Point((SystemParameters.WorkArea.Right - 30), (SystemParameters.WorkArea.Bottom - 30) / 2);
-        AIChatSidebarPosition = new Point((SystemParameters.WorkArea.Right - 520), (SystemParameters.WorkArea.Bottom - 700) / 2);
+        AIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right - 30), (int)(SystemParameters.WorkArea.Bottom - 30) / 2);
+        AIChatSidebarPosition = new Point((int)(SystemParameters.WorkArea.Right - 520), (int)(SystemParameters.WorkArea.Bottom - 700) / 2);
         
     }
     public void ShowJarvisAction(bool isShow)
@@ -255,7 +256,7 @@ public class PopupDictionaryService : ObserveralObject
     {
         Point visualPos = new Point();
 
-        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+        /*Application.Current.Dispatcher.BeginInvoke(new Action(() =>
         {
             PresentationSource source = PresentationSource.FromVisual(Application.Current.MainWindow);
             if (source != null)
@@ -288,13 +289,15 @@ public class PopupDictionaryService : ObserveralObject
 
                 MenuOperationsPosition = jarvisButtonPos;
             }    
-        }));
+        }));*/
 
         return visualPos;
     }
 
     public void UpdateJarvisActionPosition(Point systemPoint, Rect elementRectBounding)
     {
+        if(systemPoint.X == 0 || systemPoint.Y == 0)
+            return;
 
         double screenHeight = SystemParameters.PrimaryScreenHeight;
         double screenWidth = SystemParameters.PrimaryScreenWidth;
@@ -302,8 +305,8 @@ public class PopupDictionaryService : ObserveralObject
         double verticalScale = screenHeight / 1080;
 
         Point jarvisButtonPos = new Point(0, 0);
-        jarvisButtonPos.X = systemPoint.X * horizontalScale;
-        jarvisButtonPos.Y = (systemPoint.Y - elementRectBounding.Height * 2) * verticalScale;
+        jarvisButtonPos.X = (int)(systemPoint.X * horizontalScale);
+        jarvisButtonPos.Y = (int)(systemPoint.Y * verticalScale - 30);
 
         JarvisActionPosition = jarvisButtonPos;
         MenuOperationsPosition = jarvisButtonPos;
