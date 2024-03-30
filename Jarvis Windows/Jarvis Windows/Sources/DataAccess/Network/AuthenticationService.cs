@@ -176,24 +176,19 @@ namespace Jarvis_Windows.Sources.DataAccess.Network
             request.Headers.Add(API_HEADER, AccessToken);
             HttpResponseMessage response = await HttpClient.SendAsync(request);
             if(response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                string responseContent = response.Content.ReadAsStringAsync().Result;
-                dynamic? responseObject = JsonConvert.DeserializeObject(responseContent);
-                if (responseObject != null)
+            {           
+                AccessToken = null;
+                RefreshToken = null;
+                if(TokenLocalService != null)
                 {
-                    AccessToken = null;
-                    RefreshToken = null;
-                    if(TokenLocalService != null)
-                    {
-                        TokenLocalService.ClearAccessToken();
-                        TokenLocalService.ClearRefreshToken();
-                        WindowLocalStorage.WriteLocalStorage("IsAuthenticated", "false");
-                        WindowLocalStorage.WriteLocalStorage("Username", "");
-                        WindowLocalStorage.WriteLocalStorage("Email", "");
-                        WindowLocalStorage.WriteLocalStorage("Role", "");
-                    }
+                    AuthenState = AUTHEN_STATE.NOT_AUTHENTICATED;
+                    TokenLocalService.ClearAccessToken();
+                    TokenLocalService.ClearRefreshToken();
+                    WindowLocalStorage.WriteLocalStorage("IsAuthenticated", "false");
+                    WindowLocalStorage.WriteLocalStorage("Username", "Login");
+                    WindowLocalStorage.WriteLocalStorage("Email", "");
+                    WindowLocalStorage.WriteLocalStorage("Role", "anonymous");
                 }
-                return responseContent;
             }
             return null;
         }

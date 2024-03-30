@@ -59,9 +59,9 @@ public static class WindowLocalStorage
         { "ApiUsageRemaining", "" },
         { "access_token", ""},
         { "refresh_token", ""},
-        { "Username", ""},
+        { "Username", "Login"},
         { "Email", ""},
-        { "Role", ""},
+        { "Role", "anonymous"},
         { "IsAuthenticated", "false" },
         { "RecentDate", "" },
         { "UserCountry", "" }

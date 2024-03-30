@@ -15,6 +15,7 @@ using System.Windows;
 using Gma.System.MouseKeyHook;
 using System.Windows.Threading;
 using Jarvis_Windows.Sources.DataAccess;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 
@@ -50,7 +51,11 @@ public class MainViewModel : ViewModelBase
     private int _previousCommandIdx;
     private double _chatPanel_Height;
     private string _usernameFirstLetter;
-    //private string _username;
+    private bool _logoutVisibility;
+    private bool _isShowLogout;
+    private bool _isLougoutOpen;
+    private string _username;
+    private bool _usernameLogoVisibility;
     private bool _isMainWindowInputTextEmpty;
     private static bool _isExecutingAIChatMessage;
     private static bool _isMouseOver_AppUI;
@@ -78,6 +83,7 @@ public class MainViewModel : ViewModelBase
     public RelayCommand RedoCommand { get; set; }
     public RelayCommand UpgradePlanCommand { get; set; }
     public RelayCommand LoginCommand { get; set; }
+    public RelayCommand LogoutCommand { get; set; }
     public RelayCommand ShowSettingsCommand { get; set; }
     public ObservableCollection<ToggleButtons> ToggleButtons { get; set; }
     private List<DispatcherTimer> StopDotTimer { get; set; }
@@ -334,6 +340,43 @@ public class MainViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    public string Username
+    {
+        get { return _username; }
+        set
+        {
+            _username = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool UsernameLogoVisibility
+    {
+        get { return _usernameLogoVisibility; }
+        set
+        {
+            _usernameLogoVisibility = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool IsShowLogout
+    {
+        get { return _isShowLogout; }
+        set
+        {
+            _isShowLogout = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool LogoutVisibility
+    {
+        get { return _logoutVisibility; }
+        set
+        {
+            _logoutVisibility = value;
+            OnPropertyChanged();
+        }
+    }
     
     public double ChatPanel_Height
     {
@@ -344,16 +387,6 @@ public class MainViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
-    
-    /*public string Username
-    {
-        get { return _username; }
-        set
-        {
-            _username = value;
-            OnPropertyChanged();
-        }
-    }*/
 
     public bool IsAPIUsageRemain
     {
@@ -492,6 +525,7 @@ public class MainViewModel : ViewModelBase
         {
             AuthenService.SignOut();
             Account.Username = "Login";
+            Account.Role = "anonymous";
             Account.Email = "example@gmail.com";
             IsShowUsernameFirstLetter = false;
         }
@@ -535,6 +569,7 @@ public class MainViewModel : ViewModelBase
        
         UpgradePlanCommand = new RelayCommand(ExecuteUpgradePlanCommand, o => true);
         LoginCommand = new RelayCommand(ExecuteLoginCommand, o => true);
+        LogoutCommand = new RelayCommand(ExecuteLogoutCommand, o => true);
         ShowSettingsCommand = new RelayCommand(o => { PopupDictionaryService.IsShowSettingMenu = !PopupDictionaryService.IsShowSettingMenu; }, o => true);
         TextMenuPinCommand = new RelayCommand(ExecuteTextMenuPinCommand, o => true);
         PopupTextMenuCommand = new RelayCommand(ExecutePopupTextMenuCommand, o => true);
@@ -583,13 +618,13 @@ public class MainViewModel : ViewModelBase
         ChatPanel_Height = 518;
         InitializeSettingToggleButtons();
 
-        //Username = "Anh Vu";
-        UsernameFirstLetter = (Account.Username.Equals("Login")) ? "" : Account?.Username[0].ToString();
-
+        UsernameFirstLetter = (Account.Role.Equals("anonymous")) ? "" : Account?.Username[0].ToString();
+        Account.Username = (Account.Role.Equals("anonymous")) ? "Login" : Account.Username;
 
         _globalMouseHook = Hook.GlobalEvents();
         _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
         _globalMouseHook.MouseDragFinished += MouseDragFinished;
+        _globalMouseHook.MouseClick += MouseClickFinished;
 
         EventAggregator.MouseOverAppUIChanged += (sender, e) => {
             _isMouseOver_AppUI = (bool)sender;
@@ -606,6 +641,8 @@ public class MainViewModel : ViewModelBase
         });
         //Application.Current.Shutdown();
     }
+    
+    
 
     private async Task ResetAPIUsageDaily()
     {
@@ -974,7 +1011,7 @@ public class MainViewModel : ViewModelBase
 
     private async void ExecuteTextMenuPinCommand(object obj)
     {
-        string[] colors = ["Transparent", "#6841EA"];
+        string[] colors = { "Transparent", "#6841EA" };
         int idx = 0;
         try { idx = (int)obj; }
         catch { idx = int.Parse((string)obj); }
@@ -1020,11 +1057,6 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    //public async void ExecuteCopyToClipboardCommand(object obj)
-    //{
-    //    Clipboard.SetText(TextMenuAPI);
-    //}
-
     public async void ExecuteUpgradePlanCommand(object obj)
     {
         try
@@ -1035,7 +1067,8 @@ public class MainViewModel : ViewModelBase
                 FileName = websiteUrl,
                 UseShellExecute = true
             });
-            // Application.Current.Shutdown();
+            
+            Application.Current.Shutdown();
         }
         catch (Exception ex)
         {
@@ -1047,15 +1080,32 @@ public class MainViewModel : ViewModelBase
     {
         try
         {
-            /*await AuthenService.SignOut();
-            await AuthenService.SignIn("trongdaitran0903@gmail.com", "Devtest1@");
-            string token = WindowLocalStorage.ReadLocalStorage("access_token");
-            Account = await AuthenService.GetMe();
-            UsernameFirstLetter = Account.Username[0].ToString();
-            _ = await JarvisApi.Instance.APIUsageHandler();
-            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-            IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥");
-            IsNoAPIUsageRemain = !IsAPIUsageRemain;*/
+            if (Account.Username != "Login")
+            {
+                LogoutVisibility = true;
+                IsShowLogout = !IsShowLogout;
+                if (_isLougoutOpen)
+                {
+                    IsShowLogout = false;
+                    _isLougoutOpen = false;
+                }
+
+                return;
+            }
+
+            LogoutVisibility = false;
+
+            //await AuthenService.SignOut();
+            //await AuthenService.SignIn("aa@gmail.com", "vudet11Q");
+            //string token = WindowLocalStorage.ReadLocalStorage("access_token");
+            //Account = await AuthenService.GetMe();
+            //UsernameFirstLetter = Account.Username[0].ToString();
+            //Username = Account.Username;
+            //_ = await JarvisApi.Instance.APIUsageHandler();
+            //RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+            //IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥");
+            //IsNoAPIUsageRemain = !IsAPIUsageRemain;
+
 
             string websiteUrl = _authUrl;
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
@@ -1067,6 +1117,23 @@ public class MainViewModel : ViewModelBase
         }
         catch (Exception)
         {}
+    }
+
+    private async void ExecuteLogoutCommand(object obj)
+    {
+        LogoutVisibility = IsShowLogout = false;
+        Account.Email = "";
+        Account.Role = "anonymous";
+        Account.Username = "Login";
+        UsernameFirstLetter = "L";
+
+        await AuthenService.SignOut();
+        await JarvisApi.Instance.APIUsageHandler();
+
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+        IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥");
+        IsNoAPIUsageRemain = !IsAPIUsageRemain;
+
     }
 
     private void InitializeSettingToggleButtons()
@@ -1315,6 +1382,12 @@ public class MainViewModel : ViewModelBase
             }
         }
         catch { }
+    }
+    
+    private async void MouseClickFinished(object sender, System.Windows.Forms.MouseEventArgs e)
+    {
+        _isLougoutOpen = IsShowLogout;
+        IsShowLogout = false;
     }
 }
 

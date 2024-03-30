@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using Jarvis_Windows.Sources.DataAccess.Local;
 using Windows.Media.Protection.PlayReady;
+using System.IO;
 
 namespace Jarvis_Windows.Sources.DataAccess.Network;
 
@@ -82,7 +83,8 @@ public sealed class JarvisApi
                 response = await _client.GetAsync(_apiUrl + _apiUserUsageEndpoint);
             }
             else
-            {               
+            {
+                _client.DefaultRequestHeaders.Clear();
                 var request = new HttpRequestMessage(HttpMethod.Get, _apiUrl + _apiUserUsageEndpoint);
                 request.Headers.Add("x-jarvis-guid", _apiHeaderID);
                 response = await _client.SendAsync(request);
@@ -98,6 +100,7 @@ public sealed class JarvisApi
                 {
                     WindowLocalStorage.WriteLocalStorage("RecentDate", dateTime.Day.ToString());
                 }
+
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
                 //WindowLocalStorage.WriteLocalStorage("IsAuthenticated", "true");
 
@@ -128,6 +131,7 @@ public sealed class JarvisApi
             }
             else
             {
+                _client.DefaultRequestHeaders.Clear();
                 var request = new HttpRequestMessage(HttpMethod.Post, _apiUrl + endPoint);
                 request.Content = contentData;
                 request.Headers.Add("x-jarvis-guid", _apiHeaderID);
@@ -142,6 +146,7 @@ public sealed class JarvisApi
                 int remainingUsage = responseObject.remainingUsage;
 
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
+                Logging.Log($"Unauthenticated call: {remainingUsage}");
 
                 string finalMessage = responseObject.message;
                 return finalMessage;
@@ -267,4 +272,24 @@ public sealed class JarvisApi
     }
 
     // ---------------------------------- Custom AI Actions ---------------------------------- //
+}
+
+public static class Logging
+{
+    private static bool isLogging = true;
+    public static void Log(string message)
+    {
+        if (!isLogging) return;
+
+        string _logFilePath = "C:\\Users\\vupham\\Desktop\\logJarvis.txt";
+        try
+        {
+            using (StreamWriter _streamWriter = new StreamWriter(_logFilePath, true))
+            {
+                _streamWriter.WriteLine($"{DateTime.Now} - {message}");
+            }
+        }
+
+        catch { return; }
+    }
 }
