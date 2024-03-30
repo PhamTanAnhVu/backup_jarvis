@@ -1063,7 +1063,7 @@ public class MainViewModel : ViewModelBase
                 FileName = websiteUrl,
                 UseShellExecute = true
             });
-            //Application.Current.Shutdown();
+            Application.Current.Shutdown();
         }
         catch (Exception)
         {}
