@@ -146,7 +146,6 @@ public sealed class JarvisApi
                 int remainingUsage = responseObject.remainingUsage;
 
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
-                Logging.Log($"Unauthenticated call: {remainingUsage}");
 
                 string finalMessage = responseObject.message;
                 return finalMessage;
@@ -272,24 +271,4 @@ public sealed class JarvisApi
     }
 
     // ---------------------------------- Custom AI Actions ---------------------------------- //
-}
-
-public static class Logging
-{
-    private static bool isLogging = true;
-    public static void Log(string message)
-    {
-        if (!isLogging) return;
-
-        string _logFilePath = "C:\\Users\\vupham\\Desktop\\logJarvis.txt";
-        try
-        {
-            using (StreamWriter _streamWriter = new StreamWriter(_logFilePath, true))
-            {
-                _streamWriter.WriteLine($"{DateTime.Now} - {message}");
-            }
-        }
-
-        catch { return; }
-    }
 }
