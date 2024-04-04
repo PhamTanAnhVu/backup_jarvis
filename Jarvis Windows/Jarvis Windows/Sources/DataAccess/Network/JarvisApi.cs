@@ -3,15 +3,11 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Net;
-using Windows.ApplicationModel.Chat;
 using System.Collections.ObjectModel;
-using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http.Headers;
 using Jarvis_Windows.Sources.DataAccess.Local;
-using Windows.Media.Protection.PlayReady;
 using System.IO;
 
 namespace Jarvis_Windows.Sources.DataAccess.Network;
@@ -210,7 +206,7 @@ public sealed class JarvisApi
         return await ApiHandler(requestBody, _actionEndpoint);
     }
 
-    public async Task<string?> ChatHandler(string content, ObservableCollection<AIChatMessage> ChatHistory)
+    public async Task<string?> ChatHandler(string content, ObservableCollection<MVVM.Views.MainView.AIChatMessage> ChatHistory)
     {
         List<Dictionary<string, string>> messages = new List<Dictionary<string, string>>();
 

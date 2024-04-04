@@ -19,7 +19,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border CornerRadius="16" Background="#FFFFFF" BorderThickness="0.5" BorderBrush="{StaticResource PrimaryBrushColor5}">
+    <Border CornerRadius="16" Background="#D7E7FF" BorderBrush="#FFFFFF" BorderThickness="1">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

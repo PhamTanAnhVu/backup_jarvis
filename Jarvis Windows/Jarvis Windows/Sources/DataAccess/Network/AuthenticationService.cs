@@ -94,8 +94,18 @@ namespace Jarvis_Windows.Sources.DataAccess.Network
                 UUID = _tokenLocalService.GetUUID();
                 if (!string.IsNullOrEmpty(AccessToken) && !string.IsNullOrEmpty(RefreshToken))
                 {
-                    AuthenState = AUTHEN_STATE.AUTHENTICATED;
-                    HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
+                    var account = GetMe().Result;
+                    if(account != null && account.Role != null)
+                    {
+                        if(account.Role.Equals("anonymous"))
+                        {
+                            AuthenState = AUTHEN_STATE.NOT_AUTHENTICATED;
+                        }
+                        else if(account.Role.Equals("user"))
+                        {
+                            AuthenState = AUTHEN_STATE.AUTHENTICATED;
+                        }
+                    }
                 }
                 else
                 {
@@ -251,6 +261,7 @@ namespace Jarvis_Windows.Sources.DataAccess.Network
         {
             AccessToken = TokenLocalService?.GetAccessToken();
             RefreshToken = TokenLocalService?.GetRefreshToken();
+            AuthenState = AUTHEN_STATE.AUTHENTICATED;
         }
     }
 }

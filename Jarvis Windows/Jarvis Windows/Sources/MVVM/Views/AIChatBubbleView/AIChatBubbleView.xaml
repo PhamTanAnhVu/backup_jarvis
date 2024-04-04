@@ -18,7 +18,7 @@
         <Button Style="{StaticResource AIBubbleButton}"
                     Command="{Binding ShowAIChatSidebarCommand}">
         <Button.Content>
-            <Image Source="../../../../Assets/Icons/jarvis_icon.ico" Width="24" Height="24" HorizontalAlignment="Center"/>
+            <Image Source="../../../../Assets/Images/jarvis_logo_large.png" Width="24" Height="24" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
         </Button.Content>
     </Button>
      

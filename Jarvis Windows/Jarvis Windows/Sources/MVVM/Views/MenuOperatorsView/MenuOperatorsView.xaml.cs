@@ -7,11 +7,12 @@ using System.Windows.Input;
 using Jarvis_Windows.Sources.Utils.WindowsAPI;
 using System.Windows.Automation;
 using System.Windows.Interop;
+using Windows.ApplicationModel.DataTransfer.DragDrop;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView
 {
     public partial class MenuOperatorsView : UserControl
-    {
+    { 
         private int _languageSelectedIndex = 14;
         private bool _isInit = false;
         private bool _isWindowClosed = false;

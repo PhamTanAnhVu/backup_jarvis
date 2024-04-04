@@ -63,7 +63,9 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <Image  Source="../../../../Assets/Images/jarvis_logo.png" Margin="0 0 8 0" Width="22" Height="22" HorizontalAlignment="Left"/>
+                    <Image  Source="../../../../Assets/Images/jarvis_logo_large.png" 
+                            Margin="0 0 8 0" Width="22" Height="22" HorizontalAlignment="Left"
+                            RenderOptions.BitmapScalingMode="HighQuality"/>
                     <TextBlock Text="Jarvis"  Margin="30 0 0 0" VerticalAlignment="Center"
                             FontSize="16" FontFamily="sans-serif" FontWeight="Bold" Foreground="#1450A3" />
                 </Grid>
@@ -92,7 +94,7 @@
                     </Grid>
                     <Grid Grid.Column="6">
                         <Button x:Name="btnCloseIntroduction"
-                                Style="{StaticResource MenuTopButton}"
+                                Style="{StaticResource JarvisNomalButton}"
                                 Width="36" Height="36" HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Command="{Binding HideAIChatSidebarCommand}">
                             <Button.Content>
@@ -215,7 +217,7 @@
 
             <Grid Grid.Row="3">
                 <Button Padding="8 0 8 0"
-                        Style="{StaticResource MenuTopButton}"
+                        Style="{StaticResource JarvisNomalButton}"
                         Width="103.47" Height="30" HorizontalAlignment="Left" 
                         Foreground="#104082" FontSize="14"
                         Command="{Binding NewAIChatCommand}">

@@ -1,5 +1,4 @@
-﻿using Jarvis_Windows.Sources.MVVM.Views.MainView;
-using Jarvis_Windows.Sources.Utils.Services;
+﻿using Jarvis_Windows.Sources.Utils.Services;
 using Microsoft.Win32;
 using System;
 using System.Windows;
@@ -10,6 +9,11 @@ using Jarvis_Windows.Sources.DataAccess.Network;
 using System.Web;
 using Jarvis_Windows.Sources.MVVM.Models;
 using System.Reflection;
+using Jarvis_Windows.Sources.MVVM.Views.MainView;
+using Windows.ApplicationModel.Activation;
+using System.Linq;
+using WinRT;
+using System.Diagnostics;
 
 namespace Jarvis_Windows
 {
@@ -20,20 +24,32 @@ namespace Jarvis_Windows
 
         public App()
         {
-            SingleInstanceWatcher();
-            //RegisterUriScheme("jarvis-windows");
+            if (IsDebugMode())
+                RegisterUriSchemeForDebugMode("jarvis-windows");
             DependencyInjection.RegisterServices();
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
         }
 
+        private static bool IsDebugMode()
+        {
+            bool isDebug = false;
+            #if DEBUG
+                isDebug = true;
+            #else
+                isDebug = Debugger.IsAttached;
+            #endif
+            return isDebug;
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
+            DestroyOldProcesses(); //Single instance application
+
             MainView mainView = DependencyInjection.GetService<MainView>();
             mainView.Show();
             DependencyInjection.GetService<PopupDictionaryService>().MainWindow = mainView;
 
-            //URI Activation
-            if (e.Args.Length > 0)
+            if (e.Args.Length > 0) //Activation from URI scheme
             {
                 UriBuilder builder = new UriBuilder(e.Args[0]);
                 var result = HttpUtility.ParseQueryString(builder.Query);
@@ -48,12 +64,16 @@ namespace Jarvis_Windows
                     authService.RefreshTokens();
                     MainViewModel mainViewModel = DependencyInjection.GetService<MainViewModel>();
                     Task<Account?> account = authService.GetMe();
-                    if (account != null)
+                    if (account != null && account.Result != null && account.Result.Username != null)
                     {
                         mainViewModel.Account = account.Result;
+                        mainViewModel.UsernameFirstLetter = account.Result.Username[0].ToString();
+
+                        //tODO:call remaining usage 
+                        _ = JarvisApi.Instance.APIUsageHandler();
+                        mainViewModel.RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
                     }
                 }
-                DependencyInjection.GetService<MainView>().Show();
             }
         }
 
@@ -76,26 +96,76 @@ namespace Jarvis_Windows
                 {
                     Current.Dispatcher.BeginInvoke((Action)(() =>
                     {
-                        if (!Current.MainWindow.Equals(null))
-                        {                            
-                            var mw = Current.MainWindow;
+                        string[] args = Environment.GetCommandLineArgs();
+                        if(args.Length > 0)
+                        {
+                            string uri = args[0];
+                            var result = HttpUtility.ParseQueryString(uri);
+                            var source = result["source"];
+                            var accessToken = result["token"];
+                            var refreshToken = result["refreshToken"];
+                            if (!String.IsNullOrEmpty(accessToken) && !String.IsNullOrEmpty(refreshToken))
+                            {
+                                WindowLocalStorage.WriteLocalStorage("access_token", accessToken);
+                                WindowLocalStorage.WriteLocalStorage("refresh_token", refreshToken);
+                                AuthenticationService? authService = DependencyInjection.GetService<IAuthenticationService>() as AuthenticationService;
+                                if(authService != null)
+                                {
+                                    authService.RefreshTokens();
+                                    MainViewModel mainViewModel = DependencyInjection.GetService<MainViewModel>();
+                                    Task<Account?> account = authService.GetMe();
+                                    if (account != null && account.Result != null && account.Result.Username != null)
+                                    {
+                                        mainViewModel.Account = account.Result;
+                                        mainViewModel.UsernameFirstLetter = account.Result.Username[0].ToString();
+                                    }
+                                }
+                            }
+                        }   
 
+                        /*if (Current.MainWindow != null)
+                        {
+                            var mw = Current.MainWindow;
                             if (mw.WindowState == WindowState.Minimized || mw.Visibility != Visibility.Visible)
                             {
                                 mw.Show();
-                                mw.WindowState = WindowState.Normal;
                             }
-                            mw.Activate();
-                            mw.Topmost = true;
-                            mw.Topmost = false;
-                            mw.Focus();
-                        }
+                        }*/
                     }));
                 }
             })
             .Start();
         }
 
+        protected void Activate(IActivatedEventArgs e)
+        {
+            if (e.Kind == ActivationKind.Protocol)
+            {
+                ProtocolActivatedEventArgs protocolArgs = e as ProtocolActivatedEventArgs;
+                if (protocolArgs != null)
+                {
+                    Uri uri = protocolArgs.Uri;
+                    var result = HttpUtility.ParseQueryString(uri.Query);
+                    var source = result["source"];
+                    var accessToken = result["token"];
+                    var refreshToken = result["refreshToken"];
+                    if (!String.IsNullOrEmpty(accessToken) && !String.IsNullOrEmpty(refreshToken))
+                    {
+                        WindowLocalStorage.WriteLocalStorage("access_token", accessToken);
+                        WindowLocalStorage.WriteLocalStorage("refresh_token", refreshToken);
+                        AuthenticationService? authService = DependencyInjection.GetService<IAuthenticationService>() as AuthenticationService;
+                        authService.RefreshTokens();
+                        MainViewModel mainViewModel = DependencyInjection.GetService<MainViewModel>();
+                        Task<Account?> account = authService.GetMe();
+                        if (account != null)
+                        {
+                            mainViewModel.Account = account.Result;
+                        }
+                    }
+                    DependencyInjection.GetService<MainView>().Show();
+                }
+            }
+        }
 
         static void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
@@ -109,9 +179,11 @@ namespace Jarvis_Windows
             }
         }
 
-        private void RegisterUriScheme(string scheme)
+        private void RegisterUriSchemeForDebugMode(string scheme)
         {
             string executablePath = Assembly.GetExecutingAssembly().Location;
+            executablePath = executablePath.Remove(executablePath.Length - 4, 4);
+            executablePath = executablePath + ".exe";
             string friendlyName = "jarvis-windows";
 
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\Classes\\{scheme}"))
@@ -130,6 +202,19 @@ namespace Jarvis_Windows
                 }
             }
         }
+
+        private void DestroyOldProcesses()
+        {
+            string currentProcessName = Process.GetCurrentProcess().ProcessName;
+            Process[] processes = Process.GetProcessesByName(currentProcessName);
+            foreach (Process process in processes)
+            {
+                if (process.Id != Process.GetCurrentProcess().Id)
+                {
+                    process.Kill();
+                }
+            }
+        }   
     }
 }
 

@@ -13,12 +13,12 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         WindowStyle="None"
-        Background="Transparent"
         AllowsTransparency="True"
+        Background="Transparent"
         PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
         PreviewMouseMove="Window_PreviewMouseMove"
         WindowStartupLocation="CenterScreen"
-        
+        MaxWidth="820" MaxHeight="496"
         Title="Jarvis MainView" Height="496" Width="820">
     <Window.Resources>
         <ResourceDictionary>
@@ -55,7 +55,7 @@
                 </LinearGradientBrush.GradientStops>
             </LinearGradientBrush>
         </Border.Background>
-
+    
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="37"/>
@@ -64,8 +64,13 @@
 
             <!-- Frame 10 -->
             <Grid Grid.Row="0" Width="780" Height="37">
-                <DockPanel LastChildFill="False" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="389*"/>
+                    <ColumnDefinition Width="391*"/>
+                </Grid.ColumnDefinitions>
+                <DockPanel LastChildFill="False" VerticalAlignment="Center" Grid.ColumnSpan="2">
                     <Button
+                        Margin="0 0 2 0"
                         DockPanel.Dock="Right" x:Name="btnCloseMainWindows"
                         Width="37" Height="37" Click="btnCloseMainWindows_Click"
                         Style="{StaticResource JarvisNomalButton}">
@@ -95,11 +100,12 @@
 
                     <!-- Frame 11 -->
                     <Grid Grid.Column="0" Width="86" Height="37" >
-                        <Image 
-                            Source="../../../../Assets/Images/jarvis_logo.png" 
-                            Margin="0,6.5,0,6.5"
+                        <Image  
+                            Source="../../../../Assets/Images/jarvis_logo_large.png" 
+                            HorizontalAlignment="Left"
+                            Margin="5 0 0 0"
                             Width="24" Height="24"
-                            HorizontalAlignment="Left"/>
+                            RenderOptions.BitmapScalingMode="HighQuality"/>
 
                         <TextBox 
                             Margin="32,4.5,0,4.5"
@@ -115,7 +121,7 @@
                             Style="{StaticResource TextBoxStyle}"/>
 
                     </Grid>
-
+  
                     <!-- Frame 21 -->
                     <Grid Grid.Column="2" Width="43" Height="20" Margin="0,8,0,9">
                         <Border Background="White" Width="43" Height="20" CornerRadius="12" >
@@ -166,7 +172,7 @@
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                
+
                                 <TextBox Grid.Row="0" FontSize="14" FontFamily="Ag" FontWeight="Medium" Foreground="#082041" Text="Try it out!"
                                            Style="{StaticResource TextBoxStyle}"/>
                                 <Rectangle Grid.Row="1" Height="1" Fill="#AEC9EF" VerticalAlignment="Bottom"/>

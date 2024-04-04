@@ -1,7 +1,7 @@
 ﻿using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
 using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 using Jarvis_Windows.Sources.MVVM.ViewModels;
-using Jarvis_Windows.Sources.MVVM.Views.MainView;
+using Jarvis_Windows.Sources.MVVM.Views;
 using Jarvis_Windows.Sources.Utils.Core;
 using System;
 using System.Diagnostics;
@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Media;
 using Point = System.Drawing.Point;
+using Jarvis_Windows.Sources.MVVM.Views.MainView;
 
 namespace Jarvis_Windows.Sources.Utils.Services;
 

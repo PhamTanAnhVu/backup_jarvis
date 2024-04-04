@@ -16,6 +16,9 @@ using Gma.System.MouseKeyHook;
 using System.Windows.Threading;
 using Jarvis_Windows.Sources.DataAccess;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using Jarvis_Windows.Sources.DataAccess.Local;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 
@@ -61,6 +64,7 @@ public class MainViewModel : ViewModelBase
     private static bool _isMouseOver_AppUI;
     private bool _isShowUsernameFirstLetter;
     private string _authUrl;
+    private TokenLocalService _tokenLocalService;
 
     private ObservableCollection<ButtonViewModel> _textMenuButtons;
     private Account? _account;
@@ -499,6 +503,16 @@ public class MainViewModel : ViewModelBase
         }
     }
 
+    public TokenLocalService TokenLocalService 
+    { 
+        get => _tokenLocalService; 
+        set
+        {
+            _tokenLocalService = value;
+            OnPropertyChanged("TokenService");
+        }
+    }
+
     public MainViewModel(INavigationService navigationService, 
         PopupDictionaryService popupDictionaryService,
         UIElementDetector accessibilityService, 
@@ -512,7 +526,6 @@ public class MainViewModel : ViewModelBase
         SendEventGA4 = sendEventGA4;
         AutomationElementValueService = automationElementValueService;
         AuthenService = authenticationService;
-
 
         Account = new Account();
         Account.Username = WindowLocalStorage.ReadLocalStorage("Username");
@@ -1113,7 +1126,7 @@ public class MainViewModel : ViewModelBase
                 FileName = websiteUrl,
                 UseShellExecute = true
             });
-            Application.Current.Shutdown();
+            //Application.Current.Shutdown();
         }
         catch (Exception)
         {}
@@ -1388,6 +1401,21 @@ public class MainViewModel : ViewModelBase
     {
         _isLougoutOpen = IsShowLogout;
         IsShowLogout = false;
+    }
+
+    protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        base.OnPropertyChanged(propertyName);
+
+        if(!string.IsNullOrEmpty(propertyName) && propertyName.Equals("TokenService"))
+        {
+            Account = AuthenService.GetMe().Result;
+            Username = Account.Username;
+            UsernameFirstLetter = Account.Username[0].ToString();
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+            IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥");
+            IsNoAPIUsageRemain = !IsAPIUsageRemain;
+        }
     }
 }
 

@@ -17,7 +17,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border CornerRadius="20" BorderBrush="White" BorderThickness="1.5" Padding="10.4">
+    <Border CornerRadius="20" BorderBrush="White" BorderThickness="2.5" Padding="10.4">
         <Border.Background>
             <LinearGradientBrush MappingMode="RelativeToBoundingBox" 
                      StartPoint="0,1" EndPoint="0,0">
@@ -39,7 +39,7 @@
             </LinearGradientBrush>
         </Border.Background>
 
-
+ 
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
@@ -59,10 +59,11 @@
 
                 <Grid Grid.Column="0">
                     <Image 
-                        Source="../../../../Assets/Images/jarvis_logo.png" 
+                        Source="../../../../Assets/Images/jarvis_logo_large.png" 
                         Margin="0 0 8 0"
                         Width="22" Height="22"
-                        HorizontalAlignment="Left"/>
+                        HorizontalAlignment="Left"
+                        RenderOptions.BitmapScalingMode="HighQuality"/>
 
                     <TextBlock Margin="30 0 0 0" VerticalAlignment="Center"
                             FontSize="16" FontFamily="sans-serif" FontWeight="Bold" Foreground="#1450A3" Text="Jarvis"/>
@@ -112,7 +113,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid Grid.Column="0">
-                        <Button Style="{StaticResource MenuUndoRedoButton}" Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"
+                        <Button Style="{StaticResource JarvisNomalButton}" Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"
                             Command="{Binding UndoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanUndo}">
                             <Button.Content>
                                 <Path Data="M5.921 11.9 1.353 8.62a.72.72 0 0 1 0-1.238L5.921 4.1A.716.716 0 0 1 7 4.719V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z"
@@ -124,15 +125,13 @@
                     </Grid>
 
                     <Grid Grid.Column="2">
-                        <Button Style="{StaticResource MenuUndoRedoButton}" 
+                        <Button Style="{StaticResource JarvisNomalButton}" 
                             Command="{Binding RedoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanRedo}"
                             Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center">
-
                             <Button.Content>
                                 <Path Data="M5.921 11.9 1.353 8.62a.72.72 0 0 1 0-1.238L5.921 4.1A.716.716 0 0 1 7 4.719V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z"
                                 VerticalAlignment="Center" HorizontalAlignment="Center"
                                 Fill="#1450A2" Height="10" Stretch="Fill" Width="13" FlowDirection="RightToLeft"/>
-
                             </Button.Content>
                         </Button>
                     </Grid>
@@ -151,12 +150,15 @@
                         <Rectangle Height="24" Width="1" Fill="Blue" Opacity="0.1"/>
                     </Grid>
                     <Grid Grid.Column="6">
-                        <Button x:Name="btnCloseIntroduction" BorderThickness="0.25"
-                                Style="{StaticResource MenuTopButton}"
+                        <Button x:Name="btnCloseIntroduction" BorderThickness="1"
+                                Style="{StaticResource JarvisNomalButton}"
                                 Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Command="{Binding HideMenuOperationsCommand}" CommandParameter="ClickUI">
                             <Button.Content>
-                                <Image Source="../../../../Assets/Images/cross.png" Width="14" Height="14" />
+                                <!--<Image Source="../../../../Assets/Images/cross.png" Width="14" Height="14" />-->
+                                <materialDesign:PackIcon Kind="Close" Width="20" Height="20" 
+                                                         VerticalAlignment="Center" 
+                                                         Foreground="#1450A2"/>
                             </Button.Content>
 
                         </Button>

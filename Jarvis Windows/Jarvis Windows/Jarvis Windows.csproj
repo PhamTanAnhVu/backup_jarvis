@@ -80,6 +80,7 @@
     <None Remove="Assets\Images\guideline1.png" />
     <None Remove="Assets\Images\guideline2.png" />
     <None Remove="Assets\Images\jarvis_logo.png" />
+    <None Remove="Assets\Images\jarvis_logo_large.png" />
     <None Remove="Assets\Images\navigate_next.png" />
     <None Remove="Assets\Images\pencil.png" />
     <None Remove="Assets\Images\scissors.png" />
@@ -136,6 +137,9 @@
 	<Content Include="Assets\Images\jarvis_logo.png">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
+	<Content Include="Assets\Images\jarvis_logo_large.png">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -185,6 +189,10 @@
     <Resource Include="Assets\Images\scissors.png" />
     <Resource Include="Assets\Images\translate_img.png" />
     <Resource Include="Sources\MVVM\Views\Styles\JarvisStyle.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Sources\MVVM\Views\MainView\" />
   </ItemGroup>
 
 </Project>

@@ -10,6 +10,8 @@ using System.Windows.Data;
 using Jarvis_Windows.Sources.Utils.Services;
 using Jarvis_Windows.Sources.MVVM.Views.ContextMenuView;
 using Point = System.Drawing.Point;
+using Windows.UI.WebUI;
+using Windows.ApplicationModel.Activation;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 public partial class MainView : Window
@@ -293,6 +295,17 @@ public partial class MainView : Window
             jarvisMenuPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBindingMenu);
 
         }));
+    }
+
+    public void Activate(IActivatedEventArgs args)
+    {
+        if (this.WindowState == WindowState.Minimized)
+        {
+            this.WindowState = WindowState.Normal;
+        }
+
+        this.Show();
+        this.Activate();
     }
 
     private class MyRenderer : ToolStripProfessionalRenderer

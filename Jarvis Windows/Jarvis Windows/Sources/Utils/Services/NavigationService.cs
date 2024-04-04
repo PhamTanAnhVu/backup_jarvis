@@ -16,10 +16,10 @@ namespace Jarvis_Windows.Sources.Utils.Services
 
     public class NavigationService : ObserveralObject, INavigationService
     {
-        private ViewModelBase _currentView;
+        private ViewModelBase? _currentView;
         private readonly Func<Type, ViewModelBase> _viewModelFactory;
 
-        public ViewModelBase CurrentView
+        public ViewModelBase? CurrentView
         {
             get => _currentView;
             private set

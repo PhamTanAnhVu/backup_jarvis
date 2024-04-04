@@ -7,10 +7,6 @@ using Jarvis_Windows.Sources.Utils.Core;
 using Jarvis_Windows.Sources.Utils.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jarvis_Windows
 {
