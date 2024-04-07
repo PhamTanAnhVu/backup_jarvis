@@ -15,8 +15,7 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
-        PreviewMouseMove="Window_PreviewMouseMove"
+        MouseDown="Window_MouseDown"
         WindowStartupLocation="CenterScreen"
         MaxWidth="820" MaxHeight="496"
         Title="Jarvis MainView" Height="496" Width="820">
@@ -27,7 +26,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-
+ 
     <Border CornerRadius="20" BorderBrush="White" BorderThickness="1" Padding="20,20"
             MouseEnter="App_MouseEnter"
             MouseLeave="App_MouseLeave">
@@ -327,7 +326,7 @@
                        PreviewMouseMove="MenuAction_PreviewMouseMove"
                        MouseEnter="App_MouseEnter"
                        MouseLeave="App_MouseLeave"
-                       Focusable="True" ForceCursor="True" StaysOpen="True"
+                       Focusable="True" ForceCursor="True" StaysOpen="False"
                        IsOpen="{Binding PopupDictionaryService.IsShowMenuOperations}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <menuOperation:MenuOperatorsView/>
@@ -339,7 +338,7 @@
                        AllowsTransparency="True"
                        PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
                        PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
-                       Focusable="True" ForceCursor="True" StaysOpen="True"
+                       Focusable="True" ForceCursor="True" StaysOpen="False"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuOperations}"
                        Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <textMenu:TextMenuView/>
@@ -354,7 +353,7 @@
                        MouseMove="TextMenuAPI_PreviewMouseMove"
                        MouseEnter="App_MouseEnter"
                        MouseLeave="App_MouseLeave"
-                       Focusable="True" ForceCursor="True" StaysOpen="True"
+                       Focusable="True" ForceCursor="True" StaysOpen="False"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuAPI}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <textMenuAPI:TextMenuAPIView/>
@@ -395,7 +394,7 @@
                        PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
                        MouseEnter="AIChatSidebar_MouseEnter"
                        MouseLeave="AIChatSidebar_MouseLeave"                      
-                       Focusable="True" ForceCursor="True" StaysOpen="True"
+                       Focusable="True" ForceCursor="True" StaysOpen="False"
                        IsOpen="{Binding PopupDictionaryService.IsShowAIChatSidebar}"
                        Width="Auto" Height="Auto" Grid.RowSpan="3">
                     <aIChatSidebar:AIChatSidebarView/>

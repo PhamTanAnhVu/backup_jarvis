@@ -138,7 +138,7 @@
 
                 <Grid Grid.Row="0" Width="382">
                     <Border Background="#FFFFFF" CornerRadius="12 12 0 0" Padding="12" Visibility="{Binding IsSpinningJarvisIconTextMenu ,Converter={StaticResource VisibilityConverter}}">
-                        <Image x:Name="img" Source="../../../../Assets/Icons/jarvis_icon.ico" Width="20" Height="20" VerticalAlignment="Bottom"
+                        <Image x:Name="img" Source="../../../../Assets/Images/jarvis_logo_large.png" Width="20" Height="20" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="Fant"
                         Visibility="{Binding IsSpinningJarvisIconTextMenu ,Converter={StaticResource VisibilityConverter}}" HorizontalAlignment="Left">
 
                             <Image.RenderTransformOrigin>

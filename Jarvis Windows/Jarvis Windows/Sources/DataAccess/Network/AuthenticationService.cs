@@ -252,7 +252,7 @@ namespace Jarvis_Windows.Sources.DataAccess.Network
             }
             else
             {
-                await SignOut();                
+                await SignOut();               
                 return "signed_out";
             }
         }

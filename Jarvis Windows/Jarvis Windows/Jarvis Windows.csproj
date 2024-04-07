@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <Configurations>Debug;Release;Dev;Product</Configurations>
-    <ApplicationIcon>Assets\Icons\jarvis_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\Icons\jarvis_logo_large.ico</ApplicationIcon>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <Company>Jarvis AI</Company>
     <Authors>Jarvis AI</Authors>
@@ -74,6 +74,7 @@
   <ItemGroup>
     <!--<None Remove="Assets\Icons\jarvis_icon.png" />-->
     <None Remove="AppSettings\Configs\supported_apps.json" />
+    <None Remove="Assets\Icons\jarvis_icon.ico" />
     <None Remove="Assets\Icons\jarvis_logo_large.ico" />
     <None Remove="Assets\Images\close.png" />
     <None Remove="Assets\Images\cross.png" />

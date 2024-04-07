@@ -321,4 +321,9 @@ public partial class MainView : Window
             }
         }
     }
+
+    private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        DragMove();
+    }
 }

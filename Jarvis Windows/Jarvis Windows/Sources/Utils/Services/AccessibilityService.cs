@@ -527,7 +527,7 @@ public class UIElementDetector
                                 TextPatternRange selection = selectedRanges[0];
                                 if (selection != null)
                                 {
-                                    var rects = selection.GetBoundingRectangles();
+                                    Rect[] rects = selection.GetBoundingRectangles();
                                     if (rects != null && rects.Length > 0)
                                     {
                                         Rect boundingRect = rects[0];
@@ -549,7 +549,7 @@ public class UIElementDetector
                                         //Point selectedTextPosition = new Point(boundingRect.X * xScale - 20, boundingRect.Y * yScale + boundingRect.Height * 1.5f);
                                         Point selectedTextPosition = new Point((int)(lpPoint.X * xScale), (int)(lpPoint.Y * yScale));
                                         _popupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
-                                        Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y +50);
+                                        Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 50);
                                         _popupDictionaryService.PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);
                                         if (!_popupDictionaryService.IsShowPinTextMenuAPI)
                                         {

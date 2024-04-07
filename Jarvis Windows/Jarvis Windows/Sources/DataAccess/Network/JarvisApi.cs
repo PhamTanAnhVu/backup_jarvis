@@ -146,7 +146,7 @@ public sealed class JarvisApi
                 string finalMessage = responseObject.message;
                 return finalMessage;
             }
-            else
+            else if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 var refreshResult = await AuthenService.Refresh();
                 if(!String.IsNullOrEmpty(refreshResult) && refreshResult.Equals("refreshed_success"))
@@ -155,11 +155,15 @@ public sealed class JarvisApi
                 }
                 else if(!String.IsNullOrEmpty(refreshResult) &&  refreshResult.Equals("signed_out"))
                 {
-                    Process.GetCurrentProcess().Kill();
+                    _apiHeaderID = WindowLocalStorage.ReadLocalStorage("ApiHeaderID");
                 }
             }
+            else
+            {
+                _apiHeaderID = WindowLocalStorage.ReadLocalStorage("ApiHeaderID");
+            }
 
-            return null;
+            return string.Empty;
         }
         catch (Exception ex)
         {

@@ -19,6 +19,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using Jarvis_Windows.Sources.DataAccess.Local;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 
@@ -555,13 +556,13 @@ public class MainViewModel : ViewModelBase
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
         //TEST AUTO RESET API USAGE
-        if(IsAPIUsageRemain == false)
+        /*if(IsAPIUsageRemain == false)
         {
             WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
             WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
             IsAPIUsageRemain = true;
-        }
+        }*/
 
 
         ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
@@ -815,6 +816,7 @@ public class MainViewModel : ViewModelBase
     {
         if (!PopupDictionaryService.IsDragging)
         {
+            //FIXME: Old handle with popup
             bool _menuShowStatus = PopupDictionaryService.IsShowMenuOperations;
             PopupDictionaryService.ShowMenuOperations(!_menuShowStatus);
             PopupDictionaryService.ShowJarvisAction(false);
@@ -829,6 +831,11 @@ public class MainViewModel : ViewModelBase
                     await SendEventGA4.SendEvent("open_input_actions");
                 });
             }
+
+
+            // New handle with windows
+            //MenuInjectionActionsView.MenuInjectionActionsView menuInjectionActionsView = new MenuInjectionActionsView.MenuInjectionActionsView();
+            //menuInjectionActionsView.Show();
         }    
     }
 

@@ -8,7 +8,10 @@ public static class AppStatus
     public static bool IsPackaged => CheckIsPackaged();
     private static bool CheckIsPackaged()
     {
-        try { return ApplicationData.Current.LocalSettings != null; }
+        try 
+        {
+            return ApplicationData.Current.LocalSettings != null; 
+        }
         catch { return false; }
     }
 }
