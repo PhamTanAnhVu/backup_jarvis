@@ -91,6 +91,7 @@ public sealed class JarvisApi
                 string responseContent = response.Content.ReadAsStringAsync().Result;
                 dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
                 int remainingUsage = responseObject.availableTokens;
+                int dailyUsage = responseObject.dailyTokens;
                 string dateString = responseObject.date;
                 if (DateTime.TryParseExact(dateString, "MM/dd/yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out DateTime dateTime))
                 {
@@ -98,7 +99,11 @@ public sealed class JarvisApi
                 }
 
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
+                WindowLocalStorage.WriteLocalStorage("DailyApiUsage", dailyUsage.ToString());
                 //WindowLocalStorage.WriteLocalStorage("IsAuthenticated", "true");
+                
+                EventAggregator.PublishLoginStatusChanged("MainWindow", EventArgs.Empty);
+                EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
 
                 string finalMessage = responseObject.message;
                 return finalMessage;
@@ -139,9 +144,10 @@ public sealed class JarvisApi
                 string responseContent = response.Content.ReadAsStringAsync().Result;
                 dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
 
-                int remainingUsage = responseObject.remainingUsage;
-
+                int remainingUsage = responseObject.remainingUsage;             
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
+
+                EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
 
                 string finalMessage = responseObject.message;
                 return finalMessage;

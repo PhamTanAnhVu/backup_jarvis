@@ -16,7 +16,7 @@ using Windows.ApplicationModel.Activation;
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 public partial class MainView : Window
 {
-    private SendEventGA4 _sendEventGA4;
+    // private SendEventGA4 _sendEventGA4;
     private NotifyIcon _notifyIcon;
 
     private bool _isMainWindowOpened;
@@ -28,12 +28,12 @@ public partial class MainView : Window
     private System.Windows.Point _menuActionPoint;
     private System.Windows.Point _jarvisButtonPoint;
     private System.Windows.Point _textMenuAPIPoint;
-    public SendEventGA4 SendEventGA4
-    {
-        get { return _sendEventGA4; }
-        set { _sendEventGA4 = value; }
-    }
-
+    //public SendEventGA4 SendEventGA4
+    //{
+    //    get { return _sendEventGA4; }
+    //    set { _sendEventGA4 = value; }
+    //}
+    public SendEventGA4 SendEventGA4 { get; internal set; }
     public PopupDictionaryService PopupDictionaryService { get; internal set; }
 
     public MainView()
@@ -95,12 +95,6 @@ public partial class MainView : Window
     private void Sidebar_Click(object sender, EventArgs e)
     {
         EventAggregator.PublishAIChatBubbleStatusChanged(this, EventArgs.Empty);
-    }
-
-
-    private void Setting_Click(object sender, EventArgs e)
-    {
-        PopupDictionaryService.IsShowSettingMenu = true;
     }
 
     private async void QuitMenuItem_Click(object sender, EventArgs e)

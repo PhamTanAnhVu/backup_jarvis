@@ -9,7 +9,6 @@
         xmlns:textMenuAPI="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView"
         xmlns:aIChatBubble="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView"
         xmlns:aIChatSidebar="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView"
-        xmlns:settingMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.SettingView"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         WindowStyle="None"
@@ -244,7 +243,7 @@
                                             </Grid>
                                         </Viewbox>
 
-                                        <TextBlock Text="{Binding Account.Username}" FontFamily ="sans-serif" Padding="5 5 5 5" FontSize="13" FontWeight="SemiBold" Foreground="#082041" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding Username}" FontFamily ="sans-serif" Padding="5 5 5 5" FontSize="13" FontWeight="SemiBold" Foreground="#082041" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Button.Content>
                                 <Button.Style>
@@ -267,7 +266,7 @@
                                                             <ContentPresenter VerticalAlignment="Center"/>
                                                         </Border>
 
-                                                        <Grid Visibility="{Binding LogoutVisibility, Converter={StaticResource VisibilityConverter}}">
+                                                        <!--<Grid Visibility="{Binding LogoutVisibility, Converter={StaticResource VisibilityConverter}}">
                                                             <Popup Name="PopupMessage" Placement="Center" VerticalOffset="-40" HorizontalOffset="-26" AllowsTransparency="True"
                                                                     IsOpen="{Binding IsShowLogout}" Focusable="True" ForceCursor="True" StaysOpen="True">
                                                                 <Border CornerRadius="10" Background="{StaticResource PrimaryBrushColor5}" Width="60" Height="38" Padding="7 2 2 2" 
@@ -277,7 +276,7 @@
                                                                             Width="50" Height="30"/>
                                                                 </Border>
                                                             </Popup>
-                                                        </Grid>
+                                                        </Grid>-->
                                                     </Grid>
 
                                                 </ControlTemplate>
@@ -359,7 +358,7 @@
                     <textMenuAPI:TextMenuAPIView/>
                 </Popup>
 
-                <Popup Name="settingMenu" Placement="Center"
+                <!--<Popup Name="settingMenu" Placement="Center"
                        AllowsTransparency="True"
                        MouseEnter="App_MouseEnter"
                        MouseLeave="App_MouseLeave"      
@@ -369,7 +368,7 @@
                        IsOpen="{Binding PopupDictionaryService.IsShowSettingMenu}"
                        Width="Auto" Height="Auto" Grid.RowSpan="3">
                     <settingMenu:SettingView/>
-                </Popup>
+                </Popup>-->
 
 
                 <Popup Name="aIChatBubblePopup" Placement="Absolute"
@@ -394,7 +393,7 @@
                        PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
                        MouseEnter="AIChatSidebar_MouseEnter"
                        MouseLeave="AIChatSidebar_MouseLeave"                      
-                       Focusable="True" ForceCursor="True" StaysOpen="False"
+                       Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowAIChatSidebar}"
                        Width="Auto" Height="Auto" Grid.RowSpan="3">
                     <aIChatSidebar:AIChatSidebarView/>

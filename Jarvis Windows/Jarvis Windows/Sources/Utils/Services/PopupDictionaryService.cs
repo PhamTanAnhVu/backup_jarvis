@@ -19,7 +19,6 @@ public class PopupDictionaryService : ObserveralObject
     private bool _isShowMenuOperations;
     private bool _isShowTextMenuOperations;
     private bool _isShowTextMenuAPI;
-    private bool _isShowSettingMenu;
     private bool _jarvisActionVisibility;
     private bool _textMenuSelectionVisibility;
     private bool _isShowAIBubbleFromTrayMenu;
@@ -67,17 +66,6 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-    
-    public bool IsShowSettingMenu
-    {
-        get { return _isShowSettingMenu; }
-        set
-        {
-            _isShowSettingMenu = value;
-            OnPropertyChanged();
-        }
-    }
-    
     public bool IsShowAIChatBubble
     {
         get { return _isShowAIChatBubble; }

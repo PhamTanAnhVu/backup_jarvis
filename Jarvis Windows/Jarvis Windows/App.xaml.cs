@@ -14,6 +14,7 @@ using Windows.ApplicationModel.Activation;
 using System.Linq;
 using WinRT;
 using System.Diagnostics;
+using Jarvis_Windows.Sources.MVVM.Views.SettingView;
 
 namespace Jarvis_Windows
 {
@@ -46,7 +47,9 @@ namespace Jarvis_Windows
             DestroyOldProcesses(); //Single instance application
 
             MainView mainView = DependencyInjection.GetService<MainView>();
+            SettingView settingView = DependencyInjection.GetService<SettingView>();
             mainView.Show();
+
             DependencyInjection.GetService<PopupDictionaryService>().MainWindow = mainView;
 
             if (e.Args.Length > 0) //Activation from URI scheme

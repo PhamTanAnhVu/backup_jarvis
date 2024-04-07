@@ -60,6 +60,7 @@ public static class WindowLocalStorage
         { "AppVersion", "" },
         { "ApiHeaderID", Guid.NewGuid().ToString() },
         { "ApiUsageRemaining", "" },
+        { "DailyApiUsage", "" },
         { "access_token", ""},
         { "refresh_token", ""},
         { "Username", "Login"},
@@ -67,7 +68,8 @@ public static class WindowLocalStorage
         { "Role", "anonymous"},
         { "IsAuthenticated", "false" },
         { "RecentDate", "" },
-        { "UserCountry", "" }
+        { "UserCountry", "" },
+        { "SettingStatus", "1111" }
     };
 
     public static void InitValue(string key)

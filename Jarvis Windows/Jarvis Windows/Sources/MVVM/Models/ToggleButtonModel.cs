@@ -4,28 +4,18 @@ using System.Windows.Controls;
 
 namespace Jarvis_Windows.Sources.MVVM.Models;
 
-public class Size
+public class ToggleButtonModel : ViewModelBase
 {
-    public double Width { get; set; }
-    public double Height { get; set; }
-    public Size(double width, double height)
-    {
-        Width = width;
-        Height = height;
-    }
-}
-
-public class ToggleButtons : ViewModelBase
-{
-    private bool _isOnline;
+    private bool _isActive;
     private string _dotMargin;
-    private string _barBackground;
+    private string _background;
     public int Idx { get; set; }
+    public string Header { get; set; }
     public string Description { get; set; }
-    public int DotSpeed { get; set; }
-    public Size DotSize { get; set; }
-    public Size GridSize { get; set; }
-    public RelayCommand ToggleCommand { get; set; }
+    public double ToggleButtonWidth { get; set; }
+    public double ToggleButtonHeight { get; set; }
+    public double DotSize { get; set; }
+    public RelayCommand Command { get; set; }
     public string DotMargin
     {
         get { return _dotMargin; }
@@ -36,55 +26,23 @@ public class ToggleButtons : ViewModelBase
         }
 
     }
-    public bool IsOnline
+    public bool IsActive
     {
-        get { return _isOnline; }
+        get { return _isActive; }
         set
         {
-            _isOnline = value;
+            _isActive = value;
             OnPropertyChanged();
         }
     }
 
-    public string BarBackground
+    public string Background
     {
-        get { return _barBackground; }
+        get { return _background; }
         set
         {
-            _barBackground = value;
+            _background = value;
             OnPropertyChanged();
         }
     }
-}
-
-public class ToggleButtonTemplate
-{
-    public ObservableCollection<ToggleButtons> ToggleButtonList { get; set; } = new ObservableCollection<ToggleButtons>
-    {
-        new ToggleButtons
-        {
-            Description = "Display Jarvis action in your textbox",
-            IsOnline = true,
-            DotSpeed = 7,
-            DotSize = new Size(20, 20),
-            GridSize = new Size(50, 28),
-
-        },
-        new ToggleButtons
-        {
-            Description = "Display Jarvis selection menu when you select text",
-            IsOnline = true,
-            DotSpeed = 7,
-            DotSize = new Size(20, 20),
-            GridSize = new Size(50, 28)
-        },
-        new ToggleButtons
-        {
-            Description = "Display Jarvis AI Chat on your right sidebar",
-            IsOnline = true,
-            DotSpeed = 7,
-            DotSize = new Size(20, 20),
-            GridSize = new Size(50, 28)
-        },
-    };
 }

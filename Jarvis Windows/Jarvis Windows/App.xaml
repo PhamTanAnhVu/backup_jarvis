@@ -3,12 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Jarvis_Windows"
              xmlns:mainView="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MainView"
+             xmlns:settingView="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.SettingView"
              >
     <Application.Resources>
         <DataTemplate DataType="{x:Type TypeName=mainView:MainViewModel}">
             <mainView:MainView/>
         </DataTemplate>
 
+        <!--<DataTemplate DataType="{x:Type TypeName=settingView:SettingViewModel}">
+            <settingView:SettingView/>
+        </DataTemplate>-->
 
         <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
         

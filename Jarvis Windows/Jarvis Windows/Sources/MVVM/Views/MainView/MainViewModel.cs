@@ -28,6 +28,7 @@ public class MainViewModel : ViewModelBase
     private INavigationService? _navigationService;
     private PopupDictionaryService _popupDictionaryService;
     private UIElementDetector _accessibilityService;
+    private SendEventGA4 _sendEventGA4;
     private bool _isSpinningJarvisIcon; // Spinning Jarvis icon
     private string _remainingAPIUsage;
     private string _mainWindowInputText;
@@ -55,7 +56,6 @@ public class MainViewModel : ViewModelBase
     private int _previousCommandIdx;
     private double _chatPanel_Height;
     private string _usernameFirstLetter;
-    private bool _logoutVisibility;
     private bool _isShowLogout;
     private bool _isLougoutOpen;
     private string _username;
@@ -67,6 +67,8 @@ public class MainViewModel : ViewModelBase
     private string _authUrl;
     private TokenLocalService _tokenLocalService;
 
+    private Views.SettingView.SettingView _settingView;
+
     private ObservableCollection<ButtonViewModel> _textMenuButtons;
     private Account? _account;
     private IKeyboardMouseEvents _globalMouseHook;
@@ -75,7 +77,6 @@ public class MainViewModel : ViewModelBase
     public RelayCommand ShowTextMenuOperationsCommand { get; set; }
     public RelayCommand HideTextMenuAPICommand { get; set; }
 
-    private SendEventGA4 _sendEventGA4;
     public List<Language> Languages { get; set; }
     public RelayCommand ShowMenuOperationsCommand { get; set; }
     public RelayCommand HideMenuOperationsCommand { get; set; }
@@ -90,8 +91,6 @@ public class MainViewModel : ViewModelBase
     public RelayCommand LoginCommand { get; set; }
     public RelayCommand LogoutCommand { get; set; }
     public RelayCommand ShowSettingsCommand { get; set; }
-    public ObservableCollection<ToggleButtons> ToggleButtons { get; set; }
-    private List<DispatcherTimer> StopDotTimer { get; set; }
     public RelayCommand TextMenuPinCommand { get; set; }
     public RelayCommand PopupTextMenuCommand { get; set; }
     public RelayCommand TextMenuAPIHeaderActionCommand { get; set; }
@@ -297,7 +296,6 @@ public class MainViewModel : ViewModelBase
     public RelayCommand AIChatSendCommand { get; set; }
     public RelayCommand NewAIChatCommand { get; set; }
     public RelayCommand HideAIChatSidebarCommand { get; set; }
-    public RelayCommand LoginOrUserInfoCommand { get; set; }
 
 
     private ObservableCollection<AIChatMessage> _aIChatMessages;
@@ -364,25 +362,6 @@ public class MainViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
-    public bool IsShowLogout
-    {
-        get { return _isShowLogout; }
-        set
-        {
-            _isShowLogout = value;
-            OnPropertyChanged();
-        }
-    }
-    public bool LogoutVisibility
-    {
-        get { return _logoutVisibility; }
-        set
-        {
-            _logoutVisibility = value;
-            OnPropertyChanged();
-        }
-    }
-    
     public double ChatPanel_Height
     {
         get { return _chatPanel_Height; }
@@ -532,6 +511,7 @@ public class MainViewModel : ViewModelBase
         Account.Username = WindowLocalStorage.ReadLocalStorage("Username");
         Account.Email = WindowLocalStorage.ReadLocalStorage("Email");
         Account.Role = WindowLocalStorage.ReadLocalStorage("Role");
+
         if (Account.Username == "")
             Account = AuthenService.GetMe().Result;
         if(AuthenticationService.AuthenState == AUTHEN_STATE.NOT_AUTHENTICATED
@@ -551,6 +531,9 @@ public class MainViewModel : ViewModelBase
         // Reset APIUsage daily
         Task.Run(async () => await ResetAPIUsageDaily()).Wait();
 
+        Username = Account.Username;
+        EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
+        if (IsShowUsernameFirstLetter) UsernameFirstLetter = Username[0].ToString();
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
         IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
@@ -584,7 +567,7 @@ public class MainViewModel : ViewModelBase
         UpgradePlanCommand = new RelayCommand(ExecuteUpgradePlanCommand, o => true);
         LoginCommand = new RelayCommand(ExecuteLoginCommand, o => true);
         LogoutCommand = new RelayCommand(ExecuteLogoutCommand, o => true);
-        ShowSettingsCommand = new RelayCommand(o => { PopupDictionaryService.IsShowSettingMenu = !PopupDictionaryService.IsShowSettingMenu; }, o => true);
+        ShowSettingsCommand = new RelayCommand(ExecuteShowSettingCommand, o => true);
         TextMenuPinCommand = new RelayCommand(ExecuteTextMenuPinCommand, o => true);
         PopupTextMenuCommand = new RelayCommand(ExecutePopupTextMenuCommand, o => true);
         TextMenuAPIHeaderActionCommand = new RelayCommand(ExecuteTextMenuAPIHeaderActionCommand, o => true);
@@ -603,7 +586,6 @@ public class MainViewModel : ViewModelBase
         //Register Acceccibility service
         AccessibilityService.SubscribeToElementFocusChanged();
         EventAggregator.LanguageSelectionChanged += OnLanguageSelectionChanged;
-        EventAggregator.AIChatBubbleStatusChanged += OnAIChatBubbleStatusChanged;
 
         // Checking App update here
         try { ExecuteCheckUpdate(); }
@@ -617,7 +599,6 @@ public class MainViewModel : ViewModelBase
         InitializeButtons();
         InitializeButtonsTextMenu();
 
-        ShowAIChatBubbleCommand = new RelayCommand(ExecuteShowAIChatBubbleCommand, o => true);
         ShowAIChatSidebarCommand = new RelayCommand(ExecuteShowAIChatSidebarCommand, o => true);
         HideAIChatSidebarCommand = new RelayCommand(ExecuteHideAIChatSidebarCommand, o => true);
         AIChatSendCommand = new RelayCommand(ExecuteAIChatSendCommand, o => true);
@@ -625,46 +606,30 @@ public class MainViewModel : ViewModelBase
             AIChatMessagesClear();
             await SendEventGA4.SendEvent("start_new_chat");
         }, o => true);
-        LoginOrUserInfoCommand = new RelayCommand(ExecuteLoginOrUserInfoCommand, o => true);
 
         AIChatMessages = new ObservableCollection<AIChatMessage>();
         AIChatMessagesClear();
         ChatPanel_Height = 518;
-        InitializeSettingToggleButtons();
 
-        UsernameFirstLetter = (Account.Role.Equals("anonymous")) ? "" : Account?.Username[0].ToString();
-        Account.Username = (Account.Role.Equals("anonymous")) ? "Login" : Account.Username;
+        EventAggregator.LoginStatusChanged += (sender, e) =>
+        {
+            string type = (string)sender;
+            if (type != "MainWindow") return;
+            RetrieveUserInfo();
+        };
 
         _globalMouseHook = Hook.GlobalEvents();
         _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
         _globalMouseHook.MouseDragFinished += MouseDragFinished;
-        _globalMouseHook.MouseClick += MouseClickFinished;
 
         EventAggregator.MouseOverAppUIChanged += (sender, e) => {
             _isMouseOver_AppUI = (bool)sender;
         };
-    }
-
-    private void ExecuteLoginOrUserInfoCommand(object obj)
-    {
-        string authenUrl = "https://admin.dev.jarvis.cx/auth/login?flow=OAuth&client_id=jarvis-windows&redirect=jarvis-windows:?source=jarvis-admin";
-        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-        {
-            FileName = authenUrl,
-            UseShellExecute = true
-        });
-        //Application.Current.Shutdown();
-    }
-    
-    
+    }  
 
     private async Task ResetAPIUsageDaily()
     {
-        int currentDate = DateTime.Now.Day;
-        //if (currentDate.ToString() != WindowLocalStorage.ReadLocalStorage("RecentDate"))
-        {
-            await JarvisApi.Instance.APIUsageHandler();
-        }
+        await JarvisApi.Instance.APIUsageHandler();   
     }
 
     private void UpdateButtonVisibility()
@@ -733,6 +698,11 @@ public class MainViewModel : ViewModelBase
         }
 
         UpdateButtonVisibility();
+    }
+
+    private void ExecuteShowSettingCommand(object obj)
+    {
+        EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
     }
 
     private void OnLanguageSelectionChanged(object sender, EventArgs e)
@@ -863,7 +833,7 @@ public class MainViewModel : ViewModelBase
 
             var textFromElement = "";
             var textFromAPI = "";
-            try 
+            try
             { 
                 textFromElement = (String.IsNullOrEmpty(UIElementDetector.CurrentSelectedText))? 
                     AccessibilityService.GetTextFromFocusingEditElement() : 
@@ -1096,24 +1066,25 @@ public class MainViewModel : ViewModelBase
         }
     }
 
+    private void RetrieveUserInfo()
+    {
+        Account.Username = WindowLocalStorage.ReadLocalStorage("Username");
+        Account.Email = WindowLocalStorage.ReadLocalStorage("Email");
+        Account.Role = WindowLocalStorage.ReadLocalStorage("Role");
+        Username = (Account.Role == "anonymous") ? "Login" : Account.Username;
+        UsernameFirstLetter = (Account.Role != "anonymous") ? Username[0].ToString() : "";
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+    }
+
     public async void ExecuteLoginCommand(object obj)
     {
         try
         {
-            if (Account.Username != "Login")
+            if (Account.Role != "anonymous")
             {
-                LogoutVisibility = true;
-                IsShowLogout = !IsShowLogout;
-                if (_isLougoutOpen)
-                {
-                    IsShowLogout = false;
-                    _isLougoutOpen = false;
-                }
-
+                EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
                 return;
             }
-
-            LogoutVisibility = false;
 
             //await AuthenService.SignOut();
             //await AuthenService.SignIn("aa@gmail.com", "vudet11Q");
@@ -1125,7 +1096,7 @@ public class MainViewModel : ViewModelBase
             //RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
             //IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥");
             //IsNoAPIUsageRemain = !IsAPIUsageRemain;
-
+            //EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
 
             string websiteUrl = _authUrl;
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
@@ -1133,7 +1104,7 @@ public class MainViewModel : ViewModelBase
                 FileName = websiteUrl,
                 UseShellExecute = true
             });
-            //Application.Current.Shutdown();
+
         }
         catch (Exception)
         {}
@@ -1141,11 +1112,10 @@ public class MainViewModel : ViewModelBase
 
     private async void ExecuteLogoutCommand(object obj)
     {
-        LogoutVisibility = IsShowLogout = false;
         Account.Email = "";
         Account.Role = "anonymous";
         Account.Username = "Login";
-        UsernameFirstLetter = "L";
+        UsernameFirstLetter = "";
 
         await AuthenService.SignOut();
         await JarvisApi.Instance.APIUsageHandler();
@@ -1153,99 +1123,8 @@ public class MainViewModel : ViewModelBase
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
         IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥");
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
-
-    }
-
-    private void InitializeSettingToggleButtons()
-    {
-        PopupDictionaryService.JarvisActionVisibility = true;
-        PopupDictionaryService.TextMenuSelectionVisibility = true;
-
-        StopDotTimer = new List<DispatcherTimer>();
-        ToggleButtons = new ToggleButtonTemplate().ToggleButtonList;
-
-        for (int i = 0; i < ToggleButtons.Count; i++)
-        {
-            ToggleButtons toggleButton = ToggleButtons[i];
-
-            toggleButton.Idx = i;
-            toggleButton.BarBackground = "#1450A3";
-            toggleButton.ToggleCommand = new RelayCommand(ExecuteToggleCommand, o => true);
-            toggleButton.DotMargin = $"{toggleButton.GridSize.Width - toggleButton.DotSize.Width - 3} 0 0 0";
-
-            DispatcherTimer timer = new DispatcherTimer();            
-            timer.Interval = TimeSpan.FromMilliseconds(10); 
-            timer.Tick += (sender, e) => Timer_Tick(sender, e, toggleButton.Idx);
-
-            StopDotTimer.Add(timer);
-        }
-    }
-   
-    private async void ExecuteToggleCommand(object obj)
-    {
-        int idx = (int)obj;
-        string ga4EventName = "";
-        if (idx == 0) 
-        { 
-            PopupDictionaryService.JarvisActionVisibility = !PopupDictionaryService.JarvisActionVisibility;
-            ga4EventName = (PopupDictionaryService.JarvisActionVisibility) ? "turn_on_inject_input_actions" : "turn_off_inject_input_actions";
-        }
-        else if (idx == 1) 
-        { 
-            PopupDictionaryService.TextMenuSelectionVisibility = !PopupDictionaryService.TextMenuSelectionVisibility;
-            ga4EventName = (PopupDictionaryService.TextMenuSelectionVisibility) ? "turn_on_inject_selection_actions" : "turn_off_inject_selection_actions";
-        }
         
-        else if (idx == 2) 
-        {
-
-            PopupDictionaryService.IsShowAIChatBubble = (PopupDictionaryService.IsShowAIChatSidebar) ? false : !PopupDictionaryService.IsShowAIChatBubble;
-            PopupDictionaryService.IsShowAIChatSidebar = false;
-            ga4EventName = (PopupDictionaryService.IsShowAIChatBubble) ? "turn_on_sidebar_chat" : "turn_off_sidebar_chat";
-        }
-
-        ToggleButtons[idx].IsOnline = !ToggleButtons[idx].IsOnline;
-        StopDotTimer[idx].Start();
-
-        // await SendEventGA4.SendEvent(ga4EventName);
-    }
-
-    private void Timer_Tick(object sender, EventArgs e, int idx)
-    {
-        ToggleButtons toggleButton = ToggleButtons[idx];
-        double curMarginX = double.Parse(toggleButton.DotMargin.Split(" ")[0]);
-        double minMargin = 3;
-        double maxMargin = toggleButton.GridSize.Width - toggleButton.DotSize.Width - minMargin;
-        if (toggleButton.IsOnline)
-        {
-            toggleButton.BarBackground = "#1450A3";
-            curMarginX += toggleButton.DotSpeed;
-            if (curMarginX >= maxMargin)
-            {
-                StopDotTimer[idx].Stop();
-                curMarginX = maxMargin;
-            }
-        }
-        else
-        {
-            curMarginX -= toggleButton.DotSpeed;
-            toggleButton.BarBackground = "#CCCCCC";
-            if (curMarginX <= minMargin)
-            {
-                StopDotTimer[idx].Stop();
-                curMarginX = minMargin;
-            }
-        }
-
-        toggleButton.DotMargin = $"{curMarginX} 0 0 0";
-        OnPropertyChanged(nameof(ToggleButtons));
-    }
-
-    public async void ExecuteShowAIChatBubbleCommand(object obj)
-    {
-        string tmp = (string)obj;
-        bool status = (tmp == "false") ? false : true;
-        PopupDictionaryService.ShowAIChatBubble(status);
+        EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
     }
 
     public async void ExecuteShowAIChatSidebarCommand(object obj)
@@ -1260,12 +1139,6 @@ public class MainViewModel : ViewModelBase
         PopupDictionaryService.ShowAIChatSidebar(false);
         PopupDictionaryService.ShowAIChatBubble(true);
         // AIChatMessagesClear();
-    }
-
-    private void OnAIChatBubbleStatusChanged(object sender, EventArgs e)
-    {
-        if (!PopupDictionaryService.IsShowAIChatBubble && !PopupDictionaryService.IsShowAIChatSidebar) ExecuteToggleCommand(2);
-        if (!PopupDictionaryService.IsShowAIChatSidebar) ShowAIChatSidebarCommand.Execute(null); // Avoid sending GA4 event again if Chat already show up
     }
 
     void AIChatMessagesClear()
@@ -1402,13 +1275,7 @@ public class MainViewModel : ViewModelBase
             }
         }
         catch { }
-    }
-    
-    private async void MouseClickFinished(object sender, System.Windows.Forms.MouseEventArgs e)
-    {
-        _isLougoutOpen = IsShowLogout;
-        IsShowLogout = false;
-    }
+    }  
 
     protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {

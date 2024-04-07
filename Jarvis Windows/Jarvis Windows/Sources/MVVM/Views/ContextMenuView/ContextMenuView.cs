@@ -37,7 +37,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
 
         private void Setting_Click(object? sender, EventArgs e)
         {
-            PopupDictionaryService.IsShowSettingMenu = true;
+            EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
         }
 
         private async void QuitMenuItem_Click(object? sender, EventArgs e)
