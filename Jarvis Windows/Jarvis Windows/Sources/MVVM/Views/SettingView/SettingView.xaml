@@ -8,6 +8,7 @@
         xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
         mc:Ignorable="d" 
         WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
         MouseEnter="Setting_MouseEnter"
         MouseLeave="Setting_MouseLeave"
         Background="Transparent"
@@ -22,7 +23,7 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Border CornerRadius="5" BorderBrush="White" BorderThickness="1" Background="#FFFFFF"
+    <Border Style="{StaticResource JarvisPrimaryWindowBorder}"
             MouseDown="Window_MouseDown">
         <Grid>
             <Grid.RowDefinitions>
@@ -40,16 +41,19 @@
             <Grid Grid.Row="1" Grid.ColumnSpan="2"/>
 
             <Grid Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" Background="#FAFAFA">
-                <Grid Margin="0 5 0 0">
-                    <Image 
-                        Source="../../../../Assets/Icons/jarvis_icon.ico"
-                        Width="20" Height="20" Margin="10 0 0 0"
-                        HorizontalAlignment="Left"/>
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Image 
+                            Source="../../../../Assets/Images/jarvis_logo_large.png"
+                            Width="20" Height="20" Margin="10 0 10 0"
+                            HorizontalAlignment="Left"
+                            RenderOptions.BitmapScalingMode="HighQuality"/>
 
-                    <TextBlock Margin="35 0 0 0" VerticalAlignment="Center"
+                        <TextBlock VerticalAlignment="Center"
                             FontSize="18" FontFamily="sans-serif" FontWeight="Bold"
                             Foreground="#1450A3"
                             Text="Settings"/>
+                    </StackPanel>
                 </Grid>
             </Grid>
 
@@ -58,15 +62,23 @@
                          FontSize="18" FontWeight="Bold" Text="{Binding LabelName}"/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="__" FontWeight="Bold" Margin="0 -15 0 0" FontSize="18"
-                                Background="Transparent" BorderThickness="0"
-                                Style="{StaticResource DockButton}"
-                                Click="HideWindow_Click"/>
+                    <Button Margin="0 0 0 0"
+                            Style="{StaticResource JarvisNomalButton}"
+                            Click="HideWindow_Click">
+                        <Button.Content>
+                            <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" 
+                            Kind="Minimize" Width="24" Height="24" VerticalAlignment="Center"/>
+                        </Button.Content>
+                    </Button>
 
-                    <Button Margin="10 0 15 0" FontSize="18" Content="✕"
-                                Background="Transparent" BorderThickness="0"
-                                Style="{StaticResource DockButton}"
-                                Click="CloseWindow_Click"/>
+                    <Button Margin="10 0 15 0"
+                            Style="{StaticResource JarvisNomalButton}"
+                            Click="CloseWindow_Click">
+                        <Button.Content>
+                            <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" 
+                                                Kind="Close" Width="24" Height="24" VerticalAlignment="Center" />
+                        </Button.Content>
+                    </Button>
                 </StackPanel>
 
             </Grid>

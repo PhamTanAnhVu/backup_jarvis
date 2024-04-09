@@ -932,7 +932,10 @@ public class MainViewModel : ViewModelBase
     public async void ExecuteTextMenuAICommand(object obj)
     {
         int idx = 0;
-        try { idx = (int)obj; }
+        try 
+        {
+            idx = (int)obj;
+        }
         catch { idx = int.Parse((string)obj); }
         string _aiAction = "custom";
         string _targetLanguage = TextMenuLanguages[LanguageSelectedIndex].Value;
@@ -1003,7 +1006,10 @@ public class MainViewModel : ViewModelBase
     {
         string[] colors = { "Transparent", "#6841EA" };
         int idx = 0;
-        try { idx = (int)obj; }
+        try 
+        {
+            idx = int.Parse((string)obj); 
+        }
         catch { idx = int.Parse((string)obj); }
         if (idx == -1)
         {

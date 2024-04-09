@@ -282,8 +282,8 @@
 
     <Style x:Key="JarvisNomalButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="#FFFFFF"/>
+        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -805,5 +805,29 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="JarvisPrimaryWindowBorder" TargetType="Border">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Color="#FFFFFF" Offset="0"/>
+                        <GradientStop Color="#F2F6FC" Offset="0.1658"/>
+                        <GradientStop Color="#F1F5FC" Offset="0.1659"/>
+                        <GradientStop Color="#F2F6FC" Offset="0.1902"/>
+                        <GradientStop Color="#F2F6FC" Offset="0.1903"/>
+                        <GradientStop Color="#F0F5FC" Offset="0.1904"/>
+                        <GradientStop Color="#EEF4FC" Offset="0.2099"/>
+                        <GradientStop Color="#EEF4FC" Offset="0.21"/>
+                        <GradientStop Color="#ECF2FB" Offset="0.2295"/>
+                        <GradientStop Color="#EBF1FB" Offset="0.2296"/>
+                        <GradientStop Color="#D7E7F8" Offset="1"/>
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="#FFFFFF"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="20"/>
+    </Style>
 
 </ResourceDictionary>
