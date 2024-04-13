@@ -6,7 +6,7 @@
              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
              xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             x:Name="JarvisMenuOperatorsView"
+             Name="JarvisMenuOperatorsView"
              mc:Ignorable="d" 
              Height="Auto" Width="420">
     <UserControl.Resources>
@@ -17,7 +17,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border CornerRadius="20" BorderBrush="White" BorderThickness="2.5" Padding="10.4">
+    <Border CornerRadius="20" BorderBrush="White" BorderThickness="2.5" Padding="10.4"
+            Name="BorderPopupMenu">
         <Border.Background>
             <LinearGradientBrush MappingMode="RelativeToBoundingBox" 
                      StartPoint="0,1" EndPoint="0,0">

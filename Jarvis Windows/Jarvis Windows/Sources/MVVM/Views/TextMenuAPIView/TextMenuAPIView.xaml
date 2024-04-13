@@ -4,11 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView"
              xmlns:popupTextMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.PopupTextMenuView"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"     
              mc:Ignorable="d" 
-             Height="Auto" Width="398"
+             Height="Auto" Width="403"
              Name="JarvisTextMenuAPIView">
 
     <UserControl.Resources>
@@ -60,13 +61,13 @@
                     <Grid Grid.Row="0">
                         <Border Background="Transparent" Padding="10 10 10 12">
                             <Button Background="Transparent" Style="{StaticResource AskButton}"
-                                BorderThickness="0" Width="100" HorizontalAlignment="Left" FontSize="14" FontWeight="Bold" 
-                                Foreground="#232329" FontFamily="monica-ext-font_YIBBBFG, -apple-system, 'system-ui', 'Segoe UI'"
-                                Command="{Binding TextMenuAPIHeaderActionCommand}">
+                                    BorderThickness="0" Width="130" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" 
+                                    Foreground="#232329" FontFamily="monica-ext-font_YIBBBFG, -apple-system, 'system-ui', 'Segoe UI'"
+                                    Command="{Binding TextMenuAPIHeaderActionCommand}">
                                 <Button.Content>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding TextMenuAPIHeaderActionName}"/>
-                                        <Path Stroke="#232329" Width="8" Height="10" Stretch="Uniform" Margin="5 0 0 0"
+                                        <Path Stroke="#232329" Width="12" Height="16" Stretch="Uniform" Margin="5 0 0 0"
                                             Data="M26.666 10.667 16 21.333 5.333 10.667"/>
                                     </StackPanel>
                                 </Button.Content>
@@ -75,7 +76,7 @@
 
                         <Popup Name="PopupTextMenu" IsOpen="{Binding IsTextMenuAPIHeaderAction}" 
                             Placement="Bottom" VerticalOffset="-15" HorizontalOffset="+10"
-                            AllowsTransparency="True" ForceCursor="True" StaysOpen="False"
+                            AllowsTransparency="True" PopupAnimation="Slide" ForceCursor="True" StaysOpen="False"
                             Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                             <popupTextMenu:PopupTextMenuView/>
                         </Popup>
@@ -108,22 +109,31 @@
                     </Grid>
 
                     <Grid Grid.Column="4" Background="Transparent">
-                        <Button Width="24" Height="24" HorizontalAlignment="Left"                            
-                                Style="{StaticResource PopupMenuButtonPin}"
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Width="30" Height="30" HorizontalAlignment="Left"                            
+                                Style="{StaticResource JarvisNomalButton}"
                                 Command="{Binding TextMenuPinCommand}" CommandParameter="-1">
                             <Button.Content>
-                                <Path Stroke="#232329" StrokeThickness="0.5" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
-                                            Fill="{Binding TextMenuPinColor}" Width="14" Height="14" VerticalAlignment="Center" Stretch="Uniform"/>
+                                <Viewbox Width="24" Height="23" Margin="0 1 0 0">
+                                    <Canvas Width="16" Height="16">
+                                        <Path Stroke="#232329" StrokeThickness="0.5" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
+                                              Fill="{Binding TextMenuPinColor}"/>
+                                    </Canvas>
+                                </Viewbox>
                             </Button.Content>
                         </Button>
 
-                        <Button Width="24" Height="24" Margin="27 0 0 0" 
-                                Style="{StaticResource PopupMenuButtonPin}"
+                        <Button Grid.Column="2" Width="30" Height="30"
+                                Style="{StaticResource JarvisNomalButton}"
                                 Command="{Binding HideTextMenuAPICommand}">
                             <Button.Content>
-                                <Path Fill="#8A939D" Data="M5.536 4.475a.75.75 0 1 0-1.072 1.05l4.47 4.566-4.46 4.373a.75.75 0 0 0 1.05 1.072L10 11.146l4.475 4.389a.75.75 0 1 0 1.05-1.072l-4.46-4.373 4.47-4.566a.75.75 0 0 0-1.071-1.05L10 9.035l-4.464-4.56Z"
-                                    Width="13" Height="14" ClipToBounds="True" Stretch="Uniform"/>
-
+                                <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" 
+                                                         Kind="Close" Width="30" Height="30" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center" />
                             </Button.Content>
                         </Button>
                     </Grid>

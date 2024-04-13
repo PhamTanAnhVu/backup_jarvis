@@ -24,6 +24,8 @@ using Jarvis_Windows.Sources.Utils.WindowsAPI;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Automation;
+using Jarvis_Windows.Sources.Utils.WindowsAPI;
+using Windows.Devices.Geolocation;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Point = System.Drawing.Point;
@@ -895,9 +897,9 @@ public class MainViewModel : ViewModelBase
             else
                 textFromAPI = await JarvisApi.Instance.AIHandler(textFromElement, _actionType);
 
+            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-
-            IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
+            IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
             IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
 
@@ -935,11 +937,31 @@ public class MainViewModel : ViewModelBase
         PopupDictionaryService.IsShowPinTextMenuAPI = false;
         TextMenuPinColor = "Transparent";
     }
-    
+
+    private void UpdatePopupTextMenuPosition()
+    {
+        int textMenuWidth = 64;
+        foreach (var action in TextMenuButtons)
+        {
+            action.ExtraIconVisibility = true;
+            if (action.Visibility) textMenuWidth += 32;
+        }
+
+        PopupDictionaryService.PopupTextMenuPosition = new System.Drawing.Point
+        (
+            PopupDictionaryService.TextMenuOperationsPosition.X + (textMenuWidth - 215),
+            PopupDictionaryService.TextMenuOperationsPosition.Y + 40
+        );
+    }
+
     public async void ExecutePopupTextMenuCommand(object obj)
     {
+        UpdatePopupTextMenuPosition();
         PopupDictionaryService.IsShowPopupTextMenu = !PopupDictionaryService.IsShowPopupTextMenu;
-        if (!PopupDictionaryService.IsShowPinTextMenuAPI) PopupDictionaryService.IsShowTextMenuAPI = false;
+        if (!PopupDictionaryService.IsShowPinTextMenuAPI)
+        {
+            PopupDictionaryService.IsShowTextMenuAPI = false;
+        }
     }
     
     private void InitializeButtonsTextMenu()
@@ -966,6 +988,16 @@ public class MainViewModel : ViewModelBase
             idx = (int)obj;
         }
         catch { idx = int.Parse((string)obj); }
+        
+        if (!PopupDictionaryService.IsShowPinTextMenuAPI)
+        {
+            PopupDictionaryService.TextMenuAPIPosition = new System.Drawing.Point
+            (
+                PopupDictionaryService.TextMenuOperationsPosition.X,
+                PopupDictionaryService.TextMenuOperationsPosition.Y + 40
+            );
+        }
+
         string _aiAction = "custom";
         string _targetLanguage = TextMenuLanguages[LanguageSelectedIndex].Value;
 
@@ -1007,9 +1039,9 @@ public class MainViewModel : ViewModelBase
 
             TextMenuAPI = textFromAPI;
 
+            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-
-            IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
+            IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
             IsNoAPIUsageRemain = !IsAPIUsageRemain;
         }
         catch { }
@@ -1032,14 +1064,14 @@ public class MainViewModel : ViewModelBase
     }
 
     private async void ExecuteTextMenuPinCommand(object obj)
-    {
+    {      
         string[] colors = { "Transparent", "#6841EA" };
         int idx = 0;
         try 
         {
             idx = (int)obj; 
         }
-        catch { idx = int.Parse((string)obj); }
+        catch { idx = (int)obj; }
         if (idx == -1)
         {
             PopupDictionaryService.IsShowPinTextMenuAPI = !PopupDictionaryService.IsShowPinTextMenuAPI;
@@ -1062,12 +1094,14 @@ public class MainViewModel : ViewModelBase
         bool visibilityStatus = !TextMenuButtons[idx].Visibility;
         int sizeChanged = (visibilityStatus) ? -32 : 32;
         TextMenuButtons[idx].Visibility = visibilityStatus;
-        
+
         // Add buttons and expand to the left, the problem is the UI will reload everytime -> not smooth
-        //PopupDictionaryService.TextMenuOperationsPosition = new Point
-        //(
-        //    PopupDictionaryService.TextMenuOperationsPosition.X + sizeChanged, PopupDictionaryService.TextMenuOperationsPosition.Y
-        //);
+        PopupDictionaryService.TextMenuOperationsPosition = new System.Drawing.Point(
+            PopupDictionaryService.TextMenuOperationsPosition.X + sizeChanged,
+            PopupDictionaryService.TextMenuOperationsPosition.Y
+        );
+
+        // UpdatePopupTextMenuPosition();
 
         TextMenuButtons[idx].PinColor = colors[Convert.ToInt32(visibilityStatus)];
         OnPropertyChanged(nameof(TextMenuButtons));
@@ -1108,7 +1142,10 @@ public class MainViewModel : ViewModelBase
         Account.Role = WindowLocalStorage.ReadLocalStorage("Role");
         Username = (Account.Role == "anonymous") ? "Login" : Account.Username;
         UsernameFirstLetter = (Account.Role != "anonymous") ? Username[0].ToString() : "";
+        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+        IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
+        IsNoAPIUsageRemain = !IsAPIUsageRemain;
     }
 
     public async void ExecuteLoginCommand(object obj)
@@ -1128,8 +1165,9 @@ public class MainViewModel : ViewModelBase
             //UsernameFirstLetter = Account.Username[0].ToString();
             //Username = Account.Username;
             //_ = await JarvisApi.Instance.APIUsageHandler();
+            //bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
             //RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-            //IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥");
+            //IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
             //IsNoAPIUsageRemain = !IsAPIUsageRemain;
             //EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
 
@@ -1155,10 +1193,12 @@ public class MainViewModel : ViewModelBase
         await AuthenService.SignOut();
         await JarvisApi.Instance.APIUsageHandler();
 
+        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-        IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥");
+        IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
-        
+
+
         EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
     }
 
@@ -1234,8 +1274,9 @@ public class MainViewModel : ViewModelBase
             IsBorderVisible = true
         });
 
+        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-        IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
+        IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
         _isExecutingAIChatMessage = false;
 
@@ -1247,13 +1288,6 @@ public class MainViewModel : ViewModelBase
         return;
         IDataObject tmpClipboard = System.Windows.Clipboard.GetDataObject();
         System.Windows.Clipboard.Clear();
-
-        if (_isMouseOver_AppUI)
-        {
-            PopupDictionaryService.ShowMenuSelectionActions(false);
-            return;
-        }
-
         await Task.Delay(50);
 
         // Send Ctrl+C, which is "copy"
@@ -1267,6 +1301,11 @@ public class MainViewModel : ViewModelBase
             {
                 string text = System.Windows.Clipboard.GetText();
                 UIElementDetector.CurrentSelectedText = text;
+                if (PopupDictionaryService.IsShowPinTextMenuAPI && PopupDictionaryService.IsShowTextMenuAPI)
+                {
+                    PopupDictionaryService.ShowMenuSelectionActions(false);
+                    return;
+                }
                 PopupDictionaryService.ShowMenuSelectionActions(true);
                 await SendEventGA4.SendEvent("inject_selection_actions");
             }
@@ -1370,8 +1409,9 @@ public class MainViewModel : ViewModelBase
             Account = AuthenService.GetMe().Result;
             Username = Account.Username;
             UsernameFirstLetter = Account.Username[0].ToString();
+            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-            IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥");
+            IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
             IsNoAPIUsageRemain = !IsAPIUsageRemain;
         }
     }

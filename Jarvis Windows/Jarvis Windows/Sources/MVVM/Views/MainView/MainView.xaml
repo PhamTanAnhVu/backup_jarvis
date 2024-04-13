@@ -212,13 +212,13 @@
                         <ColumnDefinition Width="190"/>
                     </Grid.ColumnDefinitions>
                     <Border Background="#1450A3" CornerRadius="10" Grid.Column="1" Padding="24 0 24 0">
-                        <Button Background="Transparent" BorderThickness="0"
+                        <Button Background="#1450A3" BorderThickness="0"
                                 Foreground="White" FontSize="13" FontWeight="Bold" Content="More at Jarvis" Click="btnMoreAtJarvis_Click">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Background" Value="#1450A3" />
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -265,18 +265,6 @@
                                                                 CornerRadius="8">
                                                             <ContentPresenter VerticalAlignment="Center"/>
                                                         </Border>
-
-                                                        <!--<Grid Visibility="{Binding LogoutVisibility, Converter={StaticResource VisibilityConverter}}">
-                                                            <Popup Name="PopupMessage" Placement="Center" VerticalOffset="-40" HorizontalOffset="-26" AllowsTransparency="True"
-                                                                    IsOpen="{Binding IsShowLogout}" Focusable="True" ForceCursor="True" StaysOpen="True">
-                                                                <Border CornerRadius="10" Background="{StaticResource PrimaryBrushColor5}" Width="60" Height="38" Padding="7 2 2 2" 
-                                                                       VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                                    <Button Content="Logout" Foreground="White" FontSize="14" FontWeight="SemiBold" FontFamily="monica-ext-font_YIBBBFG, -apple-system, 'system-ui', 'Segoe UI'" 
-                                                                            Command="{Binding LogoutCommand}" Style="{StaticResource AskButton}"
-                                                                            Width="50" Height="30"/>
-                                                                </Border>
-                                                            </Popup>
-                                                        </Grid>-->
                                                     </Grid>
 
                                                 </ControlTemplate>
@@ -305,7 +293,7 @@
                 <Popup x:Name="jarvisActionPopup" Placement="AbsolutePoint" 
                        VerticalOffset="{Binding PopupDictionaryService.JarvisActionPosition.Y}" 
                        HorizontalOffset="{Binding PopupDictionaryService.JarvisActionPosition.X}" 
-                       AllowsTransparency="True" 
+                       AllowsTransparency="True" PopupAnimation="Fade" 
                        PreviewMouseLeftButtonDown="JarvisButton_PreviewMouseLeftButtonDown"
                        PreviewMouseRightButtonDown="JarvisButton_PreviewMouseRightButtonDown"
                        PreviewMouseMove="JarvisButton_MouseMove"
@@ -319,25 +307,25 @@
                 <Popup x:Name="jarvisMenuPopup" Placement="AbsolutePoint"
                        VerticalOffset="{Binding PopupDictionaryService.MenuOperationsPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.MenuOperationsPosition.X}"
-                       AllowsTransparency="True"
+                       AllowsTransparency="True" PopupAnimation="Fade"
                        PreviewMouseLeftButtonDown="MenuAction_PreviewMouseLeftButtonDown"
                        PreviewMouseLeftButtonUp="MenuAction_PreviewMouseLeftButtonUp"
                        PreviewMouseMove="MenuAction_PreviewMouseMove"
                        MouseEnter="App_MouseEnter"
                        MouseLeave="App_MouseLeave"
-                       Focusable="True" ForceCursor="True" StaysOpen="False"
+                       Focusable="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowMenuOperations}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <menuOperation:MenuOperatorsView/>
                 </Popup>
 
-                <Popup Name="textMenuPopup" Placement="Absolute"
+                <Popup x:Name="textMenuPopup" Placement="Absolute"
                        VerticalOffset="{Binding PopupDictionaryService.TextMenuOperationsPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.TextMenuOperationsPosition.X}"
-                       AllowsTransparency="True"
+                       AllowsTransparency="True" PopupAnimation="Fade"
                        PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
                        PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
-                       Focusable="True" ForceCursor="True" StaysOpen="False"
+                       Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuOperations}"
                        Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <textMenu:TextMenuView/>
@@ -346,13 +334,11 @@
                 <Popup Name="textMenuAPIPopup" Placement="Absolute"
                        VerticalOffset="{Binding PopupDictionaryService.TextMenuAPIPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.TextMenuAPIPosition.X}"
-                       AllowsTransparency="True"
-                       PreviewMouseLeftButtonDown="TextMenuAPI_PreviewMouseLeftButtonDown"
-                       PreviewMouseLeftButtonUp="TextMenuAPI_PreviewMouseLeftButtonUp"
+                       AllowsTransparency="True" PopupAnimation="Fade"
+                       MouseLeftButtonDown="TextMenuAPI_PreviewMouseLeftButtonDown"
+                       MouseLeftButtonUp="TextMenuAPI_PreviewMouseLeftButtonUp"
                        MouseMove="TextMenuAPI_PreviewMouseMove"
-                       MouseEnter="App_MouseEnter"
-                       MouseLeave="App_MouseLeave"
-                       Focusable="True" ForceCursor="True" StaysOpen="False"
+                       Focusable="True" StaysOpen="False"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuAPI}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <textMenuAPI:TextMenuAPIView/>
@@ -361,7 +347,7 @@
                 <Popup Name="aIChatBubblePopup" Placement="Absolute"
                        VerticalOffset="{Binding PopupDictionaryService.AIChatBubblePosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.AIChatBubblePosition.X}"
-                       AllowsTransparency="True"
+                       AllowsTransparency="True" PopupAnimation="Fade"
                        PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
                        PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"                      
                        MouseEnter="App_MouseEnter"
@@ -375,7 +361,7 @@
                 <Popup Name="aIChatSidebarPopup" Placement="Absolute"
                        VerticalOffset="{Binding PopupDictionaryService.AIChatSidebarPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.AIChatSidebarPosition.X}"
-                       AllowsTransparency="True"
+                       AllowsTransparency="True" PopupAnimation="Fade"
                        PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
                        PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
                        MouseEnter="AIChatSidebar_MouseEnter"

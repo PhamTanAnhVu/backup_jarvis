@@ -25,6 +25,7 @@ public class SettingViewModel : ViewModelBase
 
     private double _usageBarGreen;
 
+    private string _usageBarCornerRadius;
     private string _authUrl;
     private string _appVersion;
     private string _labelName;
@@ -101,6 +102,15 @@ public class SettingViewModel : ViewModelBase
         set
         {
             _usageBarGreen = value;
+            OnPropertyChanged();
+        }
+    }
+    public string UsageBarCornerRadius
+    {
+        get { return _usageBarCornerRadius; }
+        set
+        {
+            _usageBarCornerRadius = value;
             OnPropertyChanged();
         }
     }
@@ -498,6 +508,7 @@ public class SettingViewModel : ViewModelBase
         RetrieveUserInfo();
         UsedAPIUsage = $"{usedApiUsage}/{dailyApiUsage} 🔥";
         UsageBarGreen = usedApiUsage * usageBarJump;
+        UsageBarCornerRadius = (usedApiUsage == dailyApiUsage) ? "5 0 0 5" : "5 5 5 5";
     }
 
     private async void ExecuteOpenWebsiteCommand(object obj)

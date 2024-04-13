@@ -542,7 +542,8 @@
                             <ContentPresenter VerticalAlignment="Center"/>
                         </Border>
 
-                        <Popup Name="PopupMessage" Placement="Center" VerticalOffset="-32" AllowsTransparency="True">
+                        <Popup Name="PopupMessage" Placement="Center" VerticalOffset="-32" 
+                               AllowsTransparency="True" PopupAnimation="Fade">
                             <Border CornerRadius="10" Background="#202020" Width="Auto" Height="28" Padding="7 6 7 6" 
                                     VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <TextBlock Text="{Binding Content}" Foreground="White"
@@ -606,16 +607,16 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="DarkGray"/>
+                <Setter Property="Background" Value="#cfd6fc"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
     <Style x:Key="PopupTextMenuBorder" TargetType="Border">
-        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="Background" Value="#D7E7FF"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#9CA3AF"/>
+                <Setter Property="Background" Value="#b8c7e0"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -737,14 +738,14 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Border x:Name="rectangle" Background="LightGray" 
+                    <Border x:Name="rectangle" Background="#f0f4fa" 
                         SnapsToDevicePixels="True" Width="6" CornerRadius="4"/>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" TargetName="rectangle" Value="LightGray"/>
+                            <Setter Property="Background" TargetName="rectangle" Value="#f0f4fa"/>
                         </Trigger>
                         <Trigger Property="IsDragging" Value="true">
-                            <Setter Property="Background" TargetName="rectangle" Value="LightGray"/>
+                            <Setter Property="Background" TargetName="rectangle" Value="#f0f4fa"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

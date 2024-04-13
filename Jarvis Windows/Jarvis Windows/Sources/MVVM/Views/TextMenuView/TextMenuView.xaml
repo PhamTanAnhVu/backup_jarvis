@@ -78,7 +78,7 @@
                                                 <ContentPresenter VerticalAlignment="Center"/>
                                             </Border>
 
-                                            <Popup Name="PopupMessage" Placement="Center" VerticalOffset="-32" AllowsTransparency="True">
+                                            <Popup Name="PopupMessage" Placement="Center" VerticalOffset="-32" AllowsTransparency="True" PopupAnimation="Fade">
                                                 <Border CornerRadius="10" Background="#202020" Width="Auto" Height="28" Padding="7 6 7 6" 
                                                         VerticalAlignment="Center" HorizontalAlignment="Center">
                                                     <TextBlock Text="Unpin Response" Foreground="White"
@@ -103,7 +103,7 @@
                     </Button.Style>
                 </Button>
 
-                <Popup Name="PopupMessage" PlacementTarget="{Binding ElementName=Button}" Placement="Center" VerticalOffset="-32" AllowsTransparency="True">
+                <Popup Name="PopupMessage" PlacementTarget="{Binding ElementName=Button}" Placement="Center" VerticalOffset="-32" AllowsTransparency="True" PopupAnimation="Fade">
                     <Border CornerRadius="10" Background="#202020" Width="Auto" Height="28" Padding="7 6 7 6" 
                             VerticalAlignment="Center" HorizontalAlignment="Center">
                         <TextBlock Text="Unpin response panel" Foreground="White"
@@ -136,7 +136,7 @@
                         Placement="Absolute"
                         VerticalOffset="{Binding PopupDictionaryService.PopupTextMenuPosition.Y}"
                         HorizontalOffset="{Binding PopupDictionaryService.PopupTextMenuPosition.X}"
-                        AllowsTransparency="True"
+                        AllowsTransparency="True" PopupAnimation="Slide"
                         Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <popupTextMenu:PopupTextMenuView/>
                 </Popup>

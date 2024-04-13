@@ -15,7 +15,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border CornerRadius="16" Background="#FFFFFF" BorderThickness="0" Padding="5 8 8 12">
+    <Border CornerRadius="16" Background="#D7E7FF" BorderThickness="0" Padding="5 8 8 12">
         <ScrollViewer MaxHeight="170">
             <ItemsControl ItemsSource="{Binding TextMenuButtons}">
                 <ItemsControl.ItemsPanel>
@@ -35,7 +35,8 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Grid Grid.Column="0" Visibility="{Binding ExtraIconVisibility, Converter={StaticResource VisibilityConverter}}">
+                                <Grid Grid.Column="0" Visibility="{Binding ExtraIconVisibility, Converter={StaticResource VisibilityConverter}}"
+                                      Margin="5 0 0 0">
                                     <Button Width="18" Height="16" Style="{StaticResource PopupMenuButton}">
                                         <Button.Content>
                                             <Path Fill="{StaticResource PrimaryBrushColor6}" Data="M5.143 2.571c0-.428-.429-.857-.857-.857-.429 0-.857.429-.857.857 0 .43.428.858.857.858.428 0 .857-.429.857-.857ZM6.857 9.43c0 .428.429.857.857.857.429 0 .858-.429.858-.857 0-.429-.429-.857-.858-.857-.428 0-.857.428-.857.857Zm1.715-6.857c0-.43-.429-.858-.858-.858-.428 0-.857.429-.857.857 0 .43.429.858.857.858.429 0 .858-.429.858-.857ZM5.143 9.428c0-.429-.429-.857-.857-.857-.429 0-.857.428-.857.857 0 .428.428.857.857.857.428 0 .857-.429.857-.857ZM8.572 6c0-.428-.429-.857-.858-.857-.428 0-.857.429-.857.857 0 .429.429.857.857.857.429 0 .858-.428.858-.857ZM5.143 6c0-.428-.429-.857-.857-.857-.429 0-.857.429-.857.857 0 .429.428.857.857.857.428 0 .857-.428.857-.857Z" 
@@ -67,8 +68,7 @@
 
                                 <Grid Grid.Column="3" Visibility="{Binding ExtraIconVisibility, Converter={StaticResource VisibilityConverter}}">
                                     <Button Style="{StaticResource PopupMenuButtonPin}"
-                                                Command="{Binding PinCommand}"
-                                                CommandParameter="{Binding Idx}">
+                                            Command="{Binding PinCommand}" CommandParameter="{Binding Idx}">
                                         <Button.Content>
                                             <Path Fill="{Binding PinColor}" Stroke="#232329" StrokeThickness="0.5" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
                                                   Height="14" VerticalAlignment="Center" Stretch="Uniform"/>

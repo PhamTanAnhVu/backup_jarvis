@@ -225,7 +225,7 @@ public partial class MainView : Window
 
     private void TextMenuAPI_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (e.LeftButton == MouseButtonState.Pressed)
+        if (e.LeftButton == MouseButtonState.Pressed && _isDraggingTextMenuAPI)
         {
             System.Windows.Point relative = e.GetPosition(null);
             System.Windows.Point AbsolutePos = new System.Windows.Point(relative.X + textMenuAPIPopup.HorizontalOffset, relative.Y + textMenuAPIPopup.VerticalOffset);

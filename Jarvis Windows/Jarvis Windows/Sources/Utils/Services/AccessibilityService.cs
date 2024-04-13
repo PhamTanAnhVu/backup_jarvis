@@ -18,6 +18,8 @@ using System.Windows.Media.Imaging;
 //using System.Drawing;
 using System.Windows.Media.Animation;
 using Point = System.Drawing.Point;
+using Jarvis_Windows.Sources.MVVM.Views.MainView;
+using Windows.Foundation.Diagnostics;
 
 namespace Jarvis_Windows.Sources.Utils.Accessibility;
 
@@ -36,6 +38,7 @@ public class UIElementDetector
     private static ISupportedAppService? _supportedAppSerice;
 
     private static bool _isMouseOverAppUI;
+    private static bool _isMouseOverAIChatPanel;
 
     public static bool IsUseAutoTuningPosition { 
         get => _isUseAutoTuningPosition; 
@@ -92,22 +95,10 @@ public class UIElementDetector
         EventAggregator.MouseOverAppUIChanged += (sender, e) => {
             _isMouseOverAppUI = (bool)sender;
         };
-
-        EventAggregator.MouseOverAIChatPanelChanged += (sender, e) => {
-            _isMouseOverAppUI |= (bool)sender;
-        };
     }
 
     public UIElementDetector()
-    {
-        /*EventAggregator.MouseOverAppUIChanged += (sender, e) => {
-            _isMouseOverAppUI = (bool)sender;
-        };*/
-
-        /*EventAggregator.MouseOverAIChatPanelChanged += (sender, e) => {
-            _isMouseOverAppUI |= (bool)sender;
-        };*/
-    }
+    { }
 
     public void SubscribeToElementFocusChanged()
     {
@@ -159,7 +150,7 @@ public class UIElementDetector
 
     private static void ExecuteSendEventInject()
     {   
-        if(_sendEventGA4 != null)
+        if (_sendEventGA4 != null)
             _ = _sendEventGA4.SendEvent("inject_input_actions");       
     }
 
@@ -182,27 +173,31 @@ public class UIElementDetector
     private static void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
     {
         AutomationElement? newFocusElement = sender as AutomationElement;
-        /*if (newFocusElement != null)
-            RegisterSelectionChangedFor(newFocusElement);*/
-
+        //if (newFocusElement != null)
+        //    RegisterSelectionChangedFor(newFocusElement);
+        
+        string appName = GetActiveWindowTitle();
         if (_supportedAppSerice != null)
-            if (!_supportedAppSerice.IsSupportedInjectionApp(GetActiveWindowTitle()))
+        {
+            if (!_supportedAppSerice.IsSupportedInjectionApp(appName) &&
+                !string.IsNullOrEmpty(appName) && appName != "Jarvis MainView")
             {
                 _popupDictionaryService.ShowJarvisAction(false);
                 _popupDictionaryService.ShowMenuOperations(false);
                 return;
             }
+        }
 
         if (newFocusElement != null && newFocusElement != _focusingElement)
         {
             if (newFocusElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") ||
-                newFocusElement.Current.ControlType.ProgrammaticName.Equals("ControlType.Window"))
+                newFocusElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox"))
             {
                 _popupDictionaryService.ShowJarvisAction(false);
-                _popupDictionaryService.ShowMenuOperations(false);
+                //_popupDictionaryService.ShowMenuOperations(false);
                 return;
             }
-                
+
 
             if (IsEditableElement(newFocusElement))
             {
@@ -504,7 +499,8 @@ public class UIElementDetector
             !automationElement.Current.AutomationId.Equals("TextMenuAPI_Result_Text") &&
             !automationElement.Current.AutomationId.Equals("AIChatSidebar_ChatPanel") &&
             !automationElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox") &&
-            !automationElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") && !_isMouseOverAppUI)
+            !automationElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") &&
+            !_isMouseOverAppUI)
         {      
             try
             {
@@ -523,11 +519,15 @@ public class UIElementDetector
                             TextPatternRange[] selectedRanges = textPattern.GetSelection();
                             if (selectedRanges != null && selectedRanges.Length > 0)
                             {
-
                                 TextPatternRange selection = selectedRanges[0];
                                 if (selection != null)
                                 {
-                                    Rect[] rects = selection.GetBoundingRectangles();
+                                    Rect[] rects;
+                                    try 
+                                    { 
+                                        rects = selection.GetBoundingRectangles(); 
+                                    } 
+                                    catch { return; }
                                     if (rects != null && rects.Length > 0)
                                     {
                                         Rect boundingRect = rects[0];
@@ -548,14 +548,13 @@ public class UIElementDetector
                                         NativeUser32API.GetCursorPos(out lpPoint);
                                         Debug.WriteLine($"📌📌📌 Cursor Position: {lpPoint.X} - {lpPoint.Y}");
                                         //Point selectedTextPosition = new Point(boundingRect.X * xScale - 20, boundingRect.Y * yScale + boundingRect.Height * 1.5f);
+                                        
                                         Point selectedTextPosition = new Point((int)(lpPoint.X * xScale), (int)(lpPoint.Y * yScale));
                                         _popupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
-                                        Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 50);
-                                        _popupDictionaryService.PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);
+                                    
                                         if (!_popupDictionaryService.IsShowPinTextMenuAPI)
                                         {
-                                            _popupDictionaryService.ShowSelectionResponseView(false);
-                                            _popupDictionaryService.TextMenuAPIPosition = new Point(newPosition.X, newPosition.Y);
+                                            _popupDictionaryService.IsShowTextMenuAPI = false;
                                         }
                                     }
                                 }
@@ -583,9 +582,13 @@ public class UIElementDetector
     private static void RegisterSelectionChangedFor(AutomationElement automationElement)
     {
         //if(ObserverSelectionChangeElement != null)
-            //Automation.RemoveAutomationEventHandler(TextPattern.TextSelectionChangedEvent, ObserverSelectionChangeElement, OnTextSelectionChange);
-        ObserverSelectionChangeElement = automationElement;
-        Automation.AddAutomationEventHandler(TextPattern.TextSelectionChangedEvent, ObserverSelectionChangeElement, TreeScope.Element, OnTextSelectionChange);
+        //Automation.RemoveAutomationEventHandler(TextPattern.TextSelectionChangedEvent, ObserverSelectionChangeElement, OnTextSelectionChange);
+        try
+        {
+            ObserverSelectionChangeElement = automationElement;
+            Automation.AddAutomationEventHandler(TextPattern.TextSelectionChangedEvent, ObserverSelectionChangeElement, TreeScope.Element, OnTextSelectionChange);
+        }
+        catch { }
     }
 
     private string GetTextFromFocusedControl()

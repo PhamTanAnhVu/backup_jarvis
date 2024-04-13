@@ -8,6 +8,9 @@ using Jarvis_Windows.Sources.Utils.WindowsAPI;
 using System.Windows.Automation;
 using System.Windows.Interop;
 using Windows.ApplicationModel.DataTransfer.DragDrop;
+using Jarvis_Windows.Sources.Utils.Accessibility;
+using System.Text;
+using System.Runtime.InteropServices;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView
 {
@@ -48,8 +51,28 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView
             }
         }
 
+        private static string GetActiveWindowTitle()
+        {
+            const int nChars = 256;
+            StringBuilder Buff = new StringBuilder(nChars);
+            IntPtr handle = GetForegroundWindow();
+
+            if (GetWindowText(handle, Buff, nChars) > 0)
+            {
+                return Buff.ToString();
+            }
+            return String.Empty;
+        }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        internal static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
         private void Jarvis_Custom_Action_TextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            // Logging.Log($"Jarvis_Custom_Action_TextBox_PreviewMouseDown: Bring to front");
             TextBox textBox = (TextBox)sender;
             HwndSource source = (HwndSource)PresentationSource.FromVisual(textBox);
             if (source != null)

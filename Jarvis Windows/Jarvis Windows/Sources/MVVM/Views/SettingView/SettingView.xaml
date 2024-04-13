@@ -259,7 +259,7 @@
                                 </Grid>
 
                                 <Border Height="15" Width="{Binding UsageBarGray}" CornerRadius="5" Background="LightGray" Margin="0 10 0 0">
-                                    <Border Background="Green" CornerRadius="5 0 0 5" Width="{Binding UsageBarGreen}" HorizontalAlignment="Left"/>
+                                    <Border Background="Green" CornerRadius="{Binding UsageBarCornerRadius}" Width="{Binding UsageBarGreen}" HorizontalAlignment="Left"/>
                                 </Border>
                             </StackPanel>
                         </Border>

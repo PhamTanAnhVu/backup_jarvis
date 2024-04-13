@@ -86,6 +86,7 @@
     <None Remove="Assets\Images\pencil.png" />
     <None Remove="Assets\Images\scissors.png" />
     <None Remove="Assets\Images\translate_img.png" />
+    <None Remove="Sources\Utils\Services\rxt5dpoj.vat~" />
   </ItemGroup>
 
   <ItemGroup>
