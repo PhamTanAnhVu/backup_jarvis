@@ -266,4 +266,23 @@ public class TextMenuViewModel : ViewModelBase
             await SendEventGA4.SendEvent("do_ai_action", eventParams);
         }
     }
+
+    public int GetMenuSelectionActionWidth()
+    {
+        int visibleButtons = 0;
+        foreach (var button in TextMenuButtons)
+        {
+            if (button.Visibility)
+            {
+                visibleButtons++;
+            }
+        }
+
+        return visibleButtons * 32 + 64;
+    }
+
+    public int GetMenuSelectionActionHeight()
+    {
+        return 30;
+    }
 }

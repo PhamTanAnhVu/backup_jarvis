@@ -59,5 +59,8 @@ namespace Jarvis_Windows.Sources.Utils.WindowsAPI
 
         [DllImport("user32.dll")]
         public static extern bool GetCursorPos(out System.Drawing.Point lpPoint);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
     }
 }

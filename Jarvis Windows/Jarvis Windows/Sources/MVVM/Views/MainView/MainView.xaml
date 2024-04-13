@@ -358,19 +358,6 @@
                     <textMenuAPI:TextMenuAPIView/>
                 </Popup>
 
-                <!--<Popup Name="settingMenu" Placement="Center"
-                       AllowsTransparency="True"
-                       MouseEnter="App_MouseEnter"
-                       MouseLeave="App_MouseLeave"      
-                       PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
-                       PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
-                       Focusable="True" ForceCursor="True" StaysOpen="False"
-                       IsOpen="{Binding PopupDictionaryService.IsShowSettingMenu}"
-                       Width="Auto" Height="Auto" Grid.RowSpan="3">
-                    <settingMenu:SettingView/>
-                </Popup>-->
-
-
                 <Popup Name="aIChatBubblePopup" Placement="Absolute"
                        VerticalOffset="{Binding PopupDictionaryService.AIChatBubblePosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.AIChatBubblePosition.X}"

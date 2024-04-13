@@ -182,8 +182,8 @@ public class UIElementDetector
     private static void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
     {
         AutomationElement? newFocusElement = sender as AutomationElement;
-        if (newFocusElement != null)
-            RegisterSelectionChangedFor(newFocusElement);
+        /*if (newFocusElement != null)
+            RegisterSelectionChangedFor(newFocusElement);*/
 
         if (_supportedAppSerice != null)
             if (!_supportedAppSerice.IsSupportedInjectionApp(GetActiveWindowTitle()))
@@ -498,7 +498,7 @@ public class UIElementDetector
 
     private static void OnTextSelectionChange(object sender, AutomationEventArgs e)
     {
-
+        return;
         AutomationElement? automationElement = sender as AutomationElement;
         if (automationElement != null && 
             !automationElement.Current.AutomationId.Equals("TextMenuAPI_Result_Text") &&
@@ -531,13 +531,14 @@ public class UIElementDetector
                                     if (rects != null && rects.Length > 0)
                                     {
                                         Rect boundingRect = rects[0];
-                                        if (boundingRect == Rect.Empty)
+                                        /*if (boundingRect == Rect.Empty)
                                         {
                                             _popupDictionaryService.ShowMenuSelectionActions(false);
                                             _popupDictionaryService.IsShowPopupTextMenu = false;
-                                        }
-                                        _popupDictionaryService.ShowMenuSelectionActions(false);
-                                        _popupDictionaryService.IsShowPopupTextMenu = false;
+                                            return;
+                                        }*/
+                                        /*_popupDictionaryService.ShowMenuSelectionActions(false);
+                                        _popupDictionaryService.IsShowPopupTextMenu = false;*/
                                         double screenHeight = SystemParameters.PrimaryScreenHeight;
                                         double screenWidth = SystemParameters.PrimaryScreenWidth;
                                         double xScale = screenWidth / 1920;

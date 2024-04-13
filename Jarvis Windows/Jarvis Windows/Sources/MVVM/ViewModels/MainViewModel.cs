@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Jarvis_Windows.Sources.MVVM.ViewModels
 {
-    internal class MainViewModel
+    internal class MainViewModel_
     {
     }
 }

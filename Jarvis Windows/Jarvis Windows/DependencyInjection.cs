@@ -1,5 +1,6 @@
 ﻿using Jarvis_Windows.Sources.DataAccess.Local;
 using Jarvis_Windows.Sources.DataAccess.Network;
+using Jarvis_Windows.Sources.MVVM.ViewModels;
 using Jarvis_Windows.Sources.MVVM.Views.JarvisActionView;
 using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Jarvis_Windows.Sources.MVVM.Views.SettingView;
@@ -57,6 +58,8 @@ namespace Jarvis_Windows
             {
                 PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>()
             });
+
+            services.AddSingleton<TextMenuViewModel>();
 
             _serviceProvider = services.BuildServiceProvider();
         }

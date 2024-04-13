@@ -20,8 +20,14 @@ using Jarvis_Windows.Sources.DataAccess.Local;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
+using Jarvis_Windows.Sources.Utils.WindowsAPI;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+using System.Windows.Automation;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
+using Point = System.Drawing.Point;
+using IDataObject = System.Windows.IDataObject;
 
 public class MainViewModel : ViewModelBase
 {
@@ -621,11 +627,34 @@ public class MainViewModel : ViewModelBase
         _globalMouseHook = Hook.GlobalEvents();
         _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
         _globalMouseHook.MouseDragFinished += MouseDragFinished;
+        _globalMouseHook.MouseClick+= MouseClicked;
 
         EventAggregator.MouseOverAppUIChanged += (sender, e) => {
             _isMouseOver_AppUI = (bool)sender;
         };
-    }  
+    }
+
+    private void MouseClicked(object? sender, System.Windows.Forms.MouseEventArgs e)
+    {
+        double screenHeight = SystemParameters.PrimaryScreenHeight;
+        double screenWidth = SystemParameters.PrimaryScreenWidth;
+        double xScale = screenWidth / 1920;
+        double yScale = screenHeight / 1080;
+        Point mousePoint = new Point((int)(e.X * xScale), (int)(e.Y * yScale));
+        
+        //TODO::Check if the mouse is not over menu text selection
+        if (PopupDictionaryService.IsShowTextMenuOperations)
+        {
+            Point textMenuAPIPosition = PopupDictionaryService.TextMenuAPIPosition;
+            double textMenuAPIWidth = PopupDictionaryService.GetMenuSelectionActionWidth();
+            double textMenuAPIHeight = PopupDictionaryService.GetMenuSelectionActionHeight();
+            if (mousePoint.X < textMenuAPIPosition.X || mousePoint.X > textMenuAPIPosition.X + textMenuAPIWidth
+            || mousePoint.Y > textMenuAPIPosition.Y || mousePoint.Y < textMenuAPIPosition.Y - textMenuAPIHeight)
+            {
+                PopupDictionaryService.ShowMenuSelectionActions(false);
+            }
+        }
+    }
 
     private async Task ResetAPIUsageDaily()
     {
@@ -1008,7 +1037,7 @@ public class MainViewModel : ViewModelBase
         int idx = 0;
         try 
         {
-            idx = int.Parse((string)obj); 
+            idx = (int)obj; 
         }
         catch { idx = int.Parse((string)obj); }
         if (idx == -1)
@@ -1215,6 +1244,7 @@ public class MainViewModel : ViewModelBase
 
     private async void MouseDoubleClicked(object sender, System.Windows.Forms.MouseEventArgs e)
     {
+        return;
         IDataObject tmpClipboard = System.Windows.Clipboard.GetDataObject();
         System.Windows.Clipboard.Clear();
 
@@ -1248,37 +1278,85 @@ public class MainViewModel : ViewModelBase
         catch { }
     }
 
+    private async Task<IDataObject?> RetryGetClipboardObject()
+    {
+        IDataObject? tmpClipboard = null;
+        int retries = 10;
+        while (retries > 0)
+        {
+            try
+            {
+                tmpClipboard = System.Windows.Clipboard.GetDataObject();
+                break;
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+                if (retries == 0)
+                {
+                    // rethrow the exception if no retries are left
+                    throw;
+                }
+                // wait for some time and retry
+                await Task.Delay(0);
+                retries--;
+            }
+        }
+        return tmpClipboard;
+    }
+
+    static System.Windows.Point _lastMousePoint = new System.Windows.Point();
     private async void MouseDragFinished(object sender, System.Windows.Forms.MouseEventArgs e)
     {
-        IDataObject tmpClipboard = System.Windows.Clipboard.GetDataObject();
-        System.Windows.Clipboard.Clear();
-
         if (_isMouseOver_AppUI)
         {
             PopupDictionaryService.ShowMenuSelectionActions(false);
             return;
         }
 
-        await Task.Delay(50);
+        System.Windows.Point currentMousePoint = new System.Windows.Point(e.X, e.Y);
+        double distance = (currentMousePoint - _lastMousePoint).Length;
+        if(distance < 5)
+        {
+            _lastMousePoint = currentMousePoint;
+            return;
+        }
+        _lastMousePoint = currentMousePoint;
 
-        // Send Ctrl+C, which is "copy"
-        System.Windows.Forms.SendKeys.SendWait("^c");
-
-        await Task.Delay(50);
+        IDataObject? tmpClipboard = RetryGetClipboardObject().Result;
+        if (tmpClipboard == null) return;
 
         try
         {
-            if (System.Windows.Clipboard.ContainsText())
+            /*if (System.Windows.Clipboard.ContainsText())*/
             {
-                string text = System.Windows.Clipboard.GetText();
-                UIElementDetector.CurrentSelectedText = text;
+                // Send Ctrl+C, which is "copy"
+                System.Windows.Clipboard.Clear();
+                System.Windows.Forms.SendKeys.SendWait("^c");
+                UIElementDetector.CurrentSelectedText = Clipboard.GetText();
+
+                double screenHeight = SystemParameters.PrimaryScreenHeight;
+                double screenWidth = SystemParameters.PrimaryScreenWidth;
+                double xScale = screenWidth / 1920;
+                double yScale = screenHeight / 1080;
+                System.Drawing.Point lpPoint;
+                NativeUser32API.GetCursorPos(out lpPoint);
+                Point selectedTextPosition = new Point((int)(lpPoint.X * xScale), (int)(lpPoint.Y * yScale));
+                _popupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
+                Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 50);
+                _popupDictionaryService.PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);
+                if (!_popupDictionaryService.IsShowPinTextMenuAPI)
+                {
+                    _popupDictionaryService.ShowSelectionResponseView(false);
+                    _popupDictionaryService.TextMenuAPIPosition = new Point(newPosition.X, newPosition.Y);
+                }
+
                 PopupDictionaryService.ShowMenuSelectionActions(true);
                 await SendEventGA4.SendEvent("inject_selection_actions");
             }
-            else
+            /*else
             {
                 System.Windows.Clipboard.SetDataObject(tmpClipboard);
-            }
+            }*/
         }
         catch { }
     }  

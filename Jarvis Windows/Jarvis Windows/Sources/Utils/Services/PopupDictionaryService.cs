@@ -37,6 +37,7 @@ public class PopupDictionaryService : ObserveralObject
     private Point _aIChatSidebarPosition;
     private static String? _targetLanguage;
     private Point _automationElementVisualPos;
+    private TextMenuViewModel? _textMenuViewModel = null;
     
     public static  String TargetLangguage
     {
@@ -234,7 +235,6 @@ public class PopupDictionaryService : ObserveralObject
         MenuOperationsPosition = new Point(0, 0);
         AIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right - 30), (int)(SystemParameters.WorkArea.Bottom - 30) / 2);
         AIChatSidebarPosition = new Point((int)(SystemParameters.WorkArea.Right - 520), (int)(SystemParameters.WorkArea.Bottom - 700) / 2);
-        
     }
     public void ShowJarvisAction(bool isShow)
     {
@@ -370,5 +370,21 @@ public class PopupDictionaryService : ObserveralObject
     internal void ShowSelectionResponseView(bool bIsShow)
     {
         IsShowTextMenuAPI = bIsShow;
+    }
+
+    public int GetMenuSelectionActionWidth()
+    {
+        if(_textMenuViewModel == null)
+            _textMenuViewModel = DependencyInjection.GetService<TextMenuViewModel>();
+
+        return _textMenuViewModel.GetMenuSelectionActionWidth();
+    }
+
+    public int GetMenuSelectionActionHeight()
+    {
+        if (_textMenuViewModel == null)
+            _textMenuViewModel = DependencyInjection.GetService<TextMenuViewModel>();
+
+        return _textMenuViewModel.GetMenuSelectionActionHeight();
     }
 }
