@@ -26,16 +26,15 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Width="Auto" Height="34" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                CornerRadius="8" Padding="0 5 3 5" Style="{StaticResource PopupTextMenuBorder}">
+                                CornerRadius="8" Padding="10 5 3 5" Style="{StaticResource PopupTextMenuBorder}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="115"/>
-                                    <ColumnDefinition Width="24"/>
+                                    <ColumnDefinition Width="0"/>
+                                    <ColumnDefinition Width="125"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Grid Grid.Column="0" Visibility="{Binding ExtraIconVisibility, Converter={StaticResource VisibilityConverter}}"
+                                <Grid Grid.Column="0" Visibility="Collapsed"
                                       Margin="5 0 0 0">
                                     <Button Width="18" Height="16" Style="{StaticResource PopupMenuButton}">
                                         <Button.Content>
@@ -45,8 +44,8 @@
                                     </Button>
                                 </Grid>
 
-                                <Grid Grid.Column="1" Margin="4 0 0 0">
-                                    <Button Width="115" Style="{StaticResource PopupMenuButton}"
+                                <Grid Grid.Column="1" Margin="0 0 0 0">
+                                    <Button Width="125" Style="{StaticResource PopupMenuButton}"
                                             Command="{Binding Command}" CommandParameter="{Binding Idx}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -66,7 +65,7 @@
                                     </Button>
                                 </Grid>
 
-                                <Grid Grid.Column="3" Visibility="{Binding ExtraIconVisibility, Converter={StaticResource VisibilityConverter}}">
+                                <Grid Grid.Column="2" Visibility="{Binding ExtraIconVisibility, Converter={StaticResource VisibilityConverter}}">
                                     <Button Style="{StaticResource PopupMenuButtonPin}"
                                             Command="{Binding PinCommand}" CommandParameter="{Binding Idx}">
                                         <Button.Content>

@@ -12,6 +12,7 @@ using Jarvis_Windows.Sources.MVVM.Views.ContextMenuView;
 using Point = System.Drawing.Point;
 using Windows.UI.WebUI;
 using Windows.ApplicationModel.Activation;
+using System.Windows.Media;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 public partial class MainView : Window
@@ -80,6 +81,15 @@ public partial class MainView : Window
     private void App_MouseLeave(object sender, EventArgs e)
     {
         EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
+    }
+    private void TextSelectionMenu_MouseEnter(object sender, EventArgs e)
+    {
+        EventAggregator.PublishMouseOverTextSelectionMenuChanged(true, EventArgs.Empty);
+    }
+
+    private void TextSelectionMenu_MouseLeave(object sender, EventArgs e)
+    {
+        EventAggregator.PublishMouseOverTextSelectionMenuChanged(false, EventArgs.Empty);
     }
     
     private async void AIChatSidebar_MouseEnter(object sender, EventArgs e)
@@ -236,6 +246,7 @@ public partial class MainView : Window
             double newX = Math.Min(Math.Max(AbsolutePos.X - _textMenuAPIPoint.X, screenBounds.Left), maxX);
             double newY = Math.Min(Math.Max(AbsolutePos.Y - _textMenuAPIPoint.Y, screenBounds.Top), maxY);
 
+            // PopupDictionaryService.IsShowTextMenuOperations = false;
             PopupDictionaryService.TextMenuAPIPosition = new System.Drawing.Point((int)newX, (int)newY);
         }
     }
@@ -318,6 +329,33 @@ public partial class MainView : Window
 
     private void Window_MouseDown(object sender, MouseButtonEventArgs e)
     {
-        DragMove();
+        DependencyObject depObj = e.OriginalSource as DependencyObject;
+        if (depObj != null)
+        {
+            // Check if the mouse event originated from a popup
+            if (FindParent<Popup>(depObj) != null)
+            {
+                // Mouse event originated from a popup, don't drag the window
+                return;
+            }
+
+            // Check if the mouse event originated from a child element of the main window
+            if (FindParent<MainView>(depObj) == this)
+            {
+                DragMove();
+            }
+        }
+    }
+
+    private static T FindParent<T>(DependencyObject child) where T : DependencyObject
+    {
+        DependencyObject parent = VisualTreeHelper.GetParent(child);
+
+        while (parent != null && !(parent is T))
+        {
+            parent = VisualTreeHelper.GetParent(parent);
+        }
+
+        return parent as T;
     }
 }

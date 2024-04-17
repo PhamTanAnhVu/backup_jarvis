@@ -20,11 +20,13 @@
     </UserControl.Resources>
 
     <Border CornerRadius="10" Background="#FFFFFF" BorderBrush="#FFFFFF" BorderThickness="1">
+            <!--MouseEnter="TextSelection_MouseEnter"
+            MouseLeave="TextSelection_MouseLeave">-->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="32"/>
-                <ColumnDefinition Width="32"/>
+                <ColumnDefinition Width="28"/>
+                <ColumnDefinition Width="28"/>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
@@ -56,11 +58,16 @@
             </Grid>
 
             <Grid Grid.Column="1">
-                <Button HorizontalAlignment="Left"                                  
+                <Button HorizontalAlignment="Left" Width="Auto" Height="30"                             
                         Command="{Binding TextMenuPinCommand}" CommandParameter="-2">
                     <Button.Content>
-                        <Path Stroke="{StaticResource PrimaryBrushColor6}" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
-                            Width="14" Height="14" VerticalAlignment="Center" Stretch="Uniform"/>
+                        <Viewbox Width="16" Height="16" Visibility="{Binding IsLogout, Converter={StaticResource VisibilityConverter}}">
+                            <Canvas Width="16" Height="16">
+                                <Path Stroke="{StaticResource PrimaryBrushColor6}" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
+                                         />
+                            </Canvas>
+                        </Viewbox>
+                        
                     </Button.Content>
                     <Button.Style>
                         <Style TargetType="Button">
@@ -124,7 +131,7 @@
             <Grid Grid.Column="2">
                 
                 <Button Width="Auto" Height="30"
-                        Style="{StaticResource AskButton}"
+                        Style="{StaticResource AskButton}" 
                         Command="{Binding PopupTextMenuCommand}" CommandParameter="{Binding CommandParameter}">
                     <Button.Content>
                         <Path Data="M6.667 12.667a1.333 1.333 0 1 0 2.666 0 1.333 1.333 0 0 0-2.666 0Zm.39-8.39A1.333 1.333 0 1 1 8.943 2.39a1.333 1.333 0 0 1-1.886 1.885Zm0 4.666a1.333 1.333 0 1 1 1.886-1.886 1.333 1.333 0 0 1-1.886 1.886Z"
@@ -137,6 +144,8 @@
                         VerticalOffset="{Binding PopupDictionaryService.PopupTextMenuPosition.Y}"
                         HorizontalOffset="{Binding PopupDictionaryService.PopupTextMenuPosition.X}"
                         AllowsTransparency="True" PopupAnimation="Slide"
+                        MouseEnter="TextMenuPopup_MouseEnter"
+                        MouseLeave="TextMenuPopup_MouseLeave"
                         Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <popupTextMenu:PopupTextMenuView/>
                 </Popup>

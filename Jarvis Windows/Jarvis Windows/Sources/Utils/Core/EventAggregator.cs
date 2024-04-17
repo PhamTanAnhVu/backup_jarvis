@@ -11,6 +11,7 @@ public static class EventAggregator
     public static event EventHandler<EventArgs>? MouseOverAIChatInputTextboxChanged;
     public static event EventHandler<EventArgs>? MouseOverAppUIChanged;
     public static event EventHandler<EventArgs>? MouseOverTextSelectionMenuChanged;
+    public static event EventHandler<EventArgs>? MouseOverTextMenuPopupChanged;
     public static event EventHandler<EventArgs>? MouseOverAIChatPanelChanged;
     public static event EventHandler<EventArgs>? SettingVisibilityChanged;
     public static event EventHandler<EventArgs>? LoginStatusChanged;
@@ -37,12 +38,20 @@ public static class EventAggregator
     public static void PublishMouseOverAIChatPanelChanged(object sender, EventArgs e)
     {
         MouseOverAIChatPanelChanged?.Invoke(sender, e);
+        MouseOverAppUIChanged?.Invoke(sender, e);
     }
 
     public static void PublishMouseOverTextSelectionMenuChanged(object sender, EventArgs e)
     {
         MouseOverTextSelectionMenuChanged?.Invoke(sender, e);
     }
+
+    public static void PublishMouseOverTextMenuPopupChanged(object sender, EventArgs e)
+    {
+        MouseOverTextMenuPopupChanged?.Invoke(sender, e);
+    }
+
+
     public static void PublishSettingVisibilityChanged(object sender, EventArgs e)
     {
         SettingVisibilityChanged?.Invoke(sender, e);

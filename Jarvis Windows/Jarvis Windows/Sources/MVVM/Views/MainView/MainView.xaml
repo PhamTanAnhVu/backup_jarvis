@@ -325,6 +325,8 @@
                        AllowsTransparency="True" PopupAnimation="Fade"
                        PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
                        PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
+                       MouseEnter="TextSelectionMenu_MouseEnter"
+                       MouseLeave="TextSelectionMenu_MouseLeave"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuOperations}"
                        Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
@@ -338,7 +340,9 @@
                        MouseLeftButtonDown="TextMenuAPI_PreviewMouseLeftButtonDown"
                        MouseLeftButtonUp="TextMenuAPI_PreviewMouseLeftButtonUp"
                        MouseMove="TextMenuAPI_PreviewMouseMove"
-                       Focusable="True" StaysOpen="False"
+                       MouseEnter="App_MouseEnter"
+                       MouseLeave="App_MouseLeave"
+                       Focusable="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuAPI}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                     <textMenuAPI:TextMenuAPIView/>

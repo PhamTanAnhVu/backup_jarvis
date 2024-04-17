@@ -73,6 +73,8 @@ public class MainViewModel : ViewModelBase
     private static bool _isMouseOver_AppUI;
     private bool _isShowUsernameFirstLetter;
     private string _authUrl;
+    private bool _isMouseOver_TextSelectionMenu;
+    private bool _isMouseOver_TextMenuPopup;
     private TokenLocalService _tokenLocalService;
 
     private Views.SettingView.SettingView _settingView;
@@ -632,6 +634,14 @@ public class MainViewModel : ViewModelBase
         EventAggregator.MouseOverAppUIChanged += (sender, e) => {
             _isMouseOver_AppUI = (bool)sender;
         };
+
+        EventAggregator.MouseOverTextSelectionMenuChanged += (sender, e) => {
+            _isMouseOver_TextSelectionMenu = (bool)sender;
+        };
+
+        EventAggregator.MouseOverTextMenuPopupChanged += (sender, e) => {
+            _isMouseOver_TextMenuPopup = (bool)sender;
+        };
     }
 
     private void MouseClicked(object? sender, System.Windows.Forms.MouseEventArgs e)
@@ -645,14 +655,20 @@ public class MainViewModel : ViewModelBase
         //TODO::Check if the mouse is not over menu text selection
         if (PopupDictionaryService.IsShowTextMenuOperations)
         {
-            Point textMenuSelectionPosition = PopupDictionaryService.TextMenuOperationsPosition;
-            double textMenuSelectionWidth = PopupDictionaryService.GetMenuSelectionActionWidth();
-            double textMenuSelectionHeight = PopupDictionaryService.GetMenuSelectionActionHeight();
-            if (mousePoint.X < textMenuSelectionPosition.X || mousePoint.X > textMenuSelectionPosition.X + textMenuSelectionWidth
-            || mousePoint.Y > textMenuSelectionPosition.Y || mousePoint.Y < textMenuSelectionPosition.Y - textMenuSelectionHeight)
+            if (_isMouseOver_TextMenuPopup || _isMouseOver_TextSelectionMenu)
             {
-                PopupDictionaryService.ShowMenuSelectionActions(false);
+                return;
             }
+
+            PopupDictionaryService.ShowMenuSelectionActions(false);
+            //Point textMenuSelectionPosition = PopupDictionaryService.TextMenuOperationsPosition;
+            //double textMenuSelectionWidth = PopupDictionaryService.GetMenuSelectionActionWidth();
+            //double textMenuSelectionHeight = PopupDictionaryService.GetMenuSelectionActionHeight();
+            //if (mousePoint.X < textMenuSelectionPosition.X || mousePoint.X > textMenuSelectionPosition.X + textMenuSelectionWidth
+            //|| mousePoint.Y > textMenuSelectionPosition.Y || mousePoint.Y < textMenuSelectionPosition.Y - textMenuSelectionHeight)
+            //{
+            //    PopupDictionaryService.ShowMenuSelectionActions(false);
+            //}
         }
     }
 
@@ -947,7 +963,7 @@ public class MainViewModel : ViewModelBase
 
         PopupDictionaryService.PopupTextMenuPosition = new System.Drawing.Point
         (
-            PopupDictionaryService.TextMenuOperationsPosition.X + (textMenuWidth - 215),
+            PopupDictionaryService.TextMenuOperationsPosition.X + (textMenuWidth - 195),
             PopupDictionaryService.TextMenuOperationsPosition.Y + 40
         );
     }
@@ -1069,7 +1085,7 @@ public class MainViewModel : ViewModelBase
         {
             idx = (int)obj; 
         }
-        catch { idx = (int)obj; }
+        catch { idx = int.Parse((string)obj); }
         if (idx == -1)
         {
             PopupDictionaryService.IsShowPinTextMenuAPI = !PopupDictionaryService.IsShowPinTextMenuAPI;
@@ -1101,6 +1117,8 @@ public class MainViewModel : ViewModelBase
 
         // UpdatePopupTextMenuPosition();
 
+        PopupDictionaryService.IsShowTextMenuOperations = true;
+        PopupDictionaryService.IsShowPopupTextMenu = true;
         TextMenuButtons[idx].PinColor = colors[Convert.ToInt32(visibilityStatus)];
         OnPropertyChanged(nameof(TextMenuButtons));
     }
@@ -1370,7 +1388,7 @@ public class MainViewModel : ViewModelBase
                 System.Windows.Clipboard.Clear();
                 System.Windows.Forms.SendKeys.SendWait("^c");
                 UIElementDetector.CurrentSelectedText = Clipboard.GetText();
-
+                
                 double screenHeight = SystemParameters.PrimaryScreenHeight;
                 double screenWidth = SystemParameters.PrimaryScreenWidth;
                 double xScale = screenWidth / 1920;

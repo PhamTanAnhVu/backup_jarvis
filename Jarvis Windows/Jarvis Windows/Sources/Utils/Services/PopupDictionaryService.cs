@@ -63,10 +63,6 @@ public class PopupDictionaryService : ObserveralObject
         get { return _isShowMenuOperations; }
         set
         {
-            if (value == false && _isShowMenuOperations)
-            {
-                int n = 5;
-            }
             _isShowMenuOperations = value;
             OnPropertyChanged();
         }
