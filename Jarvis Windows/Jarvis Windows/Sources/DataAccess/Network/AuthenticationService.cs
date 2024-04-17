@@ -182,24 +182,24 @@ namespace Jarvis_Windows.Sources.DataAccess.Network
 
         public async Task<string?> SignOut()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, ApiUr + SIGN_OUT_ENDPOINT);
-            request.Headers.Add(API_HEADER, AccessToken);
-            HttpResponseMessage response = await HttpClient.SendAsync(request);
-            if(response.StatusCode == System.Net.HttpStatusCode.OK)
-            {           
-                AccessToken = null;
-                RefreshToken = null;
-                if(TokenLocalService != null)
-                {
-                    AuthenState = AUTHEN_STATE.NOT_AUTHENTICATED;
-                    TokenLocalService.ClearAccessToken();
-                    TokenLocalService.ClearRefreshToken();
-                    WindowLocalStorage.WriteLocalStorage("IsAuthenticated", "false");
-                    WindowLocalStorage.WriteLocalStorage("Username", "Login");
-                    WindowLocalStorage.WriteLocalStorage("Email", "");
-                    WindowLocalStorage.WriteLocalStorage("Role", "anonymous");
-                }
+            if (TokenLocalService != null)
+            {
+                AuthenState = AUTHEN_STATE.NOT_AUTHENTICATED;
+                TokenLocalService.ClearAccessToken();
+                TokenLocalService.ClearRefreshToken();
+                WindowLocalStorage.WriteLocalStorage("IsAuthenticated", "false");
+                WindowLocalStorage.WriteLocalStorage("Username", "Login");
+                WindowLocalStorage.WriteLocalStorage("Email", "");
+                WindowLocalStorage.WriteLocalStorage("Role", "anonymous");
             }
+
+            var request = new HttpRequestMessage(HttpMethod.Get, ApiUr + SIGN_OUT_ENDPOINT);
+            request.Headers.Add(API_HEADER, UUID);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
+            HttpResponseMessage response = await HttpClient.SendAsync(request);
+            
+            AccessToken = null;
+            RefreshToken = null;
             return null;
         }
 

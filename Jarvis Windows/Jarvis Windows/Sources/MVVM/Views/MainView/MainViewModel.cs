@@ -520,8 +520,6 @@ public class MainViewModel : ViewModelBase
         Account.Email = WindowLocalStorage.ReadLocalStorage("Email");
         Account.Role = WindowLocalStorage.ReadLocalStorage("Role");
 
-        if (Account.Username == "")
-            Account = AuthenService.GetMe().Result;
         if(AuthenticationService.AuthenState == AUTHEN_STATE.NOT_AUTHENTICATED
             && Account != null)
         {
@@ -647,11 +645,11 @@ public class MainViewModel : ViewModelBase
         //TODO::Check if the mouse is not over menu text selection
         if (PopupDictionaryService.IsShowTextMenuOperations)
         {
-            Point textMenuAPIPosition = PopupDictionaryService.TextMenuAPIPosition;
-            double textMenuAPIWidth = PopupDictionaryService.GetMenuSelectionActionWidth();
-            double textMenuAPIHeight = PopupDictionaryService.GetMenuSelectionActionHeight();
-            if (mousePoint.X < textMenuAPIPosition.X || mousePoint.X > textMenuAPIPosition.X + textMenuAPIWidth
-            || mousePoint.Y > textMenuAPIPosition.Y || mousePoint.Y < textMenuAPIPosition.Y - textMenuAPIHeight)
+            Point textMenuSelectionPosition = PopupDictionaryService.TextMenuOperationsPosition;
+            double textMenuSelectionWidth = PopupDictionaryService.GetMenuSelectionActionWidth();
+            double textMenuSelectionHeight = PopupDictionaryService.GetMenuSelectionActionHeight();
+            if (mousePoint.X < textMenuSelectionPosition.X || mousePoint.X > textMenuSelectionPosition.X + textMenuSelectionWidth
+            || mousePoint.Y > textMenuSelectionPosition.Y || mousePoint.Y < textMenuSelectionPosition.Y - textMenuSelectionHeight)
             {
                 PopupDictionaryService.ShowMenuSelectionActions(false);
             }

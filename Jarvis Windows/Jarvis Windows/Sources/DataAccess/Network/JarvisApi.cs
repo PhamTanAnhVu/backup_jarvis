@@ -93,10 +93,10 @@ public sealed class JarvisApi
                 int remainingUsage = responseObject.availableTokens;
                 int dailyUsage = responseObject.dailyTokens;
                 string dateString = responseObject.date;
-                if (DateTime.TryParseExact(dateString, "MM/dd/yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out DateTime dateTime))
-                {
-                    WindowLocalStorage.WriteLocalStorage("RecentDate", dateTime.Day.ToString());
-                }
+                //if (DateTime.TryParseExact(dateString, "MM/dd/yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out DateTime dateTime))
+                //{
+                //    WindowLocalStorage.WriteLocalStorage("RecentDate", dateTime.Day.ToString());
+                //}
 
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
                 WindowLocalStorage.WriteLocalStorage("DailyApiUsage", dailyUsage.ToString());

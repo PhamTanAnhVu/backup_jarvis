@@ -256,8 +256,6 @@ public class SettingViewModel : ViewModelBase
         AppVersion = $"Current version: {WindowLocalStorage.ReadLocalStorage("AppVersion")}";
         UsageBarGray = 590;
 
-        RetrieveUserInfo();        
-        
         InitLabels();
         InitializeToggleButtons();
 
@@ -469,10 +467,9 @@ public class SettingViewModel : ViewModelBase
             //string token = WindowLocalStorage.ReadLocalStorage("access_token");
             //_ = await AuthenService.GetMe();
             //_ = await JarvisApi.Instance.APIUsageHandler();
-
-            RetrieveUserInfo();
-            EventAggregator.PublishLoginStatusChanged("MainWindow", EventArgs.Empty);
-            EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
+            // RetrieveUserInfo();
+            // EventAggregator.PublishLoginStatusChanged("MainWindow", EventArgs.Empty);
+            // EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
 
         }
         catch (Exception ex) { }
