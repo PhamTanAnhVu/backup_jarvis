@@ -362,7 +362,7 @@
                     <aIChatBubble:AIChatBubbleView/>
                 </Popup>
 
-                <Popup Name="aIChatSidebarPopup" Placement="Absolute"
+                <!--<Popup Name="aIChatSidebarPopup" Placement="Absolute"
                        VerticalOffset="{Binding PopupDictionaryService.AIChatSidebarPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.AIChatSidebarPosition.X}"
                        AllowsTransparency="True" PopupAnimation="Fade"
@@ -374,7 +374,7 @@
                        IsOpen="{Binding PopupDictionaryService.IsShowAIChatSidebar}"
                        Width="Auto" Height="Auto" Grid.RowSpan="3">
                     <aIChatSidebar:AIChatSidebarView/>
-                </Popup>
+                </Popup>-->
             </Grid>
         </Grid>
     </Border>

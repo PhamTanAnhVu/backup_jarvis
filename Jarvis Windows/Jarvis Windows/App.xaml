@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Jarvis_Windows"
              xmlns:mainView="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MainView"
              xmlns:settingView="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.SettingView"
-             >
+             StartupUri="Sources/MVVM/Views/MainNavigationView/MainNavigationView.xaml">
     <Application.Resources>
         <DataTemplate DataType="{x:Type TypeName=mainView:MainViewModel}">
             <mainView:MainView/>

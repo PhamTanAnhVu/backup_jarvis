@@ -48,7 +48,7 @@ namespace Jarvis_Windows
 
             MainView mainView = DependencyInjection.GetService<MainView>();
             SettingView settingView = DependencyInjection.GetService<SettingView>();
-            mainView.Show();
+            //mainView.Show();
 
             DependencyInjection.GetService<PopupDictionaryService>().MainWindow = mainView;
 
