@@ -32,54 +32,54 @@
     <Window.DataContext>
         <local:MainNavigationViewModel/>
     </Window.DataContext>
-
+    
     <!--<Grid Visibility="{Binding IsShowMainNavigation, Converter={StaticResource VisibilityConverter}}">-->
     <Border Background="{StaticResource TailwindPrimary1}" Padding="{StaticResource Padding2}"
             Visibility="{Binding IsShowMainNavigation, Converter={StaticResource VisibilityConverter}}">
         <Grid Background="Transparent" Height="auto" Width="auto">
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="474"/>
-                    <ColumnDefinition Width="8"/>
-                    <ColumnDefinition Width="62"/>
-                </Grid.ColumnDefinitions>
-
-                <!--Main Content-->
+            <ColumnDefinition Width="8"/>
+            <ColumnDefinition Width="62"/>
+        </Grid.ColumnDefinitions>
+        
+        <!--Main Content-->
                 <UserControl x:Name="userControlMainContent" Grid.Column="0">
                     <ContentControl x:Name="PageContent"
                             Content="{Binding CurrentViewModel}" />
-                </UserControl>
-
-                <!--Navigation Bar-->
-                <Border Grid.Column="2" Background="White" CornerRadius="12">
+        </UserControl>
+        
+        <!--Navigation Bar-->
+        <Border Grid.Column="2" Background="White" CornerRadius="12">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <!--Top: Hide and Expand Button-->
+                <!--Top: Hide and Expand Button-->
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Width="auto" Height="44" HorizontalAlignment="Center">
                             <Button Width="20" Height="20" Margin="0 0 8 0" Style="{StaticResource JarvisPrimaryButton}"
                                     Command="{Binding CloseMainNavigationCommand}">
-                                <Button.Content>
+                        <Button.Content>
                                     <Path Fill="{StaticResource SolidColorBrushSlate500}" Data="M4.146 3.646a.5.5 0 0 0 0 .708L7.793 8l-3.647 3.646a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708 0M11.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5"/>
-                                </Button.Content>
-                            </Button>
+                        </Button.Content>
+                    </Button>
 
                             <Button Width="20" Height="20" Style="{StaticResource JarvisPrimaryButton}">
-                                <Button.Content>
+                        <Button.Content>
                                     <Path Fill="{StaticResource SolidColorBrushSlate500}" Data="M3.646 10.146a.5.5 0 0 1 .708 0L8 13.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708m0-4.292a.5.5 0 0 0 .708 0L8 2.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8"/>
-                                </Button.Content>
+                        </Button.Content>
                                 <Button.RenderTransform>
                                     <RotateTransform CenterX="10" CenterY="10" Angle="90" />
                                 </Button.RenderTransform>
-                            </Button>
-                        </StackPanel>
-
-                        <!--Navigation Items-->
+                    </Button>
+                </StackPanel>
+                
+                <!--Navigation Items-->
                         <StackPanel Grid.Row="1" Orientation="Vertical" Width="auto" Height="auto">
-                            <!--Item Chat-->
+                    <!--Item Chat-->
                             <Button x:Name="btnNavigateChat" Width="auto" Height="54"
                             Command="{Binding NavigateCommand}"
                             CommandParameter="{Binding ElementName=btnNavigateChat}"
@@ -90,7 +90,7 @@
                                             <ColumnDefinition Width="50"/>
                                             <ColumnDefinition Width="4"/>
                                         </Grid.ColumnDefinitions>
-
+                        
                                         <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
                                             <Path HorizontalAlignment="Center" 
                                           VerticalAlignment="Center"
@@ -130,9 +130,9 @@
                                         </Border>
                                     </Grid>
                                 </Button.Content>
-                            </Button>
-
-                            <!--Item Read-->
+                    </Button>
+                    
+                    <!--Item Read-->
                             <Button Name="btnNavigateRead" Width="auto" Height="54" Margin="0 10"
                         Command="{Binding NavigateCommand}"
                         CommandParameter="{Binding ElementName=btnNavigateRead}"
@@ -175,9 +175,9 @@
                                         </Border>
                                     </Grid>
                                 </Button.Content>
-                            </Button>
-
-                            <!--Item Search-->
+                    </Button>
+                    
+                    <!--Item Search-->
                             <Button Name="btnNavigateSearch" Width="auto" Height="54"
                                     Command="{Binding NavigateCommand}"
                                     CommandParameter="{Binding ElementName=btnNavigateSearch}"
@@ -220,9 +220,9 @@
                                         </Border>
                                     </Grid>
                                 </Button.Content>
-                            </Button>
-
-                            <!--Item Write-->
+                    </Button>
+                    
+                    <!--Item Write-->
                             <Button Name="btnNavigateWrite" Width="auto" Height="54" Margin="0 10"
                         Command="{Binding NavigateCommand}"
                         CommandParameter="{Binding ElementName=btnNavigateWrite}"
@@ -265,9 +265,9 @@
                                         </Border>
                                     </Grid>
                                 </Button.Content>
-                            </Button>
-
-                            <!--Item Translate-->
+                    </Button>
+                    
+                    <!--Item Translate-->
                             <Button x:Name="btnNavigateTranslate" Width="auto" Height="54"
                             Command="{Binding NavigateCommand}"
                             CommandParameter="{Binding ElementName=btnNavigateTranslate}"
@@ -308,7 +308,7 @@
                                            FontFamily="Inter"
                                            FontWeight="SemiBold"/>
                                         </StackPanel>
-
+                        
                                         <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
                                             <Border.Background>
                                                 <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
@@ -319,9 +319,9 @@
                                         </Border>
                                     </Grid>
                                 </Button.Content>
-                            </Button>
-
-                            <!--Item Art-->
+                    </Button>
+                    
+                    <!--Item Art-->
                             <Button x:Name="btnNavigateArt" Width="auto" Height="54" Margin="0 10"
                         Command="{Binding NavigateCommand}"
                         CommandParameter="{Binding ElementName=btnNavigateArt}"
@@ -363,10 +363,10 @@
                                         </Border>
                                     </Grid>
                                 </Button.Content>
-                            </Button>
-                        </StackPanel>
+                    </Button>
+                </StackPanel>
 
-                        <!--Option Items-->
+                <!--Option Items-->
                         <StackPanel Grid.Row="2" VerticalAlignment="Bottom" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}"
                                     Width="auto">
                             <!--Item More Info-->
@@ -383,7 +383,7 @@
                                         </Viewbox>
                                     </Button.Content>
                                 </Button>
-
+                        
                                 <Popup Placement="Left" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
                                        PlacementTarget="{Binding ElementName=btnNavigateDownloadApp}" VerticalOffset="5" HorizontalOffset="-7"
                                        IsOpen="{Binding ElementName=btnNavigateDownloadApp, Path=IsMouseOver, Mode=OneWay}">
@@ -407,7 +407,7 @@
                                             </Grid>
                                         </Viewbox>
                                     </Button.Content>
-                                </Button>
+                    </Button>
 
                                 <Popup Placement="Left" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
                                        PlacementTarget="{Binding ElementName=btnNavigateMoreInfo}" VerticalOffset="5" HorizontalOffset="-7"
@@ -419,7 +419,7 @@
                                 </Popup>
                             </Grid>
 
-                            <!--Item Settings-->
+                    <!--Item Settings-->
                             <Grid>
                                 <Button x:Name="btnNavigateSettings" Width="32" Height="32"
                                     Command="{Binding NavigatesCommand}"
@@ -434,7 +434,7 @@
                                         </Viewbox>
                                     </Button.Content>
                                 </Button>
-
+ 
                                 <Popup Placement="Left" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
                                        PlacementTarget="{Binding ElementName=btnNavigateSettings}" VerticalOffset="5" HorizontalOffset="-7"
                                        IsOpen="{Binding ElementName=btnNavigateSettings, Path=IsMouseOver, Mode=OneWay}">
@@ -445,7 +445,7 @@
                                 </Popup>
                             </Grid>
 
-                            <!--Item Profile-->
+                    <!--Item Profile-->
                             <Button x:Name="btnNavigateProfile" Command="{Binding LoginCommand}"
                                     Style="{StaticResource ProfileButton}">
                                 <Button.Content>
@@ -456,12 +456,12 @@
                                                    Foreground="White"/>
                                     </Grid>
                                 </Button.Content>
-                            </Button>
-                        </StackPanel>
+                    </Button>
+                </StackPanel>
                     </Grid>
-                </Border>
+        </Border>
             </Grid>
-
+        
             <Popup x:Name="aIChatBubblePopup" Placement="Absolute"
                    HorizontalOffset="auto"
                    VerticalOffset="auto"
@@ -474,7 +474,7 @@
                    PreviewMouseUp="MouseUp">
                 <aIChatBubble:AIChatBubbleView/>
             </Popup>
-        </Grid>
+    </Grid>
     </Border>
 
 </Window>

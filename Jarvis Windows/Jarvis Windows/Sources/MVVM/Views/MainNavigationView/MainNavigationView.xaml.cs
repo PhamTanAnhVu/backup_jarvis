@@ -12,12 +12,18 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 using Point = System.Windows.Point;
 
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 {
+    /// <summary>
+    /// Interaction logic for MainNavigationView.xaml
+    /// </summary>
     public partial class MainNavigationView : Window
     {
         private bool _isBubbleClicked = false;
