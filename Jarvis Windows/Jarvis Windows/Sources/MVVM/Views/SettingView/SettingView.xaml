@@ -28,7 +28,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="10"/>
-                <RowDefinition Height="25"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="25"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -62,21 +62,21 @@
                          FontSize="18" FontWeight="Bold" Text="{Binding LabelName}"/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Margin="0 0 0 0"
+                    <Button Margin="0 0 0 0" Width="30" Height="30"
                             Style="{StaticResource JarvisNomalButton}"
                             Click="HideWindow_Click">
                         <Button.Content>
                             <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" 
-                            Kind="Minimize" Width="24" Height="24" VerticalAlignment="Center"/>
+                            Kind="Minimize" Width="20" Height="20" VerticalAlignment="Center"/>
                         </Button.Content>
                     </Button>
 
-                    <Button Margin="10 0 15 0"
+                    <Button Margin="10 0 15 0" Width="30" Height="30"
                             Style="{StaticResource JarvisNomalButton}"
                             Click="CloseWindow_Click">
                         <Button.Content>
                             <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" 
-                                                Kind="Close" Width="24" Height="24" VerticalAlignment="Center" />
+                                                Kind="Close" Width="20" Height="20" VerticalAlignment="Center" />
                         </Button.Content>
                     </Button>
                 </StackPanel>
@@ -87,7 +87,7 @@
                 <Rectangle Height="1" Fill="#1450A3" Margin="0 -5 0 0" Opacity="0.3"/>
             </Grid>
 
-            <Grid Grid.Row="3" Grid.Column="0" Background="#FAFAFA">
+            <Grid Grid.Row="3" Grid.Column="0" Background="Transparent">
                 <ItemsControl ItemsSource="{Binding Settings}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>

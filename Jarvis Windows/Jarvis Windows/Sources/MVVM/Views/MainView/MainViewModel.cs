@@ -997,12 +997,15 @@ public class MainViewModel : ViewModelBase
     public async void ExecuteTextMenuAICommand(object obj)
     {
         int idx = 0;
-        try 
+        if (obj is int)
         {
             idx = (int)obj;
         }
-        catch { idx = int.Parse((string)obj); }
-        
+        else if (obj is string)
+        {
+            idx = int.Parse(obj.ToString());
+        }
+
         if (!PopupDictionaryService.IsShowPinTextMenuAPI)
         {
             PopupDictionaryService.TextMenuAPIPosition = new System.Drawing.Point
@@ -1081,11 +1084,16 @@ public class MainViewModel : ViewModelBase
     {      
         string[] colors = { "Transparent", "#6841EA" };
         int idx = 0;
-        try 
+
+        if(obj is int)
         {
-            idx = (int)obj; 
+            idx = (int)obj;
         }
-        catch { idx = int.Parse((string)obj); }
+        else if(obj is string)
+        {
+            idx = int.Parse(obj.ToString());
+        }
+
         if (idx == -1)
         {
             PopupDictionaryService.IsShowPinTextMenuAPI = !PopupDictionaryService.IsShowPinTextMenuAPI;
@@ -1379,14 +1387,15 @@ public class MainViewModel : ViewModelBase
 
         IDataObject? tmpClipboard = RetryGetClipboardObject().Result;
         if (tmpClipboard == null) return;
+        System.Windows.Clipboard.Clear();
+
+        await Task.Delay(50);
+        System.Windows.Forms.SendKeys.SendWait("^c");
 
         try
         {
-            /*if (System.Windows.Clipboard.ContainsText())*/
+            if (System.Windows.Clipboard.ContainsText())
             {
-                // Send Ctrl+C, which is "copy"
-                System.Windows.Clipboard.Clear();
-                System.Windows.Forms.SendKeys.SendWait("^c");
                 UIElementDetector.CurrentSelectedText = Clipboard.GetText();
                 
                 double screenHeight = SystemParameters.PrimaryScreenHeight;
@@ -1396,24 +1405,28 @@ public class MainViewModel : ViewModelBase
                 System.Drawing.Point lpPoint;
                 NativeUser32API.GetCursorPos(out lpPoint);
                 Point selectedTextPosition = new Point((int)(lpPoint.X * xScale), (int)(lpPoint.Y * yScale));
-                _popupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
+                PopupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
                 Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 50);
-                _popupDictionaryService.PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);
-                if (!_popupDictionaryService.IsShowPinTextMenuAPI)
+                PopupDictionaryService.PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);
+                if (!PopupDictionaryService.IsShowPinTextMenuAPI)
                 {
-                    _popupDictionaryService.ShowSelectionResponseView(false);
-                    _popupDictionaryService.TextMenuAPIPosition = new Point(newPosition.X, newPosition.Y);
+                    PopupDictionaryService.ShowSelectionResponseView(false);
+                    PopupDictionaryService.TextMenuAPIPosition = new Point(newPosition.X, newPosition.Y);
                 }
 
                 PopupDictionaryService.ShowMenuSelectionActions(true);
                 await SendEventGA4.SendEvent("inject_selection_actions");
             }
-            /*else
+            else
             {
                 System.Windows.Clipboard.SetDataObject(tmpClipboard);
-            }*/
+            }
         }
-        catch { }
+        catch
+        {
+            PopupDictionaryService.ShowMenuSelectionActions(false);
+            PopupDictionaryService.ShowSelectionResponseView(false);
+        }
     }  
 
     protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)

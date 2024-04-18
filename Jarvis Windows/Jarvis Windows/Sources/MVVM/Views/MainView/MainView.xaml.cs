@@ -51,6 +51,7 @@ public partial class MainView : Window
         _notifyIcon.Icon = new Icon(fullPath);
         _notifyIcon.MouseClick += NotifyIcon_MouseClick;
         _notifyIcon.Visible = true;
+        _notifyIcon.ContextMenuStrip = new CustomContextMenuView();
     }
 
     private async void NotifyIcon_MouseClick(object? sender, System.Windows.Forms.MouseEventArgs e)
@@ -63,13 +64,6 @@ public partial class MainView : Window
                 await SendEventGA4.SendEvent("open_main_window");
 
             _isMainWindowOpened = true;
-        }
-        else if (e.Button == MouseButtons.Right)
-        {
-            if(_notifyIcon.ContextMenuStrip == null)
-            {
-                _notifyIcon.ContextMenuStrip = new CustomContextMenuView(PopupDictionaryService, SendEventGA4);
-            }
         }
     }
 

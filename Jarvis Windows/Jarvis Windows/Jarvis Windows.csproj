@@ -73,6 +73,7 @@
 
   <ItemGroup>
     <!--<None Remove="Assets\Icons\jarvis_icon.png" />-->
+    <None Remove="AppSettings\Configs\blocked_list.json" />
     <None Remove="AppSettings\Configs\supported_apps.json" />
     <None Remove="Assets\Icons\jarvis_icon.ico" />
     <None Remove="Assets\Icons\jarvis_logo_large.ico" />
@@ -94,6 +95,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="AppSettings\Configs\blocked_list.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="AppSettings\Configs\supported_apps.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

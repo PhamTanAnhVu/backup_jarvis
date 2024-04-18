@@ -173,10 +173,8 @@ public class UIElementDetector
     private static void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
     {
         AutomationElement? newFocusElement = sender as AutomationElement;
-        //if (newFocusElement != null)
-        //    RegisterSelectionChangedFor(newFocusElement);
         
-        string appName = GetActiveWindowTitle();
+        /*string appName = GetActiveWindowTitle();
         if (_supportedAppSerice != null)
         {
             if (!_supportedAppSerice.IsSupportedInjectionApp(appName) &&
@@ -186,7 +184,7 @@ public class UIElementDetector
                 _popupDictionaryService.ShowMenuOperations(false);
                 return;
             }
-        }
+        }*/
 
         if (newFocusElement != null && newFocusElement != _focusingElement)
         {

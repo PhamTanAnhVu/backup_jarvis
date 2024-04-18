@@ -9,14 +9,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
 {
     public class CustomContextMenuView : ContextMenuStrip
     {
-        public PopupDictionaryService PopupDictionaryService { get; }
-        public SendEventGA4 SendEventGA4 { get; }
+        private SendEventGA4 _googleAnalytic;
 
-        public CustomContextMenuView(PopupDictionaryService popupDictionaryService, SendEventGA4 sendEventGA4)
+        public CustomContextMenuView()
         {
-            PopupDictionaryService = popupDictionaryService;
-            SendEventGA4 = sendEventGA4;
             DecorateMenuItems();
+            _googleAnalytic = DependencyInjection.GetService<SendEventGA4>();
         }
 
         private void DecorateMenuItems()
@@ -34,7 +32,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
             EventAggregator.PublishAIChatBubbleStatusChanged(this, EventArgs.Empty);
         }
 
-
         private void Setting_Click(object? sender, EventArgs e)
         {
             EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
@@ -44,13 +41,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
         {
             try
             {
-                await SendEventGA4.SendEvent("quit_app");
+                await _googleAnalytic.SendEvent("quit_app");
                 Process.GetCurrentProcess().Kill();
             }
-
-            catch (Exception ex)
+            catch
             {
-                System.Windows.MessageBox.Show(ex.Message);
+                Process.GetCurrentProcess().Kill();
             }
         }
     }
