@@ -1,0 +1,306 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--=====================================START Textblock============================================-->
+    <!-- Header TextBlock Style -->
+    <Style x:Key="BaseHeader_TextblockStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <Style x:Key="Header_Textblock1" BasedOn="{StaticResource BaseHeader_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="34"/>
+        <Setter Property="LineHeight" Value="1.3"/>
+    </Style>
+
+    <Style x:Key="Header_Textblock2" BasedOn="{StaticResource BaseHeader_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="26"/>
+        <Setter Property="LineHeight" Value="1.35"/>
+    </Style>
+
+    <Style x:Key="Header_Textblock3" BasedOn="{StaticResource BaseHeader_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="LineHeight" Value="1.4"/>
+    </Style>
+
+    <Style x:Key="Header_Textblock4" BasedOn="{StaticResource BaseHeader_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="LineHeight" Value="1.45"/>
+    </Style>
+
+    <Style x:Key="Header_Textblock5" BasedOn="{StaticResource BaseHeader_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="LineHeight" Value="1.5"/>
+    </Style>
+
+    <Style x:Key="Header_Textblock6" BasedOn="{StaticResource BaseHeader_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="LineHeight" Value="1.5"/>
+    </Style>
+
+    <!--Normal Textblock Style-->
+    <Style x:Key="BaseText_TextblockStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="LineHeight" Value="1.55"/>
+    </Style>
+
+    <!--Extra Small Textblock-->
+    <Style x:Key="XsTextblock400" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+    
+    <Style x:Key="XsTextblock500" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+     
+    <Style x:Key="XsTextblock600" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+     
+    <Style x:Key="XsTextBlock700" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+ 
+    <!--Small Textblock-->
+    <Style x:Key="SmTextblock400" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+    
+    <Style x:Key="SmTextblock500" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+     
+    <Style x:Key="SmTextblock600" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+     
+    <Style x:Key="SmTextBlock700" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    
+    <!--Medium Textblock-->
+    <Style x:Key="MdTextblock400" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+    
+    <Style x:Key="MdTextblock500" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+     
+    <Style x:Key="MdTextblock600" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+     
+    <Style x:Key="MdTextBlock700" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    
+    <!--Large Textblock-->
+    <Style x:Key="LgTextblock400" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+    
+    <Style x:Key="LgTextblock500" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+     
+    <Style x:Key="LgTextblock600" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+     
+    <Style x:Key="LgTextBlock700" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    
+    <!--Extra Large Textblock-->
+    <Style x:Key="XlTextblock400" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+    
+    <Style x:Key="XlTextblock500" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+     
+    <Style x:Key="XlTextblock600" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+     
+    <Style x:Key="XlTextBlock700" BasedOn="{StaticResource BaseText_TextblockStyle}" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <!--======================================END Textblock=============================================-->
+
+    <!--======================================START TextBox=============================================-->
+    <!-- Header TextBox Style -->
+    <Style x:Key="BaseHeader_TextBoxStyle" TargetType="TextBox">
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <Style x:Key="Header_TextBox1" BasedOn="{StaticResource BaseHeader_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="34"/>
+    </Style>
+
+    <Style x:Key="Header_TextBox2" BasedOn="{StaticResource BaseHeader_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="26"/>
+    </Style>
+
+    <Style x:Key="Header_TextBox3" BasedOn="{StaticResource BaseHeader_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="22"/>
+    </Style>
+
+    <Style x:Key="Header_TextBox4" BasedOn="{StaticResource BaseHeader_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="18"/>
+    </Style>
+
+    <Style x:Key="Header_TextBox5" BasedOn="{StaticResource BaseHeader_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+
+    <Style x:Key="Header_TextBox6" BasedOn="{StaticResource BaseHeader_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!--Normal TextBox Style-->
+    <Style x:Key="BaseText_TextBoxStyle" TargetType="TextBox">
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <!--Extra Small TextBox-->
+    <Style x:Key="XsTextBox400" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+
+    <Style x:Key="XsTextBox500" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+    <Style x:Key="XsTextBox600" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style x:Key="XsTextBox700" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <!--Small TextBox-->
+    <Style x:Key="SmTextBox400" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+
+    <Style x:Key="SmTextBox500" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+    <Style x:Key="SmTextBox600" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style x:Key="SmTextBox700" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <!--Medium TextBox-->
+    <Style x:Key="MdTextBox400" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+
+    <Style x:Key="MdTextBox500" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+    <Style x:Key="MdTextBox600" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style x:Key="MdTextBox700" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <!--Large TextBox-->
+    <Style x:Key="LgTextBox400" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+
+    <Style x:Key="LgTextBox500" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+    <Style x:Key="LgTextBox600" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style x:Key="LgTextBox700" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <!--Extra Large TextBox-->
+    <Style x:Key="XlTextBox400" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+    </Style>
+
+    <Style x:Key="XlTextBox500" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+    <Style x:Key="XlTextBox600" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style x:Key="XlTextBox700" BasedOn="{StaticResource BaseText_TextBoxStyle}" TargetType="TextBox">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    <!--=======================================END TextBox==============================================-->
+
+</ResourceDictionary>

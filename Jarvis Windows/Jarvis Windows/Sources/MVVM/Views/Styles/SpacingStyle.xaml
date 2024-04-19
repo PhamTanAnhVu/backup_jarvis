@@ -1,0 +1,217 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Border Radius Styles -->
+    <Style x:Key="BorderRadiusNone" TargetType="Border">
+        <Setter Property="CornerRadius" Value="0"/>
+    </Style>
+
+    <Style x:Key="BorderRadiusSm" TargetType="Border">
+        <Setter Property="CornerRadius" Value="2"/>
+    </Style>
+
+    <Style x:Key="BorderRadius" TargetType="Border">
+        <Setter Property="CornerRadius" Value="4"/>
+    </Style>
+
+    <Style x:Key="BorderRadiusMd" TargetType="Border">
+        <Setter Property="CornerRadius" Value="6"/>
+    </Style>
+
+    <Style x:Key="BorderRadiusLg" TargetType="Border">
+        <Setter Property="CornerRadius" Value="8"/>
+    </Style>
+
+    <Style x:Key="BorderRadiusXl" TargetType="Border">
+        <Setter Property="CornerRadius" Value="12"/>
+    </Style>
+
+    <Style x:Key="BorderRadius2Xl" TargetType="Border">
+        <Setter Property="CornerRadius" Value="16"/>
+    </Style>
+
+    <Style x:Key="BorderRadius3Xl" TargetType="Border">
+        <Setter Property="CornerRadius" Value="24"/>
+    </Style>
+
+    <Style x:Key="BorderRadiusFull" TargetType="Border">
+        <Setter Property="CornerRadius" Value="9999"/>
+    </Style>
+
+    <!-- Padding Styles -->
+    <Style x:Key="Spacing0" TargetType="Border">
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
+    <Style x:Key="Spacing0.5" TargetType="Border">
+        <Setter Property="Padding" Value="2"/>
+    </Style>
+
+    <Style x:Key="Spacing1" TargetType="Border">
+        <Setter Property="Padding" Value="4"/>
+    </Style>
+
+    <Style x:Key="Spacing1.5" TargetType="Border">
+        <Setter Property="Padding" Value="6"/>
+    </Style>
+
+    <Style x:Key="Spacing2" TargetType="Border">
+        <Setter Property="Padding" Value="8"/>
+    </Style>
+
+    <Style x:Key="Spacing2.5" TargetType="Border">
+        <Setter Property="Padding" Value="10"/>
+    </Style>
+
+    <Style x:Key="Spacing3" TargetType="Border">
+        <Setter Property="Padding" Value="12"/>
+    </Style>
+
+    <Style x:Key="Spacing3.5" TargetType="Border">
+        <Setter Property="Padding" Value="14"/>
+    </Style>
+
+    <Style x:Key="Spacing4" TargetType="Border">
+        <Setter Property="Padding" Value="16"/>
+    </Style>
+
+    <Style x:Key="Spacing4.5" TargetType="Border">
+        <Setter Property="Padding" Value="18"/>
+    </Style>
+
+    <Style x:Key="Spacing5" TargetType="Border">
+        <Setter Property="Padding" Value="20"/>
+    </Style>
+
+    <Style x:Key="Spacing5.5" TargetType="Border">
+        <Setter Property="Padding" Value="22"/>
+    </Style>
+
+    <Style x:Key="Spacing6" TargetType="Border">
+        <Setter Property="Padding" Value="24"/>
+    </Style>
+
+    <Style x:Key="Spacing6.5" TargetType="Border">
+        <Setter Property="Padding" Value="26"/>
+    </Style>
+
+    <Style x:Key="Spacing7" TargetType="Border">
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+
+    <Style x:Key="Spacing7.5" TargetType="Border">
+        <Setter Property="Padding" Value="30"/>
+    </Style>
+
+    <Style x:Key="Spacing8" TargetType="Border">
+        <Setter Property="Padding" Value="32"/>
+    </Style>
+
+    <Style x:Key="Spacing8.5" TargetType="Border">
+        <Setter Property="Padding" Value="34"/>
+    </Style>
+
+    <Style x:Key="Spacing9" TargetType="Border">
+        <Setter Property="Padding" Value="36"/>
+    </Style>
+
+    <Style x:Key="Spacing9.5" TargetType="Border">
+        <Setter Property="Padding" Value="38"/>
+    </Style>
+
+    <Style x:Key="Spacing10" TargetType="Border">
+        <Setter Property="Padding" Value="40"/>
+    </Style>
+
+
+    <!-- Grid Row Gap Styles -->
+    <Style x:Key="RowGapSpacing0" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 0 0"/>
+    </Style>
+
+    <Style x:Key="RowGapSpacing0.5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 2 0"/>
+    </Style>
+
+    <Style x:Key="RowGapSpacing1" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 4 0"/>
+    </Style>
+
+    <Style x:Key="RowGapSpacing1.5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 6 0"/>
+    </Style>
+
+    <Style x:Key="RowGapSpacing2" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 8 0"/>
+    </Style>
+
+    <Style x:Key="RowGapSpacing2.5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 10 0"/>
+    </Style>
+
+    <Style x:Key="RowGapSpacing3" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 12 0"/>
+    </Style>
+
+    <Style x:Key="RowGapSpacing3.5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 14 0"/>
+    </Style>
+
+    <Style x:Key="RowGapSpacing4" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 16 0"/>
+    </Style>
+
+    <Style x:Key="RowGapSpacing4.5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 18 0"/>
+    </Style>
+
+    <Style x:Key="RowGapSpacing5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 20 0"/>
+    </Style>
+
+    <!-- Grid Column Gap Styles -->
+    <Style x:Key="ColumnGapSpacing0" TargetType="Grid">
+        <Setter Property="Margin" Value="0 0 0 0"/>
+    </Style>
+
+    <Style x:Key="ColumnGapSpacing0.5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 2 0 0"/>
+    </Style>
+
+    <Style x:Key="ColumnGapSpacing1" TargetType="Grid">
+        <Setter Property="Margin" Value="0 4 0 0"/>
+    </Style>
+
+    <Style x:Key="ColumnGapSpacing1.5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 6 0 0"/>
+    </Style>
+
+    <Style x:Key="ColumnGapSpacing2" TargetType="Grid">
+        <Setter Property="Margin" Value="0 8 0 0"/>
+    </Style>
+
+    <Style x:Key="ColumnGapSpacing2.5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 10 0 0"/>
+    </Style>
+
+    <Style x:Key="ColumnGapSpacing3" TargetType="Grid">
+        <Setter Property="Margin" Value="0 12 0 0"/>
+    </Style>
+
+    <Style x:Key="ColumnGapSpacing3.5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 14 0 0"/>
+    </Style>
+
+    <Style x:Key="ColumnGapSpacing4" TargetType="Grid">
+        <Setter Property="Margin" Value="0 16 0 0"/>
+    </Style>
+
+    <Style x:Key="ColumnGapSpacing4.5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 18 0 0"/>
+    </Style>
+
+    <Style x:Key="ColumnGapSpacing5" TargetType="Grid">
+        <Setter Property="Margin" Value="0 20 0 0"/>
+    </Style>
+
+</ResourceDictionary>
