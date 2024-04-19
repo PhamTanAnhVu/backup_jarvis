@@ -21,9 +21,9 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <vm:MenuInjectionActionsViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
 
     <Border CornerRadius="20" BorderBrush="White" BorderThickness="2.5" Padding="10.4">
         <Border.Background>

@@ -6,7 +6,13 @@
 //using System.Windows.Controls;
 //using System.Windows;
 
-//namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
+using Jarvis_Windows.Sources.Utils.Core;
+
+namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
+public class AIChatSidebarViewModel : ViewModelBase
+{
+
+}
 
 //public class AIChatSidebarViewModel : ViewModelBase
 //{

@@ -15,7 +15,7 @@
         <mainView:MainView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type viewModel:SideBarChatViewModel}">
+    <DataTemplate DataType="{x:Type chatAI:AIChatSidebarViewModel}">
         <chatAI:AIChatSidebarView/>
     </DataTemplate>
 

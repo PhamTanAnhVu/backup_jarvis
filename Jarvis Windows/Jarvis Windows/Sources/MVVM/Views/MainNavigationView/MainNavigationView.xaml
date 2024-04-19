@@ -80,7 +80,6 @@
                                 <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
                                     <Path HorizontalAlignment="Center" 
                                           VerticalAlignment="Center"
-                                          Fill="{StaticResource SolidColorBrushSlate500}" 
                                           Data="M26 12C26 17.3157 21.0751 21.625 15 21.625C13.877 21.625 12.7932 21.4777 
                                           11.7727 21.2041C10.9699 21.6109 9.12564 22.3928 6.02362 22.9007C5.74997 22.9455 
                                           5.5405 22.6592 5.6486 22.4038C6.13549 21.2536 6.57469 19.7222 6.70845 18.3251C5.02171 
@@ -89,13 +88,20 @@
                                           20.5 8.9422 20.5 8.5625C20.5 8.1828 20.1922 7.875 19.8125 7.875H10.1875ZM10.1875 11.3125C9.8078 11.3125 
                                           9.5 11.6203 9.5 12C9.5 12.3797 9.8078 12.6875 10.1875 12.6875H19.8125C20.1922 12.6875 20.5 12.3797 20.5 
                                           12C20.5 11.6203 20.1922 11.3125 19.8125 11.3125H10.1875ZM10.1875 14.75C9.8078 14.75 9.5 15.0578 9.5 15.4375C9.5 
-                                          15.8172 9.8078 16.125 10.1875 16.125H15.6875C16.0672 16.125 16.375 15.8172 16.375 15.4375C16.375 15.0578 16.0672 14.75 15.6875 14.75H10.1875Z"/>
+                                          15.8172 9.8078 16.125 10.1875 16.125H15.6875C16.0672 16.125 16.375 15.8172 16.375 15.4375C16.375 15.0578 16.0672 14.75 15.6875 14.75H10.1875Z">
+                                        <Path.Fill>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#0078D4" Offset="1"/>
+                                                <GradientStop Color="#9692FF" Offset="0"/>
+                                            </LinearGradientBrush>
+                                        </Path.Fill>
+                                    </Path>
 
                                     <TextBlock Text="Chat"
                                                Margin="0 5 0 0"
                                                HorizontalAlignment="Center" 
                                                VerticalAlignment="Center" 
-                                               FontSize="10" Foreground="{StaticResource SolidColorBrushSlate500}"
+                                               FontSize="10" Foreground="#0078D4"
                                                FontFamily="Inter"
                                                FontWeight="SemiBold"/> 
                                 </StackPanel>
@@ -306,7 +312,7 @@
                         </Button.Content>
                     </Button>
                 </StackPanel>
-
+    
                 <!--Option Items-->
                 <StackPanel Orientation="Vertical" Width="auto" Height="auto">
                     <!--Item More Info-->

@@ -7,6 +7,7 @@ using Jarvis_Windows.Sources.MVVM.Views.AIWrite;
 using Jarvis_Windows.Sources.MVVM.Views.MoreInfo;
 using Jarvis_Windows.Sources.MVVM.Views.Profile;
 using Jarvis_Windows.Sources.MVVM.Views.Settings;
+using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 using Jarvis_Windows.Sources.Utils.Core;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 {
     public class MainNavigationViewModel : ViewModelBase
     {
-        //Default view model
-        private object _currentViewModel = new SideBarChatViewModel();
+        private object _currentViewModel = new AIChatSidebarViewModel(); //Default view model
         private Dictionary<string, object> _viewModels = new Dictionary<string, object>();
 
         public object CurrentViewModel
@@ -40,8 +40,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         {
             NavigateCommand = new RelayCommand(OnNavigate, o => true);
 
-            //Add all view models to the dictionary
-            _viewModels.Add("Chat", new SideBarChatViewModel());
+            _viewModels.Add("Chat", new AIChatSidebarViewModel());
             _viewModels.Add("Read", new AIReadViewModel()); 
             _viewModels.Add("Search", new AISearchViewModel());
             _viewModels.Add("Write", new AIWriteViewModel());
@@ -54,15 +53,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
         private void OnNavigate(object obj)
         {
-            //Separate parameter from the view name
             Button? pressedButton = obj as Button;
             if(pressedButton != null)
             {
                 string token = "btnNavigate";
                 string targetViewModel = pressedButton.Name.ToString().Substring(token.Length);
-                Debug.WriteLine(targetViewModel);
 
-                //Change the current view model
                 if(_viewModels.ContainsKey(targetViewModel))
                     CurrentViewModel = _viewModels[targetViewModel];
             }
