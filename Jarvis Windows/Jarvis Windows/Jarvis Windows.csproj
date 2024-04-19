@@ -79,6 +79,7 @@
     <None Remove="Assets\Icons\jarvis_logo_large.ico" />
     <None Remove="Assets\Images\close.png" />
     <None Remove="Assets\Images\cross.png" />
+    <None Remove="Assets\Images\default-avatar.png" />
     <None Remove="Assets\Images\guideline1.png" />
     <None Remove="Assets\Images\guideline2.png" />
     <None Remove="Assets\Images\jarvis_logo.png" />
@@ -185,6 +186,9 @@
   <ItemGroup>
     <Resource Include="Assets\Images\close.png" />
     <Resource Include="Assets\Images\cross.png" />
+    <Resource Include="Assets\Images\default-avatar.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Assets\Images\guideline1.png" />
     <Resource Include="Assets\Images\guideline2.png" />
     <Resource Include="Assets\Images\jarvis_logo.png">
