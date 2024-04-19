@@ -16,6 +16,6 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 namespace Jarvis_Windows.Sources.MVVM.Views.AIRead;
 
 public class AIReadViewModel : ViewModelBase
-{
+    {
     
 }

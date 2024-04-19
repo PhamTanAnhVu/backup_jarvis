@@ -27,7 +27,7 @@
 
             <Grid Grid.Row="0" Background="Transparent" VerticalAlignment="Top">
                 <!--<TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"
-                            FontSize="20" FontWeight="Bold">
+                           FontSize="20" FontWeight="Bold">
                     AI Art
                 </TextBlock>-->
             </Grid>

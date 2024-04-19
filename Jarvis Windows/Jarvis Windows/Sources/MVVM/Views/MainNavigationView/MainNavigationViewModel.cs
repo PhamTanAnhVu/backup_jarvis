@@ -1,4 +1,5 @@
-﻿using Jarvis_Windows.Sources.MVVM.Views.AIArt;
+﻿using Jarvis_Windows.Sources.MVVM.ViewModels;
+using Jarvis_Windows.Sources.MVVM.Views.AIArt;
 using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 using Jarvis_Windows.Sources.MVVM.Views.AISearch;
 using Jarvis_Windows.Sources.MVVM.Views.AITranslate;
@@ -344,7 +345,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                     if (!string.IsNullOrEmpty(page))
                     {
                         NavigateCommand.Execute(page);
-                    }
+        }
                     break;
             }
         }
@@ -356,6 +357,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             {
                 string token = "btnNavigate";
                 string targetViewModel = pressedButton.Name.ToString().Substring(token.Length);
+                Debug.WriteLine(targetViewModel);
 
                 if (_viewModels.ContainsKey(targetViewModel))
                     CurrentViewModel = _viewModels[targetViewModel];

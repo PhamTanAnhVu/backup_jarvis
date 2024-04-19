@@ -26,15 +26,17 @@ using Windows.ApplicationModel.Background;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.AIRead;
 
-/// <summary>
-/// Interaction logic for AIReadView.xaml
-/// </summary>
-public partial class AIReadView : UserControl
+namespace Jarvis_Windows.Sources.MVVM.Views.AIRead
 {
-    public AIReadView()
+    /// <summary>
+    /// Interaction logic for AIReadView.xaml
+    /// </summary>
+    public partial class AIReadView : UserControl
     {
-        InitializeComponent();
+        public AIReadView()
+        {
+            InitializeComponent();
+        }
     }
-}
 
 
