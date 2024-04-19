@@ -8,7 +8,8 @@
         xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
         xmlns:li="http://github.com/zeluisping/loadingIndicators/xaml/controls"
         mc:Ignorable="d"
-        Height="Auto" Width="520">
+        Height="Auto" Width="490"
+        Style="{StaticResource Page_Style}">
 
     <UserControl.Resources>
         <ResourceDictionary>

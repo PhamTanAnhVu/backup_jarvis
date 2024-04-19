@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.AISearch.AISearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AISearch"
+             mc:Ignorable="d" 
+             d:DesignHeight="750" d:DesignWidth="490"
+             Style="{StaticResource Page_Style}">
+    <Border CornerRadius="20" BorderBrush="White" BorderThickness="1">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                <LinearGradientBrush.RelativeTransform>
+                    <TransformGroup>
+                        <RotateTransform CenterY="0.5" CenterX="0.5" Angle="111"/>
+                        <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                        <TranslateTransform Y="0.5"/>
+                    </TransformGroup>
+                </LinearGradientBrush.RelativeTransform>
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Color="#F2F6FC" Offset="0.1658"/>
+                    <GradientStop Color="#F1F5FC" Offset="0.1659"/>
+                    <GradientStop Color="#F2F6FC" Offset="0.1902"/>
+                    <GradientStop Color="#F2F6FC" Offset="0.1903"/>
+                    <GradientStop Color="#F0F5FC" Offset="0.1904"/>
+                    <GradientStop Color="#EEF4FC" Offset="0.2099"/>
+                    <GradientStop Color="#EEF4FC" Offset="0.21"/>
+                    <GradientStop Color="#ECF2FB" Offset="0.2295"/>
+                    <GradientStop Color="#EBF1FB" Offset="0.2296"/>
+                    <GradientStop Color="#D7E7F8" Offset="1"/>
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="9*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Background="Transparent">
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       FontSize="20" FontWeight="Bold">
+                AI Search View
+                </TextBlock>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>
