@@ -365,7 +365,7 @@
                                 </Button.Content>
                     </Button>
                 </StackPanel>
-
+    
                 <!--Option Items-->
                         <StackPanel Grid.Row="2" VerticalAlignment="Bottom" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}"
                                     Width="auto">

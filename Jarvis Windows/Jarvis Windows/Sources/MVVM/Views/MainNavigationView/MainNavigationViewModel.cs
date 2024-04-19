@@ -357,7 +357,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             {
                 string token = "btnNavigate";
                 string targetViewModel = pressedButton.Name.ToString().Substring(token.Length);
-                Debug.WriteLine(targetViewModel);
 
                 if (_viewModels.ContainsKey(targetViewModel))
                     CurrentViewModel = _viewModels[targetViewModel];
