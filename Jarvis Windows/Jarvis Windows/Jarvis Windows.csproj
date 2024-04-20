@@ -267,7 +267,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Sources\MVVM\ViewModels\" />
     <Folder Include="Sources\MVVM\Views\MainView\" />
   </ItemGroup>
 

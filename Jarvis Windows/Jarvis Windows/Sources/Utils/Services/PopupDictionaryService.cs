@@ -16,8 +16,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using Point = System.Drawing.Point;
-using System.Windows.Threading;
-using System.Windows.Media.Animation;
+using Jarvis_Windows.Sources.MVVM.Views.MainView;
 
 namespace Jarvis_Windows.Sources.Utils.Services;
 
@@ -54,25 +53,8 @@ public class PopupDictionaryService : ObserveralObject
     private static String? _targetLanguage;
     private Point _automationElementVisualPos;
     private TextMenuViewModel? _textMenuViewModel = null;
-    private InjectionActionViewModel _injectionActionViewModel;
-    private MenuSelectionActionsViewModel _menuSelectionActionsViewModel;
-    private MenuSelectionResponseViewModel _menuSelectionResponseViewModel;
-    private MenuSelectionPopupListViewModel _menuSelectionPopupListViewModel;
-    private System.Windows.Point _jarvisButtonPoint;
-
-    //Popups 
-    private Popup? _injectionActionPopup;
-    private Popup? _menuinjectionActionsPopup;
-    private MenuInjectionActionsViewModel? _menuinjectionActionsViewModel;
-    private MenuInjectionActionsViewModel? _menuOperatorsViewModel;
-    private static PopupDictionaryService? _instance = null;
-
-
-    private Popup _menuSelectionActionsPopup;
-    private Popup _menuSelectionResponsePopup;
-    private Popup _menuSelectionPopupListPopup;
-
-    public static String TargetLangguage
+    
+    public static  String TargetLangguage
     {
         get { return _targetLanguage; }
         set
@@ -546,11 +528,10 @@ public class PopupDictionaryService : ObserveralObject
         horizontalBinding.Source = this;
         _menuSelectionPopupListPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
 
-        IsShowMenuSelectionPopupList = false;
-        Binding isOpenBinding = new Binding("IsShowMenuSelectionPopupList");
-        isOpenBinding.Source = this;
-        isOpenBinding.NotifyOnSourceUpdated = true;
-        _menuSelectionPopupListPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
+        JarvisActionPosition = new Point(0, 0);
+        MenuOperationsPosition = new Point(0, 0);
+        AIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right - 30), (int)(SystemParameters.WorkArea.Bottom - 30) / 2);
+        AIChatSidebarPosition = new Point((int)(SystemParameters.WorkArea.Right - 520), (int)(SystemParameters.WorkArea.Bottom - 700) / 2);
     }
 
     public void InitMenuInjectionActions()

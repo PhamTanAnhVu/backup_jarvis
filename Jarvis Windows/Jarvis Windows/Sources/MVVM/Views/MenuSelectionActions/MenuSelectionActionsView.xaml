@@ -78,7 +78,7 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="Button">
-                                        <Grid>
+    <Grid>
                                             <Border Background="{TemplateBinding Background}"
                                                 BorderThickness="{TemplateBinding BorderThickness}"
                                                 VerticalAlignment="{TemplateBinding VerticalAlignment}"
@@ -148,8 +148,8 @@
                     <popupTextMenu:PopupTextMenuView/>
                 </Popup>
             </Grid>
-
-        </Grid>
+            
+    </Grid>
     </Border>
 
 

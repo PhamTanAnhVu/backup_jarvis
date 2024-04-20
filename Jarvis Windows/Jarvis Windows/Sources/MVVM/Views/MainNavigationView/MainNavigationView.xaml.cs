@@ -21,9 +21,6 @@ using Point = System.Windows.Point;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 {
-    /// <summary>
-    /// Interaction logic for MainNavigationView.xaml
-    /// </summary>
     public partial class MainNavigationView : Window
     {
         private bool _isBubbleClicked = false;
