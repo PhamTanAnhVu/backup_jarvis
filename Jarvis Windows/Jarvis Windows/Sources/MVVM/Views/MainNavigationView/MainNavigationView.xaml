@@ -36,10 +36,10 @@
         </Grid.ColumnDefinitions>
         
         <!--Main Content-->
-        <UserControl Grid.Column="0"> 
+        <!--<UserControl Grid.Column="0"> 
             <ContentControl x:Name="PageContent"
                                 Content="{Binding CurrentViewModel}" />
-        </UserControl>
+        </UserControl>-->
         
         <!--Navigation Bar-->
         <Border Grid.Column="2" Background="White" CornerRadius="12">
@@ -49,13 +49,13 @@
                 <StackPanel Orientation="Horizontal" Width="auto" Height="44" HorizontalAlignment="Center">
                     <Button Width="20" Height="20" Margin="0 0 8 0" Style="{StaticResource JarvisPrimaryButton}">
                         <Button.Content>
-                            <Path Fill="#334155" Data="M4.146 3.646a.5.5 0 0 0 0 .708L7.793 8l-3.647 3.646a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708 0M11.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5"/>
+                            <Path Fill="{StaticResource SolidColorBrushSlate500}" Data="M4.146 3.646a.5.5 0 0 0 0 .708L7.793 8l-3.647 3.646a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708 0M11.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5"/>
                         </Button.Content>
                     </Button>
 
                     <Button Width="20" Height="20" Style="{StaticResource JarvisPrimaryButton}">
                         <Button.Content>
-                            <Path Fill="#334155" Data="M3.646 10.146a.5.5 0 0 1 .708 0L8 13.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708m0-4.292a.5.5 0 0 0 .708 0L8 2.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8"/>
+                            <Path Fill="{StaticResource SolidColorBrushSlate500}" Data="M3.646 10.146a.5.5 0 0 1 .708 0L8 13.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708m0-4.292a.5.5 0 0 0 .708 0L8 2.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8"/>
                         </Button.Content>
                         <Button.RenderTransform>
                             <RotateTransform CenterX="10" CenterY="10" Angle="90" />

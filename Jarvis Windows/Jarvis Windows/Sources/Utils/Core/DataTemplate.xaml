@@ -10,7 +10,8 @@
                     xmlns:aiWrite="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIWrite"
                     xmlns:moreInfo="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MoreInfo"
                     xmlns:settings="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Settings"
-                    xmlns:profile="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Profile">
+                    xmlns:profile="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Profile"
+                    xmlns:exhautedTokens="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.ExhaustedTokens">
     <DataTemplate DataType="{x:Type mainView:MainViewModel}">
         <mainView:MainView/>
     </DataTemplate>
@@ -50,5 +51,9 @@
     <DataTemplate DataType="{x:Type profile:ProfileViewModel}">
         <profile:ProfileView/>
     </DataTemplate>
-   
+
+    <DataTemplate DataType="{x:Type exhautedTokens:ExhautedTokensViewModel}">
+        <exhautedTokens:ExhaustedTokensView/>
+    </DataTemplate>
+
 </ResourceDictionary>

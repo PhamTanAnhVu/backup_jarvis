@@ -1,22 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Controls.Primitives;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 {
-    /// <summary>
-    /// Interaction logic for MainNavigationView.xaml
-    /// </summary>
     public partial class MainNavigationView : Window
     {
         public MainNavigationView()
@@ -26,6 +13,11 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             //Startup postion
             this.Left = SystemParameters.WorkArea.Width - this.Width;
             this.Top = (SystemParameters.WorkArea.Height - this.Height) / 2;
+
+            //Test injection popup
+            MenuInjectionActionsView.MenuInjectionActionsView menuInjectionActionsView = new MenuInjectionActionsView.MenuInjectionActionsView();
+            menuInjectionActionsView.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            menuInjectionActionsView.Show();
         }
     }
 }

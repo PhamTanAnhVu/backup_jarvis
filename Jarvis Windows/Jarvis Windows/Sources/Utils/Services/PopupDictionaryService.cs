@@ -10,6 +10,8 @@ using System.Windows.Automation;
 using System.Windows.Media;
 using Point = System.Drawing.Point;
 using Jarvis_Windows.Sources.MVVM.Views.MainView;
+using System.Windows.Controls.Primitives;
+using Jarvis_Windows.Sources.MVVM.Views.JarvisActionView;
 
 namespace Jarvis_Windows.Sources.Utils.Services;
 
@@ -38,6 +40,9 @@ public class PopupDictionaryService : ObserveralObject
     private static String? _targetLanguage;
     private Point _automationElementVisualPos;
     private TextMenuViewModel? _textMenuViewModel = null;
+
+    //Popups 
+    private Popup _injectionActionPopup;
     
     public static  String TargetLangguage
     {
@@ -235,6 +240,13 @@ public class PopupDictionaryService : ObserveralObject
         MenuOperationsPosition = new Point(0, 0);
         AIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right - 30), (int)(SystemParameters.WorkArea.Bottom - 30) / 2);
         AIChatSidebarPosition = new Point((int)(SystemParameters.WorkArea.Right - 520), (int)(SystemParameters.WorkArea.Bottom - 700) / 2);
+
+        _injectionActionPopup = new Popup();
+        _injectionActionPopup.AllowsTransparency = true;
+        _injectionActionPopup.Child = new JarvisActionView();
+        _injectionActionPopup.Placement = PlacementMode.MousePoint;
+        _injectionActionPopup.StaysOpen = true;
+        _injectionActionPopup.IsOpen = true;
     }
     public void ShowJarvisAction(bool isShow)
     {
