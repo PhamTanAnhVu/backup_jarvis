@@ -9,7 +9,7 @@
   <Identity
     Name="4063jarvis.cx.JarvisAIChatGPTBingClaudeBardBOT"
     Publisher="CN=8408F21D-68E8-4019-8C6D-5334D8970E1A"
-    Version="2.0.2.0" />
+    Version="2.0.1.0" />
 
   <Properties>
 	<DisplayName>Jarvis AI: Chatbot &amp; AI Writing Assistant</DisplayName>
