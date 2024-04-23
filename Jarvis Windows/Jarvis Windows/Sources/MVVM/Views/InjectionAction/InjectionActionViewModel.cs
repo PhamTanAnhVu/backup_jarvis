@@ -29,7 +29,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
                 OnPropertyChanged();
             }
         }
-
+        
         public bool? IsAnimationEnabled
         {
             get { return _isAnimationEnabled; }
@@ -41,18 +41,18 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         }
 
         public double? HorizontalOffset
-        {
+        { 
             get => _horizontalOffset;
             set
             {
                 _horizontalOffset = value;
                 OnPropertyChanged();
-            }
+            } 
         }
 
         public double? VerticalOffset
-        {
-            get => _verticalOffset;
+        { 
+            get => _verticalOffset; 
             set
             {
                 _verticalOffset = value;
@@ -103,7 +103,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         private void ExecuteStopSpinJarvisIcon(object obj)
         {
             IsSpinningJarvisIcon = false;
-        }
+        }   
 
         private void ExecuteSpinJarvisIcon(object obj)
         {

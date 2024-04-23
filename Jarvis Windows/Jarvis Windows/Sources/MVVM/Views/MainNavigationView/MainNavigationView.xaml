@@ -15,7 +15,7 @@
         Height="auto" Width="auto"
         WindowStyle="None"
         Background="Transparent"
-        Topmost="True"
+        Topmost="False"
         WindowStartupLocation="Manual"
         ResizeMode="NoResize"
         AllowsTransparency="True"
