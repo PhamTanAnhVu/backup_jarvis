@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:menuOperation="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView"
-        xmlns:jarvisAction="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.JarvisActionView"
+        xmlns:jarvisAction="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.InjectionAction"
         xmlns:textMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuView"
         xmlns:textMenuAPI="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView"
         xmlns:aIChatBubble="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView"
@@ -290,7 +290,7 @@
                     </Grid>
                 </Grid>
 
-                <Popup x:Name="jarvisActionPopup" Placement="AbsolutePoint" 
+                <!--<Popup x:Name="jarvisActionPopup" Placement="AbsolutePoint" 
                        VerticalOffset="{Binding PopupDictionaryService.JarvisActionPosition.Y}" 
                        HorizontalOffset="{Binding PopupDictionaryService.JarvisActionPosition.X}" 
                        AllowsTransparency="True" PopupAnimation="Fade" 
@@ -301,7 +301,11 @@
                        MouseLeave="App_MouseLeave"
                        IsOpen="{Binding PopupDictionaryService.IsShowJarvisAction}"
                        Width="50" Height="30">
-                    <jarvisAction:JarvisActionView/>
+                    <jarvisAction:InjectionActionView/>
+                </Popup>-->
+
+                <Popup x:Name="jarvisActionPopup">
+                    
                 </Popup>
 
                 <Popup x:Name="jarvisMenuPopup" Placement="AbsolutePoint"

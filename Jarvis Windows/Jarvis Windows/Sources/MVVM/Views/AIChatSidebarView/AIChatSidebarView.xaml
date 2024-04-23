@@ -9,7 +9,7 @@
         xmlns:li="http://github.com/zeluisping/loadingIndicators/xaml/controls"
         mc:Ignorable="d"
         Height="Auto" Width="490"
-        Style="{StaticResource Page_Style}">
+        Style="{StaticResource PageAppearEffect}">
 
     <UserControl.Resources>
         <ResourceDictionary>

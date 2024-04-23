@@ -11,7 +11,8 @@
                     xmlns:moreInfo="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MoreInfo"
                     xmlns:settings="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Settings"
                     xmlns:profile="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Profile"
-                    xmlns:exhautedTokens="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.ExhaustedTokens">
+                    xmlns:exhautedTokens="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.ExhaustedTokens"
+                    xmlns:injectionAction="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.InjectionAction">
     <DataTemplate DataType="{x:Type mainView:MainViewModel}">
         <mainView:MainView/>
     </DataTemplate>
@@ -54,6 +55,10 @@
 
     <DataTemplate DataType="{x:Type exhautedTokens:ExhautedTokensViewModel}">
         <exhautedTokens:ExhaustedTokensView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type injectionAction:InjectionActionViewModel}">
+        <injectionAction:InjectionActionView/>
     </DataTemplate>
 
 </ResourceDictionary>

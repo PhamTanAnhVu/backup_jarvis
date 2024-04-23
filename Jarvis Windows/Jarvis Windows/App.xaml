@@ -6,17 +6,12 @@
              xmlns:settingView="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.SettingView"
              StartupUri="Sources/MVVM/Views/MainNavigationView/MainNavigationView.xaml">
     <Application.Resources>
-        <!--<DataTemplate DataType="{x:Type TypeName=mainView:MainViewModel}">
-            <mainView:MainView/>
-        </DataTemplate>-->
-        
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jarvis Windows;component/Sources/Utils/Core/DataTemplate.xaml"/>
                 <ResourceDictionary Source="/Jarvis Windows;component/Sources/Utils/Core/Page.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-
         </ResourceDictionary>
     </Application.Resources>
 </Application>

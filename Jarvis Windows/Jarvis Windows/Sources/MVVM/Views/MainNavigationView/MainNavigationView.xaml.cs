@@ -13,11 +13,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             //Startup postion
             this.Left = SystemParameters.WorkArea.Width - this.Width;
             this.Top = (SystemParameters.WorkArea.Height - this.Height) / 2;
-
-            //Test injection popup
-            MenuInjectionActionsView.MenuInjectionActionsView menuInjectionActionsView = new MenuInjectionActionsView.MenuInjectionActionsView();
-            menuInjectionActionsView.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            menuInjectionActionsView.Show();
         }
     }
 }

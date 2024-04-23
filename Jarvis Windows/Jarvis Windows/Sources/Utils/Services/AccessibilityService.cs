@@ -206,7 +206,7 @@ public class UIElementDetector
                     _popupDictionaryService.ShowMenuOperations(false);
                     _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
                     _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
-                    _popupDictionaryService.MainWindow.ResetBinding();
+                    //_popupDictionaryService.MainWindow.ResetBinding();
                     ExecuteSendEventInject();
                     _automationElementValueService.CheckUndoRedo(_focusingElement);
                 }

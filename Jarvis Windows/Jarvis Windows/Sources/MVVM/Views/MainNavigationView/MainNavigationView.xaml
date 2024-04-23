@@ -12,7 +12,7 @@
         Height="750" Width="550"
         WindowStyle="None"
         Background="Transparent"
-        Topmost="True"
+        Topmost="False"
         WindowStartupLocation="Manual"
         ResizeMode="NoResize"
         AllowsTransparency="True">
@@ -36,10 +36,10 @@
         </Grid.ColumnDefinitions>
         
         <!--Main Content-->
-        <!--<UserControl Grid.Column="0"> 
+        <UserControl Grid.Column="0"> 
             <ContentControl x:Name="PageContent"
-                                Content="{Binding CurrentViewModel}" />
-        </UserControl>-->
+                            Content="{Binding CurrentViewModel}" />
+        </UserControl>
         
         <!--Navigation Bar-->
         <Border Grid.Column="2" Background="White" CornerRadius="12">

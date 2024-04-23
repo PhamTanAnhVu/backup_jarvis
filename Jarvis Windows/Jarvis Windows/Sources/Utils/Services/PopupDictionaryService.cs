@@ -11,7 +11,8 @@ using System.Windows.Media;
 using Point = System.Drawing.Point;
 using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using System.Windows.Controls.Primitives;
-using Jarvis_Windows.Sources.MVVM.Views.JarvisActionView;
+using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
+using System.Windows.Data;
 
 namespace Jarvis_Windows.Sources.Utils.Services;
 
@@ -40,6 +41,7 @@ public class PopupDictionaryService : ObserveralObject
     private static String? _targetLanguage;
     private Point _automationElementVisualPos;
     private TextMenuViewModel? _textMenuViewModel = null;
+    private InjectionActionViewModel _injectionActionViewModel;
 
     //Popups 
     private Popup _injectionActionPopup;
@@ -241,16 +243,39 @@ public class PopupDictionaryService : ObserveralObject
         AIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right - 30), (int)(SystemParameters.WorkArea.Bottom - 30) / 2);
         AIChatSidebarPosition = new Point((int)(SystemParameters.WorkArea.Right - 520), (int)(SystemParameters.WorkArea.Bottom - 700) / 2);
 
-        _injectionActionPopup = new Popup();
-        _injectionActionPopup.AllowsTransparency = true;
-        _injectionActionPopup.Child = new JarvisActionView();
-        _injectionActionPopup.Placement = PlacementMode.MousePoint;
-        _injectionActionPopup.StaysOpen = true;
-        _injectionActionPopup.IsOpen = true;
+        InitInjectionAction();
     }
     public void ShowJarvisAction(bool isShow)
     {
+        //IsShowJarvisAction = isShow;
         IsShowJarvisAction = isShow & JarvisActionVisibility;
+    }
+
+    private void InitInjectionAction()
+    {
+        _injectionActionPopup = new Popup();
+        InjectionActionView injectionActionView = new InjectionActionView();
+        _injectionActionViewModel = (InjectionActionViewModel)injectionActionView.DataContext;
+        _injectionActionPopup.SetCurrentValue(Popup.ChildProperty, injectionActionView);
+        _injectionActionPopup.SetCurrentValue(Popup.AllowsTransparencyProperty, true);
+        _injectionActionPopup.SetCurrentValue(Popup.PlacementProperty, PlacementMode.AbsolutePoint);
+        _injectionActionPopup.SetCurrentValue(Popup.StaysOpenProperty, true);
+        _injectionActionPopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
+
+        Binding verticalBinding = new Binding("JarvisActionPosition.Y");
+        verticalBinding.NotifyOnSourceUpdated = true;
+        verticalBinding.Source = this;
+        _injectionActionPopup.SetBinding(Popup.VerticalOffsetProperty, verticalBinding);
+
+        Binding horizontalBinding = new Binding("JarvisActionPosition.X");
+        horizontalBinding.NotifyOnSourceUpdated = true;
+        horizontalBinding.Source = this;
+        _injectionActionPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
+
+        Binding isOpenBinding = new Binding("IsShowJarvisAction");
+        isOpenBinding.Source = this;
+        isOpenBinding.NotifyOnSourceUpdated = true;
+        _injectionActionPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
     }
 
     private Point ConvertFromSystemCoorToVisualCoord(Point systemPoint)
@@ -315,6 +340,7 @@ public class PopupDictionaryService : ObserveralObject
 
     public void ShowMenuOperations(bool isShow)
     {
+        //IsShowMenuOperations = isShow;
         IsShowMenuOperations = isShow & JarvisActionVisibility;
     }
 

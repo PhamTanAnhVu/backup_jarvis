@@ -15,6 +15,7 @@ using System.Linq;
 using WinRT;
 using System.Diagnostics;
 using Jarvis_Windows.Sources.MVVM.Views.SettingView;
+using Jarvis_Windows.Sources.MVVM.Views.MainNavigationView;
 
 namespace Jarvis_Windows
 {

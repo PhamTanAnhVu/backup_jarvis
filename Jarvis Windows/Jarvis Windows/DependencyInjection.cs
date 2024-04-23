@@ -1,7 +1,7 @@
 ﻿using Jarvis_Windows.Sources.DataAccess.Local;
 using Jarvis_Windows.Sources.DataAccess.Network;
 using Jarvis_Windows.Sources.MVVM.ViewModels;
-using Jarvis_Windows.Sources.MVVM.Views.JarvisActionView;
+using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
 using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Jarvis_Windows.Sources.MVVM.Views.SettingView;
 using Jarvis_Windows.Sources.Utils.Accessibility;
@@ -50,12 +50,6 @@ namespace Jarvis_Windows
             {
                 DataContext = provider.GetRequiredService<SettingViewModel>(),
                 SendEventGA4 = provider.GetRequiredService<SendEventGA4>(),
-                PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>()
-            });
-
-
-            services.AddSingleton<JarvisActionViewModel>(provider => new JarvisActionViewModel
-            {
                 PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>()
             });
 
