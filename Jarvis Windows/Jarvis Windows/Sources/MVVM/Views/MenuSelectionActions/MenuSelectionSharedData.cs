@@ -15,7 +15,7 @@ public static class MenuSelectionSharedData
     public static event EventHandler<EventArgs>? MouseOverActions;
     public static event EventHandler<EventArgs>? MouseOverResponse;
     public static event EventHandler<EventArgs>? MouseOverPopup;
-    
+
     public static void PublishMenuSelectionCommandExecuted(object sender, EventArgs e)
     {
         MenuSelectionCommandExecuted?.Invoke(sender, e);

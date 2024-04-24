@@ -15,6 +15,13 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionActionsViewModel : ViewModelBase
 {
+    private PopupDictionaryService? _popupDictionaryService;
+    private UIElementDetector? _accessibilityService;
+    private SendEventGA4? _googleAnnalyticService;
+
+    private static bool _isMouseOver_AppUI;
+    private bool _isMouseOver_TextMenuSelection;
+    private bool _isMouseOver_TextMenuPopup;
     private IKeyboardMouseEvents _globalMouseHook;
     private bool _isMouseOverActions;
     private bool _isMouseOverResponse;
@@ -26,11 +33,12 @@ public class MenuSelectionActionsViewModel : ViewModelBase
 
     public MenuSelectionActionsViewModel()
     {
+        // InitializeServices();
         InitializeMenuSelectionButtons();
         // MenuSelectionCommand = new RelayCommand(ExecuteMenuSelectionCommand, o => true);
         // MenuSelectionPinCommand = new RelayCommand(ExecuteMenuSelectionPinCommand, o => true);
         ShowMenuSelectionPopupListCommand = new RelayCommand(ExecuteShowMenuSelectionPopupListCommand, o => true);
-
+        
         _globalMouseHook = Hook.GlobalEvents();
         _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
         _globalMouseHook.MouseDragFinished += MouseDragFinished;
@@ -95,7 +103,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
     {
         UpdateMenuSelectionPopupListPosition();
         PopupDictionaryService.Instance().IsShowMenuSelectionPopupList = !PopupDictionaryService.Instance().IsShowMenuSelectionPopupList;
-
+        
         if (!PopupDictionaryService.Instance().IsPinMenuSelectionResponse)
         {
             // Turn off MenuSelectionResponse View if not pinned
@@ -127,10 +135,10 @@ public class MenuSelectionActionsViewModel : ViewModelBase
         }
 
         if (PopupDictionaryService.Instance().IsShowMenuSelectionPopupList && !_isMouseOverPopup)
-        {
+            {
             PopupDictionaryService.Instance().IsShowMenuSelectionPopupList = false;
-        }
-        
+            }
+
 
         if (PopupDictionaryService.Instance().IsShowMenuSelectionResponse && !PopupDictionaryService.Instance().IsPinMenuSelectionResponse && !_isMouseOverResponse)
         {

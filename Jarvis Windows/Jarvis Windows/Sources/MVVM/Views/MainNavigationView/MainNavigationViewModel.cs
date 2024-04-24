@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.MVVM.ViewModels;
+using Jarvis_Windows.Sources.MVVM.ViewModels;
 using Jarvis_Windows.Sources.MVVM.Views.AIArt;
 using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 using Jarvis_Windows.Sources.MVVM.Views.AISearch;

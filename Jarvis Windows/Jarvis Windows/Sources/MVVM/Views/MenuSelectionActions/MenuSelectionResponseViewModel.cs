@@ -14,6 +14,10 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionResponseViewModel : ViewModelBase
 {
+    private PopupDictionaryService? _popupDictionaryService;
+    private UIElementDetector? _accessibilityService;
+    private SendEventGA4? _googleAnnalyticService;
+
     private double _scrollBarHeight;
     private int _languageSelectedIndex;
     private bool _isOutOfToken;
@@ -124,6 +128,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
     }
     public MenuSelectionResponseViewModel()
     {
+        // InitializeServices();
         MenuSelectionCommand = new RelayCommand(ExecuteMenuSelectionCommand, o => true);
         MenuSelectionPinCommand = new RelayCommand(ExecuteMenuSelectionPinCommand, o => true);
         ShowMenuSelectionPopupListCommand = new RelayCommand(ExecuteShowMenuSelectionPopupListCommand, o => true);
@@ -141,17 +146,27 @@ public class MenuSelectionResponseViewModel : ViewModelBase
 
         TranslateLanguages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
         LanguageSelectedIndex = 14;
+        UpdateAPIUsage();
 
         
         MenuSelectionSharedData.MenuSelectionCommandExecuted += (sender, e) =>
         {
             MenuSelectionCommand.Execute(sender);
         };
+    }
 
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
         EventAggregator.ApiUsageChanged += (sender, e) =>
-        {
-            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+    {
+        _popupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
+        _accessibilityService = DependencyInjection.GetService<UIElementDetector>();
+        _googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
+    }
+
+    private void UpdateAPIUsage()
+    {
+        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
             IsOutOfToken = (RemainingAPIUsage == "0 🔥");
         };
     }

@@ -47,7 +47,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             {
                 _horizontalOffset = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
         public double? VerticalOffset

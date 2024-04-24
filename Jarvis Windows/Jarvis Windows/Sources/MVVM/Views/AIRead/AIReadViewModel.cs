@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.DataAccess.Network;
+using Jarvis_Windows.Sources.DataAccess.Network;
 using Jarvis_Windows.Sources.MVVM.Models;
 using Jarvis_Windows.Sources.Utils.Core;
 using System;

@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
+using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
 using Jarvis_Windows.Sources.MVVM.Views.MainNavigationView;
 using Jarvis_Windows.Sources.MVVM.ViewModels;
 using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
@@ -112,10 +112,10 @@ public class PopupDictionaryService : ObserveralObject
 
     public bool IsShowTextMenuOperations
     {
-        get { return _isShowTextMenuOperations; }
+        get { return _isPinMenuSelectionResponse; }
         set
         {
-            _isShowTextMenuOperations = value;
+            _isPinMenuSelectionResponse = value;
             OnPropertyChanged();
         }
     }
@@ -212,30 +212,70 @@ public class PopupDictionaryService : ObserveralObject
         }
     }
 
-    public Point TextMenuOperationsPosition
+    private bool _isShowMenuSelectionActions;
+    private bool _isShowMenuSelectionResponse;
+    private bool _isShowMenuSelectionPopupList;
+
+    private Point _menuSelectionActionsPosition;
+    private Point _menuSelectionResponsePosition;
+    private Point _menuSelectionPopupListPosition;
+
+    public bool IsShowMenuSelectionActions
     {
-        get { return _textMenuOperationsPosition; }
+        get { return _isShowMenuSelectionActions; }
         set
         {
-            _textMenuOperationsPosition = value;
+            _isShowMenuSelectionActions = value;
             OnPropertyChanged();
         }
     }
-    public Point TextMenuAPIPosition
+    
+    public Point MenuSelectionActionsPosition
     {
-        get { return _textMenuAPIPosition; }
+        get { return _menuSelectionActionsPosition; }
         set
         {
-            _textMenuAPIPosition = value;
+            _menuSelectionActionsPosition = value;
             OnPropertyChanged();
         }
     }
-    public Point PopupTextMenuPosition
+
+    public bool IsShowMenuSelectionResponse
     {
-        get { return _popupTextMenuPosition; }
+        get { return _isShowMenuSelectionResponse; }
         set
         {
-            _popupTextMenuPosition = value;
+            _isShowMenuSelectionResponse = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public Point MenuSelectionResponsePosition
+    {
+        get { return _menuSelectionResponsePosition; }
+        set
+        {
+            _menuSelectionResponsePosition = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool IsShowMenuSelectionPopupList
+    {
+        get { return _isShowMenuSelectionPopupList; }
+        set
+        {
+            _isShowMenuSelectionPopupList = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public Point MenuSelectionPopupListPosition
+    {
+        get { return _menuSelectionPopupListPosition; }
+        set
+        {
+            _menuSelectionPopupListPosition = value;
             OnPropertyChanged();
         }
     }
@@ -566,7 +606,6 @@ public class PopupDictionaryService : ObserveralObject
     {
         IsShowJarvisAction = isShow & JarvisActionVisibility;
     }
-
     private void InitInjectionAction()
     {
         _injectionActionPopup = new Popup();
@@ -596,6 +635,91 @@ public class PopupDictionaryService : ObserveralObject
         //Init menu injection actions
         //_menuinjectionActionsView = new MenuInjectionActionsView();
         //_menuinjectionActionsViewModel = (MenuInjectionActionsViewModel)_menuinjectionActionsView.DataContext;
+    }
+
+    private void InitMenuSelectionActions()
+    {
+        _menuSelectionActionsPopup = new Popup();
+        MenuSelectionActionsView menuSelectionActionsView = new MenuSelectionActionsView();
+        _menuSelectionActionsViewModel = (MenuSelectionActionsViewModel)menuSelectionActionsView.DataContext;
+        _menuSelectionActionsPopup.SetCurrentValue(Popup.ChildProperty, menuSelectionActionsView);
+        _menuSelectionActionsPopup.SetCurrentValue(Popup.AllowsTransparencyProperty, true);
+        _menuSelectionActionsPopup.SetCurrentValue(Popup.PlacementProperty, PlacementMode.AbsolutePoint);
+        _menuSelectionActionsPopup.SetCurrentValue(Popup.StaysOpenProperty, true);
+        _menuSelectionActionsPopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
+
+        Binding verticalBinding = new Binding("MenuSelectionActionsPosition.Y");
+        verticalBinding.NotifyOnSourceUpdated = true;
+        verticalBinding.Source = this;
+        _menuSelectionActionsPopup.SetBinding(Popup.VerticalOffsetProperty, verticalBinding);
+
+        Binding horizontalBinding = new Binding("MenuSelectionActionsPosition.X");
+        horizontalBinding.NotifyOnSourceUpdated = true;
+        horizontalBinding.Source = this;
+        _menuSelectionActionsPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
+
+        IsShowMenuSelectionActions = true;
+        Binding isOpenBinding = new Binding("IsShowMenuSelectionActions");
+        isOpenBinding.Source = this;
+        isOpenBinding.NotifyOnSourceUpdated = true;
+        _menuSelectionActionsPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
+    }
+    private void InitMenuSelectionResponse()
+    {
+        _menuSelectionResponsePopup = new Popup();
+        MenuSelectionResponseView menuSelectionResponseView = new MenuSelectionResponseView();
+        _menuSelectionResponseViewModel = (MenuSelectionResponseViewModel)menuSelectionResponseView.DataContext;
+        _menuSelectionResponsePopup.SetCurrentValue(Popup.ChildProperty, menuSelectionResponseView);
+        _menuSelectionResponsePopup.SetCurrentValue(Popup.AllowsTransparencyProperty, true);
+        _menuSelectionResponsePopup.SetCurrentValue(Popup.PlacementProperty, PlacementMode.AbsolutePoint);
+        _menuSelectionResponsePopup.SetCurrentValue(Popup.StaysOpenProperty, true);
+        _menuSelectionResponsePopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
+
+        MenuSelectionResponsePosition = new Point(100, 500);
+        Binding verticalBinding = new Binding("MenuSelectionResponsePosition.Y");
+        verticalBinding.NotifyOnSourceUpdated = true;
+        verticalBinding.Source = this;
+        _menuSelectionResponsePopup.SetBinding(Popup.VerticalOffsetProperty, verticalBinding);
+
+        Binding horizontalBinding = new Binding("MenuSelectionResponsePosition.X");
+        horizontalBinding.NotifyOnSourceUpdated = true;
+        horizontalBinding.Source = this;
+        _menuSelectionResponsePopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
+
+        IsShowMenuSelectionResponse = true;
+        Binding isOpenBinding = new Binding("IsShowMenuSelectionResponse");
+        isOpenBinding.Source = this;
+        isOpenBinding.NotifyOnSourceUpdated = true;
+        _menuSelectionResponsePopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
+    }
+ 
+    private void InitMenuSelectionPopupList()
+    {
+        _menuSelectionPopupListPopup = new Popup();
+        MenuSelectionPopupListView menuSelectionPopupListView = new MenuSelectionPopupListView();
+        _menuSelectionPopupListViewModel = (MenuSelectionPopupListViewModel)menuSelectionPopupListView.DataContext;
+        _menuSelectionPopupListPopup.SetCurrentValue(Popup.ChildProperty, menuSelectionPopupListView);
+        _menuSelectionPopupListPopup.SetCurrentValue(Popup.AllowsTransparencyProperty, true);
+        _menuSelectionPopupListPopup.SetCurrentValue(Popup.PlacementProperty, PlacementMode.AbsolutePoint);
+        _menuSelectionPopupListPopup.SetCurrentValue(Popup.StaysOpenProperty, true);
+        _menuSelectionPopupListPopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
+
+        MenuSelectionPopupListPosition = new Point(1000, 500);
+        Binding verticalBinding = new Binding("MenuSelectionPopupListPosition.Y");
+        verticalBinding.NotifyOnSourceUpdated = true;
+        verticalBinding.Source = this;
+        _menuSelectionPopupListPopup.SetBinding(Popup.VerticalOffsetProperty, verticalBinding);
+
+        Binding horizontalBinding = new Binding("MenuSelectionPopupListPosition.X");
+        horizontalBinding.NotifyOnSourceUpdated = true;
+        horizontalBinding.Source = this;
+        _menuSelectionPopupListPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
+
+        IsShowMenuSelectionPopupList = true;
+        Binding isOpenBinding = new Binding("IsShowMenuSelectionPopupList");
+        isOpenBinding.Source = this;
+        isOpenBinding.NotifyOnSourceUpdated = true;
+        _menuSelectionPopupListPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
     }
 
     private Point ConvertFromSystemCoorToVisualCoord(Point systemPoint)
@@ -673,7 +797,7 @@ public class PopupDictionaryService : ObserveralObject
 
     public void ShowMenuSelectionActions(bool isShow)
     {
-        IsShowTextMenuOperations = isShow & TextMenuSelectionVisibility;
+        IsShowMenuSelectionActions = isShow & TextMenuSelectionVisibility;
     }
 
     public void UpdateMenuOperationsPosition(Point systemPoint, Rect elementRectBounding)
