@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.Utils.WindowsAPI;
+using Jarvis_Windows.Sources.Utils.WindowsAPI;
 using System.Windows.Automation;
 using System.Windows;
 using System;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +10,7 @@ public static class EventAggregator
     public static event EventHandler<EventArgs>? AIChatBubbleStatusChanged;
     public static event EventHandler<EventArgs>? MouseOverAIChatInputTextboxChanged;
     public static event EventHandler<EventArgs>? MouseOverAppUIChanged;
-    public static event EventHandler<EventArgs>? MouseOverTextSelectionMenuChanged;
+    public static event EventHandler<EventArgs>? MouseOverTextMenuSelectionChanged;
     public static event EventHandler<EventArgs>? MouseOverTextMenuPopupChanged;
     public static event EventHandler<EventArgs>? MouseOverAIChatPanelChanged;
     public static event EventHandler<EventArgs>? SettingVisibilityChanged;
@@ -41,9 +41,9 @@ public static class EventAggregator
         MouseOverAppUIChanged?.Invoke(sender, e);
     }
 
-    public static void PublishMouseOverTextSelectionMenuChanged(object sender, EventArgs e)
+    public static void PublishMouseOverTextMenuSelectionChanged(object sender, EventArgs e)
     {
-        MouseOverTextSelectionMenuChanged?.Invoke(sender, e);
+        MouseOverTextMenuSelectionChanged?.Invoke(sender, e);
     }
 
     public static void PublishMouseOverTextMenuPopupChanged(object sender, EventArgs e)

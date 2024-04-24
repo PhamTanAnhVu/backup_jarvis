@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.Utils.Core;
+using Jarvis_Windows.Sources.Utils.Core;
 using System;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView

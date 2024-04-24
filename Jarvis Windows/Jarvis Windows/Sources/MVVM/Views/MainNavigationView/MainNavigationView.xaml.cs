@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
+using Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 

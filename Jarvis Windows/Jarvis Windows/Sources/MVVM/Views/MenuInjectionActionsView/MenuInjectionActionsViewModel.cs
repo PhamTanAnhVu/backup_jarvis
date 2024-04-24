@@ -1,4 +1,4 @@
-﻿using Gma.System.MouseKeyHook;
+using Gma.System.MouseKeyHook;
 using Jarvis_Windows.Sources.DataAccess.Local;
 using Jarvis_Windows.Sources.DataAccess;
 using Jarvis_Windows.Sources.DataAccess.Network;
@@ -37,8 +37,8 @@ public class MenuInjectionActionsViewModel : ViewModelBase
     private bool _isTextEmpty;
     private bool isExpanded;
     private double _scrollBarHeight;
-    private ObservableCollection<ButtonViewModel> _fixedButtons;
-    private ObservableCollection<ButtonViewModel> _dynamicButtons;
+    private ObservableCollection<AIButton> _fixedButtons;
+    private ObservableCollection<AIButton> _dynamicButtons;
     private static IAutomationElementValueService? _automationElementValueService;
     private IAuthenticationService _authenticationService;
     private bool _isTextEmptyAIChat;
@@ -66,7 +66,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
     private static bool _isMouseOver_AppUI;
     private bool _isShowUsernameFirstLetter;
     private string _authUrl;
-    private bool _isMouseOver_TextSelectionMenu;
+    private bool _isMouseOver_TextMenuSelection;
     private bool _isMouseOver_TextMenuPopup;
     private TokenLocalService _tokenLocalService;
 
@@ -74,7 +74,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
     private Views.SettingView.SettingView _settingView;
 
-    private ObservableCollection<ButtonViewModel> _textMenuButtons;
+    private ObservableCollection<AIButton> _textMenuButtons;
     private Account? _account;
     private IKeyboardMouseEvents _globalMouseHook;
     public List<Language> TextMenuLanguages { get; set; }
@@ -187,7 +187,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
     }
 
-    public ObservableCollection<ButtonViewModel> FixedButtons
+    public ObservableCollection<AIButton> FixedButtons
     {
         get { return _fixedButtons; }
         set
@@ -197,7 +197,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
     }
 
-    public ObservableCollection<ButtonViewModel> DynamicButtons
+    public ObservableCollection<AIButton> DynamicButtons
     {
         get { return _dynamicButtons; }
         set
@@ -244,7 +244,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
     }
 
-    public ObservableCollection<ButtonViewModel> TextMenuButtons
+    public ObservableCollection<AIButton> TextMenuButtons
     {
         get { return _textMenuButtons; }
         set
@@ -694,8 +694,8 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         Username = Account.Username;
         EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
         if (IsShowUsernameFirstLetter) UsernameFirstLetter = Username[0].ToString();
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-        IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
+        IsAPIUsageRemain = (RemainingAPIUsage != "0 ??") ? true : false;
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
         //TEST AUTO RESET API USAGE
@@ -703,7 +703,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         {
             WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
             WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
-            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
             IsAPIUsageRemain = true;
         }*/
 
@@ -787,8 +787,8 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             _isMouseOver_AppUI = (bool)sender;
         };
 
-        EventAggregator.MouseOverTextSelectionMenuChanged += (sender, e) => {
-            _isMouseOver_TextSelectionMenu = (bool)sender;
+        EventAggregator.MouseOverTextMenuSelectionChanged += (sender, e) => {
+            _isMouseOver_TextMenuSelection = (bool)sender;
         };
 
         EventAggregator.MouseOverTextMenuPopupChanged += (sender, e) => {
@@ -805,15 +805,15 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         Point mousePoint = new Point((int)(e.X * xScale), (int)(e.Y * yScale));
 
         //TODO::Check if the mouse is not over menu text selection
-        if (PopupDictionaryService.IsShowTextMenuOperations)
+        if (PopupDictionaryService.IsShowMenuSelectionActions)
         {
-            if (_isMouseOver_TextMenuPopup || _isMouseOver_TextSelectionMenu)
+            if (_isMouseOver_TextMenuPopup || _isMouseOver_TextMenuSelection)
             {
                 return;
             }
 
             PopupDictionaryService.ShowMenuSelectionActions(false);
-            //Point textMenuSelectionPosition = PopupDictionaryService.TextMenuOperationsPosition;
+            //Point textMenuSelectionPosition = PopupDictionaryService.MenuSelectionActionsPosition;
             //double textMenuSelectionWidth = PopupDictionaryService.GetMenuSelectionActionWidth();
             //double textMenuSelectionHeight = PopupDictionaryService.GetMenuSelectionActionHeight();
             //if (mousePoint.X < textMenuSelectionPosition.X || mousePoint.X > textMenuSelectionPosition.X + textMenuSelectionWidth
@@ -1038,7 +1038,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
                 textFromElement = (String.IsNullOrEmpty(UIElementDetector.CurrentSelectedText)) ?
                     AccessibilityService.GetTextFromFocusingEditElement() :
                     UIElementDetector.CurrentSelectedText;
-                Debug.WriteLine($"🎇🎇🎇 TEXT FROM ELEMENT {textFromElement}");
+                Debug.WriteLine($"?????? TEXT FROM ELEMENT {textFromElement}");
             }
             catch
             {
@@ -1066,15 +1066,15 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             else
                 textFromAPI = await JarvisApi.Instance.AIHandler(textFromElement, _actionType);
 
-            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-            IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
+            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 ??");
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
+            IsAPIUsageRemain = ((RemainingAPIUsage != "0 ??") | previousRemaingAPIUSage) ? true : false;
             IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
 
             if (textFromAPI == null)
             {
-                Debug.WriteLine($"🆘🆘🆘 {ErrorConstant.translateError}");
+                Debug.WriteLine($"?????? {ErrorConstant.translateError}");
                 return;
             }
 
@@ -1103,11 +1103,11 @@ public class MenuInjectionActionsViewModel : ViewModelBase
     public async void ExecuteHideTextMenuAPICommand(object obj)
     {
         PopupDictionaryService.ShowTextMenuAPIOperations(false);
-        PopupDictionaryService.IsShowPinTextMenuAPI = false;
+        PopupDictionaryService.IsPinMenuSelectionResponse = false;
         TextMenuPinColor = "Transparent";
     }
 
-    private void UpdatePopupTextMenuPosition()
+    private void UpdateMenuSelectionPopupListPosition()
     {
         int textMenuWidth = 64;
         foreach (var action in TextMenuButtons)
@@ -1116,34 +1116,34 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             if (action.Visibility) textMenuWidth += 32;
         }
 
-        PopupDictionaryService.PopupTextMenuPosition = new System.Drawing.Point
+        PopupDictionaryService.MenuSelectionPopupListPosition = new System.Drawing.Point
         (
-            PopupDictionaryService.TextMenuOperationsPosition.X + (textMenuWidth - 195),
-            PopupDictionaryService.TextMenuOperationsPosition.Y + 40
+            PopupDictionaryService.MenuSelectionActionsPosition.X + (textMenuWidth - 195),
+            PopupDictionaryService.MenuSelectionActionsPosition.Y + 40
         );
     }
 
     public async void ExecutePopupTextMenuCommand(object obj)
     {
-        UpdatePopupTextMenuPosition();
-        PopupDictionaryService.IsShowPopupTextMenu = !PopupDictionaryService.IsShowPopupTextMenu;
-        if (!PopupDictionaryService.IsShowPinTextMenuAPI)
+        UpdateMenuSelectionPopupListPosition();
+        PopupDictionaryService.IsShowMenuSelectionPopupList = !PopupDictionaryService.IsShowMenuSelectionPopupList;
+        if (!PopupDictionaryService.IsPinMenuSelectionResponse)
         {
-            PopupDictionaryService.IsShowTextMenuAPI = false;
+            PopupDictionaryService.IsShowMenuSelectionResponse = false;
         }
     }
 
     private void InitializeButtonsTextMenu()
     {
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
-        TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
+        TextMenuButtons = aIActionTemplate.MenuSelectionButtonList;
         TextMenuPinColor = "Transparent";
         int idx = 0;
         foreach (var action in TextMenuButtons)
         {
             action.Command = new RelayCommand(ExecuteTextMenuAICommand, o => true);
             action.PinCommand = new RelayCommand(ExecuteTextMenuPinCommand, o => true);
-            action.Idx = idx++;
+            action.Idx = (idx++).ToString();
             action.ExtraIconVisibility = true;
             if (action.PinColor == "") action.PinColor = "Transparent";
         }
@@ -1161,12 +1161,12 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             idx = int.Parse(obj.ToString());
         }
 
-        if (!PopupDictionaryService.IsShowPinTextMenuAPI)
+        if (!PopupDictionaryService.IsPinMenuSelectionResponse)
         {
-            PopupDictionaryService.TextMenuAPIPosition = new System.Drawing.Point
+            PopupDictionaryService.MenuSelectionResponsePosition = new System.Drawing.Point
             (
-                PopupDictionaryService.TextMenuOperationsPosition.X,
-                PopupDictionaryService.TextMenuOperationsPosition.Y + 40
+                PopupDictionaryService.MenuSelectionActionsPosition.X,
+                PopupDictionaryService.MenuSelectionActionsPosition.Y + 40
             );
         }
 
@@ -1175,14 +1175,14 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
         PreviousCommandIdx = idx;
         IsActionTranslate = (idx == 0) ? true : false;
-        PopupDictionaryService.IsShowPopupTextMenu = IsTextMenuAPIHeaderAction = false;
+        PopupDictionaryService.IsShowMenuSelectionPopupList = IsTextMenuAPIHeaderAction = false;
         try
         {
             TextMenuAPI = "";
             TextMenuAPIscrollBarHeight = 88;
             IsSpinningJarvisIconTextMenu = true;
             TextMenuAPIHeaderActionName = TextMenuButtons[idx].Content;
-            PopupDictionaryService.IsShowTextMenuAPI = true;
+            PopupDictionaryService.IsShowMenuSelectionResponse = true;
 
             var textFromElement = UIElementDetector.CurrentSelectedText;
             var textFromAPI = "";
@@ -1211,9 +1211,9 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
             TextMenuAPI = textFromAPI;
 
-            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-            IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
+            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 ??");
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
+            IsAPIUsageRemain = ((RemainingAPIUsage != "0 ??") | previousRemaingAPIUSage) ? true : false;
             IsNoAPIUsageRemain = !IsAPIUsageRemain;
         }
         catch { }
@@ -1251,8 +1251,8 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
         if (idx == -1)
         {
-            PopupDictionaryService.IsShowPinTextMenuAPI = !PopupDictionaryService.IsShowPinTextMenuAPI;
-            TextMenuPinColor = colors[Convert.ToInt32(PopupDictionaryService.IsShowPinTextMenuAPI)];
+            PopupDictionaryService.IsPinMenuSelectionResponse = !PopupDictionaryService.IsPinMenuSelectionResponse;
+            TextMenuPinColor = colors[Convert.ToInt32(PopupDictionaryService.IsPinMenuSelectionResponse)];
             if (TextMenuPinColor == colors[1])
             {
                 await SendEventGA4.SendEvent("pin_inject_selection_actions_response");
@@ -1263,7 +1263,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
         else if (idx == -2)
         {
-            PopupDictionaryService.IsShowPinTextMenuAPI = false;
+            PopupDictionaryService.IsPinMenuSelectionResponse = false;
             TextMenuPinColor = colors[0];
             return;
         }
@@ -1273,15 +1273,15 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         TextMenuButtons[idx].Visibility = visibilityStatus;
 
         // Add buttons and expand to the left, the problem is the UI will reload everytime -> not smooth
-        PopupDictionaryService.TextMenuOperationsPosition = new System.Drawing.Point(
-            PopupDictionaryService.TextMenuOperationsPosition.X + sizeChanged,
-            PopupDictionaryService.TextMenuOperationsPosition.Y
+        PopupDictionaryService.MenuSelectionActionsPosition = new System.Drawing.Point(
+            PopupDictionaryService.MenuSelectionActionsPosition.X + sizeChanged,
+            PopupDictionaryService.MenuSelectionActionsPosition.Y
         );
 
-        // UpdatePopupTextMenuPosition();
+        // UpdateMenuSelectionPopupListPosition();
 
-        PopupDictionaryService.IsShowTextMenuOperations = true;
-        PopupDictionaryService.IsShowPopupTextMenu = true;
+        PopupDictionaryService.IsShowMenuSelectionActions = true;
+        PopupDictionaryService.IsShowMenuSelectionPopupList = true;
         TextMenuButtons[idx].PinColor = colors[Convert.ToInt32(visibilityStatus)];
         OnPropertyChanged(nameof(TextMenuButtons));
     }
@@ -1321,9 +1321,9 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         Account.Role = WindowLocalStorage.ReadLocalStorage("Role");
         Username = (Account.Role == "anonymous") ? "Login" : Account.Username;
         UsernameFirstLetter = (Account.Role != "anonymous") ? Username[0].ToString() : "";
-        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-        IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
+        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 ??");
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
+        IsAPIUsageRemain = ((RemainingAPIUsage != "0 ??") | previousRemaingAPIUSage) ? true : false;
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
     }
 
@@ -1344,9 +1344,9 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             //UsernameFirstLetter = Account.Username[0].ToString();
             //Username = Account.Username;
             //_ = await JarvisApi.Instance.APIUsageHandler();
-            //bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-            //RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-            //IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
+            //bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 ??");
+            //RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
+            //IsAPIUsageRemain = ((RemainingAPIUsage != "0 ??") | previousRemaingAPIUSage) ? true : false;
             //IsNoAPIUsageRemain = !IsAPIUsageRemain;
             //EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
 
@@ -1372,9 +1372,9 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         await AuthenService.SignOut();
         await JarvisApi.Instance.APIUsageHandler();
 
-        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-        IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
+        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 ??");
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
+        IsAPIUsageRemain = ((RemainingAPIUsage != "0 ??") | previousRemaingAPIUSage) ? true : false;
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
 
@@ -1411,7 +1411,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
     private async void ExecuteAIChatSendCommand(object obj)
     {
-        if (string.IsNullOrEmpty(AIChatMessageInput) || _isExecutingAIChatMessage || RemainingAPIUsage == "0 🔥") return;
+        if (string.IsNullOrEmpty(AIChatMessageInput) || _isExecutingAIChatMessage || RemainingAPIUsage == "0 ??") return;
 
         _isExecutingAIChatMessage = true;
         AIChatMessages.Add(new AIChatMessage
@@ -1453,9 +1453,9 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             IsBorderVisible = true
         });
 
-        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-        IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
+        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 ??");
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
+        IsAPIUsageRemain = ((RemainingAPIUsage != "0 ??") | previousRemaingAPIUSage) ? true : false;
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
         _isExecutingAIChatMessage = false;
 
@@ -1480,7 +1480,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             {
                 string text = System.Windows.Clipboard.GetText();
                 UIElementDetector.CurrentSelectedText = text;
-                if (PopupDictionaryService.IsShowPinTextMenuAPI && PopupDictionaryService.IsShowTextMenuAPI)
+                if (PopupDictionaryService.IsPinMenuSelectionResponse && PopupDictionaryService.IsShowMenuSelectionResponse)
                 {
                     PopupDictionaryService.ShowMenuSelectionActions(false);
                     return;
@@ -1560,13 +1560,13 @@ public class MenuInjectionActionsViewModel : ViewModelBase
                 System.Drawing.Point lpPoint;
                 NativeUser32API.GetCursorPos(out lpPoint);
                 Point selectedTextPosition = new Point((int)(lpPoint.X * xScale), (int)(lpPoint.Y * yScale));
-                PopupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
+                PopupDictionaryService.MenuSelectionActionsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
                 Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 50);
-                PopupDictionaryService.PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);
-                if (!PopupDictionaryService.IsShowPinTextMenuAPI)
+                PopupDictionaryService.MenuSelectionPopupListPosition = new Point(newPosition.X, newPosition.Y);
+                if (!PopupDictionaryService.IsPinMenuSelectionResponse)
                 {
                     PopupDictionaryService.ShowSelectionResponseView(false);
-                    PopupDictionaryService.TextMenuAPIPosition = new Point(newPosition.X, newPosition.Y);
+                    PopupDictionaryService.MenuSelectionResponsePosition = new Point(newPosition.X, newPosition.Y);
                 }
 
                 PopupDictionaryService.ShowMenuSelectionActions(true);
@@ -1593,9 +1593,9 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             Account = AuthenService.GetMe().Result;
             Username = Account.Username;
             UsernameFirstLetter = Account.Username[0].ToString();
-            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-            IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
+            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 ??");
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
+            IsAPIUsageRemain = ((RemainingAPIUsage != "0 ??") | previousRemaingAPIUSage) ? true : false;
             IsNoAPIUsageRemain = !IsAPIUsageRemain;
         }
     }

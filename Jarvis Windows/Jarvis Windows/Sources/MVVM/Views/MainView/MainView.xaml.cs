@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Forms;
@@ -76,14 +76,14 @@ public partial class MainView : Window
     {
         EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
     }
-    private void TextSelectionMenu_MouseEnter(object sender, EventArgs e)
+    private void TextMenuSelection_MouseEnter(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverTextSelectionMenuChanged(true, EventArgs.Empty);
+        EventAggregator.PublishMouseOverTextMenuSelectionChanged(true, EventArgs.Empty);
     }
 
-    private void TextSelectionMenu_MouseLeave(object sender, EventArgs e)
+    private void TextMenuSelection_MouseLeave(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverTextSelectionMenuChanged(false, EventArgs.Empty);
+        EventAggregator.PublishMouseOverTextMenuSelectionChanged(false, EventArgs.Empty);
     }
     
     private async void AIChatSidebar_MouseEnter(object sender, EventArgs e)
@@ -241,7 +241,7 @@ public partial class MainView : Window
             double newY = Math.Min(Math.Max(AbsolutePos.Y - _textMenuAPIPoint.Y, screenBounds.Top), maxY);
 
             // PopupDictionaryService.IsShowTextMenuOperations = false;
-            PopupDictionaryService.TextMenuAPIPosition = new System.Drawing.Point((int)newX, (int)newY);
+            PopupDictionaryService.MenuSelectionResponsePosition = new System.Drawing.Point((int)newX, (int)newY);
         }
     }
 

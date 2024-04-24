@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.Utils.Services;
+using Jarvis_Windows.Sources.Utils.Services;
 using Microsoft.Win32;
 using System;
 using System.Windows;
@@ -9,11 +9,11 @@ using Jarvis_Windows.Sources.DataAccess.Network;
 using System.Web;
 using Jarvis_Windows.Sources.MVVM.Models;
 using System.Reflection;
-using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Windows.ApplicationModel.Activation;
 using System.Linq;
 using WinRT;
 using System.Diagnostics;
+using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Jarvis_Windows.Sources.MVVM.Views.SettingView;
 using Jarvis_Windows.Sources.MVVM.Views.MainNavigationView;
 
@@ -81,7 +81,7 @@ namespace Jarvis_Windows
 
                         //tODO:call remaining usage 
                         _ = JarvisApi.Instance.APIUsageHandler();
-                        mainViewModel.RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+                        mainViewModel.RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
                     }
                 }
             }

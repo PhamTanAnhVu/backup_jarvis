@@ -329,8 +329,8 @@
                        AllowsTransparency="True" PopupAnimation="Fade"
                        PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
                        PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
-                       MouseEnter="TextSelectionMenu_MouseEnter"
-                       MouseLeave="TextSelectionMenu_MouseLeave"
+                       MouseEnter="TextMenuSelection_MouseEnter"
+                       MouseLeave="TextMenuSelection_MouseLeave"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuOperations}"
                        Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">

@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.Utils.Services;
+using Jarvis_Windows.Sources.Utils.Services;
 using Stfu.Linq;
 using System;
 using System.Collections.Generic;

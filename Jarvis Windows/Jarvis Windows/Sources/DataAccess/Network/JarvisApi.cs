@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using Jarvis_Windows.Sources.DataAccess.Local;
 using System.IO;
+using Jarvis_Windows.Sources.MVVM.Models;
 
 namespace Jarvis_Windows.Sources.DataAccess.Network;
 
@@ -216,7 +217,7 @@ public sealed class JarvisApi
         return await ApiHandler(requestBody, _actionEndpoint);
     }
 
-    public async Task<string?> ChatHandler(string content, ObservableCollection<MVVM.Views.MainView.AIChatMessage> ChatHistory)
+    public async Task<string?> ChatHandler(string content, ObservableCollection<AIChatMessage> ChatHistory)
     {
         List<Dictionary<string, string>> messages = new List<Dictionary<string, string>>();
 

@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.DataAccess.Network;
+using Jarvis_Windows.Sources.DataAccess.Network;
 using Jarvis_Windows.Sources.Utils.Accessibility;
 using Jarvis_Windows.Sources.Utils.Constants;
 using Jarvis_Windows.Sources.Utils.Core;
@@ -26,7 +26,7 @@ public class TextMenuViewModel : ViewModelBase
     private bool _isSpinningJarvisIconTextMenu;
     private double _textMenuAPIscrollBarHeight;
 
-    private ObservableCollection<ButtonViewModel> _textMenuButtons;
+    private ObservableCollection<AIButton> _textMenuButtons;
     public List<Language> TextMenuLanguages { get; set; }
     public RelayCommand TextMenuAICommand { get; set; }
     public RelayCommand ShowTextMenuOperationsCommand { get; set; }
@@ -63,7 +63,7 @@ public class TextMenuViewModel : ViewModelBase
         }
     }
 
-    public ObservableCollection<ButtonViewModel> TextMenuButtons
+    public ObservableCollection<AIButton> TextMenuButtons
     {
         get { return _textMenuButtons; }
         set
@@ -161,7 +161,7 @@ public class TextMenuViewModel : ViewModelBase
         PopupDictionaryService.ShowJarvisAction(false);
 
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
-        TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
+        TextMenuButtons = aIActionTemplate.MenuSelectionButtonList;
 
         if (_menuShowStatus == false)
         {
@@ -180,13 +180,13 @@ public class TextMenuViewModel : ViewModelBase
         PopupDictionaryService.ShowTextMenuAPIOperations(false);
 
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
-        TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
+        TextMenuButtons = aIActionTemplate.MenuSelectionButtonList;
     }
 
     private void InitializeButtons()
     {
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
-        TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
+        TextMenuButtons = aIActionTemplate.MenuSelectionButtonList;
     }
 
     private void OnLanguageSelectionChanged(object sender, EventArgs e)
@@ -205,7 +205,7 @@ public class TextMenuViewModel : ViewModelBase
             TextMenuAPI = "";
             TextMenuAPIscrollBarHeight = 88;
             IsSpinningJarvisIconTextMenu = true;
-            PopupDictionaryService.IsShowTextMenuAPI = true;
+            PopupDictionaryService.IsShowMenuSelectionResponse = true;
 
             //var textFromElement = "Jarvis AI Assistant, your all-in-one solution that harnesses the formidable capabilities of ChatGPT, which provides large and wide knowledge, GPT 4 for cutting-edge language understanding, Claude AI for advanced innovations, Llama 2 for next-level text generation, Bard for creative content creation, Bing Chat for seamless communication, Meta AI for deep learning potential, Chat GPT for conversational prowess, Chatting GPT for natural dialogue, GPT Chat for interactive communication, GPT4 for state-of-the-art language processing, and the transformative power of Ajax AI (also known as AjaxAI), OpenAI and latest AI model Gemini.";
             var textFromElement = UIElementDetector.GetSelectedText();
@@ -240,7 +240,7 @@ public class TextMenuViewModel : ViewModelBase
 
             if (textFromAPI == null)
             {
-                Debug.WriteLine($"🆘🆘🆘 {ErrorConstant.translateError}");
+                Debug.WriteLine($"?????? {ErrorConstant.translateError}");
                 return;
             }
 

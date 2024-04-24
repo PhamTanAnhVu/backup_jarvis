@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.Utils.Services;
+using Jarvis_Windows.Sources.Utils.Services;
 using Jarvis_Windows.Sources.MVVM.Models;
 using System.Windows.Controls;
 using System;

@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.DataAccess.Local;
+using Jarvis_Windows.Sources.DataAccess.Local;
 using Jarvis_Windows.Sources.DataAccess.Network;
 using Jarvis_Windows.Sources.MVVM.ViewModels;
 using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;

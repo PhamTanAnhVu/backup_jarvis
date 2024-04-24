@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Automation;
 using System.Windows;
 using Jarvis_Windows.Sources.Utils.Services;
@@ -317,13 +317,13 @@ public class UIElementDetector
         var automationElement = sender as AutomationElement;
         if (e.Property == AutomationElement.BoundingRectangleProperty)
         {
-            Debug.WriteLine($"🟧🟧🟧 {automationElement?.Current.Name} Bounding Rectangle Changed");
+            Debug.WriteLine($"?????? {automationElement?.Current.Name} Bounding Rectangle Changed");
             PopupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
             PopupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
         }
         else if (e.Property == AutomationElement.IsOffscreenProperty)
         {
-            Debug.WriteLine($"👁️👁️👁️ {automationElement?.Current.ControlType.ProgrammaticName} Offscreen Property Changed");
+            Debug.WriteLine($"????????? {automationElement?.Current.ControlType.ProgrammaticName} Offscreen Property Changed");
             PopupDictionaryService.ShowJarvisAction(false);
             PopupDictionaryService.ShowMenuOperations(false);
         }
@@ -395,7 +395,7 @@ public class UIElementDetector
 
             Task<string> getValueTask = Task.Run(() =>
             {
-                Debug.WriteLine($"❌❌❌ Get Value of {_focusingElement.Current.ClassName} {_focusingElement.Current.ControlType.ProgrammaticName}");
+                Debug.WriteLine($"??? Get Value of {_focusingElement.Current.ClassName} {_focusingElement.Current.ControlType.ProgrammaticName}");
                 try
                 {
                     ValuePattern? valuePattern = null;
@@ -413,11 +413,11 @@ public class UIElementDetector
                 }
                 catch (ElementNotAvailableException)
                 {
-                    Debug.WriteLine($"❌❌❌ Element is not available");
+                    Debug.WriteLine($"??? Element is not available");
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"❌❌❌ Exception: {ex.Message}");
+                    Debug.WriteLine($"??? Exception: {ex.Message}");
                 }
                 return string.Empty;
             });
@@ -468,11 +468,11 @@ public class UIElementDetector
                 }
                 catch (ElementNotAvailableException)
                 {
-                    Debug.WriteLine($"❌❌❌ Element is not available");
+                    Debug.WriteLine($"??? Element is not available");
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"❌❌❌ Exception: {ex.Message}");
+                    Debug.WriteLine($"??? Exception: {ex.Message}");
                 }
                 return string.Empty;
             });
@@ -532,11 +532,11 @@ public class UIElementDetector
                                         /*if (boundingRect == Rect.Empty)
                                         {
                                             _popupDictionaryService.ShowMenuSelectionActions(false);
-                                            _popupDictionaryService.IsShowPopupTextMenu = false;
+                                            _popupDictionaryService.IsShowMenuSelectionPopupList = false;
                                             return;
                                         }*/
                                         /*_popupDictionaryService.ShowMenuSelectionActions(false);
-                                        _popupDictionaryService.IsShowPopupTextMenu = false;*/
+                                        _popupDictionaryService.IsShowMenuSelectionPopupList = false;*/
                                         double screenHeight = SystemParameters.PrimaryScreenHeight;
                                         double screenWidth = SystemParameters.PrimaryScreenWidth;
                                         double xScale = screenWidth / 1920;
@@ -544,15 +544,15 @@ public class UIElementDetector
 
                                         System.Drawing.Point lpPoint;
                                         NativeUser32API.GetCursorPos(out lpPoint);
-                                        Debug.WriteLine($"📌📌📌 Cursor Position: {lpPoint.X} - {lpPoint.Y}");
+                                        Debug.WriteLine($"?????? Cursor Position: {lpPoint.X} - {lpPoint.Y}");
                                         //Point selectedTextPosition = new Point(boundingRect.X * xScale - 20, boundingRect.Y * yScale + boundingRect.Height * 1.5f);
                                         
                                         Point selectedTextPosition = new Point((int)(lpPoint.X * xScale), (int)(lpPoint.Y * yScale));
-                                        _popupDictionaryService.TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
+                                        _popupDictionaryService.MenuSelectionActionsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
                                     
-                                        if (!_popupDictionaryService.IsShowPinTextMenuAPI)
+                                        if (!_popupDictionaryService.IsPinMenuSelectionResponse)
                                         {
-                                            _popupDictionaryService.IsShowTextMenuAPI = false;
+                                            _popupDictionaryService.IsShowMenuSelectionResponse = false;
                                         }
                                     }
                                 }

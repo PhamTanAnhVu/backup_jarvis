@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.Utils.Core;
+using Jarvis_Windows.Sources.Utils.Core;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
 

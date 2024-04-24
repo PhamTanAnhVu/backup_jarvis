@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView

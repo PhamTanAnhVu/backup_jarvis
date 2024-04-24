@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Windows.Storage;
 using Hanssens.Net;
 using System;

@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.DataAccess.Local;
+using Jarvis_Windows.Sources.DataAccess.Local;
 using Jarvis_Windows.Sources.MVVM.Models;
 using Jarvis_Windows.Sources.Utils.Core;
 using Newtonsoft.Json;
@@ -35,7 +35,7 @@ namespace Jarvis_Windows.Sources.DataAccess.Network
         #region Constants
         private const string API_HEADER = "x-jarvis-guid";
         private const string REFRESH_QUERRY = "refreshToken";
-        private const string GET_MẸ_ENDPOINT = "/api/v1/auth/me";
+        private const string GET_M_ENDPOINT = "/api/v1/auth/me";
         private const string SIGN_IN_ENDPOINT = "/api/v1/auth/sign-in";
         private const string SIGN_UP_ENDPOINT = "/api/v1/auth/sign-up";
         private const string SIGN_OUT_ENDPOINT = "/api/v1/auth/sign-out";
@@ -119,7 +119,7 @@ namespace Jarvis_Windows.Sources.DataAccess.Network
             //HttpClient.DefaultRequestHeaders.Clear();
             HttpClient.DefaultRequestHeaders.Add(API_HEADER, UUID);
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
-            var response = HttpClient.GetAsync(ApiUr + GET_MẸ_ENDPOINT).Result;
+            var response = HttpClient.GetAsync(ApiUr + GET_M_ENDPOINT).Result;
             Account account = new Account();
             if (response.IsSuccessStatusCode)
             {

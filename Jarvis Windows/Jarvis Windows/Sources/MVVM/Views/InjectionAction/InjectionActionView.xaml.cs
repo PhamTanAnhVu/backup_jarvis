@@ -1,4 +1,4 @@
-﻿using Hardcodet.Wpf.TaskbarNotification;
+using Hardcodet.Wpf.TaskbarNotification;
 using Jarvis_Windows.Sources.Utils.Services;
 using System.Diagnostics;
 using System.Threading;

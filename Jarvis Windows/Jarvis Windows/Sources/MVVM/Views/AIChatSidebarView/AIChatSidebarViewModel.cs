@@ -1,4 +1,4 @@
-﻿//using Jarvis_Windows.Sources.DataAccess.Network;
+//using Jarvis_Windows.Sources.DataAccess.Network;
 //using Jarvis_Windows.Sources.Utils.Core;
 //using Jarvis_Windows.Sources.Utils.Services;
 //using System;
@@ -96,7 +96,7 @@ public class AIChatSidebarViewModel : ViewModelBase
 //    {
 //        PopupDictionaryService = popupDictionaryService;
 //        SendEventGA4 = sendEventGA4;
-//        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+//        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
 
 //        HideAIChatSidebarCommand = new RelayCommand(ExecuteHideAIChatSidebarCommand, o => true);
 //        SendCommand = new RelayCommand(ExecuteSendCommand, o => true);
@@ -166,7 +166,7 @@ public class AIChatSidebarViewModel : ViewModelBase
 //            IsBorderVisible = true
 //        });
 
-//        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+//        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
 //    }
 //}
 

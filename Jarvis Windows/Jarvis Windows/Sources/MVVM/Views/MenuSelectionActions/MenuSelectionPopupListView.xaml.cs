@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Jarvis_Windows.Sources.MVVM.Views.AIArt
+namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions
 {
     /// <summary>
-    /// Interaction logic for AIArtView.xaml
+    /// Interaction logic for MenuSelectionPopupMenuView.xaml
     /// </summary>
-    public partial class AIArtView : UserControl
+    public partial class MenuSelectionPopupListView : UserControl
     {
-        public AIArtView()
+        public MenuSelectionPopupListView()
         {
             InitializeComponent();
         }

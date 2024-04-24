@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.DataAccess;
+using Jarvis_Windows.Sources.DataAccess;
 using Jarvis_Windows.Sources.DataAccess.Network;
 using Jarvis_Windows.Sources.MVVM.Models;
 using Jarvis_Windows.Sources.Utils.Accessibility;
@@ -242,25 +242,25 @@ public class SettingViewModel : ViewModelBase
         SendEventGA4 sendEventGA4,
         IAuthenticationService authenticationService)
     {
-        NavigationService = navigationService;
-        PopupDictionaryService = popupDictionaryService;
-        AccessibilityService = accessibilityService;
-        SendEventGA4 = sendEventGA4;
-        AuthenService = authenticationService;
+        //NavigationService = navigationService;
+        //PopupDictionaryService = popupDictionaryService;
+        //AccessibilityService = accessibilityService;
+        //SendEventGA4 = sendEventGA4;
+        //AuthenService = authenticationService;
 
-        ResetSettingsCommand = new RelayCommand(ExecuteResetSettingsCommand, o => true);
-        AuthenticateCommand = new RelayCommand(ExecuteAuthenticateCommand, o => true);
-        OpenWebsiteCommand = new RelayCommand(ExecuteOpenWebsiteCommand, o => true);
+        //ResetSettingsCommand = new RelayCommand(ExecuteResetSettingsCommand, o => true);
+        //AuthenticateCommand = new RelayCommand(ExecuteAuthenticateCommand, o => true);
+        //OpenWebsiteCommand = new RelayCommand(ExecuteOpenWebsiteCommand, o => true);
         
-        _authUrl = DataConfiguration.AuthUrl;
-        AppVersion = $"Current version: {WindowLocalStorage.ReadLocalStorage("AppVersion")}";
-        UsageBarGray = 590;
+        //_authUrl = DataConfiguration.AuthUrl;
+        //AppVersion = $"Current version: {WindowLocalStorage.ReadLocalStorage("AppVersion")}";
+        //UsageBarGray = 590;
 
-        InitLabels();
-        InitializeToggleButtons();
+        //InitLabels();
+        //InitializeToggleButtons();
 
-        OnLoginStatusChanged("SettingWindow", EventArgs.Empty);
-        EventAggregator.LoginStatusChanged += OnLoginStatusChanged;
+        //OnLoginStatusChanged("SettingWindow", EventArgs.Empty);
+        //EventAggregator.LoginStatusChanged += OnLoginStatusChanged;
     }
  
     private void InitLabels()
@@ -503,7 +503,7 @@ public class SettingViewModel : ViewModelBase
         double usageBarJump = UsageBarGray / double.Parse(DailyApiUsage);
 
         RetrieveUserInfo();
-        UsedAPIUsage = $"{usedApiUsage}/{dailyApiUsage} 🔥";
+        UsedAPIUsage = $"{usedApiUsage}/{dailyApiUsage} ??";
         UsageBarGreen = usedApiUsage * usageBarJump;
         UsageBarCornerRadius = (usedApiUsage == dailyApiUsage) ? "5 0 0 5" : "5 5 5 5";
     }

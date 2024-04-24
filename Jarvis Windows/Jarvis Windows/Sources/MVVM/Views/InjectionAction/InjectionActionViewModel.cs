@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
+using Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
 using Jarvis_Windows.Sources.Utils.Core;
 using Jarvis_Windows.Sources.Utils.Services;
 using System;
@@ -29,7 +29,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
                 OnPropertyChanged();
             }
         }
-        
+
         public bool IsAnimationEnabled
         {
             get { return _isAnimationEnabled; }
@@ -40,19 +40,19 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             }
         }
 
-        public double HorizontalOffset 
-        { 
+        public double HorizontalOffset
+        {
             get => _horizontalOffset;
             set
             {
                 _horizontalOffset = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
-        public double VerticalOffset 
-        { 
-            get => _verticalOffset; 
+        public double VerticalOffset
+        {
+            get => _verticalOffset;
             set
             {
                 _verticalOffset = value;
