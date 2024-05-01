@@ -56,9 +56,5 @@
     <DataTemplate DataType="{x:Type exhautedTokens:ExhautedTokensViewModel}">
         <exhautedTokens:ExhaustedTokensView/>
     </DataTemplate>
-
-    <DataTemplate DataType="{x:Type injectionAction:InjectionActionViewModel}">
-        <injectionAction:InjectionActionView/>
-    </DataTemplate>
-
+    
 </ResourceDictionary>

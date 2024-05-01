@@ -13,6 +13,7 @@ using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using System.Windows.Controls.Primitives;
 using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
 using System.Windows.Data;
+using Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
 
 namespace Jarvis_Windows.Sources.Utils.Services;
 
@@ -44,7 +45,9 @@ public class PopupDictionaryService : ObserveralObject
     private InjectionActionViewModel _injectionActionViewModel;
 
     //Popups 
-    private Popup _injectionActionPopup;
+    private Popup? _injectionActionPopup;
+    private MenuInjectionActionsView? _menuinjectionActionsView;
+    private MenuInjectionActionsViewModel? _menuinjectionActionsViewModel;
     
     public static  String TargetLangguage
     {
@@ -247,8 +250,8 @@ public class PopupDictionaryService : ObserveralObject
     }
     public void ShowJarvisAction(bool isShow)
     {
-        //IsShowJarvisAction = isShow;
-        IsShowJarvisAction = isShow & JarvisActionVisibility;
+        IsShowJarvisAction = isShow;
+        //IsShowJarvisAction = isShow & JarvisActionVisibility;
     }
 
     private void InitInjectionAction()
@@ -276,6 +279,10 @@ public class PopupDictionaryService : ObserveralObject
         isOpenBinding.Source = this;
         isOpenBinding.NotifyOnSourceUpdated = true;
         _injectionActionPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
+
+        //Init menu injection actions
+        //_menuinjectionActionsView = new MenuInjectionActionsView();
+        //_menuinjectionActionsViewModel = (MenuInjectionActionsViewModel)_menuinjectionActionsView.DataContext;
     }
 
     private Point ConvertFromSystemCoorToVisualCoord(Point systemPoint)
@@ -341,7 +348,17 @@ public class PopupDictionaryService : ObserveralObject
     public void ShowMenuOperations(bool isShow)
     {
         //IsShowMenuOperations = isShow;
-        IsShowMenuOperations = isShow & JarvisActionVisibility;
+        //IsShowMenuOperations = isShow & JarvisActionVisibility;
+
+        /*if (isShow)
+        {
+            _injectionActionPopup.IsOpen = false;
+            _menuinjectionActionsView.Show();
+        }
+        else
+        {
+            _menuinjectionActionsView.Hide();
+        }*/
     }
 
     public void ShowMenuSelectionActions(bool isShow)

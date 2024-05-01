@@ -47,11 +47,17 @@ namespace Jarvis_Windows
         {
             DestroyOldProcesses(); //Single instance application
 
-            MainView mainView = DependencyInjection.GetService<MainView>();
-            SettingView settingView = DependencyInjection.GetService<SettingView>();
+            //MainView mainView = DependencyInjection.GetService<MainView>();
+            //SettingView settingView = DependencyInjection.GetService<SettingView>();
             //mainView.Show();
+            //DependencyInjection.GetService<PopupDictionaryService>().MainWindow = mainView;
 
-            DependencyInjection.GetService<PopupDictionaryService>().MainWindow = mainView;
+            MainNavigationView mainNavigationView = new MainNavigationView();
+            mainNavigationView.Show();
+
+            //Test register Accessibility Service
+            UIElementDetector accessibilityService = DependencyInjection.GetService<UIElementDetector>();
+            accessibilityService.SubscribeToElementFocusChanged();
 
             if (e.Args.Length > 0) //Activation from URI scheme
             {

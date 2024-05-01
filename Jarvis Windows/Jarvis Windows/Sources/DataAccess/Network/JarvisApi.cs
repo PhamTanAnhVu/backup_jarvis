@@ -91,7 +91,7 @@ public sealed class JarvisApi
                 string responseContent = response.Content.ReadAsStringAsync().Result;
                 dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
                 int remainingUsage = responseObject.availableTokens;
-                int dailyUsage = responseObject.dailyTokens;
+                int dailyUsage = responseObject.totalTokens;
                 string dateString = responseObject.date;
                 //if (DateTime.TryParseExact(dateString, "MM/dd/yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out DateTime dateTime))
                 //{

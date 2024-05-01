@@ -14,7 +14,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
     /// </summary>
     public partial class InjectionActionView : UserControl
     {
-        private Timer timer;
         private readonly Size _expandSize = new Size(50, 30);
         private readonly Size _collapseSize = new Size(30, 30);
 
@@ -24,6 +23,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         public InjectionActionView()
         {
             InitializeComponent();
+
             parrentBorder.Background = new SolidColorBrush(Colors.White);
             parrentBorder.Width = _collapseSize.Width;
             parrentBorder.Height = _collapseSize.Height;

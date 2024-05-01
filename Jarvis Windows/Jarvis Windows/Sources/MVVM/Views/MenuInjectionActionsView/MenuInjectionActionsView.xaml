@@ -13,6 +13,9 @@
         Background="Transparent"
         Title="MenuInjectionActionsView"
         MouseDown="Window_MouseDown"
+        Visibility="{Binding WindowVisibility}"
+        Topmost="True"
+        ShowInTaskbar="False"
         Height="Auto" Width="420">
     <Window.Resources>
         <ResourceDictionary>

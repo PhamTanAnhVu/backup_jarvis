@@ -18,6 +18,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
+using System.Windows.Navigation;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
 using Point = System.Drawing.Point;
@@ -68,6 +69,8 @@ public class MenuInjectionActionsViewModel : ViewModelBase
     private bool _isMouseOver_TextSelectionMenu;
     private bool _isMouseOver_TextMenuPopup;
     private TokenLocalService _tokenLocalService;
+
+    private Visibility _windowVisibility;
 
     private Views.SettingView.SettingView _settingView;
 
@@ -485,6 +488,17 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
     }
 
+    public Visibility WindowVisibility 
+    { 
+        get => _windowVisibility; 
+        set
+        {
+            _windowVisibility = value;
+            OnPropertyChanged();
+        }
+    }
+
+
     public TokenLocalService TokenLocalService
     {
         get => _tokenLocalService;
@@ -495,9 +509,150 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
     }
 
+
     public MenuInjectionActionsViewModel()
     {
-        
+        PopupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
+        AccessibilityService = DependencyInjection.GetService<UIElementDetector>();
+        SendEventGA4 = DependencyInjection.GetService<SendEventGA4>();
+        AutomationElementValueService = (AutomationElementValueService)DependencyInjection.GetService<IAutomationElementValueService>();
+        AuthenService = (AuthenticationService)DependencyInjection.GetService<IAuthenticationService>();
+
+        Account = new Account();
+        Account.Username = WindowLocalStorage.ReadLocalStorage("Username");
+        Account.Email = WindowLocalStorage.ReadLocalStorage("Email");
+        Account.Role = WindowLocalStorage.ReadLocalStorage("Role");
+
+        if (AuthenticationService.AuthenState == AUTHEN_STATE.NOT_AUTHENTICATED
+            && Account != null)
+        {
+            AuthenService.SignOut();
+            Account.Username = "Login";
+            Account.Role = "anonymous";
+            Account.Email = "example@gmail.com";
+            IsShowUsernameFirstLetter = false;
+        }
+        else
+        {
+            IsShowUsernameFirstLetter = true;
+        }
+
+        // Reset APIUsage daily
+        Task.Run(async () => await ResetAPIUsageDaily()).Wait();
+
+        Username = Account.Username;
+        EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
+        if (IsShowUsernameFirstLetter) UsernameFirstLetter = Username[0].ToString();
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+        IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
+        IsNoAPIUsageRemain = !IsAPIUsageRemain;
+
+        //TEST AUTO RESET API USAGE
+        /*if(IsAPIUsageRemain == false)
+        {
+            WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
+            WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+            IsAPIUsageRemain = true;
+        }*/
+
+
+        ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
+        HideMenuOperationsCommand = new RelayCommand(ExecuteHideMenuOperationsCommand, o => true);
+
+        AICommand = new RelayCommand(ExecuteAICommand, o => true);
+        ExpandCommand = new RelayCommand(ExecuteExpandCommand, o => true);
+
+        OpenSettingsCommand = new RelayCommand(ExecuteOpenSettingsCommand, o => true);
+        QuitAppCommand = new RelayCommand(ExecuteQuitAppCommand, o => true);
+        PinJarvisButtonCommand = new RelayCommand(ExecutePinJarvisButtonCommand, o => true);
+        UndoCommand = new RelayCommand(ExecuteUndoCommand, o => true);
+        RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true);
+
+        TextMenuAICommand = new RelayCommand(ExecuteTextMenuAICommand, o => true);
+        ShowTextMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
+        HideTextMenuAPICommand = new RelayCommand(ExecuteHideTextMenuAPICommand, o => true);
+
+        UpgradePlanCommand = new RelayCommand(ExecuteUpgradePlanCommand, o => true);
+        LoginCommand = new RelayCommand(ExecuteLoginCommand, o => true);
+        LogoutCommand = new RelayCommand(ExecuteLogoutCommand, o => true);
+        ShowSettingsCommand = new RelayCommand(ExecuteShowSettingCommand, o => true);
+        TextMenuPinCommand = new RelayCommand(ExecuteTextMenuPinCommand, o => true);
+        PopupTextMenuCommand = new RelayCommand(ExecutePopupTextMenuCommand, o => true);
+        TextMenuAPIHeaderActionCommand = new RelayCommand(ExecuteTextMenuAPIHeaderActionCommand, o => true);
+        CopyToClipboardCommand = new RelayCommand(o => { Clipboard.SetText(TextMenuAPI); }, o => true);
+
+        string relativePath = Path.Combine("Appsettings", "Configs", "languages_supported.json");
+        string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
+        string jsonContent = "";
+        jsonContent = File.ReadAllText(fullPath);
+
+        Languages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
+        TextMenuLanguages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
+        LanguageSelectedIndex = 14;
+        _authUrl = DataConfiguration.AuthUrl;
+
+        //Register Acceccibility service
+        AccessibilityService.SubscribeToElementFocusChanged();
+        EventAggregator.LanguageSelectionChanged += OnLanguageSelectionChanged;
+
+        // Checking App update here
+        try { ExecuteCheckUpdate(); }
+
+        catch { }
+        finally { ExecuteSendEventOpenMainWindow(); }
+
+        try { ExecuteGetUserGeoLocation(); }
+        catch { }
+
+        InitializeButtons();
+        InitializeButtonsTextMenu();
+
+        ShowAIChatSidebarCommand = new RelayCommand(ExecuteShowAIChatSidebarCommand, o => true);
+        HideAIChatSidebarCommand = new RelayCommand(ExecuteHideAIChatSidebarCommand, o => true);
+        AIChatSendCommand = new RelayCommand(ExecuteAIChatSendCommand, o => true);
+        NewAIChatCommand = new RelayCommand(async o => {
+            AIChatMessagesClear();
+            await SendEventGA4.SendEvent("start_new_chat");
+        }, o => true);
+
+        AIChatMessages = new ObservableCollection<AIChatMessage>();
+        AIChatMessagesClear();
+        ChatPanel_Height = 518;
+
+        EventAggregator.LoginStatusChanged += (sender, e) =>
+        {
+            string type = (string)sender;
+            if (type != "MainWindow") return;
+            RetrieveUserInfo();
+        };
+
+        _globalMouseHook = Hook.GlobalEvents();
+        _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
+        _globalMouseHook.MouseDragFinished += MouseDragFinished;
+        _globalMouseHook.MouseClick += MouseClicked;
+
+        EventAggregator.MouseOverAppUIChanged += (sender, e) => {
+            _isMouseOver_AppUI = (bool)sender;
+        };
+
+        EventAggregator.MouseOverTextSelectionMenuChanged += (sender, e) => {
+            _isMouseOver_TextSelectionMenu = (bool)sender;
+        };
+
+        EventAggregator.MouseOverTextMenuPopupChanged += (sender, e) => {
+            _isMouseOver_TextMenuPopup = (bool)sender;
+        };
+    }
+
+    private void InitialCommands()
+    {
+        ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
+        HideMenuOperationsCommand = new RelayCommand(ExecuteHideMenuOperationsCommand, o => true);
+        AICommand = new RelayCommand(ExecuteAICommand, o => true);
+        ExpandCommand = new RelayCommand(ExecuteExpandCommand, o => true);
+        UndoCommand = new RelayCommand(ExecuteUndoCommand, o => true);
+        RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true);
     }
 
     public MenuInjectionActionsViewModel(INavigationService navigationService,
@@ -754,11 +909,12 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
     private void ExecuteHideMenuOperationsCommand(object obj)
     {
-        PopupDictionaryService.ShowMenuOperations(false);
+        WindowVisibility = Visibility.Collapsed;
+        /*PopupDictionaryService.ShowMenuOperations(false);
         if ((string)obj == "ClickUI")
         {
             PopupDictionaryService.ShowJarvisAction(true);
-        }
+        }*/
     }
 
     private void ExecuteQuitAppCommand(object obj)
@@ -826,7 +982,9 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
     public async void ExecuteShowMenuOperationsCommand(object obj)
     {
-        if (!PopupDictionaryService.IsDragging)
+        WindowVisibility = Visibility.Visible;
+
+        /*if (!PopupDictionaryService.IsDragging)
         {
             //FIXME: Old handle with popup
             bool _menuShowStatus = PopupDictionaryService.IsShowMenuOperations;
@@ -848,7 +1006,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             // New handle with windows
             //MenuInjectionActionsView.MenuInjectionActionsView menuInjectionActionsView = new MenuInjectionActionsView.MenuInjectionActionsView();
             //menuInjectionActionsView.Show();
-        }
+        }*/
     }
 
     private async void ExecuteExpandCommand(object parameter)

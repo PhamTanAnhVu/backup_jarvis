@@ -37,7 +37,7 @@ namespace Jarvis_Windows
                 SupportedAppService = provider.GetRequiredService<ISupportedAppService>()
             });
 
-            services.AddSingleton<MainViewModel>();
+            /*services.AddSingleton<MainViewModel>();
             services.AddSingleton<MainView>(provider => new MainView
             {
                 DataContext = provider.GetRequiredService<MainViewModel>(),
@@ -53,7 +53,7 @@ namespace Jarvis_Windows
                 PopupDictionaryService = provider.GetRequiredService<PopupDictionaryService>()
             });
 
-            services.AddSingleton<TextMenuViewModel>();
+            services.AddSingleton<TextMenuViewModel>();*/
 
             _serviceProvider = services.BuildServiceProvider();
         }

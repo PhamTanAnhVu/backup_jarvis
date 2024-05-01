@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Jarvis_Windows"
              xmlns:mainView="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MainView"
-             xmlns:settingView="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.SettingView"
-             StartupUri="Sources/MVVM/Views/MainNavigationView/MainNavigationView.xaml">
+             xmlns:settingView="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.SettingView">
     <Application.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
