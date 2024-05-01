@@ -592,6 +592,10 @@ public class PopupDictionaryService : ObserveralObject
         isOpenBinding.Source = this;
         isOpenBinding.NotifyOnSourceUpdated = true;
         _injectionActionPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
+
+        //Init menu injection actions
+        //_menuinjectionActionsView = new MenuInjectionActionsView();
+        //_menuinjectionActionsViewModel = (MenuInjectionActionsViewModel)_menuinjectionActionsView.DataContext;
     }
 
     private Point ConvertFromSystemCoorToVisualCoord(Point systemPoint)

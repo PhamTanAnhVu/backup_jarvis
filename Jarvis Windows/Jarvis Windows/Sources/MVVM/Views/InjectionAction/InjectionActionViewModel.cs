@@ -110,7 +110,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             IsSpinningJarvisIcon = true;
         }
 
-        private void ExecuteShowMenuOperationsCommand(object obj)
+        private void ExecutePinJarvisButtonCommand(object obj)
         {
             if(!PopupDictionaryService.Instance().IsDragging)
             {

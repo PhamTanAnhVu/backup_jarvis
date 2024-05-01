@@ -19,6 +19,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
+using System.Windows.Navigation;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
 {
@@ -438,6 +439,17 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
     }
 
+    public Visibility WindowVisibility 
+    { 
+        get => _windowVisibility; 
+        set
+        {
+            _windowVisibility = value;
+            OnPropertyChanged();
+        }
+    }
+
+
     public TokenLocalService TokenLocalService
     {
         get => _tokenLocalService;
@@ -447,6 +459,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             OnPropertyChanged("TokenService");
         }
     }
+
 
     public MenuInjectionActionsViewModel()
     {
