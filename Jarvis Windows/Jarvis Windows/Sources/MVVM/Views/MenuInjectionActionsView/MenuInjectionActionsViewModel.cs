@@ -636,8 +636,8 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             _isMouseOver_AppUI = (bool)sender;
         };
 
-        EventAggregator.MouseOverTextSelectionMenuChanged += (sender, e) => {
-            _isMouseOver_TextSelectionMenu = (bool)sender;
+        EventAggregator.MouseOverTextMenuSelectionChanged += (sender, e) => {
+            _isMouseOver_TextMenuSelection = (bool)sender;
         };
 
         EventAggregator.MouseOverTextMenuPopupChanged += (sender, e) => {

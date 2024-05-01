@@ -46,7 +46,7 @@ public class PopupDictionaryService : ObserveralObject
     private Popup? _injectionActionPopup;
     private MenuInjectionActionsView? _menuinjectionActionsView;
     private MenuInjectionActionsViewModel? _menuinjectionActionsViewModel;
-    private Popup _injectionActionPopup;
+
     private Popup _menuSelectionActionsPopup;
     private Popup _menuSelectionResponsePopup;
     private Popup _menuSelectionPopupListPopup;
