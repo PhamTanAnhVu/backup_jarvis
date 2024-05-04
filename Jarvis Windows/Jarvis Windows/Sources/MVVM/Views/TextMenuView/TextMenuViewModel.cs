@@ -16,7 +16,7 @@ namespace Jarvis_Windows.Sources.MVVM.ViewModels;
 
 public class TextMenuViewModel : ViewModelBase
 {
-    private PopupDictionaryService _popupDictionaryService;
+    //private PopupDictionaryService _popupDictionaryService;
     private UIElementDetector _uIElementDetector;
     private SendEventGA4 _sendEventGA4;
 
@@ -33,7 +33,7 @@ public class TextMenuViewModel : ViewModelBase
     public RelayCommand HideTextMenuAPICommand { get; set; }
     public RelayCommand LanguageComboBoxCommand { get; set; }
     
-    public PopupDictionaryService PopupDictionaryService
+    /*public PopupDictionaryService PopupDictionaryService
     {
         get { return _popupDictionaryService; }
         set
@@ -41,7 +41,7 @@ public class TextMenuViewModel : ViewModelBase
             _popupDictionaryService = value;
             OnPropertyChanged();
         }
-    }
+    }*/
 
     public UIElementDetector UIElementDetector
     {
@@ -126,9 +126,9 @@ public class TextMenuViewModel : ViewModelBase
         }
     }
 
-    public TextMenuViewModel(PopupDictionaryService popupDictionaryService, UIElementDetector uIElementDetector, SendEventGA4 sendEventGA4)
+    public TextMenuViewModel(/*PopupDictionaryService popupDictionaryService, */UIElementDetector uIElementDetector, SendEventGA4 sendEventGA4)
     {
-        PopupDictionaryService = popupDictionaryService;
+        //PopupDictionaryService = popupDictionaryService;
         UIElementDetector = uIElementDetector;
         SendEventGA4 = sendEventGA4;
 
@@ -155,10 +155,10 @@ public class TextMenuViewModel : ViewModelBase
 
     public async void ExecuteShowMenuOperationsCommand(object obj)
     {
-        bool _menuShowStatus = PopupDictionaryService.IsShowMenuOperations;
+        bool _menuShowStatus = PopupDictionaryService.Instance().IsShowMenuOperations;
 
-        PopupDictionaryService.ShowMenuOperations(!_menuShowStatus);
-        PopupDictionaryService.ShowJarvisAction(false);
+        PopupDictionaryService.Instance().ShowMenuOperations(!_menuShowStatus);
+        PopupDictionaryService.Instance().ShowJarvisAction(false);
 
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
         TextMenuButtons = aIActionTemplate.MenuSelectionButtonList;
@@ -177,7 +177,7 @@ public class TextMenuViewModel : ViewModelBase
 
     public async void ExecuteHideTextMenuAPICommand(object obj)
     {
-        PopupDictionaryService.ShowTextMenuAPIOperations(false);
+        PopupDictionaryService.Instance().ShowTextMenuAPIOperations(false);
 
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
         TextMenuButtons = aIActionTemplate.MenuSelectionButtonList;
@@ -205,7 +205,7 @@ public class TextMenuViewModel : ViewModelBase
             TextMenuAPI = "";
             TextMenuAPIscrollBarHeight = 88;
             IsSpinningJarvisIconTextMenu = true;
-            PopupDictionaryService.IsShowMenuSelectionResponse = true;
+            PopupDictionaryService.Instance().IsShowTextMenuAPI = true;
 
             //var textFromElement = "Jarvis AI Assistant, your all-in-one solution that harnesses the formidable capabilities of ChatGPT, which provides large and wide knowledge, GPT 4 for cutting-edge language understanding, Claude AI for advanced innovations, Llama 2 for next-level text generation, Bard for creative content creation, Bing Chat for seamless communication, Meta AI for deep learning potential, Chat GPT for conversational prowess, Chatting GPT for natural dialogue, GPT Chat for interactive communication, GPT4 for state-of-the-art language processing, and the transformative power of Ajax AI (also known as AjaxAI), OpenAI and latest AI model Gemini.";
             var textFromElement = UIElementDetector.GetSelectedText();

@@ -55,6 +55,11 @@ namespace Jarvis_Windows
             MainNavigationView mainNavigationView = new MainNavigationView();
             mainNavigationView.Show();
 
+            PopupDictionaryService.Instance().InitInjectionAction();
+            PopupDictionaryService.Instance().InitMenuSelectionActions();
+            PopupDictionaryService.Instance().InitMenuSelectionPopupList();
+            PopupDictionaryService.Instance().InitMenuSelectionResponse();
+
             //Test register Accessibility Service
             UIElementDetector accessibilityService = DependencyInjection.GetService<UIElementDetector>();
             accessibilityService.SubscribeToElementFocusChanged();

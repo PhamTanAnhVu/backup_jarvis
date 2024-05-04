@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Automation;
 using System.Windows;
 using Jarvis_Windows.Sources.Utils.Services;
@@ -29,7 +29,7 @@ public class UIElementDetector
     private static AutomationElement? _focusingElement;
     private static AutomationFocusChangedEventHandler? _focusChangedEventHandler = new AutomationFocusChangedEventHandler(OnElementFocusChanged);
 
-    private static PopupDictionaryService? _popupDictionaryService;
+    //private static PopupDictionaryService? _popupDictionaryService;
     private static SendEventGA4? _sendEventGA4;
     private static bool _isUseAutoTuningPosition = true;
     private static IAutomationElementValueService? _automationElementValueService;
@@ -78,27 +78,27 @@ public class UIElementDetector
         get => _observerSelectionChangeElement; 
         set => _observerSelectionChangeElement = value; 
     }
-    public PopupDictionaryService? PopupDictionaryService 
+    /*public PopupDictionaryService? PopupDictionaryService 
     { 
         get => _popupDictionaryService; 
         set => _popupDictionaryService = value; 
-    }
+    }*/
     public ISupportedAppService SupportedAppService 
     { 
         get => _supportedAppSerice;
         set => _supportedAppSerice = value;
     }
 
-    private UIElementDetector(PopupDictionaryService popupDictionaryService)
+    public UIElementDetector(/*PopupDictionaryService popupDictionaryService*/)
     {
-        PopupDictionaryService = popupDictionaryService;
+        //PopupDictionaryService = popupDictionaryService;
         EventAggregator.MouseOverAppUIChanged += (sender, e) => {
             _isMouseOverAppUI = (bool)sender;
         };
     }
 
-    public UIElementDetector()
-    { }
+    /*public UIElementDetector()
+    { }*/
 
     public void SubscribeToElementFocusChanged()
     {
@@ -191,7 +191,7 @@ public class UIElementDetector
             if (newFocusElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") ||
                 newFocusElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox"))
             {
-                _popupDictionaryService.ShowJarvisAction(false);
+                PopupDictionaryService.Instance().ShowJarvisAction(false);
                 //_popupDictionaryService.ShowMenuOperations(false);
                 return;
             }
@@ -200,12 +200,12 @@ public class UIElementDetector
             if (IsEditableElement(newFocusElement))
             {
                 _focusingElement = newFocusElement;
-                if(_popupDictionaryService != null && _automationElementValueService != null)
+                if(/*PopupDictionaryService.Instance() != null && */_automationElementValueService != null)
                 {
-                    _popupDictionaryService.ShowJarvisAction(true);
-                    _popupDictionaryService.ShowMenuOperations(false);
-                    _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
-                    _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+                    PopupDictionaryService.Instance().ShowJarvisAction(true);
+                    PopupDictionaryService.Instance().ShowMenuOperations(false);
+                    PopupDictionaryService.Instance().UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+                    PopupDictionaryService.Instance().UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
                     //_popupDictionaryService.MainWindow.ResetBinding();
                     ExecuteSendEventInject();
                     _automationElementValueService.CheckUndoRedo(_focusingElement);
@@ -226,8 +226,8 @@ public class UIElementDetector
                     }
 
                     _focusingElement = null;
-                    _popupDictionaryService?.ShowJarvisAction(false);
-                    _popupDictionaryService?.ShowMenuOperations(false);
+                    PopupDictionaryService.Instance().ShowJarvisAction(false);
+                    PopupDictionaryService.Instance().ShowMenuOperations(false);
                 }
                 catch (Exception)
                 {
@@ -255,8 +255,8 @@ public class UIElementDetector
                 Rect elementRectBounding = _focusingElement.Current.BoundingRectangle;
                 if(elementRectBounding.X <0 || elementRectBounding.Y < 0)
                 {
-                    _popupDictionaryService.ShowJarvisAction(false);
-                    _popupDictionaryService.ShowMenuOperations(false);
+                    PopupDictionaryService.Instance().ShowJarvisAction(false);
+                    PopupDictionaryService.Instance().ShowMenuOperations(false);
                     placementPoint.X = 0;
                     placementPoint.Y = 0;
                 }
@@ -292,23 +292,11 @@ public class UIElementDetector
                 Automation.AddAutomationPropertyChangedEventHandler(trackingElement, treeScope, propertyChangedHandler, trackingProperty);
             }
         }
-        catch (NullReferenceException)
-        {
-            Debug.WriteLine($"Null reference exception");
-            PopupDictionaryService.ShowJarvisAction(false);
-            PopupDictionaryService.ShowMenuOperations(false);
-        }
-        catch (ElementNotAvailableException)
-        {
-            Debug.WriteLine($"Element is not available");
-            PopupDictionaryService.ShowJarvisAction(false);
-            PopupDictionaryService.ShowMenuOperations(false);
-        }
         catch (Exception ex)
         {
             Debug.WriteLine($"An error occurred: {ex.Message}");
-            PopupDictionaryService.ShowJarvisAction(false);
-            PopupDictionaryService.ShowMenuOperations(false);
+            PopupDictionaryService.Instance().ShowJarvisAction(false);
+            PopupDictionaryService.Instance().ShowMenuOperations(false);
         }
     }
 
@@ -317,15 +305,15 @@ public class UIElementDetector
         var automationElement = sender as AutomationElement;
         if (e.Property == AutomationElement.BoundingRectangleProperty)
         {
-            Debug.WriteLine($"?????? {automationElement?.Current.Name} Bounding Rectangle Changed");
-            PopupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
-            PopupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+            Debug.WriteLine($"🟧🟧🟧 {automationElement?.Current.Name} Bounding Rectangle Changed");
+            PopupDictionaryService.Instance().UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+            PopupDictionaryService.Instance().UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
         }
         else if (e.Property == AutomationElement.IsOffscreenProperty)
         {
-            Debug.WriteLine($"????????? {automationElement?.Current.ControlType.ProgrammaticName} Offscreen Property Changed");
-            PopupDictionaryService.ShowJarvisAction(false);
-            PopupDictionaryService.ShowMenuOperations(false);
+            Debug.WriteLine($"👁️👁️👁️ {automationElement?.Current.ControlType.ProgrammaticName} Offscreen Property Changed");
+            PopupDictionaryService.Instance().ShowJarvisAction(false);
+            PopupDictionaryService.Instance().ShowMenuOperations(false);
         }
     }
 
@@ -548,11 +536,11 @@ public class UIElementDetector
                                         //Point selectedTextPosition = new Point(boundingRect.X * xScale - 20, boundingRect.Y * yScale + boundingRect.Height * 1.5f);
                                         
                                         Point selectedTextPosition = new Point((int)(lpPoint.X * xScale), (int)(lpPoint.Y * yScale));
-                                        _popupDictionaryService.MenuSelectionActionsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
+                                        PopupDictionaryService.Instance().TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
                                     
-                                        if (!_popupDictionaryService.IsPinMenuSelectionResponse)
+                                        if (!PopupDictionaryService.Instance().IsShowPinTextMenuAPI)
                                         {
-                                            _popupDictionaryService.IsShowMenuSelectionResponse = false;
+                                            PopupDictionaryService.Instance().IsShowTextMenuAPI = false;
                                         }
                                     }
                                 }

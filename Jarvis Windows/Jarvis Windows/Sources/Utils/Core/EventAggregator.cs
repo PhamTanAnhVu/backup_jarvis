@@ -51,7 +51,6 @@ public static class EventAggregator
         MouseOverTextMenuPopupChanged?.Invoke(sender, e);
     }
 
-
     public static void PublishSettingVisibilityChanged(object sender, EventArgs e)
     {
         SettingVisibilityChanged?.Invoke(sender, e);

@@ -13,7 +13,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionResponseViewModel : ViewModelBase
 {
-    private PopupDictionaryService? _popupDictionaryService;
+    //private PopupDictionaryService? _popupDictionaryService;
     private UIElementDetector? _accessibilityService;
     private SendEventGA4? _googleAnnalyticService;
 
@@ -153,7 +153,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
 
     void InitializeServices()
     {
-        _popupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
+        //_popupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
         _accessibilityService = DependencyInjection.GetService<UIElementDetector>();
         _googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
     }
@@ -168,15 +168,15 @@ public class MenuSelectionResponseViewModel : ViewModelBase
 
     private async void ExecuteHideMenuSelectionResponseCommand(object obj)
     {
-        _popupDictionaryService.IsPinMenuSelectionResponse = false;
-        _popupDictionaryService.IsShowMenuSelectionResponse = false;
+        PopupDictionaryService.Instance().IsPinMenuSelectionResponse = false;
+        PopupDictionaryService.Instance().IsShowMenuSelectionResponse = false;
         SelectionResponsePinColor = "Transparent";
     }
 
     private async void ExecuteShowMenuSelectionPopupListCommand(object obj)
     {
-        _popupDictionaryService.IsShowMenuSelectionPopupList = !_popupDictionaryService.IsShowMenuSelectionPopupList;
-        if (_popupDictionaryService.IsShowMenuSelectionPopupList)
+        PopupDictionaryService.Instance().IsShowMenuSelectionPopupList = !PopupDictionaryService.Instance().IsShowMenuSelectionPopupList;
+        if (PopupDictionaryService.Instance().IsShowMenuSelectionPopupList)
         {
             // Turn off PinCommand for buttons in MenuSelectionResponse View
             MenuSelectionSharedData.PublishMenuSelectionPopupListExecuted(false, EventArgs.Empty);
@@ -186,8 +186,8 @@ public class MenuSelectionResponseViewModel : ViewModelBase
     public async void ExecuteMenuSelectionPinCommand(object obj)
     {
         string[] colors = { "Transparent", "#6841EA" };
-        _popupDictionaryService.IsPinMenuSelectionResponse = !_popupDictionaryService.IsPinMenuSelectionResponse;
-        SelectionResponsePinColor = colors[Convert.ToInt32(_popupDictionaryService.IsPinMenuSelectionResponse)];
+        PopupDictionaryService.Instance().IsPinMenuSelectionResponse = !PopupDictionaryService.Instance().IsPinMenuSelectionResponse;
+        SelectionResponsePinColor = colors[Convert.ToInt32(PopupDictionaryService.Instance().IsPinMenuSelectionResponse)];
         if (SelectionResponsePinColor == colors[1])
         {
             await _googleAnnalyticService.SendEvent("pin_inject_selection_actions_response");
@@ -206,16 +206,16 @@ public class MenuSelectionResponseViewModel : ViewModelBase
     }
     public async void ExecuteMenuSelectionCommand(object obj)
     {
-        if (!_popupDictionaryService.IsPinMenuSelectionResponse)
+        if (!PopupDictionaryService.Instance().IsPinMenuSelectionResponse)
         {
-            _popupDictionaryService.MenuSelectionActionsPosition = new System.Drawing.Point
+            PopupDictionaryService.Instance().MenuSelectionActionsPosition = new System.Drawing.Point
             (
-                _popupDictionaryService.MenuSelectionActionsPosition.X,
-                _popupDictionaryService.MenuSelectionActionsPosition.Y + 40
+                PopupDictionaryService.Instance().MenuSelectionActionsPosition.X,
+                PopupDictionaryService.Instance().MenuSelectionActionsPosition.Y + 40
             );
         }
 
-        _popupDictionaryService.IsShowMenuSelectionPopupList = false;
+        PopupDictionaryService.Instance().IsShowMenuSelectionPopupList = false;
 
         string _aiAction = "custom";
         string _targetLanguage = TranslateLanguages[LanguageSelectedIndex].Value;
@@ -227,7 +227,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             SelectionTextResponse = "";
             IsSpinningJarvisIcon = true;
             SelectionResponseHeaderName = _buttonInfo.Content;
-            _popupDictionaryService.IsShowMenuSelectionResponse = true;
+            PopupDictionaryService.Instance().IsShowMenuSelectionResponse = true;
 
             var textFromElement = UIElementDetector.CurrentSelectedText;
             if (textFromElement == "") return;

@@ -16,7 +16,7 @@
         WindowStartupLocation="Manual"
         ResizeMode="NoResize"
         AllowsTransparency="True"
-        ShowInTaskbar="False">
+        ShowInTaskbar="True">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

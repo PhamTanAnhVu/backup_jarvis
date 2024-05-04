@@ -13,7 +13,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionActionsViewModel : ViewModelBase
 {
-    private PopupDictionaryService? _popupDictionaryService;
+    //private PopupDictionaryService? _popupDictionaryService;
     private UIElementDetector? _accessibilityService;
     private SendEventGA4? _googleAnnalyticService;
 
@@ -28,33 +28,33 @@ public class MenuSelectionActionsViewModel : ViewModelBase
 
     public MenuSelectionActionsViewModel()
     {
-        // InitializeServices();
+        InitializeServices();
         InitializeMenuSelectionButtons();
         // MenuSelectionCommand = new RelayCommand(ExecuteMenuSelectionCommand, o => true);
         // MenuSelectionPinCommand = new RelayCommand(ExecuteMenuSelectionPinCommand, o => true);
         // ShowMenuSelectionPopupListCommand = new RelayCommand(ExecuteShowMenuSelectionPopupListCommand, o => true);
-        
-        //_globalMouseHook = Hook.GlobalEvents();
-        //_globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
-        //_globalMouseHook.MouseDragFinished += MouseDragFinished;
-        //_globalMouseHook.MouseClick += MouseClicked;
-        //EventAggregator.MouseOverAppUIChanged += (sender, e) =>
-        //{
-        //    _isMouseOver_AppUI = (bool)sender;
-        //};
-        //EventAggregator.MouseOverTextMenuSelectionChanged += (sender, e) =>
-        //{
-        //    _isMouseOver_TextMenuSelection = (bool)sender;
-        //};
-        //EventAggregator.MouseOverTextMenuPopupChanged += (sender, e) =>
-        //{
-        //    _isMouseOver_TextMenuPopup = (bool)sender;
-        //};
+
+        _globalMouseHook = Hook.GlobalEvents();
+        _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
+        _globalMouseHook.MouseDragFinished += MouseDragFinished;
+        _globalMouseHook.MouseClick += MouseClicked;
+        EventAggregator.MouseOverAppUIChanged += (sender, e) =>
+        {
+            _isMouseOver_AppUI = (bool)sender;
+        };
+        EventAggregator.MouseOverTextMenuSelectionChanged += (sender, e) =>
+        {
+            _isMouseOver_TextMenuSelection = (bool)sender;
+        };
+        EventAggregator.MouseOverTextMenuPopupChanged += (sender, e) =>
+        {
+            _isMouseOver_TextMenuPopup = (bool)sender;
+        };
     }
 
     void InitializeServices()
     {
-        _popupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
+        //_popupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
         _accessibilityService = DependencyInjection.GetService<UIElementDetector>();
         _googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
     }
@@ -80,25 +80,25 @@ public class MenuSelectionActionsViewModel : ViewModelBase
             if (action.Visibility) textMenuWidth += 32;
         }
 
-        _popupDictionaryService.MenuSelectionPopupListPosition = new System.Drawing.Point
+        PopupDictionaryService.Instance().MenuSelectionPopupListPosition = new System.Drawing.Point
         (
-            _popupDictionaryService.MenuSelectionPopupListPosition.X + (textMenuWidth - 195),
-            _popupDictionaryService.MenuSelectionPopupListPosition.Y + 40
+            PopupDictionaryService.Instance().MenuSelectionPopupListPosition.X + (textMenuWidth - 195),
+            PopupDictionaryService.Instance().MenuSelectionPopupListPosition.Y + 40
         );
     }
 
     public async void ExecuteShowMenuSelectionPopupListCommand(object obj)
     {
         UpdateMenuSelectionPopupListPosition();
-        _popupDictionaryService.IsShowMenuSelectionPopupList = !_popupDictionaryService.IsShowMenuSelectionPopupList;
+        PopupDictionaryService.Instance().IsShowMenuSelectionPopupList = !PopupDictionaryService.Instance().IsShowMenuSelectionPopupList;
         
-        if (!_popupDictionaryService.IsPinMenuSelectionResponse)
+        if (!PopupDictionaryService.Instance().IsPinMenuSelectionResponse)
         {
             // Turn off MenuSelectionResponse View if not pinned
-            _popupDictionaryService.IsShowMenuSelectionResponse = false;
+            PopupDictionaryService.Instance().IsShowMenuSelectionResponse = false;
         }
 
-        if (_popupDictionaryService.IsShowMenuSelectionPopupList)
+        if (PopupDictionaryService.Instance().IsShowMenuSelectionPopupList)
         {
             // Turn on PinCommand for buttons in MenuSelectionActions View
             MenuSelectionSharedData.PublishMenuSelectionPopupListExecuted(true, EventArgs.Empty);
@@ -123,14 +123,14 @@ public class MenuSelectionActionsViewModel : ViewModelBase
         Point mousePoint = new Point((int)(e.X * xScale), (int)(e.Y * yScale));
 
         //TODO::Check if the mouse is not over menu text selection
-        if (_popupDictionaryService.IsShowMenuSelectionActions)
+        if (PopupDictionaryService.Instance().IsShowMenuSelectionActions)
         {
             if (_isMouseOver_TextMenuPopup || _isMouseOver_TextMenuSelection)
             {
                 return;
             }
 
-            _popupDictionaryService.ShowMenuSelectionActions(false);
+            PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
         }
     }
     private async void MouseDoubleClicked(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -151,12 +151,12 @@ public class MenuSelectionActionsViewModel : ViewModelBase
             {
                 string text = System.Windows.Clipboard.GetText();
                 UIElementDetector.CurrentSelectedText = text;
-                if (_popupDictionaryService.IsPinMenuSelectionResponse && _popupDictionaryService.IsShowMenuSelectionResponse)
+                if (PopupDictionaryService.Instance().IsPinMenuSelectionResponse && PopupDictionaryService.Instance().IsShowMenuSelectionResponse)
                 {
-                    _popupDictionaryService.ShowMenuSelectionActions(false);
+                    PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
                     return;
                 }
-                _popupDictionaryService.ShowMenuSelectionActions(true);
+                PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
                 await _googleAnnalyticService.SendEvent("inject_selection_actions");
             }
             else
@@ -198,7 +198,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
     {
         if (_isMouseOver_AppUI)
         {
-            _popupDictionaryService.ShowMenuSelectionActions(false);
+            PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
             return;
         }
 
@@ -231,29 +231,29 @@ public class MenuSelectionActionsViewModel : ViewModelBase
                 System.Drawing.Point lpPoint;
                 NativeUser32API.GetCursorPos(out lpPoint);
                 Point selectedTextPosition = new Point((int)(lpPoint.X * xScale), (int)(lpPoint.Y * yScale));
-                _popupDictionaryService.MenuSelectionActionsPosition = new System.Drawing.Point
+                PopupDictionaryService.Instance().MenuSelectionActionsPosition = new System.Drawing.Point
                 (
                     (int) selectedTextPosition.X, 
                     (int) selectedTextPosition.Y + 10
                 );
                 Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 50);
-                _popupDictionaryService.MenuSelectionPopupListPosition = new System.Drawing.Point
+                PopupDictionaryService.Instance().MenuSelectionPopupListPosition = new System.Drawing.Point
                 (
                     (int)newPosition.X, 
                     (int)newPosition.Y
                 );
 
-                if (!_popupDictionaryService.IsPinMenuSelectionResponse)
+                if (!PopupDictionaryService.Instance().IsPinMenuSelectionResponse)
                 {
-                    _popupDictionaryService.ShowSelectionResponseView(false);
-                    _popupDictionaryService.MenuSelectionResponsePosition = new System.Drawing.Point
+                    PopupDictionaryService.Instance().ShowSelectionResponseView(false);
+                    PopupDictionaryService.Instance().MenuSelectionResponsePosition = new System.Drawing.Point
                     (
                         (int)newPosition.X, 
                         (int)newPosition.Y
                     );
                 }
 
-                _popupDictionaryService.ShowMenuSelectionActions(true);
+                PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
                 await _googleAnnalyticService.SendEvent("inject_selection_actions");
             }
             else
@@ -263,8 +263,8 @@ public class MenuSelectionActionsViewModel : ViewModelBase
         }
         catch
         {
-            _popupDictionaryService.ShowMenuSelectionActions(false);
-            _popupDictionaryService.ShowSelectionResponseView(false);
+            PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
+            PopupDictionaryService.Instance().ShowSelectionResponseView(false);
         }
     }
 }
