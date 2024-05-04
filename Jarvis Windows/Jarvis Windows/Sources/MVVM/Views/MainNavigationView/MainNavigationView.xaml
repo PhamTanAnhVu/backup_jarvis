@@ -12,11 +12,12 @@
         Height="750" Width="550"
         WindowStyle="None"
         Background="Transparent"
-        Topmost="False"
+        Topmost="{Binding MakeSidebarTopmost}"
         WindowStartupLocation="Manual"
         ResizeMode="NoResize"
         AllowsTransparency="True"
-        ShowInTaskbar="True">
+        Visibility="{Binding SidebarVisibility}"
+        ShowInTaskbar="False">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -28,7 +29,16 @@
     <Window.DataContext>
         <local:MainNavigationViewModel/>
     </Window.DataContext>
+    
+    <!--<Window.CommandBindings>
+        <CommandBinding Command="{x:Reference local:MainNavigationView}" 
+                     Executed="MyCommandExecuted"/>
+    </Window.CommandBindings>
 
+    <Window.InputBindings>
+        <KeyBinding Gesture="Alt+J" Command="{Binding OpenFromShortcutCommand}"/>
+    </Window.InputBindings>-->
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="490"/>
