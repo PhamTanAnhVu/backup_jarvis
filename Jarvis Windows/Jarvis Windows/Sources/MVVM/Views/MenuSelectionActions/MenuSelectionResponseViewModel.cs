@@ -126,7 +126,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
     }
     public MenuSelectionResponseViewModel()
     {
-        // InitializeServices();
+        InitializeServices();
         MenuSelectionCommand = new RelayCommand(ExecuteMenuSelectionCommand, o => true);
         MenuSelectionPinCommand = new RelayCommand(ExecuteMenuSelectionPinCommand, o => true);
         ShowMenuSelectionPopupListCommand = new RelayCommand(ExecuteShowMenuSelectionPopupListCommand, o => true);
@@ -153,7 +153,6 @@ public class MenuSelectionResponseViewModel : ViewModelBase
 
     void InitializeServices()
     {
-        //_popupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
         _accessibilityService = DependencyInjection.GetService<UIElementDetector>();
         _googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
     }

@@ -13,7 +13,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionPopupListViewModel : ViewModelBase
 {
-    private PopupDictionaryService? _popupDictionaryService;
     private UIElementDetector? _accessibilityService;
     private SendEventGA4? _googleAnnalyticService;
     public ObservableCollection<AIButton> MenuSelectionButtons { get; set; }
@@ -67,15 +66,15 @@ public class MenuSelectionPopupListViewModel : ViewModelBase
         MenuSelectionButtons[idx].Visibility = visibilityStatus;
 
         // Add buttons and expand to the left, the problem is the UI will reload everytime -> not smooth
-        _popupDictionaryService.MenuSelectionActionsPosition = new System.Drawing.Point(
-            _popupDictionaryService.MenuSelectionActionsPosition.X + sizeChanged,
-            _popupDictionaryService.MenuSelectionActionsPosition.Y
+        PopupDictionaryService.Instance().MenuSelectionActionsPosition = new System.Drawing.Point(
+            PopupDictionaryService.Instance().MenuSelectionActionsPosition.X + sizeChanged,
+            PopupDictionaryService.Instance().MenuSelectionActionsPosition.Y
         );
 
-        // UpdateMenuSelectionPopupListPosition();
+        //UpdateMenuSelectionPopupListPosition();
 
-        _popupDictionaryService.IsShowMenuSelectionActions = true;
-        _popupDictionaryService.IsShowMenuSelectionPopupList = true;
+        PopupDictionaryService.Instance().IsShowMenuSelectionActions = true;
+        PopupDictionaryService.Instance().IsShowMenuSelectionPopupList = true;
         MenuSelectionButtons[idx].PinColor = colors[Convert.ToInt32(visibilityStatus)];
         OnPropertyChanged(nameof(MenuSelectionButtons));
     }

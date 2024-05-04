@@ -161,7 +161,7 @@ public class UIElementDetector
     {
         const int nChars = 256;
         StringBuilder Buff = new StringBuilder(nChars);
-        IntPtr handle = GetForegroundWindow();
+        IntPtr handle = NativeUser32API.GetForegroundWindow();
 
         if (GetWindowText(handle, Buff, nChars) > 0)
         {
@@ -577,7 +577,7 @@ public class UIElementDetector
         catch { }
     }
 
-    private string GetTextFromFocusedControl()
+    /*private string GetTextFromFocusedControl()
     {
         try
         {
@@ -605,56 +605,5 @@ public class UIElementDetector
         string w = Marshal.PtrToStringUni(buffer);
         Marshal.FreeHGlobal(buffer);
         return w;
-    }
-
-    [DllImport("user32.dll", EntryPoint = "WindowFromPoint", CharSet = CharSet.Auto, ExactSpelling = true)]
-    public static extern IntPtr WindowFromPoint(Point pt);
-
-    [DllImport("user32.dll", EntryPoint = "SendMessageW")]
-    public static extern int SendMessageW([InAttribute] System.IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
-    public const int WM_GETTEXT = 13;
-
-    [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-    internal static extern IntPtr GetForegroundWindow();
-
-    [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-    internal static extern IntPtr GetFocus();
-
-    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    internal static extern int GetWindowThreadProcessId(int handle, out int processId);
-
-    [DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
-    internal static extern int AttachThreadInput(int idAttach, int idAttachTo, bool fAttach);
-    [DllImport("kernel32.dll")]
-    internal static extern int GetCurrentThreadId();
-
-    private static AutomationElement FindFirstElementType(AutomationElement automationElement, ControlType controlType)
-    {
-        AutomationElement? element = null;
-        try
-        {
-            IntPtr handle = NativeUser32API.GetForegroundWindow();
-            AutomationElement rootElement = AutomationElement.FromHandle(handle);
-            var elementColections = rootElement.FindAll(TreeScope.Subtree, new PropertyCondition(AutomationElement.ControlTypeProperty, controlType));
-            Debug.WriteLine("======================================================================================");
-            Debug.WriteLine("ROOT ELEMENT: " + rootElement.Current.Name);
-            Debug.WriteLine("GROUP ELEMENT COUNT: " + elementColections.Count);
-            if(elementColections.Count > 0)
-            {
-                foreach (AutomationElement groupElement in elementColections)
-                {
-                    AutomationElementCollection childs = groupElement.FindAll(TreeScope.Children, System.Windows.Automation.Condition.TrueCondition);
-                    foreach (AutomationElement child in childs)
-                    {
-                        Debug.WriteLine("CHILD ELEMENT: " + child.Current.ControlType.ProgrammaticName);
-                    }
-                }
-            }
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-        return element;
-    }
+    }*/
 }

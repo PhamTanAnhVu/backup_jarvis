@@ -32,7 +32,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
         InitializeMenuSelectionButtons();
         // MenuSelectionCommand = new RelayCommand(ExecuteMenuSelectionCommand, o => true);
         // MenuSelectionPinCommand = new RelayCommand(ExecuteMenuSelectionPinCommand, o => true);
-        // ShowMenuSelectionPopupListCommand = new RelayCommand(ExecuteShowMenuSelectionPopupListCommand, o => true);
+        ShowMenuSelectionPopupListCommand = new RelayCommand(ExecuteShowMenuSelectionPopupListCommand, o => true);
 
         _globalMouseHook = Hook.GlobalEvents();
         _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
@@ -131,6 +131,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
             }
 
             PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
+            PopupDictionaryService.Instance().IsShowMenuSelectionPopupList = false;
         }
     }
     private async void MouseDoubleClicked(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -256,10 +257,10 @@ public class MenuSelectionActionsViewModel : ViewModelBase
                 PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
                 await _googleAnnalyticService.SendEvent("inject_selection_actions");
             }
-            else
+            /*else
             {
                 System.Windows.Clipboard.SetDataObject(tmpClipboard);
-            }
+            }*/
         }
         catch
         {

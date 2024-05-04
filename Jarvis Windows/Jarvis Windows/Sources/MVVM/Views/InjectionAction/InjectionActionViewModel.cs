@@ -14,8 +14,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         private double _horizontalOffset;
         private double _verticalOffset;
         private MenuInjectionActionsViewModel? _menuInjectionActionsViewModel;
-
-        //private PopupDictionaryService? _popupDictionaryService;
         private SendEventGA4? _googleAnnalyticService;
         #endregion
 

@@ -490,11 +490,11 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
     public MenuInjectionActionsViewModel()
     {
-        //PopupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
         AccessibilityService = DependencyInjection.GetService<UIElementDetector>();
         SendEventGA4 = DependencyInjection.GetService<SendEventGA4>();
         AutomationElementValueService = (AutomationElementValueService)DependencyInjection.GetService<IAutomationElementValueService>();
         AuthenService = (AuthenticationService)DependencyInjection.GetService<IAuthenticationService>();
+        WindowVisibility = Visibility.Collapsed;
 
 
         Account = new Account();

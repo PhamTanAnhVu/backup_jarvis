@@ -143,17 +143,20 @@ namespace Jarvis_Windows.Sources.Utils.Services
 
         public void StoreAction(AutomationElement? automationElement, string previousTextFromInput)
         {
-            if(AutomationElementValueDictionary.ContainsKey(automationElement))
+            if (automationElement != null)
             {
-                AutomationElementValueDictionary[automationElement].DoAction(previousTextFromInput);
+                if (AutomationElementValueDictionary.ContainsKey(automationElement))
+                {
+                    AutomationElementValueDictionary[automationElement].DoAction(previousTextFromInput);
+                }
+                else
+                {
+                    AutomationElementValueDictionary.Add(automationElement, new UndoRedoAction());
+                    AutomationElementValueDictionary[automationElement].DoAction(previousTextFromInput);
+                }
+                IsCanUndo = CheckCanUndo(automationElement);
+                IsCanRedo = CheckCanRedo(automationElement);
             }
-            else
-            {
-                AutomationElementValueDictionary.Add(automationElement, new UndoRedoAction());
-                AutomationElementValueDictionary[automationElement].DoAction(previousTextFromInput);
-            }
-            IsCanUndo = CheckCanUndo(automationElement);
-            IsCanRedo = CheckCanRedo(automationElement);
         }
 
         public static bool CheckCanUndo(AutomationElement? automationElement)
