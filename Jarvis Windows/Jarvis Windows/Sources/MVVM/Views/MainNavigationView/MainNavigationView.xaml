@@ -15,7 +15,7 @@
         Height="auto" Width="auto"
         WindowStyle="None"
         Background="Transparent"
-        Topmost="False"
+        Topmost="{Binding MakeSidebarTopmost}"
         WindowStartupLocation="Manual"
         ResizeMode="NoResize"
         AllowsTransparency="True"

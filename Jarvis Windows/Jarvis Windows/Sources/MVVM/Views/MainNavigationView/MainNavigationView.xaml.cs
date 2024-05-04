@@ -1,4 +1,4 @@
-using Gma.System.MouseKeyHook;
+﻿using Gma.System.MouseKeyHook;
 using Jarvis_Windows.Sources.MVVM.Models;
 using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
 using Jarvis_Windows.Sources.MVVM.Views.ContextMenuView;

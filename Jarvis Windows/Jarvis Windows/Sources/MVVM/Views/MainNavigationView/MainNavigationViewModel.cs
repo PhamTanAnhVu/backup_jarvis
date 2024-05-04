@@ -1,4 +1,4 @@
-using Jarvis_Windows.Sources.MVVM.ViewModels;
+﻿using Jarvis_Windows.Sources.MVVM.ViewModels;
 using Jarvis_Windows.Sources.MVVM.Views.AIArt;
 using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 using Jarvis_Windows.Sources.MVVM.Views.AISearch;
@@ -9,6 +9,7 @@ using Jarvis_Windows.Sources.MVVM.Views.Profile;
 using Jarvis_Windows.Sources.MVVM.Views.Settings;
 using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 using Jarvis_Windows.Sources.Utils.Core;
+using Microsoft.Expression.Interactivity.Core;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -434,6 +435,16 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.J)
             {
                 EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", !IsShowMainNavigation), new EventArgs());
+                e.Handled = true;
+            }
+        }
+
+        private void KeyboardShortcutEvents(object? sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.J)
+            {
+                SidebarVisibility = Visibility.Visible;
+                MakeSidebarTopmost = true;
                 e.Handled = true;
             }
         }
