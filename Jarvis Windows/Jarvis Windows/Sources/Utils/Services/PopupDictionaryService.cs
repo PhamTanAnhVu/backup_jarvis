@@ -212,13 +212,33 @@ public class PopupDictionaryService : ObserveralObject
         }
     }
 
-    private bool _isShowMenuSelectionActions;
-    private bool _isShowMenuSelectionResponse;
-    private bool _isShowMenuSelectionPopupList;
-
-    private Point _menuSelectionActionsPosition;
-    private Point _menuSelectionResponsePosition;
-    private Point _menuSelectionPopupListPosition;
+    public Point TextMenuOperationsPosition
+    {
+        get { return _textMenuOperationsPosition; }
+        set
+        {
+            _textMenuOperationsPosition = value;
+            OnPropertyChanged();
+        }
+    }
+    public Point TextMenuAPIPosition
+    {
+        get { return _textMenuAPIPosition; }
+        set
+        {
+            _textMenuAPIPosition = value;
+            OnPropertyChanged();
+        }
+    }
+    public Point PopupTextMenuPosition
+    {
+        get { return _popupTextMenuPosition; }
+        set
+        {
+            _popupTextMenuPosition = value;
+            OnPropertyChanged();
+        }
+    }
 
     public bool IsShowMenuSelectionActions
     {
@@ -606,7 +626,8 @@ public class PopupDictionaryService : ObserveralObject
     {
         IsShowJarvisAction = isShow & JarvisActionVisibility;
     }
-    private void InitInjectionAction()
+
+    public void InitInjectionAction()
     {
         _injectionActionPopup = new Popup();
         InjectionActionView injectionActionView = new InjectionActionView();
@@ -631,13 +652,9 @@ public class PopupDictionaryService : ObserveralObject
         isOpenBinding.Source = this;
         isOpenBinding.NotifyOnSourceUpdated = true;
         _injectionActionPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
-
-        //Init menu injection actions
-        //_menuinjectionActionsView = new MenuInjectionActionsView();
-        //_menuinjectionActionsViewModel = (MenuInjectionActionsViewModel)_menuinjectionActionsView.DataContext;
     }
 
-    private void InitMenuSelectionActions()
+    public void InitMenuSelectionActions()
     {
         _menuSelectionActionsPopup = new Popup();
         MenuSelectionActionsView menuSelectionActionsView = new MenuSelectionActionsView();
@@ -664,7 +681,7 @@ public class PopupDictionaryService : ObserveralObject
         isOpenBinding.NotifyOnSourceUpdated = true;
         _menuSelectionActionsPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
     }
-    private void InitMenuSelectionResponse()
+    public void InitMenuSelectionResponse()
     {
         _menuSelectionResponsePopup = new Popup();
         MenuSelectionResponseView menuSelectionResponseView = new MenuSelectionResponseView();
@@ -693,7 +710,7 @@ public class PopupDictionaryService : ObserveralObject
         _menuSelectionResponsePopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
     }
  
-    private void InitMenuSelectionPopupList()
+    public void InitMenuSelectionPopupList()
     {
         _menuSelectionPopupListPopup = new Popup();
         MenuSelectionPopupListView menuSelectionPopupListView = new MenuSelectionPopupListView();

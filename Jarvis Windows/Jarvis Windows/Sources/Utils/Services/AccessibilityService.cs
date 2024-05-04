@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Automation;
 using System.Windows;
 using Jarvis_Windows.Sources.Utils.Services;

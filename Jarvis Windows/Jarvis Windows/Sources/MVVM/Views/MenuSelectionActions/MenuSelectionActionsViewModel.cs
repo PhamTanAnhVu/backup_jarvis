@@ -15,7 +15,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionActionsViewModel : ViewModelBase
 {
-    private PopupDictionaryService? _popupDictionaryService;
+    //private PopupDictionaryService? _popupDictionaryService;
     private UIElementDetector? _accessibilityService;
     private SendEventGA4? _googleAnnalyticService;
 
@@ -33,7 +33,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
 
     public MenuSelectionActionsViewModel()
     {
-        // InitializeServices();
+        InitializeServices();
         InitializeMenuSelectionButtons();
         // MenuSelectionCommand = new RelayCommand(ExecuteMenuSelectionCommand, o => true);
         // MenuSelectionPinCommand = new RelayCommand(ExecuteMenuSelectionPinCommand, o => true);

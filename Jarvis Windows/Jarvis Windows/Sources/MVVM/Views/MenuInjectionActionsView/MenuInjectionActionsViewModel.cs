@@ -49,9 +49,9 @@ public class MenuInjectionActionsViewModel : ViewModelBase
     public RelayCommand HideMenuOperationsCommand { get; set; }
     public RelayCommand AICommand { get; set; }
     public RelayCommand ExpandCommand { get; set; }
-    public RelayCommand OpenSettingsCommand { get; set; }
-    public RelayCommand QuitAppCommand { get; set; }
-    public RelayCommand PinJarvisButtonCommand { get; set; }
+    //public RelayCommand OpenSettingsCommand { get; set; }
+    //public RelayCommand QuitAppCommand { get; set; }
+    //public RelayCommand PinJarvisButtonCommand { get; set; }
     public RelayCommand UndoCommand { get; set; }
     public RelayCommand RedoCommand { get; set; }
     public RelayCommand UpgradePlanCommand { get; set; }
@@ -488,15 +488,15 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         AICommand = new RelayCommand(ExecuteAICommand, o => true);
         ExpandCommand = new RelayCommand(ExecuteExpandCommand, o => true);
 
-        OpenSettingsCommand = new RelayCommand(ExecuteOpenSettingsCommand, o => true);
-        QuitAppCommand = new RelayCommand(ExecuteQuitAppCommand, o => true);
-        PinJarvisButtonCommand = new RelayCommand(ExecutePinJarvisButtonCommand, o => true);
+        //OpenSettingsCommand = new RelayCommand(ExecuteOpenSettingsCommand, o => true);
+        //QuitAppCommand = new RelayCommand(ExecuteQuitAppCommand, o => true);
+        //PinJarvisButtonCommand = new RelayCommand(ExecutePinJarvisButtonCommand, o => true);
         UndoCommand = new RelayCommand(ExecuteUndoCommand, o => true);
         RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true);
 
-        TextMenuAICommand = new RelayCommand(ExecuteTextMenuAICommand, o => true);
-        ShowTextMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
-        HideTextMenuAPICommand = new RelayCommand(ExecuteHideTextMenuAPICommand, o => true);
+        //TextMenuAICommand = new RelayCommand(ExecuteTextMenuAICommand, o => true);
+        //ShowTextMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
+        //HideTextMenuAPICommand = new RelayCommand(ExecuteHideTextMenuAPICommand, o => true);
 
         UpgradePlanCommand = new RelayCommand(ExecuteUpgradePlanCommand, o => true);
             CloseOutOfTokenPopupCommand = new RelayCommand(o => { IsOutOfToken = false; }, o => true);
@@ -533,10 +533,10 @@ public class MenuInjectionActionsViewModel : ViewModelBase
                 IsOutOfToken = (RemainingAPIUsage == "0 🔥") ? true : false;
         };
 
-        _globalMouseHook = Hook.GlobalEvents();
-        _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
-        _globalMouseHook.MouseDragFinished += MouseDragFinished;
-        _globalMouseHook.MouseClick += MouseClicked;
+        //_globalMouseHook = Hook.GlobalEvents();
+        //_globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
+        //_globalMouseHook.MouseDragFinished += MouseDragFinished;
+        //_globalMouseHook.MouseClick += MouseClicked;
 
         EventAggregator.MouseOverAppUIChanged += (sender, e) => {
             _isMouseOver_AppUI = (bool)sender;
@@ -871,15 +871,15 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
     public async void ExecuteShowAIChatSidebarCommand(object obj)
     {
-        PopupDictionaryService.ShowAIChatSidebar(true);
-        PopupDictionaryService.ShowAIChatBubble(false);
+        PopupDictionaryService.Instance().ShowAIChatSidebar(true);
+        PopupDictionaryService.Instance().ShowAIChatBubble(false);
         await SendEventGA4.SendEvent("open_sidebar_chat");
     }
 
     private async void ExecuteHideAIChatSidebarCommand(object obj)
     {
-        PopupDictionaryService.ShowAIChatSidebar(false);
-        PopupDictionaryService.ShowAIChatBubble(true);
+        PopupDictionaryService.Instance().ShowAIChatSidebar(false);
+        PopupDictionaryService.Instance().ShowAIChatBubble(true);
         // AIChatMessagesClear();
     }
 
@@ -968,12 +968,12 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             {
                 string text = System.Windows.Clipboard.GetText();
                 UIElementDetector.CurrentSelectedText = text;
-                if (PopupDictionaryService.IsPinMenuSelectionResponse && PopupDictionaryService.IsShowMenuSelectionResponse)
+                if (PopupDictionaryService.Instance().IsShowPinTextMenuAPI && PopupDictionaryService.Instance().IsShowTextMenuAPI)
                 {
-                    PopupDictionaryService.ShowMenuSelectionActions(false);
+                    PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
                     return;
                 }
-                PopupDictionaryService.ShowMenuSelectionActions(true);
+                PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
                 await SendEventGA4.SendEvent("inject_selection_actions");
             }
             else
@@ -1015,7 +1015,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
     {
         if (_isMouseOver_AppUI)
         {
-            PopupDictionaryService.ShowMenuSelectionActions(false);
+            PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
             return;
         }
 
@@ -1048,16 +1048,16 @@ public class MenuInjectionActionsViewModel : ViewModelBase
                 System.Drawing.Point lpPoint;
                 NativeUser32API.GetCursorPos(out lpPoint);
                 Point selectedTextPosition = new Point((int)(lpPoint.X * xScale), (int)(lpPoint.Y * yScale));
-                PopupDictionaryService.MenuSelectionActionsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
+                PopupDictionaryService.Instance().TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
                 Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 50);
-                PopupDictionaryService.MenuSelectionPopupListPosition = new Point(newPosition.X, newPosition.Y);
-                if (!PopupDictionaryService.IsPinMenuSelectionResponse)
+                PopupDictionaryService.Instance().PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);
+                if (!PopupDictionaryService.Instance().IsShowPinTextMenuAPI)
                 {
-                    PopupDictionaryService.ShowSelectionResponseView(false);
-                    PopupDictionaryService.MenuSelectionResponsePosition = new Point(newPosition.X, newPosition.Y);
+                    PopupDictionaryService.Instance().ShowSelectionResponseView(false);
+                    PopupDictionaryService.Instance().TextMenuAPIPosition = new Point(newPosition.X, newPosition.Y);
                 }
 
-                PopupDictionaryService.ShowMenuSelectionActions(true);
+                PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
                 await SendEventGA4.SendEvent("inject_selection_actions");
             }
             else
@@ -1067,8 +1067,8 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
         catch
         {
-            PopupDictionaryService.ShowMenuSelectionActions(false);
-            PopupDictionaryService.ShowSelectionResponseView(false);
+            PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
+            PopupDictionaryService.Instance().ShowSelectionResponseView(false);
         }
     }
 

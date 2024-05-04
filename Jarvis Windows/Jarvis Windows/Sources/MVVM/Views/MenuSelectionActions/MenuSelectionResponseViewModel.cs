@@ -14,7 +14,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionResponseViewModel : ViewModelBase
 {
-    private PopupDictionaryService? _popupDictionaryService;
+    //private PopupDictionaryService? _popupDictionaryService;
     private UIElementDetector? _accessibilityService;
     private SendEventGA4? _googleAnnalyticService;
 
@@ -158,7 +158,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
         EventAggregator.ApiUsageChanged += (sender, e) =>
     {
-        _popupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
+        //_popupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
         _accessibilityService = DependencyInjection.GetService<UIElementDetector>();
         _googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
     }
