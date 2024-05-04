@@ -675,7 +675,7 @@ public class PopupDictionaryService : ObserveralObject
         horizontalBinding.Source = this;
         _menuSelectionActionsPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
 
-        IsShowMenuSelectionActions = true;
+        IsShowMenuSelectionActions = false;
         Binding isOpenBinding = new Binding("IsShowMenuSelectionActions");
         isOpenBinding.Source = this;
         isOpenBinding.NotifyOnSourceUpdated = true;
@@ -703,7 +703,7 @@ public class PopupDictionaryService : ObserveralObject
         horizontalBinding.Source = this;
         _menuSelectionResponsePopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
 
-        IsShowMenuSelectionResponse = true;
+        IsShowMenuSelectionResponse = false;
         Binding isOpenBinding = new Binding("IsShowMenuSelectionResponse");
         isOpenBinding.Source = this;
         isOpenBinding.NotifyOnSourceUpdated = true;
@@ -732,7 +732,7 @@ public class PopupDictionaryService : ObserveralObject
         horizontalBinding.Source = this;
         _menuSelectionPopupListPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
 
-        IsShowMenuSelectionPopupList = true;
+        IsShowMenuSelectionPopupList = false;
         Binding isOpenBinding = new Binding("IsShowMenuSelectionPopupList");
         isOpenBinding.Source = this;
         isOpenBinding.NotifyOnSourceUpdated = true;
@@ -814,7 +814,8 @@ public class PopupDictionaryService : ObserveralObject
 
     public void ShowMenuSelectionActions(bool isShow)
     {
-        IsShowMenuSelectionActions = isShow & TextMenuSelectionVisibility;
+        IsShowMenuSelectionActions = isShow;
+        //IsShowMenuSelectionActions = isShow & TextMenuSelectionVisibility;
     }
 
     public void UpdateMenuOperationsPosition(Point systemPoint, Rect elementRectBounding)
