@@ -14,8 +14,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionResponseViewModel : ViewModelBase
 {
-    //private PopupDictionaryService? _popupDictionaryService;
-    private UIElementDetector? _accessibilityService;
     private SendEventGA4? _googleAnnalyticService;
 
     private double _scrollBarHeight;
@@ -158,7 +156,6 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
         EventAggregator.ApiUsageChanged += (sender, e) =>
     {
-        _accessibilityService = DependencyInjection.GetService<UIElementDetector>();
         _googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
     }
 

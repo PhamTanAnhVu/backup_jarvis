@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
 using System.Windows.Navigation;
+using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
 {
@@ -460,6 +461,15 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
     }
 
+    public Visibility ExhaustedGridVisibility
+    {
+        get => _exhaustedGridVisibility;
+        set
+        {
+            _exhaustedGridVisibility = value;
+            OnPropertyChanged();
+        }
+    }
 
     public MenuInjectionActionsViewModel()
     {
@@ -512,7 +522,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         _authUrl = DataConfiguration.AuthUrl;
 
         //Register Acceccibility service
-        AccessibilityService.SubscribeToElementFocusChanged();
+        //AccessibilityService.GetInstance().SubscribeToElementFocusChanged();
         EventAggregator.LanguageSelectionChanged += OnLanguageSelectionChanged;
 
         // Checking App update here
@@ -967,7 +977,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             if (System.Windows.Clipboard.ContainsText())
             {
                 string text = System.Windows.Clipboard.GetText();
-                UIElementDetector.CurrentSelectedText = text;
+                AccessibilityService.GetInstance().CurrentSelectedText = text;
                 if (PopupDictionaryService.Instance().IsShowPinTextMenuAPI && PopupDictionaryService.Instance().IsShowTextMenuAPI)
                 {
                     PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
@@ -1039,7 +1049,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         {
             if (System.Windows.Clipboard.ContainsText())
             {
-                UIElementDetector.CurrentSelectedText = Clipboard.GetText();
+                AccessibilityService.GetInstance().CurrentSelectedText = Clipboard.GetText();
 
                 double screenHeight = SystemParameters.PrimaryScreenHeight;
                 double screenWidth = SystemParameters.PrimaryScreenWidth;

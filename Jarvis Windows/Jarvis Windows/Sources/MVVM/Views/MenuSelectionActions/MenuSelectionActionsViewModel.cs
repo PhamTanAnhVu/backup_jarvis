@@ -15,8 +15,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionActionsViewModel : ViewModelBase
 {
-    //private PopupDictionaryService? _popupDictionaryService;
-    private UIElementDetector? _accessibilityService;
     private SendEventGA4? _googleAnnalyticService;
 
     private static bool _isMouseOver_AppUI;

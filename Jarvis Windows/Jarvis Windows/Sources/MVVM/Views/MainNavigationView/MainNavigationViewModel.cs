@@ -446,6 +446,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                 SidebarVisibility = Visibility.Visible;
                 MakeSidebarTopmost = true;
                 e.Handled = true;
+                Debug.WriteLine("⌨️⌨️⌨️⌨️ Alt + J pressed");
             }
         }
     }
