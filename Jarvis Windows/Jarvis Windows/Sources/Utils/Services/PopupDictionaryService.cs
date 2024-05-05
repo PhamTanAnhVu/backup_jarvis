@@ -350,7 +350,7 @@ public class PopupDictionaryService : ObserveralObject
 
     public void InitInjectionAction()
     {
-        _injectionActionPopup = new Popup();
+        _injectionActionPopup = new DragMoveablePopup();
         InjectionActionView injectionActionView = new InjectionActionView();
         _injectionActionViewModel = (InjectionActionViewModel)injectionActionView.DataContext;
         _injectionActionPopup.SetCurrentValue(Popup.ChildProperty, injectionActionView);

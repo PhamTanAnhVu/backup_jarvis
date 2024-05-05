@@ -20,7 +20,7 @@ public class SettingViewModel : ViewModelBase
     private INavigationService? _navigationService;
     private IAuthenticationService _authenticationService;
     private PopupDictionaryService _popupDictionaryService;
-    private UIElementDetector _accessibilityService;
+    private AccessibilityService _accessibilityService;
     private SendEventGA4 _sendEventGA4;
 
     private double _usageBarGreen;
@@ -76,7 +76,7 @@ public class SettingViewModel : ViewModelBase
         }
     }
 
-    public UIElementDetector AccessibilityService
+    public AccessibilityService AccessibilityService
     {
         get { return _accessibilityService; }
         set
@@ -238,7 +238,7 @@ public class SettingViewModel : ViewModelBase
 
     public SettingViewModel(INavigationService navigationService,
         PopupDictionaryService popupDictionaryService,
-        UIElementDetector accessibilityService,
+        AccessibilityService accessibilityService,
         SendEventGA4 sendEventGA4,
         IAuthenticationService authenticationService)
     {

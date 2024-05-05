@@ -47,22 +47,15 @@ namespace Jarvis_Windows
         {
             DestroyOldProcesses(); //Single instance application
 
-            //MainView mainView = DependencyInjection.GetService<MainView>();
-            //SettingView settingView = DependencyInjection.GetService<SettingView>();
-            //mainView.Show();
-            //DependencyInjection.GetService<PopupDictionaryService>().MainWindow = mainView;
-
             MainNavigationView mainNavigationView = new MainNavigationView();
             mainNavigationView.Show();
+
+            AccessibilityService.GetInstance().SubscribeToElementFocusChanged();
 
             PopupDictionaryService.Instance().InitInjectionAction();
             PopupDictionaryService.Instance().InitMenuSelectionActions();
             PopupDictionaryService.Instance().InitMenuSelectionPopupList();
             PopupDictionaryService.Instance().InitMenuSelectionResponse();
-
-            //Test register Accessibility Service
-            UIElementDetector accessibilityService = DependencyInjection.GetService<UIElementDetector>();
-            accessibilityService.SubscribeToElementFocusChanged();
 
             if (e.Args.Length > 0) //Activation from URI scheme
             {
@@ -186,11 +179,11 @@ namespace Jarvis_Windows
         {
             if (e.Mode == PowerModes.Suspend)
             {
-                UIElementDetector.GetInstance().UnSubscribeToElementFocusChanged();
+                AccessibilityService.GetInstance().UnSubscribeToElementFocusChanged();
             }
             else if (e.Mode == PowerModes.Resume)
             {
-                UIElementDetector.GetInstance().SubscribeToElementFocusChanged();
+                AccessibilityService.GetInstance().SubscribeToElementFocusChanged();
             }
         }
 

@@ -17,7 +17,7 @@ namespace Jarvis_Windows.Sources.MVVM.ViewModels;
 public class TextMenuViewModel : ViewModelBase
 {
     //private PopupDictionaryService _popupDictionaryService;
-    private UIElementDetector _uIElementDetector;
+    private AccessibilityService _uIElementDetector;
     private SendEventGA4 _sendEventGA4;
 
     private int _languageSelectedIndex;
@@ -43,7 +43,7 @@ public class TextMenuViewModel : ViewModelBase
         }
     }*/
 
-    public UIElementDetector UIElementDetector
+    public AccessibilityService AccessibilityService
     {
         get { return _uIElementDetector; }
         set
@@ -126,10 +126,10 @@ public class TextMenuViewModel : ViewModelBase
         }
     }
 
-    public TextMenuViewModel(/*PopupDictionaryService popupDictionaryService, */UIElementDetector uIElementDetector, SendEventGA4 sendEventGA4)
+    public TextMenuViewModel(/*PopupDictionaryService popupDictionaryService, */AccessibilityService uIElementDetector, SendEventGA4 sendEventGA4)
     {
         //PopupDictionaryService = popupDictionaryService;
-        UIElementDetector = uIElementDetector;
+        AccessibilityService = uIElementDetector;
         SendEventGA4 = sendEventGA4;
 
         TextMenuAICommand = new RelayCommand(ExecuteTextMenuAICommand, o => true);
@@ -208,7 +208,7 @@ public class TextMenuViewModel : ViewModelBase
             PopupDictionaryService.Instance().IsShowTextMenuAPI = true;
 
             //var textFromElement = "Jarvis AI Assistant, your all-in-one solution that harnesses the formidable capabilities of ChatGPT, which provides large and wide knowledge, GPT 4 for cutting-edge language understanding, Claude AI for advanced innovations, Llama 2 for next-level text generation, Bard for creative content creation, Bing Chat for seamless communication, Meta AI for deep learning potential, Chat GPT for conversational prowess, Chatting GPT for natural dialogue, GPT Chat for interactive communication, GPT4 for state-of-the-art language processing, and the transformative power of Ajax AI (also known as AjaxAI), OpenAI and latest AI model Gemini.";
-            var textFromElement = UIElementDetector.GetSelectedText();
+            var textFromElement = AccessibilityService.GetSelectedText();
 
             var textFromAPI = "";
 
@@ -245,7 +245,7 @@ public class TextMenuViewModel : ViewModelBase
             }
 
             //TODO: Test
-            UIElementDetector.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError);
+            AccessibilityService.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError);
 
             TextMenuAPI = textFromAPI;
         }

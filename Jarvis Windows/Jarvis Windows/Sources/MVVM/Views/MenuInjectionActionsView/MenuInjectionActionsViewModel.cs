@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
 using System.Windows.Navigation;
+using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
 using Point = System.Drawing.Point;
@@ -26,7 +27,6 @@ using IDataObject = System.Windows.IDataObject;
 
 public class MenuInjectionActionsViewModel : ViewModelBase
 {
-    private UIElementDetector _accessibilityService;
     private SendEventGA4 _sendEventGA4;
     private bool _isSpinningJarvisIcon; // Spinning Jarvis icon
     private string _remainingAPIUsage;
@@ -69,6 +69,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
     private TokenLocalService _tokenLocalService;
 
     private Visibility _windowVisibility;
+    private Visibility _exhaustedGridVisibility;
 
     private Views.SettingView.SettingView _settingView;
 
@@ -98,16 +99,6 @@ public class MenuInjectionActionsViewModel : ViewModelBase
     //public RelayCommand PopupTextMenuCommand { get; set; }
     //public RelayCommand TextMenuAPIHeaderActionCommand { get; set; }
     public RelayCommand CopyToClipboardCommand { get; set; }
-
-    public UIElementDetector AccessibilityService
-    {
-        get { return _accessibilityService; }
-        set
-        {
-            _accessibilityService = value;
-            OnPropertyChanged();
-        }
-    }
 
     public bool IsSpinningJarvisIcon
     {
@@ -487,10 +478,18 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
     }
 
+    public Visibility ExhaustedGridVisibility
+    {
+        get => _exhaustedGridVisibility;
+        set
+        {
+            _exhaustedGridVisibility = value;
+            OnPropertyChanged();
+        }
+    }
 
     public MenuInjectionActionsViewModel()
     {
-        AccessibilityService = DependencyInjection.GetService<UIElementDetector>();
         SendEventGA4 = DependencyInjection.GetService<SendEventGA4>();
         AutomationElementValueService = (AutomationElementValueService)DependencyInjection.GetService<IAutomationElementValueService>();
         AuthenService = (AuthenticationService)DependencyInjection.GetService<IAuthenticationService>();
@@ -527,13 +526,13 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
         //TEST AUTO RESET API USAGE
-        /*if(IsAPIUsageRemain == false)
+        if (IsAPIUsageRemain == false)
         {
             WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
             WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
             IsAPIUsageRemain = true;
-        }*/
+        }
 
 
         ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
@@ -572,7 +571,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         _authUrl = DataConfiguration.AuthUrl;
 
         //Register Acceccibility service
-        AccessibilityService.SubscribeToElementFocusChanged();
+        //AccessibilityService.GetInstance().SubscribeToElementFocusChanged();
         EventAggregator.LanguageSelectionChanged += OnLanguageSelectionChanged;
 
         // Checking App update here
@@ -769,25 +768,11 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
     private void ExecuteUndoCommand(object obj)
     {
-        try
-        {
-            AutomationElementValueService.Undo(UIElementDetector.GetInstance().GetFocusingElement());
-        }
-        catch { }
-        finally
-        {
-        }
+        AutomationElementValueService.Undo(AccessibilityService.GetInstance().GetFocusingElement());
     }
     private void ExecuteRedoCommand(object obj)
     {
-        try
-        {
-            AutomationElementValueService.Redo(UIElementDetector.GetInstance().GetFocusingElement());
-        }
-        catch { }
-        finally
-        {
-        }
+        AutomationElementValueService.Redo(AccessibilityService.GetInstance().GetFocusingElement());
     }
 
     private void ExecuteOpenSettingsCommand(object obj)
@@ -866,16 +851,17 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         {
             bool _fromWindow = false;
             //HideMenuOperationsCommand.Execute(null);
-            IsSpinningJarvisIcon = true;
+            //IsSpinningJarvisIcon = true;
+            InjectionActionViewModel.StartSpinJarvisIconCommand.Execute(null);
             PopupDictionaryService.Instance().ShowJarvisAction(true);
 
             var textFromElement = "";
             var textFromAPI = "";
             try
             {
-                textFromElement = (String.IsNullOrEmpty(UIElementDetector.CurrentSelectedText)) ?
-                    AccessibilityService.GetTextFromFocusingEditElement() :
-                    UIElementDetector.CurrentSelectedText;
+                textFromElement = (String.IsNullOrEmpty(AccessibilityService.GetInstance().CurrentSelectedText)) ?
+                    AccessibilityService.GetInstance().GetTextFromFocusingEditElement() :
+                    AccessibilityService.GetInstance().CurrentSelectedText;
                 Debug.WriteLine($"?????? TEXT FROM ELEMENT {textFromElement}");
             }
             catch
@@ -917,14 +903,15 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             }
 
 
-            if (_fromWindow != true) { AccessibilityService.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError); }
+            if (_fromWindow != true) { AccessibilityService.GetInstance().SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError); }
             else { MainWindowInputText = textFromAPI; }
-            AutomationElementValueService.StoreAction(AccessibilityService.GetFocusingElement(), textFromElement);
+            AutomationElementValueService.StoreAction(AccessibilityService.GetInstance().GetFocusingElement(), textFromElement);
         }
         catch { }
         finally
         {
-            IsSpinningJarvisIcon = false;
+            //IsSpinningJarvisIcon = false;
+            InjectionActionViewModel.StopSpinJarvisIconCommand.Execute(null);
             var eventParams = new Dictionary<string, object>
             {
                 { "ai_action", _aiAction }
@@ -1022,7 +1009,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             TextMenuAPIHeaderActionName = TextMenuButtons[idx].Content;
             PopupDictionaryService.Instance().IsShowTextMenuAPI = true;
 
-            var textFromElement = UIElementDetector.CurrentSelectedText;
+            var textFromElement = AccessibilityService.GetInstance().CurrentSelectedText;
             var textFromAPI = "";
 
             if (textFromElement == "") return;
@@ -1317,7 +1304,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             if (System.Windows.Clipboard.ContainsText())
             {
                 string text = System.Windows.Clipboard.GetText();
-                UIElementDetector.CurrentSelectedText = text;
+                AccessibilityService.GetInstance().CurrentSelectedText = text;
                 if (PopupDictionaryService.Instance().IsShowPinTextMenuAPI && PopupDictionaryService.Instance().IsShowTextMenuAPI)
                 {
                     PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
@@ -1389,7 +1376,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         {
             if (System.Windows.Clipboard.ContainsText())
             {
-                UIElementDetector.CurrentSelectedText = Clipboard.GetText();
+                AccessibilityService.GetInstance().CurrentSelectedText = Clipboard.GetText();
 
                 double screenHeight = SystemParameters.PrimaryScreenHeight;
                 double screenWidth = SystemParameters.PrimaryScreenWidth;

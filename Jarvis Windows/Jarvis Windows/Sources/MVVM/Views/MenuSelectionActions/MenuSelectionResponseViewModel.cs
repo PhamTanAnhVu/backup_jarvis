@@ -13,8 +13,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionResponseViewModel : ViewModelBase
 {
-    //private PopupDictionaryService? _popupDictionaryService;
-    private UIElementDetector? _accessibilityService;
     private SendEventGA4? _googleAnnalyticService;
 
     private double _scrollBarHeight;
@@ -153,7 +151,6 @@ public class MenuSelectionResponseViewModel : ViewModelBase
 
     void InitializeServices()
     {
-        _accessibilityService = DependencyInjection.GetService<UIElementDetector>();
         _googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
     }
 
@@ -228,7 +225,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             SelectionResponseHeaderName = _buttonInfo.Content;
             PopupDictionaryService.Instance().IsShowMenuSelectionResponse = true;
 
-            var textFromElement = UIElementDetector.CurrentSelectedText;
+            var textFromElement = AccessibilityService.GetInstance().CurrentSelectedText;
             if (textFromElement == "") return;
 
             if (_buttonInfo.CommandParameter == "Translate it")

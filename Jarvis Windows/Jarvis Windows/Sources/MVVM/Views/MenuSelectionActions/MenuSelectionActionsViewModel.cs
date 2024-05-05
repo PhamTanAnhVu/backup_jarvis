@@ -13,8 +13,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionActionsViewModel : ViewModelBase
 {
-    //private PopupDictionaryService? _popupDictionaryService;
-    private UIElementDetector? _accessibilityService;
     private SendEventGA4? _googleAnnalyticService;
 
     private static bool _isMouseOver_AppUI;
@@ -54,8 +52,6 @@ public class MenuSelectionActionsViewModel : ViewModelBase
 
     void InitializeServices()
     {
-        //_popupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
-        _accessibilityService = DependencyInjection.GetService<UIElementDetector>();
         _googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
     }
 
@@ -151,7 +147,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
             if (System.Windows.Clipboard.ContainsText())
             {
                 string text = System.Windows.Clipboard.GetText();
-                UIElementDetector.CurrentSelectedText = text;
+                AccessibilityService.GetInstance().CurrentSelectedText = text;
                 if (PopupDictionaryService.Instance().IsPinMenuSelectionResponse && PopupDictionaryService.Instance().IsShowMenuSelectionResponse)
                 {
                     PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
@@ -223,7 +219,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
         {
             if (System.Windows.Clipboard.ContainsText())
             {
-                UIElementDetector.CurrentSelectedText = Clipboard.GetText();
+                AccessibilityService.GetInstance().CurrentSelectedText = Clipboard.GetText();
 
                 double screenHeight = SystemParameters.PrimaryScreenHeight;
                 double screenWidth = SystemParameters.PrimaryScreenWidth;

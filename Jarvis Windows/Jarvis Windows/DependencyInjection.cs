@@ -27,12 +27,12 @@ namespace Jarvis_Windows
             services.AddSingleton<ITokenLocalService, TokenLocalService>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
-            services.AddSingleton<UIElementDetector>(provider => new UIElementDetector
+            /*services.AddSingleton<AccessibilityService>(provider => new AccessibilityService
             {
                 SendEventGA4 = provider.GetRequiredService<SendEventGA4>(),
                 AutomationElementValueService = provider.GetRequiredService<IAutomationElementValueService>(),
                 SupportedAppService = provider.GetRequiredService<ISupportedAppService>()
-            });
+            });*/
 
             _serviceProvider = services.BuildServiceProvider();
         }

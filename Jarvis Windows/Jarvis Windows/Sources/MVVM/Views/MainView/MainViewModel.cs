@@ -27,7 +27,7 @@ public class MainViewModel : ViewModelBase
 {
     private INavigationService? _navigationService;
     private PopupDictionaryService _popupDictionaryService;
-    private UIElementDetector _accessibilityService;
+    private AccessibilityService _accessibilityService;
     private SendEventGA4 _sendEventGA4;
     private bool _isSpinningJarvisIcon; // Spinning Jarvis icon
     private string _remainingAPIUsage;
@@ -118,7 +118,7 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    public UIElementDetector AccessibilityService
+    public AccessibilityService AccessibilityService
     {
         get { return _accessibilityService; }
         set
@@ -499,7 +499,7 @@ public class MainViewModel : ViewModelBase
 
     public MainViewModel(INavigationService navigationService,
         PopupDictionaryService popupDictionaryService,
-        UIElementDetector accessibilityService,
+        AccessibilityService accessibilityService,
         SendEventGA4 sendEventGA4,
         IAutomationElementValueService automationElementValueService,
         IAuthenticationService authenticationService)
@@ -774,7 +774,7 @@ public class MainViewModel : ViewModelBase
     {
         try
         {
-            AutomationElementValueService.Undo(UIElementDetector.GetInstance().GetFocusingElement());
+            AutomationElementValueService.Undo(AccessibilityService.GetInstance().GetFocusingElement());
         }
         catch { }
         finally
@@ -785,7 +785,7 @@ public class MainViewModel : ViewModelBase
     {
         try
         {
-            AutomationElementValueService.Redo(UIElementDetector.GetInstance().GetFocusingElement());
+            AutomationElementValueService.Redo(AccessibilityService.GetInstance().GetFocusingElement());
         }
         catch { }
         finally
@@ -874,9 +874,9 @@ public class MainViewModel : ViewModelBase
             var textFromAPI = "";
             try
             {
-                textFromElement = (String.IsNullOrEmpty(UIElementDetector.CurrentSelectedText)) ?
+                textFromElement = (String.IsNullOrEmpty(AccessibilityService.CurrentSelectedText)) ?
                     AccessibilityService.GetTextFromFocusingEditElement() :
-                    UIElementDetector.CurrentSelectedText;
+                    AccessibilityService.CurrentSelectedText;
                 Debug.WriteLine($"?????? TEXT FROM ELEMENT {textFromElement}");
             }
             catch
@@ -1023,7 +1023,7 @@ public class MainViewModel : ViewModelBase
             TextMenuAPIHeaderActionName = TextMenuButtons[idx].Content;
             PopupDictionaryService.IsShowMenuSelectionResponse = true;
 
-            var textFromElement = UIElementDetector.CurrentSelectedText;
+            var textFromElement = AccessibilityService.CurrentSelectedText;
             var textFromAPI = "";
 
             if (textFromElement == "") return;
@@ -1318,7 +1318,7 @@ public class MainViewModel : ViewModelBase
             if (System.Windows.Clipboard.ContainsText())
             {
                 string text = System.Windows.Clipboard.GetText();
-                UIElementDetector.CurrentSelectedText = text;
+                AccessibilityService.CurrentSelectedText = text;
                 if (PopupDictionaryService.IsPinMenuSelectionResponse && PopupDictionaryService.IsShowMenuSelectionResponse)
                 {
                     PopupDictionaryService.ShowMenuSelectionActions(false);
@@ -1390,7 +1390,7 @@ public class MainViewModel : ViewModelBase
         {
             if (System.Windows.Clipboard.ContainsText())
             {
-                UIElementDetector.CurrentSelectedText = Clipboard.GetText();
+                AccessibilityService.CurrentSelectedText = Clipboard.GetText();
 
                 double screenHeight = SystemParameters.PrimaryScreenHeight;
                 double screenWidth = SystemParameters.PrimaryScreenWidth;

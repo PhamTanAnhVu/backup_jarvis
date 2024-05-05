@@ -3,6 +3,7 @@ using Jarvis_Windows.Sources.Utils.Core;
 using Jarvis_Windows.Sources.Utils.Services;
 using System;
 using System.Threading.Tasks;
+using Windows.Devices.Geolocation;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
 {
@@ -62,14 +63,13 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         #region Commands
         public RelayCommand? ShowMenuOperationsCommand { get; set; }
         public RelayCommand? PinJarvisButtonCommand { get; set; }
+        public static RelayCommand? StartSpinJarvisIconCommand { get; set;}
+        public static RelayCommand? StopSpinJarvisIconCommand { get; set;}
 
         #endregion
 
         public InjectionActionViewModel()
         {
-            //Outboard services
-            InitialOutboardServices();
-
             //Commands
             InitialCommands();
 
@@ -82,17 +82,23 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         {
             ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
             PinJarvisButtonCommand = new RelayCommand(ExecutePinJarvisButtonCommand, o => true);
+            StartSpinJarvisIconCommand = new RelayCommand(ExecuteSpinJarvisIcon, o => true);
+            StopSpinJarvisIconCommand = new RelayCommand(ExecuteStopSpinJarvisIcon, o => true);
+        }
+
+        private void ExecuteStopSpinJarvisIcon(object obj)
+        {
+            IsSpinningJarvisIcon = false;
+        }
+
+        private void ExecuteSpinJarvisIcon(object obj)
+        {
+            IsSpinningJarvisIcon = true;
         }
 
         private void ExecuteShowMenuOperationsCommand(object obj)
         {
             _menuInjectionActionsViewModel.ShowMenuOperationsCommand.Execute(null);
-        }
-
-        void InitialOutboardServices()
-        {
-            //_popupDictionaryService = DependencyInjection.GetService<PopupDictionaryService>();
-            //_googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
         }
 
         private void ExecutePinJarvisButtonCommand(object obj)

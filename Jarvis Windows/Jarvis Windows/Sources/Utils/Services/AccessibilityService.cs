@@ -7,40 +7,28 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Automation.Text;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Xml.Linq;
-using Windows.Graphics.Printing3D;
-using System.IO;
 using Jarvis_Windows.Sources.DataAccess.Local;
-using System.Windows.Media.Imaging;
-//using System.Drawing;
-using System.Windows.Media.Animation;
 using Point = System.Drawing.Point;
-using Jarvis_Windows.Sources.MVVM.Views.MainView;
-using Windows.Foundation.Diagnostics;
 
 namespace Jarvis_Windows.Sources.Utils.Accessibility;
 
-public class UIElementDetector
+public class AccessibilityService
 {
-    private static UIElementDetector? Instance;
-    private static AutomationElement? _focusingElement;
-    private static AutomationFocusChangedEventHandler? _focusChangedEventHandler = new AutomationFocusChangedEventHandler(OnElementFocusChanged);
+    private static AccessibilityService? _instance;
+    private AutomationElement? _focusingElement;
+    private AutomationFocusChangedEventHandler? _focusChangedEventHandler;
+    private SendEventGA4? _sendEventGA4;
+    private bool _isUseAutoTuningPosition = true;
+    private IAutomationElementValueService? _automationElementValueService;
+    private string _currentSelectedText = String.Empty;
+    private AutomationElement? _observerSelectionChangeElement;
+    private ISupportedAppService? _supportedAppSerice;
+    private bool? _isMouseOverAppUI;
+    private bool _isMouseOverAIChatPanel;
 
-    //private static PopupDictionaryService? _popupDictionaryService;
-    private static SendEventGA4? _sendEventGA4;
-    private static bool _isUseAutoTuningPosition = true;
-    private static IAutomationElementValueService? _automationElementValueService;
-    private static string _currentSelectedText = String.Empty;
-    private static AutomationElement? _observerSelectionChangeElement;
-    private static ISupportedAppService? _supportedAppSerice;
-
-    private static bool _isMouseOverAppUI;
-    private static bool _isMouseOverAIChatPanel;
-
-    public static bool IsUseAutoTuningPosition { 
+    public bool IsUseAutoTuningPosition { 
         get => _isUseAutoTuningPosition; 
         set => _isUseAutoTuningPosition = value; 
     }
@@ -51,11 +39,11 @@ public class UIElementDetector
         set => _focusChangedEventHandler = value;
     }
 
-    public static UIElementDetector GetInstance()
+    public static AccessibilityService GetInstance()
     {
-        if (Instance == null)
-            Instance = new UIElementDetector();
-        return Instance;
+        if (_instance == null)
+            _instance = new AccessibilityService();
+        return _instance;
     }
 
     public SendEventGA4? SendEventGA4
@@ -64,41 +52,31 @@ public class UIElementDetector
         set => _sendEventGA4 = value;
     }
 
-    public IAutomationElementValueService? AutomationElementValueService { 
-        get => _automationElementValueService;
-        set => _automationElementValueService = value; 
-    }
-    public static string CurrentSelectedText
+    public string CurrentSelectedText
     {
         get => _currentSelectedText; 
         set => _currentSelectedText = value; 
     }
-    public static AutomationElement? ObserverSelectionChangeElement 
+    public AutomationElement? ObserverSelectionChangeElement 
     {
         get => _observerSelectionChangeElement; 
         set => _observerSelectionChangeElement = value; 
     }
-    /*public PopupDictionaryService? PopupDictionaryService 
-    { 
-        get => _popupDictionaryService; 
-        set => _popupDictionaryService = value; 
-    }*/
-    public ISupportedAppService SupportedAppService 
+
+    public ISupportedAppService? SupportedAppService 
     { 
         get => _supportedAppSerice;
         set => _supportedAppSerice = value;
     }
 
-    public UIElementDetector(/*PopupDictionaryService popupDictionaryService*/)
+    public AccessibilityService()
     {
-        //PopupDictionaryService = popupDictionaryService;
+        _focusChangedEventHandler = new AutomationFocusChangedEventHandler(OnElementFocusChanged);
+        _automationElementValueService = DependencyInjection.GetService<IAutomationElementValueService>();
         EventAggregator.MouseOverAppUIChanged += (sender, e) => {
-            _isMouseOverAppUI = (bool)sender;
+            _isMouseOverAppUI = sender as bool?;
         };
     }
-
-    /*public UIElementDetector()
-    { }*/
 
     public void SubscribeToElementFocusChanged()
     {
@@ -148,7 +126,7 @@ public class UIElementDetector
         return false;
     }
 
-    private static void ExecuteSendEventInject()
+    private void ExecuteSendEventInject()
     {   
         if (_sendEventGA4 != null)
             _ = _sendEventGA4.SendEvent("inject_input_actions");       
@@ -170,7 +148,7 @@ public class UIElementDetector
         return String.Empty;
     }
 
-    private static void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
+    private void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
     {
         AutomationElement? newFocusElement = sender as AutomationElement;
         
@@ -189,18 +167,17 @@ public class UIElementDetector
         if (newFocusElement != null && newFocusElement != _focusingElement)
         {
             if (newFocusElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") ||
-                newFocusElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox"))
+                newFocusElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox") ||
+                newFocusElement.Current.AutomationId.Equals("MenuInjectionActionsView"))
             {
                 PopupDictionaryService.Instance().ShowJarvisAction(false);
-                //_popupDictionaryService.ShowMenuOperations(false);
                 return;
             }
-
 
             if (IsEditableElement(newFocusElement))
             {
                 _focusingElement = newFocusElement;
-                if(/*PopupDictionaryService.Instance() != null && */_automationElementValueService != null)
+                if(_automationElementValueService != null)
                 {
                     PopupDictionaryService.Instance().ShowJarvisAction(true);
                     PopupDictionaryService.Instance().ShowMenuOperations(false);
@@ -245,7 +222,7 @@ public class UIElementDetector
         return automationElement.Current.BoundingRectangle;
     }
 
-    private static Point CalculateElementLocation()
+    private Point CalculateElementLocation()
     {
         Point placementPoint = new Point(0, 0);
         if (_focusingElement != null)
@@ -262,8 +239,8 @@ public class UIElementDetector
                 }
                 else
                 {
-                    placementPoint.X = (int)(elementRectBounding.Left/* + elementRectBounding.Width*/);
-                    placementPoint.Y = (int)(elementRectBounding.Top /*+ elementRectBounding.Height * 0.5*/);
+                    placementPoint.X = (int)(elementRectBounding.Left);
+                    placementPoint.Y = (int)(elementRectBounding.Top);
                 }
             }
             catch (Exception)
@@ -292,11 +269,11 @@ public class UIElementDetector
                 Automation.AddAutomationPropertyChangedEventHandler(trackingElement, treeScope, propertyChangedHandler, trackingProperty);
             }
         }
-        catch (Exception ex)
+        catch
         {
-            Debug.WriteLine($"An error occurred: {ex.Message}");
             PopupDictionaryService.Instance().ShowJarvisAction(false);
             PopupDictionaryService.Instance().ShowMenuOperations(false);
+            throw;
         }
     }
 
@@ -305,13 +282,11 @@ public class UIElementDetector
         var automationElement = sender as AutomationElement;
         if (e.Property == AutomationElement.BoundingRectangleProperty)
         {
-            Debug.WriteLine($"🟧🟧🟧 {automationElement?.Current.Name} Bounding Rectangle Changed");
             PopupDictionaryService.Instance().UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
             PopupDictionaryService.Instance().UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
         }
         else if (e.Property == AutomationElement.IsOffscreenProperty)
         {
-            Debug.WriteLine($"👁️👁️👁️ {automationElement?.Current.ControlType.ProgrammaticName} Offscreen Property Changed");
             PopupDictionaryService.Instance().ShowJarvisAction(false);
             PopupDictionaryService.Instance().ShowMenuOperations(false);
         }
@@ -477,16 +452,15 @@ public class UIElementDetector
         return result;
     }
 
-    private static void OnTextSelectionChange(object sender, AutomationEventArgs e)
+    private void OnTextSelectionChange(object sender, AutomationEventArgs e)
     {
-        return;
         AutomationElement? automationElement = sender as AutomationElement;
-        if (automationElement != null && 
+        if (automationElement != null &&
             !automationElement.Current.AutomationId.Equals("TextMenuAPI_Result_Text") &&
             !automationElement.Current.AutomationId.Equals("AIChatSidebar_ChatPanel") &&
             !automationElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox") &&
             !automationElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") &&
-            !_isMouseOverAppUI)
+            _isMouseOverAppUI == false)
         {      
             try
             {
@@ -565,10 +539,8 @@ public class UIElementDetector
         return CurrentSelectedText;
     }
 
-    private static void RegisterSelectionChangedFor(AutomationElement automationElement)
+    private void RegisterSelectionChangedFor(AutomationElement automationElement)
     {
-        //if(ObserverSelectionChangeElement != null)
-        //Automation.RemoveAutomationEventHandler(TextPattern.TextSelectionChangedEvent, ObserverSelectionChangeElement, OnTextSelectionChange);
         try
         {
             ObserverSelectionChangeElement = automationElement;
@@ -576,34 +548,4 @@ public class UIElementDetector
         }
         catch { }
     }
-
-    /*private string GetTextFromFocusedControl()
-    {
-        try
-        {
-            int activeWinPtr = GetForegroundWindow().ToInt32();
-            int activeThreadId = 0, processId;
-            activeThreadId = GetWindowThreadProcessId(activeWinPtr, out processId);
-            int currentThreadId = GetCurrentThreadId();
-            if (activeThreadId != currentThreadId)
-                AttachThreadInput(activeThreadId, currentThreadId, true);
-            IntPtr activeCtrlId = GetFocus();
-
-            return GetText(activeCtrlId);
-        }
-        catch (Exception exp)
-        {
-            return exp.Message;
-        }
-    }
-
-    private string GetText(IntPtr handle)
-    {
-        int maxLength = 100;
-        IntPtr buffer = Marshal.AllocHGlobal((maxLength + 1) * 2);
-        SendMessageW(handle, WM_GETTEXT, maxLength, buffer);
-        string w = Marshal.PtrToStringUni(buffer);
-        Marshal.FreeHGlobal(buffer);
-        return w;
-    }*/
 }
