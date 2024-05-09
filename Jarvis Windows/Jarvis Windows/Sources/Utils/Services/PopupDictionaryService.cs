@@ -249,7 +249,7 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-    
+
     public Point MenuSelectionActionsPosition
     {
         get { return _menuSelectionActionsPosition; }
@@ -269,7 +269,7 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-    
+
     public Point MenuSelectionResponsePosition
     {
         get { return _menuSelectionResponsePosition; }
@@ -279,7 +279,7 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-    
+
     public bool IsShowMenuSelectionPopupList
     {
         get { return _isShowMenuSelectionPopupList; }
@@ -289,7 +289,7 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-    
+
     public Point MenuSelectionPopupListPosition
     {
         get { return _menuSelectionPopupListPosition; }
@@ -709,7 +709,7 @@ public class PopupDictionaryService : ObserveralObject
         isOpenBinding.NotifyOnSourceUpdated = true;
         _menuSelectionResponsePopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
     }
- 
+
     public void InitMenuSelectionPopupList()
     {
         _menuSelectionPopupListPopup = new Popup();

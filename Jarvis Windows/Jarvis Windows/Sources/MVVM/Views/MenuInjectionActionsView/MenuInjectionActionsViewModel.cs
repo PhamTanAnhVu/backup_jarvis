@@ -21,6 +21,8 @@ using System.Windows;
 using System.IO;
 using System.Windows.Navigation;
 using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
+using Windows.Networking.XboxLive;
+using System.ComponentModel;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
 {
@@ -50,9 +52,6 @@ public class MenuInjectionActionsViewModel : ViewModelBase
     public RelayCommand HideMenuOperationsCommand { get; set; }
     public RelayCommand AICommand { get; set; }
     public RelayCommand ExpandCommand { get; set; }
-    //public RelayCommand OpenSettingsCommand { get; set; }
-    //public RelayCommand QuitAppCommand { get; set; }
-    //public RelayCommand PinJarvisButtonCommand { get; set; }
     public RelayCommand UndoCommand { get; set; }
     public RelayCommand RedoCommand { get; set; }
     public RelayCommand UpgradePlanCommand { get; set; }
