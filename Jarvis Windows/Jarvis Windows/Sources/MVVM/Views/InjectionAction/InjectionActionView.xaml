@@ -11,8 +11,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="50"
-             RenderOptions.BitmapScalingMode="HighQuality"
-             Style="{StaticResource PageAppearEffect}">
+             RenderOptions.BitmapScalingMode="HighQuality">
     <UserControl.Resources>
         <ResourceDictionary>
             <!-- Spinning animation storyboard -->

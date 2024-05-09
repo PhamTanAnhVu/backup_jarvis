@@ -1,20 +1,14 @@
-using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
-using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 using Jarvis_Windows.Sources.MVVM.ViewModels;
-using Jarvis_Windows.Sources.MVVM.Views;
-using Jarvis_Windows.Sources.Utils.Core;
-using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Automation;
-using System.Windows.Media;
-using Point = System.Drawing.Point;
-using Jarvis_Windows.Sources.MVVM.Views.MainView;
-using System.Windows.Controls.Primitives;
 using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
-using System.Windows.Data;
+using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
 using Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
+using Jarvis_Windows.Sources.Utils.Core;
+using System;
+using System.Windows;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using Point = System.Drawing.Point;
 
 namespace Jarvis_Windows.Sources.Utils.Services;
 
@@ -25,8 +19,8 @@ public class PopupDictionaryService : ObserveralObject
     private bool _jarvisActionVisibility;
     private bool _textMenuSelectionVisibility;
     private bool _isShowAIBubbleFromTrayMenu;
-    private bool _isShowAIChatBubble; 
-    private bool _isShowAIChatSidebar; 
+    private bool _isShowAIChatBubble;
+    private bool _isShowAIChatSidebar;
     private bool _isPinMenuSelectionResponse;
     private bool _isShowPinTextMenuAPI;
     private bool _isShowPopupTextMenu;
@@ -37,7 +31,7 @@ public class PopupDictionaryService : ObserveralObject
     private bool _isShowMenuSelectionPopupList;
 
     private Point _jarvisActionPosition;
-    private Point _menuOperationsPosition;    
+    private Point _menuOperationsPosition;
     private Point _textMenuOperationsPosition;
     private Point _textMenuAPIPosition;
     private Point _popupTextMenuPosition;
@@ -65,8 +59,8 @@ public class PopupDictionaryService : ObserveralObject
     private Popup _menuSelectionActionsPopup;
     private Popup _menuSelectionResponsePopup;
     private Popup _menuSelectionPopupListPopup;
-    
-    public static  String TargetLangguage
+
+    public static String TargetLangguage
     {
         get { return _targetLanguage; }
         set
@@ -186,6 +180,11 @@ public class PopupDictionaryService : ObserveralObject
         set
         {
             _jarvisActionPosition = value;
+            if(_injectionActionViewModel != null)
+            {
+                _injectionActionViewModel.HorizontalOffset = value.X;
+                _injectionActionViewModel.VerticalOffset = value.Y;
+            }
             OnPropertyChanged();
         }
     }
@@ -207,7 +206,7 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-    
+
     public bool IsShowAIBubbleFromTrayMenu
     {
         get { return _isShowAIBubbleFromTrayMenu; }
@@ -226,7 +225,7 @@ public class PopupDictionaryService : ObserveralObject
             _menuOperationsPosition = value;
             OnPropertyChanged();
         }
-    }  
+    }
 
     public Point TextMenuOperationsPosition
     {
@@ -265,7 +264,7 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-    
+
     public Point MenuSelectionActionsPosition
     {
         get { return _menuSelectionActionsPosition; }
@@ -285,7 +284,7 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-    
+
     public Point MenuSelectionResponsePosition
     {
         get { return _menuSelectionResponsePosition; }
@@ -295,7 +294,7 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-    
+
     public bool IsShowMenuSelectionPopupList
     {
         get { return _isShowMenuSelectionPopupList; }
@@ -305,7 +304,7 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-    
+
     public Point MenuSelectionPopupListPosition
     {
         get { return _menuSelectionPopupListPosition; }
@@ -430,7 +429,7 @@ public class PopupDictionaryService : ObserveralObject
         isOpenBinding.NotifyOnSourceUpdated = true;
         _menuSelectionResponsePopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
     }
- 
+
     public void InitMenuSelectionPopupList()
     {
         _menuSelectionPopupListPopup = new Popup();
@@ -504,7 +503,7 @@ public class PopupDictionaryService : ObserveralObject
 
     public void UpdateJarvisActionPosition(Point systemPoint, Rect elementRectBounding)
     {
-        if(systemPoint.X == 0 || systemPoint.Y == 0)
+        if (systemPoint.X == 0 || systemPoint.Y == 0)
             return;
 
         double screenHeight = SystemParameters.PrimaryScreenHeight;
@@ -578,7 +577,7 @@ public class PopupDictionaryService : ObserveralObject
         Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
         AIChatBubblePosition = visualPoint;
     }
-    
+
     public void ShowAIChatSidebar(bool isShow)
     {
         IsShowAIChatSidebar = isShow;
@@ -597,7 +596,7 @@ public class PopupDictionaryService : ObserveralObject
 
     public int GetMenuSelectionActionWidth()
     {
-        if(_textMenuViewModel == null)
+        if (_textMenuViewModel == null)
             _textMenuViewModel = DependencyInjection.GetService<TextMenuViewModel>();
 
         return _textMenuViewModel.GetMenuSelectionActionWidth();

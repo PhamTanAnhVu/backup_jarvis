@@ -10,16 +10,16 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
     public class InjectionActionViewModel : ViewModelBase
     {
         #region Fields
-        private bool _isSpinningJarvisIcon;
-        private bool _isAnimationEnabled = true;
-        private double _horizontalOffset;
-        private double _verticalOffset;
+        private bool? _isSpinningJarvisIcon;
+        private bool? _isAnimationEnabled = true;
+        private double? _horizontalOffset;
+        private double? _verticalOffset;
         private MenuInjectionActionsViewModel? _menuInjectionActionsViewModel;
         private SendEventGA4? _googleAnnalyticService;
         #endregion
 
         #region Properties
-        public bool IsSpinningJarvisIcon
+        public bool? IsSpinningJarvisIcon
         {
             get { return _isSpinningJarvisIcon; }
             set
@@ -29,7 +29,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             }
         }
 
-        public bool IsAnimationEnabled
+        public bool? IsAnimationEnabled
         {
             get { return _isAnimationEnabled; }
             set
@@ -39,22 +39,26 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             }
         }
 
-        public double HorizontalOffset
+        public double? HorizontalOffset
         {
             get => _horizontalOffset;
             set
             {
                 _horizontalOffset = value;
+                if(_menuInjectionActionsViewModel != null)
+                    _menuInjectionActionsViewModel.HorizontalOffset = (value != null) ? (double)value : 0;
                 OnPropertyChanged();
             }
         }
 
-        public double VerticalOffset
+        public double? VerticalOffset
         {
             get => _verticalOffset;
             set
             {
                 _verticalOffset = value;
+                if(_menuInjectionActionsViewModel != null)
+                    _menuInjectionActionsViewModel.VerticalOffset = (value != null) ? (double)value : 0;
                 OnPropertyChanged();
             }
         }
@@ -70,6 +74,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
 
         public InjectionActionViewModel()
         {
+            //Base
+            _isSpinningJarvisIcon = false;
+            _isAnimationEnabled = true;
+            _horizontalOffset = 0;
+            _verticalOffset = 0;
+
             //Commands
             InitialCommands();
 

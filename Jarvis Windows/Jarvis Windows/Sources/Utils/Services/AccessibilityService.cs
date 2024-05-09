@@ -27,6 +27,8 @@ public class AccessibilityService
     private ISupportedAppService? _supportedAppSerice;
     private bool? _isMouseOverAppUI;
     private bool _isMouseOverAIChatPanel;
+    Rect _storePreviousRect = Rect.Empty;
+
 
     public bool IsUseAutoTuningPosition { 
         get => _isUseAutoTuningPosition; 
@@ -71,7 +73,6 @@ public class AccessibilityService
 
     public AccessibilityService()
     {
-        _focusChangedEventHandler = new AutomationFocusChangedEventHandler(OnElementFocusChanged);
         _automationElementValueService = DependencyInjection.GetService<IAutomationElementValueService>();
         EventAggregator.MouseOverAppUIChanged += (sender, e) => {
             _isMouseOverAppUI = sender as bool?;
@@ -80,6 +81,7 @@ public class AccessibilityService
 
     public void SubscribeToElementFocusChanged()
     {
+        _focusChangedEventHandler = new AutomationFocusChangedEventHandler(OnElementFocusChanged);
         Automation.AddAutomationFocusChangedEventHandler(_focusChangedEventHandler);
         /*Thread tuningJarivsPositionThread = new Thread(TunningPositionThread);
         tuningJarivsPositionThread.Name = "Jarvis Position Tuning";
@@ -110,7 +112,6 @@ public class AccessibilityService
 
     public void UnSubscribeToElementFocusChanged()
     {
-        _focusChangedEventHandler = new AutomationFocusChangedEventHandler(OnElementFocusChanged);
         Automation.RemoveAutomationFocusChangedEventHandler(_focusChangedEventHandler);
     }
 
@@ -151,24 +152,33 @@ public class AccessibilityService
     private void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
     {
         AutomationElement? newFocusElement = sender as AutomationElement;
-        
-        /*string appName = GetActiveWindowTitle();
+        if(_storePreviousRect == newFocusElement?.Current.BoundingRectangle)
+            return;
+        else
+            _storePreviousRect = newFocusElement.Current.BoundingRectangle;
+
+
+        string appName = GetActiveWindowTitle();
         if (_supportedAppSerice != null)
         {
             if (!_supportedAppSerice.IsSupportedInjectionApp(appName) &&
-                !string.IsNullOrEmpty(appName) && appName != "Jarvis MainView")
+                !string.IsNullOrEmpty(appName) && appName != "MenuInjectionActionsView")
             {
-                _popupDictionaryService.ShowJarvisAction(false);
-                _popupDictionaryService.ShowMenuOperations(false);
+                PopupDictionaryService.Instance().ShowJarvisAction(false);
+                PopupDictionaryService.Instance().ShowMenuOperations(false);
                 return;
             }
-        }*/
+        }
 
+        AutomationElement rootElement = AutomationElement.FromHandle(NativeUser32API.GetForegroundWindow());
+        if (rootElement.Current.AutomationId.Equals("MenuInjectionActionsView") ||
+            rootElement.Current.Name.Equals("MenuInjectionActionsView"))
+            return;
+         
         if (newFocusElement != null && newFocusElement != _focusingElement)
         {
             if (newFocusElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") ||
-                newFocusElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox") ||
-                newFocusElement.Current.AutomationId.Equals("MenuInjectionActionsView"))
+                newFocusElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox"))
             {
                 PopupDictionaryService.Instance().ShowJarvisAction(false);
                 return;
@@ -202,7 +212,7 @@ public class AccessibilityService
                             return;
                     }
 
-                    _focusingElement = null;
+                    //_focusingElement = null;
                     PopupDictionaryService.Instance().ShowJarvisAction(false);
                     PopupDictionaryService.Instance().ShowMenuOperations(false);
                 }
@@ -273,7 +283,7 @@ public class AccessibilityService
         {
             PopupDictionaryService.Instance().ShowJarvisAction(false);
             PopupDictionaryService.Instance().ShowMenuOperations(false);
-            throw;
+            throw; 
         }
     }
 

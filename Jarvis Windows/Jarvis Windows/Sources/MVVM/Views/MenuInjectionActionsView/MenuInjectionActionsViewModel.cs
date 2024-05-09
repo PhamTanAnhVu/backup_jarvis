@@ -20,6 +20,8 @@ using System.Windows;
 using System.IO;
 using System.Windows.Navigation;
 using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
+using Windows.Networking.XboxLive;
+using System.ComponentModel;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
 using Point = System.Drawing.Point;
@@ -28,7 +30,7 @@ using IDataObject = System.Windows.IDataObject;
 public class MenuInjectionActionsViewModel : ViewModelBase
 {
     private SendEventGA4 _sendEventGA4;
-    private bool _isSpinningJarvisIcon; // Spinning Jarvis icon
+    private bool _isSpinningJarvisIcon;
     private string _remainingAPIUsage;
     private string _mainWindowInputText;
     private string _filterText;
@@ -41,7 +43,6 @@ public class MenuInjectionActionsViewModel : ViewModelBase
     private IAuthenticationService _authenticationService;
     private bool _isTextEmptyAIChat;
     private string _aIChatMessageInput;
-
     private int _languageSelectedIndex;
     private string _textMenuAPI;
     private bool _isSpinningJarvisIconTextMenu;
@@ -67,39 +68,24 @@ public class MenuInjectionActionsViewModel : ViewModelBase
     private bool _isMouseOver_TextMenuSelection;
     private bool _isMouseOver_TextMenuPopup;
     private TokenLocalService _tokenLocalService;
-
     private Visibility _windowVisibility;
     private Visibility _exhaustedGridVisibility;
-
     private Views.SettingView.SettingView _settingView;
-
     private ObservableCollection<AIButton> _textMenuButtons;
     private Account? _account;
     private IKeyboardMouseEvents _globalMouseHook;
+    private double _horizontalOffset;
+    private double _verticalOffset;
     public List<Language> TextMenuLanguages { get; set; }
-    //public RelayCommand TextMenuAICommand { get; set; }
-    //public RelayCommand ShowTextMenuOperationsCommand { get; set; }
-    //public RelayCommand HideTextMenuAPICommand { get; set; }
-
     public List<Language> Languages { get; set; }
     public RelayCommand ShowMenuOperationsCommand { get; set; }
     public RelayCommand HideMenuOperationsCommand { get; set; }
     public RelayCommand AICommand { get; set; }
     public RelayCommand ExpandCommand { get; set; }
-    //public RelayCommand OpenSettingsCommand { get; set; }
-    //public RelayCommand QuitAppCommand { get; set; }
-    //public RelayCommand PinJarvisButtonCommand { get; set; }
     public RelayCommand UndoCommand { get; set; }
     public RelayCommand RedoCommand { get; set; }
     public RelayCommand UpgradePlanCommand { get; set; }
-    //public RelayCommand LoginCommand { get; set; }
-    //public RelayCommand LogoutCommand { get; set; }
-    //public RelayCommand ShowSettingsCommand { get; set; }
-    //public RelayCommand TextMenuPinCommand { get; set; }
-    //public RelayCommand PopupTextMenuCommand { get; set; }
-    //public RelayCommand TextMenuAPIHeaderActionCommand { get; set; }
     public RelayCommand CopyToClipboardCommand { get; set; }
-
     public bool IsSpinningJarvisIcon
     {
         get { return _isSpinningJarvisIcon; }
@@ -262,6 +248,26 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         {
             _textMenuAPIscrollBarHeight = value;
             OnPropertyChanged();
+        }
+    }
+
+    public double HorizontalOffset
+    {
+        get => _horizontalOffset;
+        set
+        {
+            _horizontalOffset = value;
+            OnPropertyChanged("HorizontalOffset");
+        }
+    }
+
+    public double VerticalOffset
+    {
+        get => _verticalOffset;
+        set
+        {
+            _verticalOffset = value;
+            OnPropertyChanged("VerticalOffset");
         }
     }
 

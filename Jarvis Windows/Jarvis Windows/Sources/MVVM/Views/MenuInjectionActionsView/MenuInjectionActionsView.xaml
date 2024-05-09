@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView"
-        xmlns:vm="clr-namespace:Jarvis_Windows.Sources.MVVM.ViewModels"
         xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -16,6 +15,9 @@
         Visibility="{Binding WindowVisibility}"
         Topmost="True"
         ShowInTaskbar="False"
+        WindowStartupLocation="Manual"
+        Top="{Binding VerticalOffset}"
+        Left="{Binding HorizontalOffset}"
         Height="Auto" Width="420">
     <Window.Resources>
         <ResourceDictionary>
