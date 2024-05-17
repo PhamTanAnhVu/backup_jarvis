@@ -34,6 +34,17 @@ namespace Jarvis_Background_Service
             }
         }
 
+        private static bool IsDebugMode()
+        {
+            bool isDebug = false;
+            #if DEBUG
+                isDebug = true;
+            #else
+                isDebug = Debugger.IsAttached;
+            #endif
+            return isDebug;
+        }
+
         private void AutoRestartService()
         {
             while (true)
@@ -55,14 +66,17 @@ namespace Jarvis_Background_Service
                 else
                 {
                     Process jarvisWindows = new Process();
-                    string packagePath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-                    packagePath = packagePath.Replace("Jarvis Background Service", "Jarvis Windows");
-                    jarvisWindows.StartInfo.FileName = Path.Combine(packagePath, "Jarvis Windows.exe");
-                    if (!File.Exists(jarvisWindows.StartInfo.FileName))
+                    string? packagePath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+                    if(!IsDebugMode())
                     {
-                        System.Windows.MessageBox.Show(jarvisWindows.StartInfo.FileName);
+                        packagePath = packagePath?.Replace("Jarvis Background Service", "Jarvis Windows");
+                        jarvisWindows.StartInfo.FileName = Path.Combine(packagePath, "Jarvis Windows.exe");
+                        if (!File.Exists(jarvisWindows.StartInfo.FileName))
+                        {
+                            System.Windows.MessageBox.Show(jarvisWindows.StartInfo.FileName);
+                        }
+                        jarvisWindows.Start();
                     }
-                    jarvisWindows.Start();
                 }
 
                 Thread.Sleep(TEN_SECONDS);

@@ -14,6 +14,7 @@ using System.Diagnostics;
 using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Jarvis_Windows.Sources.MVVM.Views.MainNavigationView;
 using System.IO;
+using Windows.ApplicationModel.Contacts;
 
 namespace Jarvis_Windows
 {
@@ -85,15 +86,18 @@ namespace Jarvis_Windows
 
             //Decoupling breath service
             ///Lock test
-            /*Process processBreath = new Process();
-            string packagePath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            packagePath = packagePath.Replace("Jarvis Windows", "Jarvis Background Service");
-            processBreath.StartInfo.FileName = Path.Combine(packagePath, "Jarvis Background Service.exe");
-            if (!File.Exists(processBreath.StartInfo.FileName))
+            Process processBreath = new Process();
+            string? packagePath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName);
+            if(!IsDebugMode())
             {
-                MessageBox.Show(processBreath.StartInfo.FileName);
+                packagePath = packagePath?.Replace("Jarvis Windows", "Jarvis Background Service");
+                processBreath.StartInfo.FileName = Path.Combine(packagePath, "Jarvis Background Service.exe");
+                if (!File.Exists(processBreath.StartInfo.FileName))
+                {
+                    MessageBox.Show(processBreath.StartInfo.FileName);
+                }
+                processBreath.Start();
             }
-            processBreath.Start();*/
         }
 
         private void SingleInstanceWatcher()
