@@ -15,8 +15,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionActionsViewModel : ViewModelBase
 {
-    private SendEventGA4? _googleAnnalyticService;
-
     private static bool _isMouseOver_AppUI;
     private bool _isMouseOver_TextMenuSelection;
     private bool _isMouseOver_TextMenuPopup;
@@ -31,7 +29,6 @@ public class MenuSelectionActionsViewModel : ViewModelBase
 
     public MenuSelectionActionsViewModel()
     {
-        InitializeServices();
         InitializeMenuSelectionButtons();
         // MenuSelectionCommand = new RelayCommand(ExecuteMenuSelectionCommand, o => true);
         // MenuSelectionPinCommand = new RelayCommand(ExecuteMenuSelectionPinCommand, o => true);

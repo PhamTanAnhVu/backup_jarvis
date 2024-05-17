@@ -1,6 +1,4 @@
-﻿using Gma.System.MouseKeyHook;
-using Jarvis_Windows.Sources.DataAccess.Local;
-using Jarvis_Windows.Sources.DataAccess.Network;
+﻿using Jarvis_Windows.Sources.DataAccess.Network;
 using Jarvis_Windows.Sources.DataAccess;
 using Jarvis_Windows.Sources.MVVM.Models;
 using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
@@ -8,7 +6,6 @@ using Jarvis_Windows.Sources.Utils.Accessibility;
 using Jarvis_Windows.Sources.Utils.Constants;
 using Jarvis_Windows.Sources.Utils.Core;
 using Jarvis_Windows.Sources.Utils.Services;
-using Jarvis_Windows.Sources.Utils.WindowsAPI;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -93,33 +90,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
     }
 
-        public bool IsMainWindowInputTextEmpty
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(MainWindowInputText)) _isMainWindowInputTextEmpty = true;
-                else _isMainWindowInputTextEmpty = false;
-                return _isMainWindowInputTextEmpty;
-            }
-            set
-            {
-                _isMainWindowInputTextEmpty = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string MainWindowInputText
-        {
-            get { return _mainWindowInputText; }
-            set
-            {
-                _mainWindowInputText = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(IsMainWindowInputTextEmpty));
-            }
-        }
-
-        public string RemainingAPIUsage
+        public string? RemainingAPIUsage
         {
             get { return _remainingAPIUsage; }
             set
@@ -328,62 +299,21 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             set
             {
                 _isAPIUsageRemain = value;
-                if (_isAPIUsageRemain)
-                {
-                    ChatPanel_Height = 518;
-                }
-
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(ChatPanel_Height));
             }
         }
 
-        public bool IsNoAPIUsageRemain
+        public bool? IsNoAPIUsageRemain
         {
             get { return _isNoAPIUsageRemain; }
             set
             {
                 _isNoAPIUsageRemain = value;
-                if (_isNoAPIUsageRemain)
-                {
-                    ChatPanel_Height = 240;
-                }
-
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(ChatPanel_Height));
-            }
-        }
-
-        public string TextMenuPinColor
-        {
-            get { return _textMenuPinColor; }
-            set
-            {
-                _textMenuPinColor = value;
                 OnPropertyChanged();
             }
         }
 
-        public string TextMenuAPIHeaderActionName
-        {
-            get { return _textMenuAPIHeaderActionName; }
-            set
-            {
-                _textMenuAPIHeaderActionName = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool IsTextMenuAPIHeaderAction
-        {
-            get { return _isTextMenuAPIHeaderAction; }
-            set
-            {
-                _isTextMenuAPIHeaderAction = value;
-                OnPropertyChanged();
-            }
-        }
-        public bool IsActionTranslate
+        public bool? IsActionTranslate
         {
             get { return _isActionTranslate; }
             set
@@ -434,27 +364,6 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
     }
 
-        public Visibility WindowVisibility
-        {
-            get => _windowVisibility;
-            set
-            {
-                _windowVisibility = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        public TokenLocalService TokenLocalService
-        {
-            get => _tokenLocalService;
-            set
-            {
-                _tokenLocalService = value;
-                OnPropertyChanged("TokenService");
-            }
-        }
-
         public Visibility ExhaustedGridVisibility
         {
             get => _exhaustedGridVisibility;
@@ -485,16 +394,12 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             //    IsAPIUsageRemain = true;
             //}
 
-
             ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
             HideMenuOperationsCommand = new RelayCommand(ExecuteHideMenuOperationsCommand, o => true);
 
             AICommand = new RelayCommand(ExecuteAICommand, o => true);
             ExpandCommand = new RelayCommand(ExecuteExpandCommand, o => true);
 
-            //OpenSettingsCommand = new RelayCommand(ExecuteOpenSettingsCommand, o => true);
-            //QuitAppCommand = new RelayCommand(ExecuteQuitAppCommand, o => true);
-            //PinJarvisButtonCommand = new RelayCommand(ExecutePinJarvisButtonCommand, o => true);
             UndoCommand = new RelayCommand(ExecuteUndoCommand, o => true);
             RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true);
 
@@ -511,15 +416,10 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             jsonContent = File.ReadAllText(fullPath);
 
             Languages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
-            TextMenuLanguages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
             LanguageSelectedIndex = 14;
             _authUrl = DataConfiguration.AuthUrl;
-
-            //Register Acceccibility service
-            //AccessibilityService.GetInstance().SubscribeToElementFocusChanged();
             EventAggregator.LanguageSelectionChanged += OnLanguageSelectionChanged;
 
-            // Checking App update here
             try { ExecuteCheckUpdate(); }
 
             catch { }
@@ -543,15 +443,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             //_globalMouseHook.MouseClick += MouseClicked;
 
             EventAggregator.MouseOverAppUIChanged += (sender, e) => {
-                _isMouseOver_AppUI = (bool)sender;
-            };
-
-            EventAggregator.MouseOverTextMenuSelectionChanged += (sender, e) => {
-                _isMouseOver_TextMenuSelection = (bool)sender;
-            };
-
-            EventAggregator.MouseOverTextMenuPopupChanged += (sender, e) => {
-                _isMouseOver_TextMenuPopup = (bool)sender;
+                _isMouseOver_AppUI = (sender != null) ? (bool)sender : false;
             };
         }
 

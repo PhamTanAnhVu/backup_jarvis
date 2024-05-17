@@ -14,8 +14,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionResponseViewModel : ViewModelBase
 {
-    private SendEventGA4? _googleAnnalyticService;
-
     private double _scrollBarHeight;
     private int _languageSelectedIndex;
     private bool _isOutOfToken;
@@ -126,7 +124,6 @@ public class MenuSelectionResponseViewModel : ViewModelBase
     }
     public MenuSelectionResponseViewModel()
     {
-        InitializeServices();
         MenuSelectionCommand = new RelayCommand(ExecuteMenuSelectionCommand, o => true);
         MenuSelectionPinCommand = new RelayCommand(ExecuteMenuSelectionPinCommand, o => true);
         ShowMenuSelectionPopupListCommand = new RelayCommand(ExecuteShowMenuSelectionPopupListCommand, o => true);
