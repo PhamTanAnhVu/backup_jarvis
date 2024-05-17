@@ -46,8 +46,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             set
             {
                 _horizontalOffset = value;
-                if(_menuInjectionActionsViewModel != null)
-                    _menuInjectionActionsViewModel.HorizontalOffset = (value != null) ? (double)value : 0;
+                /*if(_menuInjectionActionsViewModel != null)
+                {
+                    _menuInjectionActionsViewModel.PositionChanged((double)VerticalOffset, (double)HorizontalOffset);
+                    Debug.WriteLine("MenuInjectionAction = " + _menuInjectionActionsViewModel.GetHashCode().ToString());
+                    //_menuInjectionActionsViewModel.HorizontalOffset = (value != null) ? (double)value : 0;
+                }*/
                 OnPropertyChanged();
             }
         }
@@ -58,8 +62,11 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             set
             {
                 _verticalOffset = value;
-                if(_menuInjectionActionsViewModel != null)
-                    _menuInjectionActionsViewModel.VerticalOffset = (value != null) ? (double)value : 0;
+                /*if(_menuInjectionActionsViewModel != null)
+                {
+                    _menuInjectionActionsViewModel.PositionChanged((double)VerticalOffset, (double)HorizontalOffset);
+                    //_menuInjectionActionsViewModel.VerticalOffset = (value != null) ? (double)value : 0;
+                }*/
                 OnPropertyChanged();
             }
         }

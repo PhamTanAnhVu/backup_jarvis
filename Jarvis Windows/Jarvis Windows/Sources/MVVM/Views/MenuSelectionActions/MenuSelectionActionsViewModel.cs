@@ -268,10 +268,10 @@ public class MenuSelectionActionsViewModel : ViewModelBase
                 PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
                 _ = GoogleAnalyticService.Instance().SendEvent("inject_selection_actions");
             }
-            /*else
+            else
             {
                 System.Windows.Clipboard.SetDataObject(tmpClipboard);
-            }*/
+            }
         }
         catch
         {

@@ -70,13 +70,13 @@ namespace Jarvis_Background_Service
                     if(!IsDebugMode())
                     {
                         packagePath = packagePath?.Replace("Jarvis Background Service", "Jarvis Windows");
-                        jarvisWindows.StartInfo.FileName = Path.Combine(packagePath, "Jarvis Windows.exe");
-                        if (!File.Exists(jarvisWindows.StartInfo.FileName))
-                        {
-                            System.Windows.MessageBox.Show(jarvisWindows.StartInfo.FileName);
-                        }
-                        jarvisWindows.Start();
+                    jarvisWindows.StartInfo.FileName = Path.Combine(packagePath, "Jarvis Windows.exe");
+                    if (!File.Exists(jarvisWindows.StartInfo.FileName))
+                    {
+                        System.Windows.MessageBox.Show(jarvisWindows.StartInfo.FileName);
                     }
+                    jarvisWindows.Start();
+                }
                 }
                 }
 
