@@ -22,7 +22,16 @@ public class SendEventGA4
     private long _sessionTimestamp;
     private string _version; // App version, only available in package mode
     private string _recentDate;
-    public SendEventGA4()
+    private static SendEventGA4? _instance = null;
+
+    public static SendEventGA4 Instance()
+    {
+        if (_instance == null)
+            _instance = new SendEventGA4();
+        return _instance;
+    }
+
+    private SendEventGA4()
     {
         _httpClient         = new HttpClient();
         _ga4Endpoint        = "https://www.google-analytics.com/mp/collect";
@@ -33,6 +42,7 @@ public class SendEventGA4
         _sessionID          = WindowLocalStorage.ReadLocalStorage("SessionID");
         _sessionTimestamp   = long.Parse(WindowLocalStorage.ReadLocalStorage("SessionTimestamp"));
         _version            = WindowLocalStorage.ReadLocalStorage("AppVersion");
+        _recentDate         = WindowLocalStorage.ReadLocalStorage("RecentDate");
     }
 
     public async Task SendEvent(string eventName, Dictionary<string, object> eventParams = null)

@@ -15,8 +15,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         private bool? _isAnimationEnabled = true;
         private double? _horizontalOffset;
         private double? _verticalOffset;
-        //private MenuInjectionActionsViewModel? _menuInjectionActionsViewModel;
-        private SendEventGA4? _googleAnnalyticService;
         #endregion
 
         #region Properties
@@ -46,12 +44,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             set
             {
                 _horizontalOffset = value;
-                /*if(_menuInjectionActionsViewModel != null)
-                {
-                    _menuInjectionActionsViewModel.PositionChanged((double)VerticalOffset, (double)HorizontalOffset);
-                    Debug.WriteLine("MenuInjectionAction = " + _menuInjectionActionsViewModel.GetHashCode().ToString());
-                    //_menuInjectionActionsViewModel.HorizontalOffset = (value != null) ? (double)value : 0;
-                }*/
                 OnPropertyChanged();
             }
         }
@@ -62,11 +54,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             set
             {
                 _verticalOffset = value;
-                /*if(_menuInjectionActionsViewModel != null)
-                {
-                    _menuInjectionActionsViewModel.PositionChanged((double)VerticalOffset, (double)HorizontalOffset);
-                    //_menuInjectionActionsViewModel.VerticalOffset = (value != null) ? (double)value : 0;
-                }*/
                 OnPropertyChanged();
             }
         }
@@ -90,11 +77,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
 
             //Commands
             InitialCommands();
-
-            //Menu Injection Actions
-            /*MenuInjectionActionsView.MenuInjectionActionsView menuInjectionActionsView = new MenuInjectionActionsView.MenuInjectionActionsView();
-            _menuInjectionActionsViewModel = (MenuInjectionActionsViewModel?)menuInjectionActionsView.DataContext;
-            Debug.WriteLine("MenuInjectionActionsViewModel = " + _menuInjectionActionsViewModel.GetHashCode().ToString());*/
         }
 
         private void InitialCommands()
@@ -119,8 +101,9 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         {
             if(!PopupDictionaryService.Instance().IsDragging)
             {
-                PopupDictionaryService.Instance().IsShowMenuOperations = true;
-                PopupDictionaryService.Instance().IsShowJarvisAction = false;
+                PopupDictionaryService.Instance().ShowMenuOperations(true);
+                PopupDictionaryService.Instance().ShowJarvisAction(false);
+                _ = SendEventGA4.Instance().SendEvent("open_input_actions");
             }
         }
 
@@ -128,11 +111,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         {
             PopupDictionaryService.Instance().PinJarvisButton();
             PopupDictionaryService.HasPinnedJarvisButton = true;
-        }
-
-        public void UpdateMenuInjectionActionsPosition(double top, double left)
-        {
-            //_menuInjectionActionsViewModel.PositionChanged(top, left);
         }
     }
 }

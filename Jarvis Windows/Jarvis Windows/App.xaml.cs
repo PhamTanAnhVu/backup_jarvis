@@ -84,7 +84,8 @@ namespace Jarvis_Windows
             }
 
             //Decoupling breath service
-            Process processBreath = new Process();
+            ///Lock test
+            /*Process processBreath = new Process();
             string packagePath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             packagePath = packagePath.Replace("Jarvis Windows", "Jarvis Background Service");
             processBreath.StartInfo.FileName = Path.Combine(packagePath, "Jarvis Background Service.exe");
@@ -92,7 +93,7 @@ namespace Jarvis_Windows
             {
                 MessageBox.Show(processBreath.StartInfo.FileName);
             }
-            processBreath.Start();
+            processBreath.Start();*/
         }
 
         private void SingleInstanceWatcher()

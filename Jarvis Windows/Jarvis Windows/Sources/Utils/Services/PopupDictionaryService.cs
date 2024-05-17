@@ -6,7 +6,9 @@ using Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 using Jarvis_Windows.Sources.Utils.Core;
 using Newtonsoft.Json.Linq;
 using System;
+using System.ComponentModel;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
@@ -585,8 +587,8 @@ public class PopupDictionaryService : ObserveralObject
 
         JarvisActionPosition = jarvisButtonPos;
         MenuOperationsPosition = jarvisButtonPos;
-        if(_menuinjectionActionsViewModel != null)
-            _menuinjectionActionsViewModel.PositionChanged(jarvisButtonPos.Y, jarvisButtonPos.X);
+        //if(_menuinjectionActionsViewModel != null)
+            //_menuinjectionActionsViewModel.PositionChanged(jarvisButtonPos.Y, jarvisButtonPos.X);
     }
 
     public void ShowMenuOperations(bool isShow)

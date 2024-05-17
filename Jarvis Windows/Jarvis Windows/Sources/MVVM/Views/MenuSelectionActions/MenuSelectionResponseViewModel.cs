@@ -13,8 +13,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionResponseViewModel : ViewModelBase
 {
-    private SendEventGA4? _googleAnnalyticService;
-
     private double _scrollBarHeight;
     private int _languageSelectedIndex;
     private bool _isAPIUsageRemain;
@@ -124,7 +122,6 @@ public class MenuSelectionResponseViewModel : ViewModelBase
     }
     public MenuSelectionResponseViewModel()
     {
-        InitializeServices();
         MenuSelectionCommand = new RelayCommand(ExecuteMenuSelectionCommand, o => true);
         MenuSelectionPinCommand = new RelayCommand(ExecuteMenuSelectionPinCommand, o => true);
         ShowMenuSelectionPopupListCommand = new RelayCommand(ExecuteShowMenuSelectionPopupListCommand, o => true);
@@ -147,11 +144,6 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         {
             MenuSelectionCommand.Execute(sender);
         };
-    }
-
-    void InitializeServices()
-    {
-        _googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
     }
 
     private void UpdateAPIUsage()
@@ -186,7 +178,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         SelectionResponsePinColor = colors[Convert.ToInt32(PopupDictionaryService.Instance().IsPinMenuSelectionResponse)];
         if (SelectionResponsePinColor == colors[1])
         {
-            await _googleAnnalyticService.SendEvent("pin_inject_selection_actions_response");
+            _ = SendEventGA4.Instance().SendEvent("pin_inject_selection_actions_response");
         }
     }
 
@@ -259,7 +251,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             else if (_aiAction == "custom")
                 eventParams.Add("ai_action_custom", _buttonInfo.CommandParameter);
 
-            await _googleAnnalyticService.SendEvent("do_ai_action", eventParams);
+            _ = SendEventGA4.Instance().SendEvent("do_ai_action", eventParams);
         }
     }
 }

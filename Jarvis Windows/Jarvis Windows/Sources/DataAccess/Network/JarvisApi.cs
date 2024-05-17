@@ -67,7 +67,7 @@ public sealed class JarvisApi
 
     public IAuthenticationService AuthenService { get; set; }
 
-    public async Task<string>? APIUsageHandler()
+    public async Task<string> APIUsageHandler()
     {
         try
         {

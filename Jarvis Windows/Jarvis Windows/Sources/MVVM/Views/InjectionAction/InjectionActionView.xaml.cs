@@ -9,9 +9,6 @@ using System.Windows.Media;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
 {
-    /// <summary>
-    /// Interaction logic for JarvisActionView.xaml
-    /// </summary>
     public partial class InjectionActionView : UserControl
     {
         private readonly Size _expandSize = new Size(50, 30);
@@ -42,62 +39,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         {
             parrentBorder.Width = CollapseSize.Width;
             parrentBorder.Height = CollapseSize.Height;
-        }
-        Point anchorPoint;
-        Point currentPoint;
-        bool isInDrag = false;
-        private TranslateTransform transform = new TranslateTransform();
-        /*private void root_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (isInDrag)
-            {
-                var element = sender as FrameworkElement;
-                currentPoint = e.GetPosition(null);
-
-                transform.X += currentPoint.X - anchorPoint.X;
-                transform.Y += (currentPoint.Y - anchorPoint.Y);
-                this.RenderTransform = transform;
-                anchorPoint = currentPoint;
-            }
-        }*/
-        private void root_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Debug.WriteLine("root_MouseLeftButtonDown");
-            var element = sender as FrameworkElement;
-            anchorPoint = e.GetPosition(null);
-            element.CaptureMouse();
-            isInDrag = true;
-            e.Handled = true;
-        }
-
-        private void root_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (isInDrag)
-            {
-                Debug.WriteLine("root_MouseMove");
-                var element = sender as FrameworkElement;
-                currentPoint = e.GetPosition(null);
-
-                var transform = new TranslateTransform
-                {
-                    X = (currentPoint.X - anchorPoint.X),
-                    Y = (currentPoint.Y - anchorPoint.Y)
-                };
-                this.RenderTransform = transform;
-                anchorPoint = currentPoint;
-            }
-        }
-
-        private void root_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (isInDrag)
-            {
-                Debug.WriteLine("root_MouseLeftButtonUp");
-                var element = sender as FrameworkElement;
-                element.ReleaseMouseCapture();
-                isInDrag = false;
-                e.Handled = true;
-            }
         }
     }
 }

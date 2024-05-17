@@ -9,12 +9,9 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
 {
     public class CustomContextMenuView : ContextMenuStrip
     {
-        private SendEventGA4 _googleAnalytic;
-
         public CustomContextMenuView()
         {
             DecorateMenuItems();
-            _googleAnalytic = DependencyInjection.GetService<SendEventGA4>();
         }
 
         private void DecorateMenuItems()
@@ -37,11 +34,11 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
             EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
         }
 
-        private async void QuitMenuItem_Click(object? sender, EventArgs e)
+        private void QuitMenuItem_Click(object? sender, EventArgs e)
         {
             try
             {
-                await _googleAnalytic.SendEvent("quit_app");
+                _ = SendEventGA4.Instance().SendEvent("quit_app");
                 Process.GetCurrentProcess().Kill();
             }
             catch

@@ -14,8 +14,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionActionsViewModel : ViewModelBase
 {
-    private SendEventGA4? _googleAnnalyticService;
-
     private static bool _isMouseOver_AppUI;
     private bool _isMouseOver_TextMenuSelection;
     private bool _isMouseOver_TextMenuPopup;
@@ -27,7 +25,6 @@ public class MenuSelectionActionsViewModel : ViewModelBase
 
     public MenuSelectionActionsViewModel()
     {
-        InitializeServices();
         InitializeMenuSelectionButtons();
         // MenuSelectionCommand = new RelayCommand(ExecuteMenuSelectionCommand, o => true);
         // MenuSelectionPinCommand = new RelayCommand(ExecuteMenuSelectionPinCommand, o => true);
@@ -49,11 +46,6 @@ public class MenuSelectionActionsViewModel : ViewModelBase
         {
             _isMouseOver_TextMenuPopup = (bool)sender;
         };
-    }
-
-    void InitializeServices()
-    {
-        _googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
     }
 
     private void InitializeMenuSelectionButtons()
@@ -155,7 +147,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
                     return;
                 }
                 PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
-                await _googleAnnalyticService.SendEvent("inject_selection_actions");
+                _ = SendEventGA4.Instance().SendEvent("inject_selection_actions");
             }
             else
             {
@@ -253,7 +245,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
                 }
 
                 PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
-                await _googleAnnalyticService.SendEvent("inject_selection_actions");
+                _ = SendEventGA4.Instance().SendEvent("inject_selection_actions");
             }
             else
             {

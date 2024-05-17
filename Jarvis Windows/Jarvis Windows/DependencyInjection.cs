@@ -21,18 +21,10 @@ namespace Jarvis_Windows
             IServiceCollection services = new ServiceCollection();
 
             services.AddSingleton<INavigationService, NavigationService>();
-            services.AddSingleton<SendEventGA4>();
             services.AddScoped<IAutomationElementValueService, AutomationElementValueService>();
             services.AddSingleton<ISupportedAppService, SupportedAppService>();
             services.AddSingleton<ITokenLocalService, TokenLocalService>();
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
-
-            /*services.AddSingleton<AccessibilityService>(provider => new AccessibilityService
-            {
-                SendEventGA4 = provider.GetRequiredService<SendEventGA4>(),
-                AutomationElementValueService = provider.GetRequiredService<IAutomationElementValueService>(),
-                SupportedAppService = provider.GetRequiredService<ISupportedAppService>()
-            });*/
 
             _serviceProvider = services.BuildServiceProvider();
         }
