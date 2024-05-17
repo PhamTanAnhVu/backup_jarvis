@@ -165,6 +165,7 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Jarvis Auto Restart\Jarvis Background Service.csproj" />
     <ProjectReference Include="..\Jarvis Windows\Jarvis Windows.csproj" />
   </ItemGroup>
 </Project>

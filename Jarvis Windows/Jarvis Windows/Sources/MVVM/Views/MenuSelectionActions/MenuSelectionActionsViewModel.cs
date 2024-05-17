@@ -8,6 +8,7 @@ using Gma.System.MouseKeyHook;
 using System.Threading.Tasks;
 using System.Windows;
 using System;
+using System.Diagnostics;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
@@ -220,6 +221,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
             if (System.Windows.Clipboard.ContainsText())
             {
                 AccessibilityService.GetInstance().CurrentSelectedText = Clipboard.GetText();
+                Debug.WriteLine("Clipboard text: " + Clipboard.GetText());
 
                 double screenHeight = SystemParameters.PrimaryScreenHeight;
                 double screenWidth = SystemParameters.PrimaryScreenWidth;
@@ -253,10 +255,10 @@ public class MenuSelectionActionsViewModel : ViewModelBase
                 PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
                 await _googleAnnalyticService.SendEvent("inject_selection_actions");
             }
-            /*else
+            else
             {
                 System.Windows.Clipboard.SetDataObject(tmpClipboard);
-            }*/
+            }
         }
         catch
         {

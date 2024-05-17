@@ -553,6 +553,7 @@
         <Setter Property="BorderBrush" Value="#FFFFFF"/>
         <Setter Property="BorderThickness" Value="1.75"/>
         <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -614,6 +615,7 @@
     </Style>
 
     <Style x:Key="MenuUndoRedoButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush MappingMode="RelativeToBoundingBox" 
@@ -790,6 +792,7 @@
         <Setter Property="BorderBrush" Value="#FFFFFF"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="5"/>
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -985,6 +988,7 @@
     <Style x:Key="AskButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -1142,6 +1146,7 @@
 
 
     <Style x:Key="UpgradePlanButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush MappingMode="RelativeToBoundingBox" 
@@ -1192,6 +1197,7 @@
     <Style x:Key="TextMenuAPIButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -1302,10 +1308,10 @@
 
     <Style x:Key="GridIsNoAPIUsageRemain" TargetType="Grid">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding IsNoAPIUsageRemain}" Value="True">
+            <DataTrigger Binding="{Binding IsNoAPIUsageRemain, Mode=TwoWay}" Value="True">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding IsNoAPIUsageRemain}" Value="False">
+            <DataTrigger Binding="{Binding IsNoAPIUsageRemain, Mode=TwoWay}" Value="False">
                 <Setter Property="Visibility" Value="Collapsed"/>
             </DataTrigger>
         </Style.Triggers>

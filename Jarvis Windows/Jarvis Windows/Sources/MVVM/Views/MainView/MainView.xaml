@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:menuOperation="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView"
+        xmlns:menuOperation="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView"
         xmlns:jarvisAction="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.InjectionAction"
         xmlns:textMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuView"
         xmlns:textMenuAPI="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView"
@@ -320,7 +320,7 @@
                        Focusable="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowMenuOperations}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
-                    <menuOperation:MenuOperatorsView/>
+                    <menuOperation:MenuInjectionActionsView/>
                 </Popup>
 
                 <Popup x:Name="textMenuPopup" Placement="Absolute"

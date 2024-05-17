@@ -4,10 +4,13 @@ using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView;
 using Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 using Jarvis_Windows.Sources.Utils.Core;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Reflection.Emit;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Input;
 using Point = System.Drawing.Point;
 
 namespace Jarvis_Windows.Sources.Utils.Services;
@@ -48,11 +51,13 @@ public class PopupDictionaryService : ObserveralObject
     private MenuSelectionActionsViewModel _menuSelectionActionsViewModel;
     private MenuSelectionResponseViewModel _menuSelectionResponseViewModel;
     private MenuSelectionPopupListViewModel _menuSelectionPopupListViewModel;
+    private System.Windows.Point _jarvisButtonPoint;
 
     //Popups 
     private Popup? _injectionActionPopup;
-    private MenuInjectionActionsView? _menuinjectionActionsView;
+    private Popup? _menuinjectionActionsPopup;
     private MenuInjectionActionsViewModel? _menuinjectionActionsViewModel;
+    private MenuInjectionActionsViewModel? _menuOperatorsViewModel;
     private static PopupDictionaryService? _instance = null;
 
 
@@ -180,7 +185,7 @@ public class PopupDictionaryService : ObserveralObject
         set
         {
             _jarvisActionPosition = value;
-            if(_injectionActionViewModel != null)
+            if (_injectionActionViewModel != null)
             {
                 _injectionActionViewModel.HorizontalOffset = value.X;
                 _injectionActionViewModel.VerticalOffset = value.Y;
@@ -346,6 +351,33 @@ public class PopupDictionaryService : ObserveralObject
         IsShowJarvisAction = isShow;
         //IsShowJarvisAction = isShow & JarvisActionVisibility;
     }
+    private void JarvisButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        IsDragging = false;
+        _jarvisButtonPoint = e.GetPosition(null);
+    }
+
+    private void JarvisButton_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed)
+        {
+            System.Windows.Point currentMousePosition = e.GetPosition(null);
+            double distance = (currentMousePosition - _jarvisButtonPoint).Length;
+
+            if (distance > 2)
+            {
+                HasPinnedJarvisButton = false;
+                IsDragging = true;
+                System.Windows.Point relative = e.GetPosition(null);
+                System.Windows.Point AbsolutePos = new System.Windows.Point(relative.X + _injectionActionPopup.HorizontalOffset, relative.Y + _injectionActionPopup.VerticalOffset);
+                _injectionActionPopup.VerticalOffset = AbsolutePos.Y - _jarvisButtonPoint.Y;
+                _injectionActionPopup.HorizontalOffset = AbsolutePos.X - _jarvisButtonPoint.X;
+
+                _injectionActionPopup.VerticalOffset = AbsolutePos.Y - _jarvisButtonPoint.Y;
+                _injectionActionPopup.HorizontalOffset = AbsolutePos.X - _jarvisButtonPoint.X;
+            }
+        }
+    }
 
     public void InitInjectionAction()
     {
@@ -357,6 +389,9 @@ public class PopupDictionaryService : ObserveralObject
         _injectionActionPopup.SetCurrentValue(Popup.PlacementProperty, PlacementMode.AbsolutePoint);
         _injectionActionPopup.SetCurrentValue(Popup.StaysOpenProperty, true);
         _injectionActionPopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
+        _injectionActionPopup.PreviewMouseLeftButtonDown += JarvisButton_PreviewMouseLeftButtonDown;
+        _injectionActionPopup.PreviewMouseMove += JarvisButton_MouseMove;
+
 
         Binding verticalBinding = new Binding("JarvisActionPosition.Y");
         verticalBinding.NotifyOnSourceUpdated = true;
@@ -372,6 +407,11 @@ public class PopupDictionaryService : ObserveralObject
         isOpenBinding.Source = this;
         isOpenBinding.NotifyOnSourceUpdated = true;
         _injectionActionPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
+    }
+
+    private void _injectionActionPopup_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        throw new NotImplementedException();
     }
 
     public void InitMenuSelectionActions()
@@ -459,6 +499,34 @@ public class PopupDictionaryService : ObserveralObject
         _menuSelectionPopupListPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
     }
 
+    public void InitMenuInjectionActions()
+    {
+        _menuinjectionActionsPopup = new Popup();
+        MenuInjectionActionsView menuOperatorsView = new MenuInjectionActionsView();
+        _menuOperatorsViewModel = (MenuInjectionActionsViewModel)menuOperatorsView.DataContext;
+        _menuinjectionActionsPopup.SetCurrentValue(Popup.ChildProperty, menuOperatorsView);
+        _menuinjectionActionsPopup.SetCurrentValue(Popup.AllowsTransparencyProperty, true);
+        _menuinjectionActionsPopup.SetCurrentValue(Popup.PlacementProperty, PlacementMode.AbsolutePoint);
+        _menuinjectionActionsPopup.SetCurrentValue(Popup.StaysOpenProperty, true);
+        _menuinjectionActionsPopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
+
+        Binding verticalBinding = new Binding("MenuOperationsPosition.Y");
+        verticalBinding.NotifyOnSourceUpdated = true;
+        verticalBinding.Source = this;
+        _menuinjectionActionsPopup.SetBinding(Popup.VerticalOffsetProperty, verticalBinding);
+
+        Binding horizontalBinding = new Binding("MenuOperationsPosition.X");
+        horizontalBinding.NotifyOnSourceUpdated = true;
+        horizontalBinding.Source = this;
+        _menuinjectionActionsPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
+
+        IsShowMenuOperations = false;
+        Binding isOpenBinding = new Binding("IsShowMenuOperations");
+        isOpenBinding.NotifyOnSourceUpdated = true;
+        isOpenBinding.Source = this;
+        _menuinjectionActionsPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
+    }
+
     private Point ConvertFromSystemCoorToVisualCoord(Point systemPoint)
     {
         Point visualPos = new Point();
@@ -517,11 +585,13 @@ public class PopupDictionaryService : ObserveralObject
 
         JarvisActionPosition = jarvisButtonPos;
         MenuOperationsPosition = jarvisButtonPos;
+        if(_menuinjectionActionsViewModel != null)
+            _menuinjectionActionsViewModel.PositionChanged(jarvisButtonPos.Y, jarvisButtonPos.X);
     }
 
     public void ShowMenuOperations(bool isShow)
     {
-        //IsShowMenuOperations = isShow;
+        IsShowMenuOperations = isShow;
         //IsShowMenuOperations = isShow & JarvisActionVisibility;
 
         /*if (isShow)
@@ -608,5 +678,22 @@ public class PopupDictionaryService : ObserveralObject
             _textMenuViewModel = DependencyInjection.GetService<TextMenuViewModel>();
 
         return _textMenuViewModel.GetMenuSelectionActionHeight();
+    }
+
+    public void PinJarvisButton()
+    {
+        _injectionActionPopup.HorizontalOffset = JarvisActionPosition.X;
+        _injectionActionPopup.VerticalOffset = JarvisActionPosition.Y;
+
+        //reset the position binding
+        Binding verticalBinding = new Binding("JarvisActionPosition.Y");
+        verticalBinding.NotifyOnSourceUpdated = true;
+        verticalBinding.Source = this;
+        _injectionActionPopup.SetBinding(Popup.VerticalOffsetProperty, verticalBinding);
+
+        Binding horizontalBinding = new Binding("JarvisActionPosition.X");
+        horizontalBinding.NotifyOnSourceUpdated = true;
+        horizontalBinding.Source = this;
+        _injectionActionPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
     }
 }
