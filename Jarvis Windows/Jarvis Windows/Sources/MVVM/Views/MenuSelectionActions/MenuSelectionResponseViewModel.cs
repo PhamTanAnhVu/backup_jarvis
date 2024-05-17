@@ -178,7 +178,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         SelectionResponsePinColor = colors[Convert.ToInt32(PopupDictionaryService.Instance().IsPinMenuSelectionResponse)];
         if (SelectionResponsePinColor == colors[1])
         {
-            _ = SendEventGA4.Instance().SendEvent("pin_inject_selection_actions_response");
+            _ = GoogleAnalyticService.Instance().SendEvent("pin_inject_selection_actions_response");
         }
     }
 
@@ -251,7 +251,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             else if (_aiAction == "custom")
                 eventParams.Add("ai_action_custom", _buttonInfo.CommandParameter);
 
-            _ = SendEventGA4.Instance().SendEvent("do_ai_action", eventParams);
+            _ = GoogleAnalyticService.Instance().SendEvent("do_ai_action", eventParams);
         }
     }
 }

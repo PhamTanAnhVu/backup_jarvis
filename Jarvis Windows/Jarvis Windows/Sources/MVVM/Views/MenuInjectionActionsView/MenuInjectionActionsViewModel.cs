@@ -369,7 +369,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
             Task.Run(async () =>
             {
                 await Task.Delay(0);
-                await SendEventGA4.Instance().SendEvent("quit_app");
+                await GoogleAnalyticService.Instance().SendEvent("quit_app");
             });
         }
 
@@ -384,16 +384,16 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
 
         private async void ExecuteCheckUpdate()
         {
-            await SendEventGA4.Instance().CheckVersion();
+            await GoogleAnalyticService.Instance().CheckVersion();
         }
         private async void ExecuteGetUserGeoLocation()
         {
-            await SendEventGA4.Instance().GetUserGeoLocation();
+            await GoogleAnalyticService.Instance().GetUserGeoLocation();
         }
 
         private async void ExecuteSendEventOpenMainWindow()
         {
-            await SendEventGA4.Instance().SendEvent("open_main_window");
+            await GoogleAnalyticService.Instance().SendEvent("open_main_window");
         }
 
         public async void ExecuteShowMenuOperationsCommand(object? obj)
@@ -401,7 +401,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
             await Task.Run(async () =>
             {
                 await Task.Delay(0);
-                await SendEventGA4.Instance().SendEvent("open_input_actions");
+                await GoogleAnalyticService.Instance().SendEvent("open_input_actions");
             });
         }
 
@@ -495,7 +495,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
                 else if (_aiAction == "custom")
                     eventParams.Add("ai_action_custom", _actionType);
 
-                await SendEventGA4.Instance().SendEvent("do_ai_action", eventParams);
+                await GoogleAnalyticService.Instance().SendEvent("do_ai_action", eventParams);
             }
         }
         public void ExecuteUpgradePlanCommand(object obj)

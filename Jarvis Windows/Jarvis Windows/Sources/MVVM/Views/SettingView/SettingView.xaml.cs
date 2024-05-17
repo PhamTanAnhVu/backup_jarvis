@@ -18,7 +18,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.SettingView;
 
 public partial class SettingView : Window
 {
-    public SendEventGA4 SendEventGA4 { get; internal set; }
+    public GoogleAnalyticService GoogleAnalyticService { get; internal set; }
     public PopupDictionaryService PopupDictionaryService { get; internal set; }
     public SettingView()
     {

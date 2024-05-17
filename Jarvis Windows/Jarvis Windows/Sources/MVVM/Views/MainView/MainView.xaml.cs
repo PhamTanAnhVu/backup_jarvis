@@ -17,7 +17,7 @@ using System.Windows.Media;
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 public partial class MainView : Window
 {
-    // private SendEventGA4 _sendEventGA4;
+    // private GoogleAnalyticService _sendEventGA4;
     private NotifyIcon _notifyIcon;
 
     private bool _isMainWindowOpened;
@@ -29,12 +29,12 @@ public partial class MainView : Window
     private System.Windows.Point _menuActionPoint;
     private System.Windows.Point _jarvisButtonPoint;
     private System.Windows.Point _textMenuAPIPoint;
-    //public SendEventGA4 SendEventGA4
+    //public GoogleAnalyticService GoogleAnalyticService
     //{
     //    get { return _sendEventGA4; }
     //    set { _sendEventGA4 = value; }
     //}
-    public SendEventGA4 SendEventGA4 { get; internal set; }
+    public GoogleAnalyticService GoogleAnalyticService { get; internal set; }
     public PopupDictionaryService PopupDictionaryService { get; internal set; }
 
     public MainView()
@@ -61,7 +61,7 @@ public partial class MainView : Window
             this.Show();
             this.Activate();
             if (_isMainWindowOpened == false)
-                await SendEventGA4.SendEvent("open_main_window");
+                await GoogleAnalyticService.SendEvent("open_main_window");
 
             _isMainWindowOpened = true;
         }
@@ -105,7 +105,7 @@ public partial class MainView : Window
     {
         try
         {
-            await SendEventGA4.SendEvent("quit_app");
+            await GoogleAnalyticService.SendEvent("quit_app");
             Process.GetCurrentProcess().Kill(); //DaiTT fix
         }
 

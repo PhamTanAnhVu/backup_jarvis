@@ -21,7 +21,7 @@ public class SettingViewModel : ViewModelBase
     private IAuthenticationService _authenticationService;
     private PopupDictionaryService _popupDictionaryService;
     private AccessibilityService _accessibilityService;
-    private SendEventGA4 _sendEventGA4;
+    private GoogleAnalyticService _sendEventGA4;
 
     private double _usageBarGreen;
 
@@ -86,7 +86,7 @@ public class SettingViewModel : ViewModelBase
         }
     }
 
-    public SendEventGA4 SendEventGA4
+    public GoogleAnalyticService GoogleAnalyticService
     {
         get { return _sendEventGA4; }
         set
@@ -239,13 +239,13 @@ public class SettingViewModel : ViewModelBase
     public SettingViewModel(INavigationService navigationService,
         PopupDictionaryService popupDictionaryService,
         AccessibilityService accessibilityService,
-        SendEventGA4 sendEventGA4,
+        GoogleAnalyticService sendEventGA4,
         IAuthenticationService authenticationService)
     {
         //NavigationService = navigationService;
         //PopupDictionaryService = popupDictionaryService;
         //AccessibilityService = accessibilityService;
-        //SendEventGA4 = sendEventGA4;
+        //GoogleAnalyticService = sendEventGA4;
         //AuthenService = authenticationService;
 
         //ResetSettingsCommand = new RelayCommand(ExecuteResetSettingsCommand, o => true);

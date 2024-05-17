@@ -17,7 +17,7 @@ public class AIChatSidebarViewModel : ViewModelBase
 //public class AIChatSidebarViewModel : ViewModelBase
 //{
 //    private PopupDictionaryService _popupDictionaryService;
-//    private SendEventGA4 _sendEventGA4;
+//    private GoogleAnalyticService _sendEventGA4;
 
 //    private bool _isTextEmpty;
 //    private string _sendMessage;
@@ -47,7 +47,7 @@ public class AIChatSidebarViewModel : ViewModelBase
 //            OnPropertyChanged();
 //        }
 //    }
-//    public SendEventGA4 SendEventGA4
+//    public GoogleAnalyticService GoogleAnalyticService
 //    {
 //        get { return _sendEventGA4; }
 //        set
@@ -92,10 +92,10 @@ public class AIChatSidebarViewModel : ViewModelBase
 //        }
 //    }
 
-//    public AIChatSidebarViewModel(PopupDictionaryService popupDictionaryService, SendEventGA4 sendEventGA4)
+//    public AIChatSidebarViewModel(PopupDictionaryService popupDictionaryService, GoogleAnalyticService sendEventGA4)
 //    {
 //        PopupDictionaryService = popupDictionaryService;
-//        SendEventGA4 = sendEventGA4;
+//        GoogleAnalyticService = sendEventGA4;
 //        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
 
 //        HideAIChatSidebarCommand = new RelayCommand(ExecuteHideAIChatSidebarCommand, o => true);

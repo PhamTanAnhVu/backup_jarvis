@@ -18,7 +18,7 @@ public class TextMenuViewModel : ViewModelBase
 {
     //private PopupDictionaryService _popupDictionaryService;
     private AccessibilityService _uIElementDetector;
-    private SendEventGA4 _sendEventGA4;
+    private GoogleAnalyticService _sendEventGA4;
 
     private int _languageSelectedIndex;
     private string _remainingAPIUsage;
@@ -53,7 +53,7 @@ public class TextMenuViewModel : ViewModelBase
         }
     }
 
-    public SendEventGA4 SendEventGA4
+    public GoogleAnalyticService GoogleAnalyticService
     {
         get { return _sendEventGA4; }
         set
@@ -126,11 +126,11 @@ public class TextMenuViewModel : ViewModelBase
         }
     }
 
-    public TextMenuViewModel(/*PopupDictionaryService popupDictionaryService, */AccessibilityService uIElementDetector, SendEventGA4 sendEventGA4)
+    public TextMenuViewModel(/*PopupDictionaryService popupDictionaryService, */AccessibilityService uIElementDetector, GoogleAnalyticService sendEventGA4)
     {
         //PopupDictionaryService = popupDictionaryService;
         AccessibilityService = uIElementDetector;
-        SendEventGA4 = sendEventGA4;
+        GoogleAnalyticService = sendEventGA4;
 
         TextMenuAICommand = new RelayCommand(ExecuteTextMenuAICommand, o => true);
         ShowTextMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
@@ -170,7 +170,7 @@ public class TextMenuViewModel : ViewModelBase
                 // Some processing before the await (if needed)
                 await Task.Delay(0); // This allows the method to yield to the caller
 
-                await SendEventGA4.SendEvent("open_input_actions");
+                await GoogleAnalyticService.SendEvent("open_input_actions");
             });
         }
     }
@@ -263,7 +263,7 @@ public class TextMenuViewModel : ViewModelBase
             else if (_aiAction == "custom")
                 eventParams.Add("ai_action_custom", _actionType);
 
-            await SendEventGA4.SendEvent("do_ai_action", eventParams);
+            await GoogleAnalyticService.SendEvent("do_ai_action", eventParams);
         }
     }
 

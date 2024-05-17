@@ -38,7 +38,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
         {
             try
             {
-                _ = SendEventGA4.Instance().SendEvent("quit_app");
+                _ = GoogleAnalyticService.Instance().SendEvent("quit_app");
                 Process.GetCurrentProcess().Kill();
             }
             catch

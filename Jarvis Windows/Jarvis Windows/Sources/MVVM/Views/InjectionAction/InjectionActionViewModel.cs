@@ -103,7 +103,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             {
                 PopupDictionaryService.Instance().ShowMenuOperations(true);
                 PopupDictionaryService.Instance().ShowJarvisAction(false);
-                _ = SendEventGA4.Instance().SendEvent("open_input_actions");
+                _ = GoogleAnalyticService.Instance().SendEvent("open_input_actions");
             }
         }
 

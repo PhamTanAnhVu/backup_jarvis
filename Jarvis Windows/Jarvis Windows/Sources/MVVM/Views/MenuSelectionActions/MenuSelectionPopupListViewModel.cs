@@ -14,7 +14,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 public class MenuSelectionPopupListViewModel : ViewModelBase
 {
     private AccessibilityService? _accessibilityService;
-    private SendEventGA4? _googleAnnalyticService;
+    private GoogleAnalyticService? _googleAnnalyticService;
     public ObservableCollection<AIButton> MenuSelectionButtons { get; set; }
     public MenuSelectionPopupListViewModel()
     {

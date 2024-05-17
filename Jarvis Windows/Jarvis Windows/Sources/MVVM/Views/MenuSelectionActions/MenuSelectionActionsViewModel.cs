@@ -147,7 +147,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
                     return;
                 }
                 PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
-                _ = SendEventGA4.Instance().SendEvent("inject_selection_actions");
+                _ = GoogleAnalyticService.Instance().SendEvent("inject_selection_actions");
             }
             else
             {
@@ -245,7 +245,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
                 }
 
                 PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
-                _ = SendEventGA4.Instance().SendEvent("inject_selection_actions");
+                _ = GoogleAnalyticService.Instance().SendEvent("inject_selection_actions");
             }
             else
             {

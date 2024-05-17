@@ -7,7 +7,7 @@ using Windows.ApplicationModel;
 using System.Collections.Generic;
 using Jarvis_Windows.Sources.DataAccess;
 
-public class SendEventGA4
+public class GoogleAnalyticService
 {
     private const int DEFAULT_ENGAGEMENT_TIME_IN_MSEC = 100;
     private const int SESSION_EXPIRATION_IN_MIN = 30;
@@ -22,16 +22,16 @@ public class SendEventGA4
     private long _sessionTimestamp;
     private string _version; // App version, only available in package mode
     private string _recentDate;
-    private static SendEventGA4? _instance = null;
+    private static GoogleAnalyticService? _instance = null;
 
-    public static SendEventGA4 Instance()
+    public static GoogleAnalyticService Instance()
     {
         if (_instance == null)
-            _instance = new SendEventGA4();
+            _instance = new GoogleAnalyticService();
         return _instance;
     }
 
-    private SendEventGA4()
+    private GoogleAnalyticService()
     {
         _httpClient         = new HttpClient();
         _ga4Endpoint        = "https://www.google-analytics.com/mp/collect";
@@ -61,7 +61,15 @@ public class SendEventGA4
 
             response.EnsureSuccessStatusCode();
         }
-        catch { throw; }
+        catch (HttpRequestException e)
+        {
+            System.Windows.MessageBox.Show("Network error");
+            throw new HttpRequestException();
+        }
+        catch (Exception e)
+        {
+            throw e.GetBaseException();
+        }
     }
 
     // CheckVersion of App, package mode only. This will be called in ExecuteCheckUpdate() in MainViewModel.cs constructor

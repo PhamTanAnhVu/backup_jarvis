@@ -28,7 +28,7 @@ public class MainViewModel : ViewModelBase
     private INavigationService? _navigationService;
     private PopupDictionaryService _popupDictionaryService;
     private AccessibilityService _accessibilityService;
-    private SendEventGA4 _sendEventGA4;
+    private GoogleAnalyticService _sendEventGA4;
     private bool _isSpinningJarvisIcon; // Spinning Jarvis icon
     private string _remainingAPIUsage;
     private string _mainWindowInputText;
@@ -174,7 +174,7 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    public SendEventGA4 SendEventGA4
+    public GoogleAnalyticService GoogleAnalyticService
     {
         get { return _sendEventGA4; }
         set
@@ -500,14 +500,14 @@ public class MainViewModel : ViewModelBase
     public MainViewModel(INavigationService navigationService,
         PopupDictionaryService popupDictionaryService,
         AccessibilityService accessibilityService,
-        SendEventGA4 sendEventGA4,
+        GoogleAnalyticService sendEventGA4,
         IAutomationElementValueService automationElementValueService,
         IAuthenticationService authenticationService)
     {
         NavigationService = navigationService;
         PopupDictionaryService = popupDictionaryService;
         AccessibilityService = accessibilityService;
-        SendEventGA4 = sendEventGA4;
+        GoogleAnalyticService = sendEventGA4;
         AutomationElementValueService = automationElementValueService;
         AuthenService = authenticationService;
 
@@ -606,7 +606,7 @@ public class MainViewModel : ViewModelBase
         //AIChatSendCommand = new RelayCommand(ExecuteAIChatSendCommand, o => true);
         //NewAIChatCommand = new RelayCommand(async o => {
         //    AIChatMessagesClear();
-        //    await SendEventGA4.SendEvent("start_new_chat");
+        //    await GoogleAnalyticService.SendEvent("start_new_chat");
         //}, o => true);
 
         //AIChatMessages = new ObservableCollection<AIChatMessage>();
@@ -766,7 +766,7 @@ public class MainViewModel : ViewModelBase
             // Some processing before the await (if needed)
             await Task.Delay(0); // This allows the method to yield to the caller
 
-            await SendEventGA4.SendEvent("quit_app");
+            await GoogleAnalyticService.SendEvent("quit_app");
         });
     }
 
@@ -807,18 +807,18 @@ public class MainViewModel : ViewModelBase
     private async void ExecuteCheckUpdate()
     {
         // Checking App update here
-        await SendEventGA4.CheckVersion();
+        await GoogleAnalyticService.CheckVersion();
     }
     private async void ExecuteGetUserGeoLocation()
     {
         // Checking App update here
-        await SendEventGA4.GetUserGeoLocation();
+        await GoogleAnalyticService.GetUserGeoLocation();
     }
 
     private async void ExecuteSendEventOpenMainWindow()
     {
         // Starting app
-        await SendEventGA4.SendEvent("open_main_window");
+        await GoogleAnalyticService.SendEvent("open_main_window");
     }
 
     public async void ExecuteShowMenuOperationsCommand(object obj)
@@ -837,7 +837,7 @@ public class MainViewModel : ViewModelBase
                     // Some processing before the await (if needed)
                     await Task.Delay(0); // This allows the method to yield to the caller
 
-                    await SendEventGA4.SendEvent("open_input_actions");
+                    await GoogleAnalyticService.SendEvent("open_input_actions");
                 });
             }
 
@@ -936,7 +936,7 @@ public class MainViewModel : ViewModelBase
             else if (_aiAction == "custom")
                 eventParams.Add("ai_action_custom", _actionType);
 
-            await SendEventGA4.SendEvent("do_ai_action", eventParams);
+            await GoogleAnalyticService.SendEvent("do_ai_action", eventParams);
         }
     }
     public async void ExecuteHideTextMenuAPICommand(object obj)
@@ -1070,7 +1070,7 @@ public class MainViewModel : ViewModelBase
             else if (_aiAction == "custom")
                 eventParams.Add("ai_action_custom", TextMenuButtons[idx].CommandParameter);
 
-            await SendEventGA4.SendEvent("do_ai_action", eventParams);
+            await GoogleAnalyticService.SendEvent("do_ai_action", eventParams);
         }
     }
 
@@ -1094,7 +1094,7 @@ public class MainViewModel : ViewModelBase
             TextMenuPinColor = colors[Convert.ToInt32(PopupDictionaryService.IsPinMenuSelectionResponse)];
             if (TextMenuPinColor == colors[1])
             {
-                await SendEventGA4.SendEvent("pin_inject_selection_actions_response");
+                await GoogleAnalyticService.SendEvent("pin_inject_selection_actions_response");
             }
 
             return;
@@ -1224,7 +1224,7 @@ public class MainViewModel : ViewModelBase
     {
         PopupDictionaryService.ShowAIChatSidebar(true);
         PopupDictionaryService.ShowAIChatBubble(false);
-        await SendEventGA4.SendEvent("open_sidebar_chat");
+        await GoogleAnalyticService.SendEvent("open_sidebar_chat");
     }
 
     private async void ExecuteHideAIChatSidebarCommand(object obj)
@@ -1298,7 +1298,7 @@ public class MainViewModel : ViewModelBase
         IsNoAPIUsageRemain = !IsAPIUsageRemain;
         _isExecutingAIChatMessage = false;
 
-        await SendEventGA4.SendEvent("send_chat_message");
+        await GoogleAnalyticService.SendEvent("send_chat_message");
     }
 
     private async void MouseDoubleClicked(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -1325,7 +1325,7 @@ public class MainViewModel : ViewModelBase
                     return;
                 }
                 PopupDictionaryService.ShowMenuSelectionActions(true);
-                await SendEventGA4.SendEvent("inject_selection_actions");
+                await GoogleAnalyticService.SendEvent("inject_selection_actions");
             }
             else
             {
@@ -1409,7 +1409,7 @@ public class MainViewModel : ViewModelBase
                 }
 
                 PopupDictionaryService.ShowMenuSelectionActions(true);
-                await SendEventGA4.SendEvent("inject_selection_actions");
+                await GoogleAnalyticService.SendEvent("inject_selection_actions");
             }
             else
             {

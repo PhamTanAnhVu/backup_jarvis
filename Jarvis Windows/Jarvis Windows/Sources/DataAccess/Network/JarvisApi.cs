@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using Jarvis_Windows.Sources.DataAccess.Local;
 using System.IO;
 using Jarvis_Windows.Sources.MVVM.Models;
+using System.Windows.Forms;
 
 namespace Jarvis_Windows.Sources.DataAccess.Network;
 
@@ -112,6 +113,11 @@ public sealed class JarvisApi
 
             return null;
         }
+        catch (HttpRequestException e)
+        {
+            MessageBox.Show("Network error");
+            throw new HttpRequestException();
+        }
         catch (Exception ex)
         {
             throw ex.GetBaseException();
@@ -171,6 +177,11 @@ public sealed class JarvisApi
             }
 
             return string.Empty;
+        }
+        catch (HttpRequestException e)
+        {
+            MessageBox.Show("Network error");
+            throw new HttpRequestException();
         }
         catch (Exception ex)
         {

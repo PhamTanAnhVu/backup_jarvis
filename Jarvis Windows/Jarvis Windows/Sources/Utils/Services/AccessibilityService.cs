@@ -19,7 +19,7 @@ public class AccessibilityService
     private static AccessibilityService? _instance;
     private AutomationElement? _focusingElement;
     private AutomationFocusChangedEventHandler? _focusChangedEventHandler;
-    private SendEventGA4? _sendEventGA4;
+    private GoogleAnalyticService? _sendEventGA4;
     private bool _isUseAutoTuningPosition = true;
     private IAutomationElementValueService? _automationElementValueService;
     private string _currentSelectedText = String.Empty;
@@ -48,7 +48,7 @@ public class AccessibilityService
         return _instance;
     }
 
-    public SendEventGA4? SendEventGA4
+    public GoogleAnalyticService? GoogleAnalyticService
     {
         get { return _sendEventGA4; }
         set => _sendEventGA4 = value;
