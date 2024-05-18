@@ -10,7 +10,7 @@
              xmlns:animations="clr-namespace:System.Windows.Media.Animation;assembly=PresentationCore"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="50"
+             d:DesignHeight="30" d:DesignWidth="60"
              RenderOptions.BitmapScalingMode="Linear">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -61,7 +61,11 @@
         <local:InjectionActionViewModel/>
     </UserControl.DataContext>
 
-    <Border RenderOptions.BitmapScalingMode="Linear" Width="50" Height="30" Background="White" x:Name="parrentBorder" BorderBrush="White" BorderThickness="0" CornerRadius="15 15 15 3">
+    <Border RenderOptions.BitmapScalingMode="Linear" 
+            Width="auto" Height="30" 
+            Background="White" x:Name="parrentBorder" 
+            BorderBrush="White" BorderThickness="0" 
+            CornerRadius="{Binding CustomCornerRadius}">
         <!--<Border.Background>
             <LinearGradientBrush StartPoint="0,1" EndPoint="1,1">
                 <LinearGradientBrush.GradientStops>
@@ -107,9 +111,15 @@
 
                 <Button BorderBrush="Transparent" Background="Transparent"
                         x:Name="pinPositionButton"
-                        Command="{Binding PinJarvisButtonCommand}" Width="auto">
+                        Command="{Binding PinJarvisButtonCommand}" Width="30" Height="30">
                     <Button.Content>
-                        <materialDesign:PackIcon Kind="Pin" Foreground="#1450A3"/>
+                        <Path
+                              Width="26" Height="26"
+                              Stretch="Fill"
+                              Fill="{StaticResource TailwindPrimary6}"
+                              StrokeThickness="0.5" 
+                              Stroke="{StaticResource TailwindPrimary5}" 
+                              Data="M8.5.5a.5.5 0 0 0-1 0v.518A7 7 0 0 0 1.018 7.5H.5a.5.5 0 0 0 0 1h.518A7 7 0 0 0 7.5 14.982v.518a.5.5 0 0 0 1 0v-.518A7 7 0 0 0 14.982 8.5h.518a.5.5 0 0 0 0-1h-.518A7 7 0 0 0 8.5 1.018zm-6.48 7A6 6 0 0 1 7.5 2.02v.48a.5.5 0 0 0 1 0v-.48a6 6 0 0 1 5.48 5.48h-.48a.5.5 0 0 0 0 1h.48a6 6 0 0 1-5.48 5.48v-.48a.5.5 0 0 0-1 0v.48A6 6 0 0 1 2.02 8.5h.48a.5.5 0 0 0 0-1zM8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
                     </Button.Content>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">

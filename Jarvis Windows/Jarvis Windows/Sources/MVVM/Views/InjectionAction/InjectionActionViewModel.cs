@@ -4,6 +4,7 @@ using Jarvis_Windows.Sources.Utils.Services;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows;
 using Windows.Devices.Geolocation;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
@@ -15,6 +16,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         private bool? _isAnimationEnabled = true;
         private double? _horizontalOffset;
         private double? _verticalOffset;
+        private CornerRadius? _customCornerRadius;
         #endregion
 
         #region Properties
@@ -57,6 +59,17 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
                 OnPropertyChanged();
             }
         }
+
+        public CornerRadius? CustomCornerRadius 
+        { 
+            get => _customCornerRadius; 
+            set
+            {
+                _customCornerRadius = value;
+                OnPropertyChanged();
+            } 
+        }
+
         #endregion
 
         #region Commands
@@ -64,7 +77,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         public RelayCommand? PinJarvisButtonCommand { get; set; }
         public static RelayCommand? StartSpinJarvisIconCommand { get; set;}
         public static RelayCommand? StopSpinJarvisIconCommand { get; set;}
-
         #endregion
 
         public InjectionActionViewModel()
@@ -74,6 +86,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             _isAnimationEnabled = true;
             _horizontalOffset = 0;
             _verticalOffset = 0;
+            _customCornerRadius = new CornerRadius(15, 15, 15, 5);
 
             //Commands
             InitialCommands();
@@ -111,6 +124,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
         {
             PopupDictionaryService.Instance().PinJarvisButton();
             PopupDictionaryService.HasPinnedJarvisButton = true;
+            CustomCornerRadius = new CornerRadius(15, 15, 15, 5);
         }
     }
 }

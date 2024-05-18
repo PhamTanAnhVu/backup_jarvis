@@ -11,7 +11,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
 {
     public partial class InjectionActionView : UserControl
     {
-        private readonly Size _expandSize = new Size(50, 30);
+        private readonly Size _expandSize = new Size(60, 30);
         private readonly Size _collapseSize = new Size(30, 30);
 
         public Size ExpandSize => _expandSize;

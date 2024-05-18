@@ -417,6 +417,7 @@ public class PopupDictionaryService : ObserveralObject
             {
                 HasPinnedJarvisButton = false;
                 IsDragging = true;
+                _injectionActionViewModel.CustomCornerRadius = new CornerRadius(15, 15, 15, 15);
                 System.Windows.Point relative = e.GetPosition(null);
                 System.Windows.Point AbsolutePos = new System.Windows.Point(relative.X + _injectionActionPopup.HorizontalOffset, relative.Y + _injectionActionPopup.VerticalOffset);
                 _injectionActionPopup.VerticalOffset = AbsolutePos.Y - _jarvisButtonPoint.Y;
