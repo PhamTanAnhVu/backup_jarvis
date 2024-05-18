@@ -2,18 +2,29 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--Brand Color Style-->
-    <Color x:Key="TailwindPrimary0.5">#F0F8FF</Color>
-    <Color x:Key="TailwindPrimary1">#E0EFFE</Color>
-    <Color x:Key="TailwindPrimary2">#B9E0FE</Color>
-    <Color x:Key="TailwindPrimary3">#7CC7FD</Color>
-    <Color x:Key="TailwindPrimary4">#36ACFA</Color>
-    <Color x:Key="TailwindPrimary5">#0C91EB</Color>
-    <Color x:Key="TailwindPrimary6">#0078D4</Color>
-    <Color x:Key="TailwindPrimary7">#005597</Color>
-    <Color x:Key="TailwindPrimary8">#004578</Color>
-    <Color x:Key="TailwindPrimary9">#00325A</Color>
-    <Color x:Key="TailwindPrimary9.5">#00213B</Color>
+    <Color x:Key="PrimaryColor0.5">#F0F8FF</Color>
+    <Color x:Key="PrimaryColor1">#E0EFFE</Color>
+    <Color x:Key="PrimaryColor2">#B9E0FE</Color>
+    <Color x:Key="PrimaryColor3">#7CC7FD</Color>
+    <Color x:Key="PrimaryColor4">#36ACFA</Color>
+    <Color x:Key="PrimaryColor5">#0C91EB</Color>
+    <Color x:Key="PrimaryColor6">#0078D4</Color>
+    <Color x:Key="PrimaryColor7">#005597</Color>
+    <Color x:Key="PrimaryColor8">#004578</Color>
+    <Color x:Key="PrimaryColor9">#00325A</Color>
+    <Color x:Key="PrimaryColor9.5">#00213B</Color>
 
+    <SolidColorBrush x:Key="TailwindPrimary0.5">#F0F8FF</SolidColorBrush>
+    <SolidColorBrush x:Key="TailwindPrimary1">#E0EFFE</SolidColorBrush>
+    <SolidColorBrush x:Key="TailwindPrimary2">#B9E0FE</SolidColorBrush>
+    <SolidColorBrush x:Key="TailwindPrimary3">#7CC7FD</SolidColorBrush>
+    <SolidColorBrush x:Key="TailwindPrimary4">#36ACFA</SolidColorBrush>
+    <SolidColorBrush x:Key="TailwindPrimary5">#0C91EB</SolidColorBrush>
+    <SolidColorBrush x:Key="TailwindPrimary6">#0078D4</SolidColorBrush>
+    <SolidColorBrush x:Key="TailwindPrimary7">#005597</SolidColorBrush>
+    <SolidColorBrush x:Key="TailwindPrimary8">#004578</SolidColorBrush>
+    <SolidColorBrush x:Key="TailwindPrimary9">#00325A</SolidColorBrush>
+    <SolidColorBrush x:Key="TailwindPrimary9.5">#00213B</SolidColorBrush>
 
     <!--Brush Color Style-->
     <SolidColorBrush x:Key="PrimaryBrushColor0">#E3EDFC</SolidColorBrush>

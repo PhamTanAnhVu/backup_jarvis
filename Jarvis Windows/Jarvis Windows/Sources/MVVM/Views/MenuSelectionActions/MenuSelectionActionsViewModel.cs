@@ -119,7 +119,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
                 return;
             }
 
-            PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
+            PopupDictionaryService.Instance().IsShowMenuSelectionActions = false;
             PopupDictionaryService.Instance().IsShowMenuSelectionPopupList = false;
         }
     }
@@ -143,7 +143,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
                 AccessibilityService.GetInstance().CurrentSelectedText = text;
                 if (PopupDictionaryService.Instance().IsPinMenuSelectionResponse && PopupDictionaryService.Instance().IsShowMenuSelectionResponse)
                 {
-                    PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
+                    PopupDictionaryService.Instance().IsShowMenuSelectionActions = false;
                     return;
                 }
                 PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
@@ -188,7 +188,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
     {
         if (_isMouseOver_AppUI)
         {
-            PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
+            PopupDictionaryService.Instance().IsShowMenuSelectionActions = false;
             return;
         }
 
@@ -254,7 +254,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
         }
         catch
         {
-            PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
+            PopupDictionaryService.Instance().IsShowMenuSelectionActions = false;
             PopupDictionaryService.Instance().ShowSelectionResponseView(false);
         }
     }

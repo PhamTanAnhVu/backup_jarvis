@@ -654,14 +654,14 @@ public class MainViewModel : ViewModelBase
                 return;
             }
 
-            PopupDictionaryService.ShowMenuSelectionActions(false);
+            PopupDictionaryService.IsShowMenuSelectionActions = false;
             //Point textMenuSelectionPosition = PopupDictionaryService.MenuSelectionActionsPosition;
             //double textMenuSelectionWidth = PopupDictionaryService.GetMenuSelectionActionWidth();
             //double textMenuSelectionHeight = PopupDictionaryService.GetMenuSelectionActionHeight();
             //if (mousePoint.X < textMenuSelectionPosition.X || mousePoint.X > textMenuSelectionPosition.X + textMenuSelectionWidth
             //|| mousePoint.Y > textMenuSelectionPosition.Y || mousePoint.Y < textMenuSelectionPosition.Y - textMenuSelectionHeight)
             //{
-            //    PopupDictionaryService.ShowMenuSelectionActions(false);
+            //    PopupDictionaryService.IsShowMenuSelectionActions = false;
             //}
         }
     }
@@ -1222,81 +1222,81 @@ public class MainViewModel : ViewModelBase
 
     public async void ExecuteShowAIChatSidebarCommand(object obj)
     {
-        PopupDictionaryService.ShowAIChatSidebar(true);
-        PopupDictionaryService.ShowAIChatBubble(false);
-        await GoogleAnalyticService.SendEvent("open_sidebar_chat");
+        //PopupDictionaryService.ShowAIChatSidebar(true);
+        //PopupDictionaryService.ShowAIChatBubble(false);
+        //await SendEventGA4.SendEvent("open_sidebar_chat");
     }
 
     private async void ExecuteHideAIChatSidebarCommand(object obj)
     {
-        PopupDictionaryService.ShowAIChatSidebar(false);
-        PopupDictionaryService.ShowAIChatBubble(true);
+        //PopupDictionaryService.ShowAIChatSidebar(false);
+        //PopupDictionaryService.ShowAIChatBubble(true);
         // AIChatMessagesClear();
     }
 
     void AIChatMessagesClear()
     {
-        AIChatMessages.Clear();
-        AIChatMessages.Add(new AIChatMessage
-        {
-            // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
-            IsUser = false,
-            IsJarvis = true,
-            Message = "Hi, I am Jarvis, your powerful AI assistant. How can I help you?",
-            IsLoading = false,
-            IsBorderVisible = true
-        });
+        //AIChatMessages.Clear();
+        //AIChatMessages.Add(new AIChatMessage
+        //{
+        //    // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
+        //    IsUser = false,
+        //    IsJarvis = true,
+        //    Message = "Hi, I am Jarvis, your powerful AI assistant. How can I help you?",
+        //    IsLoading = false,
+        //    IsBorderVisible = true
+        //});
     }
 
     private async void ExecuteAIChatSendCommand(object obj)
     {
-        if (string.IsNullOrEmpty(AIChatMessageInput) || _isExecutingAIChatMessage || RemainingAPIUsage == "0 ??") return;
+        //if (string.IsNullOrEmpty(AIChatMessageInput) || _isExecutingAIChatMessage || RemainingAPIUsage == "0 ??") return;
 
-        _isExecutingAIChatMessage = true;
-        AIChatMessages.Add(new AIChatMessage
-        {
-            // ImageSource = "../../../../Assets/Images/pencil.png",
-            IsUser = true,
-            IsJarvis = false,
-            Message = AIChatMessageInput,
-            IsLoading = false,
-            IsBorderVisible = false
-        });
+        //_isExecutingAIChatMessage = true;
+        //AIChatMessages.Add(new AIChatMessage
+        //{
+        //    // ImageSource = "../../../../Assets/Images/pencil.png",
+        //    IsUser = true,
+        //    IsJarvis = false,
+        //    Message = AIChatMessageInput,
+        //    IsLoading = false,
+        //    IsBorderVisible = false
+        //});
 
-        string tmpMessage = AIChatMessageInput;
+        //string tmpMessage = AIChatMessageInput;
 
-        AIChatMessages.Add(new AIChatMessage
-        {
-            // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
-            IsUser = false,
-            IsJarvis = true,
-            Message = "",
-            IsLoading = true,
-            IsBorderVisible = true
-        });
+        //AIChatMessages.Add(new AIChatMessage
+        //{
+        //    // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
+        //    IsUser = false,
+        //    IsJarvis = true,
+        //    Message = "",
+        //    IsLoading = true,
+        //    IsBorderVisible = true
+        //});
 
 
-        AIChatMessageInput = "";
+        //AIChatMessageInput = "";
 
-        int lastIndex = AIChatMessages.Count - 1;
-        string responseMessage = await JarvisApi.Instance.ChatHandler(tmpMessage, AIChatMessages);
+        //int lastIndex = AIChatMessages.Count - 1;
+        ////string responseMessage = await JarvisApi.Instance.ChatHandler(tmpMessage, AIChatMessages);
 
-        AIChatMessages.RemoveAt(lastIndex);
-        AIChatMessages.Add(new AIChatMessage
-        {
-            // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
-            IsUser = false,
-            IsJarvis = true,
-            Message = responseMessage,
-            IsLoading = false,
-            IsBorderVisible = true
-        });
+        //AIChatMessages.RemoveAt(lastIndex);
+        //AIChatMessages.Add(new AIChatMessage
+        //{
+        //    // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
+        //    IsUser = false,
+        //    IsJarvis = true,
+        //    Message = responseMessage,
+        //    IsLoading = false,
+        //    IsBorderVisible = true
+        //});
 
-        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 ??");
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
-        IsAPIUsageRemain = ((RemainingAPIUsage != "0 ??") | previousRemaingAPIUSage) ? true : false;
-        IsNoAPIUsageRemain = !IsAPIUsageRemain;
-        _isExecutingAIChatMessage = false;
+        //bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 ??");
+        //RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
+        //IsAPIUsageRemain = ((RemainingAPIUsage != "0 ??") | previousRemaingAPIUSage) ? true : false;
+        //IsNoAPIUsageRemain = !IsAPIUsageRemain;
+        //_isExecutingAIChatMessage = false;
 
         await GoogleAnalyticService.SendEvent("send_chat_message");
     }
@@ -1321,7 +1321,7 @@ public class MainViewModel : ViewModelBase
                 AccessibilityService.CurrentSelectedText = text;
                 if (PopupDictionaryService.IsPinMenuSelectionResponse && PopupDictionaryService.IsShowMenuSelectionResponse)
                 {
-                    PopupDictionaryService.ShowMenuSelectionActions(false);
+                    PopupDictionaryService.IsShowMenuSelectionActions = false;
                     return;
                 }
                 PopupDictionaryService.ShowMenuSelectionActions(true);
@@ -1366,7 +1366,7 @@ public class MainViewModel : ViewModelBase
     {
         if (_isMouseOver_AppUI)
         {
-            PopupDictionaryService.ShowMenuSelectionActions(false);
+            PopupDictionaryService.IsShowMenuSelectionActions = false;
             return;
         }
 
@@ -1418,7 +1418,7 @@ public class MainViewModel : ViewModelBase
         }
         catch
         {
-            PopupDictionaryService.ShowMenuSelectionActions(false);
+            PopupDictionaryService.IsShowMenuSelectionActions = false;
             PopupDictionaryService.ShowSelectionResponseView(false);
         }
     }

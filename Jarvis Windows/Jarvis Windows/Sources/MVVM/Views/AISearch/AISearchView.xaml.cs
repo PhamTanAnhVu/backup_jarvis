@@ -1,5 +1,11 @@
+using Gma.System.MouseKeyHook;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit;
+using Jarvis_Windows.Sources.MVVM.Models;
+using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,5 +30,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.AISearch
         {
             InitializeComponent();
         }
+
+        
     }
 }

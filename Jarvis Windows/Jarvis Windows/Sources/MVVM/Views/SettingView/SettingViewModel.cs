@@ -391,8 +391,8 @@ public class SettingViewModel : ViewModelBase
         else if (idx == 3)
         {
 
-            PopupDictionaryService.IsShowAIChatBubble = (PopupDictionaryService.IsShowAIChatSidebar) ? false : !PopupDictionaryService.IsShowAIChatBubble;
-            PopupDictionaryService.IsShowAIChatSidebar = false;
+            PopupDictionaryService.IsShowAIChatBubble = (PopupDictionaryService.IsShowMainNavigation) ? false : !PopupDictionaryService.IsShowAIChatBubble;
+            PopupDictionaryService.IsShowMainNavigation = false;
         }
 
         SettingStatus[idx] = (ToggleButtons[idx].IsActive) ? '1' : '0';

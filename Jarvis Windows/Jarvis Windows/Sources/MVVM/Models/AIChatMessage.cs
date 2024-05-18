@@ -1,5 +1,7 @@
+using Jarvis_Windows.Sources.Utils.Core;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,9 +10,21 @@ namespace Jarvis_Windows.Sources.MVVM.Models;
 
 public class AIChatMessage
 {
+    public int Idx { get; set; }
+    public bool IsServer { get; set; }
     public bool IsUser { get; set; }
-    public bool IsJarvis { get; set; }
-    public string? Message { get; set; }
+    public string Message { get; set; }
+    public ObservableCollection<CodeMessage> DetailMessage { get; set; }
+    public RelayCommand CopyCommand { get; set; }
+    public RelayCommand RedoCommand { get; set; }
     public bool IsLoading { get; set; }
-    public bool IsBorderVisible { get; set; }
 }
+public class CodeMessage
+{
+    public int Idx { get; set; }
+    public bool IsVisible { get; set; }
+    public string TextContent { get; set; }
+    public string Language { get; set; }
+    public string CodeContent { get; set; }
+}
+

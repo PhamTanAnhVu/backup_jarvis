@@ -1,179 +1,526 @@
-//using Jarvis_Windows.Sources.DataAccess.Network;
-//using Jarvis_Windows.Sources.Utils.Core;
-//using Jarvis_Windows.Sources.Utils.Services;
-//using System;
-//using System.Collections.ObjectModel;
-//using System.Windows.Controls;
-//using System.Windows;
-
+using Jarvis_Windows.Sources.DataAccess.Network;
 using Jarvis_Windows.Sources.Utils.Core;
+using Jarvis_Windows.Sources.Utils.Services;
+using System;
+using System.Collections.ObjectModel;
+using Jarvis_Windows.Sources.MVVM.Models;
+using System.Windows.Controls;
+using System.Windows;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
+using System.Linq;
+using Jarvis_Windows.Sources.MVVM.Views.AIRead;
+using System.Text.RegularExpressions;
+using System.IO;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 public class AIChatSidebarViewModel : ViewModelBase
 {
+    private double _dotSpeed;
+    private bool _isEmptyAIChatInput;
+    private string _aIChatInputMessage;
+    private string _aIChatInputSendButtonColor;
+    private string _remainingAPIUsage;
+    private string _svgToggleIconData;
+    private bool _addToolsButtonVisibility;
+    private bool _jarvisUpdatedBorderVisibility;
+    private bool _isShowChatHistory;
+    private bool _isShowIntro;
+    private bool _isShowChatConversation;
+    private bool _isProcessAIChat;
 
+    private GoogleAnalyticService _googleAnalyticService;
+
+    public string AddToolsButtonBorder;
+    public RelayCommand OpenJarvisWebsiteCommand { get; set; }
+    public RelayCommand ToggleAddToolsCommand { get; set; }
+    public RelayCommand SendChatInputCommand { get; set; }
+    public RelayCommand NewAIChatWindowCommand { get; set; }
+    public RelayCommand CloseJarvisUpdatedCommand { get; set; }
+    public RelayCommand ShowChatHistory { get; set; }
+    public GoogleAnalyticService GoogleAnalyticService
+    {
+        get { return _googleAnalyticService; }
+        set
+        {
+            _googleAnalyticService = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool IsEmptyAIChatInput
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(AIChatInputMessage)) _isEmptyAIChatInput = true;
+            else _isEmptyAIChatInput = false;
+            return _isEmptyAIChatInput;
+        }
+        set
+        {
+            _isEmptyAIChatInput = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string AIChatInputMessage
+    {
+        get { return _aIChatInputMessage; }
+        set
+        {
+            _aIChatInputMessage = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsEmptyAIChatInput));
+            OnPropertyChanged(nameof(AIChatInputSendButtonColor));
+        }
+    }
+
+    public string AIChatInputSendButtonColor
+    {
+        get 
+        {
+            if (IsEmptyAIChatInput) _aIChatInputSendButtonColor = "#CBD5E1";
+            else _aIChatInputSendButtonColor = "#0078D4";
+            return _aIChatInputSendButtonColor; 
+        }
+        set
+        {
+            _aIChatInputSendButtonColor = value;
+            OnPropertyChanged();
+        }
+    }
+
+
+
+    public string RemainingAPIUsage
+    {
+        get { return _remainingAPIUsage; }
+        set
+        {
+            _remainingAPIUsage = value;
+            OnPropertyChanged();
+        }
+    }
+    public string SvgToggleIconData
+    {
+        get { return _svgToggleIconData; }
+        set
+        {
+            _svgToggleIconData = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool AddToolsButtonVisibility
+    {
+        get { return _addToolsButtonVisibility; }
+        set
+        {
+            _addToolsButtonVisibility = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool JarvisUpdatedBorderVisibility
+    {
+        get { return _jarvisUpdatedBorderVisibility; }
+        set
+        {
+            _jarvisUpdatedBorderVisibility = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsShowChatHistory
+    {
+        get { return _isShowChatHistory; }
+        set
+        {
+            _isShowChatHistory = value;
+            OnPropertyChanged();
+        }
+    }
+    public bool IsShowIntro
+    {
+        get { return _isShowIntro; }
+        set
+        {
+            _isShowIntro = value;
+            IsShowChatConversation = !_isShowIntro;
+            OnPropertyChanged();
+        }
+    }
+    public bool IsShowChatConversation
+    {
+        get { return _isShowChatConversation; }
+        set
+        {
+            _isShowChatConversation = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private List<DispatcherTimer> StopDotTimer { get; set; }
+    public ObservableCollection<AddToolsToggleButton> ToggleButtons { get; set; }
+    public ObservableCollection<AddToolsToggleButton> BasicToggleButtons { get; set; }
+    public ObservableCollection<AddToolsToggleButton> AdvancedToggleButtons { get; set; }
+    public ChatHistoryViewModel ChatHistoryViewModel { get; set; }
+
+    private ObservableCollection<AIChatMessage> _aIChatMessages;
+    public ObservableCollection<AIChatMessage> AIChatMessages
+    {
+        get { return _aIChatMessages; }
+        set
+        {
+            _aIChatMessages = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public AIChatSidebarViewModel()
+    {
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
+
+        OpenJarvisWebsiteCommand = new RelayCommand(ExecuteOpenJarvisWebsiteCommand, o => true);
+        ToggleAddToolsCommand = new RelayCommand(ExecuteToggleAddToolsCommand, o => true);
+        SendChatInputCommand = new RelayCommand(ExecuteSendChatInputCommand, o => true);
+        CloseJarvisUpdatedCommand = new RelayCommand(ExecuteCloseJarvisUpdatedCommand, o => true);
+        NewAIChatWindowCommand = new RelayCommand(o => { AIChatMessages.Clear(); IsShowIntro = true; }, o => true);
+        // ShowChatHistory = new RelayCommand(o => { IsShowChatHistory = !IsShowChatHistory; }, o => true);
+        JarvisUpdatedBorderVisibility = true; 
+        
+        AddToolsButtonVisibility = true;
+        ToggleAddToolsCommand.Execute(null);
+        InitializeToggleButtons();
+
+        IsShowIntro = true;
+        InitChatMessage();
+
+        ChatHistoryViewModel = new ChatHistoryViewModel();
+        AIChatSidebarEventTrigger.MouseOverHistoryPopup += (sender, e) =>
+        {
+            if (ChatHistoryViewModel.IsTitleEditable)
+            {
+                ChatHistoryViewModel.IsTitleEditable = false;
+            }
+            else if (ChatHistoryViewModel.IsOpenDeletePopup)
+            {
+                ChatHistoryViewModel.IsOpenDeletePopup = false;
+            }
+            else
+            {
+                IsShowChatHistory = false;
+            }
+        };
+        AIChatSidebarEventTrigger.MouseOverInfoPopup += (sender, e) =>
+        {
+            ExecuteInfoPopupCommand(-1);
+        };
+    }
+
+    // Extra bullshit
+    private async void ExecuteOpenJarvisWebsiteCommand(object obj)
+    {
+        string websiteUrl = (string)obj;
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = websiteUrl,
+            UseShellExecute = true
+        });
+    }
+    
+    private async void ExecuteCloseJarvisUpdatedCommand(object obj)
+    {
+        JarvisUpdatedBorderVisibility = false;
+    }
+
+    private async void ExecuteInfoPopupCommand(object obj)
+    {
+        int idx = (int)obj;
+        for (int i = 0; i < ToggleButtons.Count; i++)
+        {
+            if (i == idx) continue;
+            ToggleButtons[i].IsOpenInfoPopup = false;
+        }
+
+        if (idx == -1) return;
+        ToggleButtons[idx].IsOpenInfoPopup = !ToggleButtons[idx].IsOpenInfoPopup;
+    }
+
+    private void InitializeToggleButtons()
+    {
+        _dotSpeed = 2;
+
+        ToggleButtons = new ObservableCollection<AddToolsToggleButton>();
+        StopDotTimer = new List<DispatcherTimer>();
+        
+        string[] headers = { "Web Access", "Create Images (DALL·E 3)", "Book Calendar Events", "Advanced Data Analysis" };
+        string[] popupDescription = 
+        { 
+            "When needed, Jarvis can search the internet or\n read the URLs you provide to obtain the real-time information and reduce hallucinations.",
+            "Jarvis can use DALL·E 3 to create images for you based on your needs and continue to improve it according to your requirements.",
+            "Jarvis can create calendar events from your request or from a flight screenshot. The event will be sent to you via email. You can then add the event to your favorite calendar app from the email.",
+            "Jarvis can use DALL·E 3 to create images for you based on your needs and continue to improve it according to your requirements."
+        };
+
+        string[] popupButtonName = { "Search for latest AI news", "Draw a cute dog", "Create a schedule for my family part", "Generate a revenue report" };
+        for (int idx = 0; idx < headers.Length; idx++)
+        {
+            AddToolsToggleButton toggleButton = new AddToolsToggleButton
+            {
+                Idx = idx,
+                IsActive = false,
+                ToggleButtonWidth = 28,
+                ToggleButtonHeight = 16,
+                ToggleDotSize = 14,
+                ToggleDotMargin = "1 0 0 0",
+                ToggleBackground = "#CBD5E1",
+                ToggleCommand = new RelayCommand(ExecuteToggleCommand, o => true),
+                InfoPopupCommand = new RelayCommand(ExecuteInfoPopupCommand, o => true),
+
+                IsOpenInfoPopup = false,
+                Header = headers[idx],
+                InfoPopupDescription = popupDescription[idx],
+                InfoPopupButtonName = popupButtonName[idx],
+            };
+
+            bool isActive = false;
+            if (isActive)
+            {
+                toggleButton.IsActive = true;
+                toggleButton.ToggleBackground = "#0078D4";
+                toggleButton.ToggleDotMargin = $"{toggleButton.ToggleButtonWidth - toggleButton.ToggleDotSize - 1} 0 0 0";
+            }
+            ToggleButtons.Add(toggleButton);
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(10);
+            timer.Tick += (sender, e) => Timer_Tick(sender, e, toggleButton.Idx);
+            StopDotTimer.Add(timer);
+        }
+
+
+        for (int idx = 0; idx < ToggleButtons.Count; idx++)
+        {
+            ToggleButtons[idx].SvgData = SvgDataTemplate.Instance().AIChatSvgDataTemplate[idx];
+        }
+
+        BasicToggleButtons = new ObservableCollection<AddToolsToggleButton>(ToggleButtons.Take(1));
+        AdvancedToggleButtons = new ObservableCollection<AddToolsToggleButton>(ToggleButtons.Skip(1));
+    }
+
+    private async void ExecuteToggleCommand(object obj)
+    {
+        int idx = (int)obj;
+        ToggleButtons[idx].IsActive = !ToggleButtons[idx].IsActive;
+        StopDotTimer[idx].Start();
+
+        if (idx == 1)
+        {
+
+        }
+        else if (idx == 2)
+        {
+
+        }
+
+        else if (idx == 3)
+        {
+
+        }
+        else if (idx == 4)
+        {
+
+        }
+        //SettingStatus[idx] = (ToggleButtons[idx].IsActive) ? '1' : '0';
+        //WindowLocalStorage.WriteLocalStorage("SettingStatus", SettingStatus.ToString());
+    }
+    private void Timer_Tick(object sender, EventArgs e, int idx)
+    {
+        AddToolsToggleButton toggleButton = ToggleButtons[idx];
+        double curMarginX = double.Parse(toggleButton.ToggleDotMargin.Split(" ")[0]);
+        double minMargin = 1;
+        double maxMargin = toggleButton.ToggleButtonWidth - toggleButton.ToggleDotSize - minMargin;
+        if (toggleButton.IsActive)
+        {
+            toggleButton.ToggleBackground = "#0078D4";
+            curMarginX += _dotSpeed;
+            if (curMarginX >= maxMargin)
+            {
+                StopDotTimer[idx].Stop();
+                curMarginX = maxMargin;
+            }
+        }
+        else
+        {
+            curMarginX -= _dotSpeed;
+            toggleButton.ToggleBackground = "#CBD5E1";
+            if (curMarginX <= minMargin)
+            {
+                StopDotTimer[idx].Stop();
+                curMarginX = minMargin;
+            }
+        }
+
+        toggleButton.ToggleDotMargin = $"{curMarginX} 0 0 0";
+    }
+
+    private async void ExecuteToggleAddToolsCommand(object obj)
+    {
+        string[] borderRadius = { "12", "0 12 12 0" };
+        string[] svgData = 
+        {
+            "M1.44064 4.06564C1.6115 3.89479 1.8885 3.89479 2.05936 4.06564L7 9.00628L11.9406 4.06564C12.1115 3.89479 12.3885 3.89479 12.5594 4.06564C12.7302 4.2365 12.7302 4.5135 12.5594 4.68436L7.30936 9.93436C7.1385 10.1052 6.8615 10.1052 6.69064 9.93436L1.44064 4.68436C1.26979 4.5135 1.26979 4.2365 1.44064 4.06564Z",
+            "M12.5594 9.93436C12.3885 10.1052 12.1115 10.1052 11.9406 9.93436L7 4.99372L2.05936 9.93436C1.8885 10.1052 1.6115 10.1052 1.44064 9.93436C1.26979 9.7635 1.26979 9.4865 1.44064 9.31564L6.69064 4.06564C6.8615 3.89479 7.1385 3.89479 7.30936 4.06564L12.5594 9.31564C12.7302 9.4865 12.7302 9.7635 12.5594 9.93436Z"
+        };
+
+        AddToolsButtonVisibility = !AddToolsButtonVisibility;
+        int idx = (AddToolsButtonVisibility) ? 1 : 0;
+        
+        AddToolsButtonBorder = borderRadius[idx];
+        SvgToggleIconData = svgData[idx];
+    }
+
+
+    // ChatMessage
+    private void InitChatMessage()
+    {
+        AIChatMessages = new ObservableCollection<AIChatMessage>();
+    }
+
+    private static ObservableCollection<CodeMessage> RetrieveCodeSection(string inputText)
+    {
+        ObservableCollection<CodeMessage> sections = new ObservableCollection<CodeMessage>();
+        var codeSectionMatches = Regex.Matches(inputText, @"```(?<Language>\w+)\s*(?<content>[\s\S]+?)```");
+
+        string[] textSelection = Regex.Split(inputText, @"```(?:\w+)\s*[\s\S]+?```");
+
+        foreach (Match match in codeSectionMatches)
+        {
+            string Language = match.Groups["Language"].Value;
+            if (Language == "csharp") { Language = "c#"; }
+            if (Language == "cpp") { Language = "c++"; }
+
+            if (!string.IsNullOrEmpty(Language))
+            {
+                Language = char.ToUpper(Language[0]) + Language.Substring(1);
+            }
+            string content = match.Groups["content"].Value.Trim();
+
+            sections.Add(new CodeMessage { Language = Language, CodeContent = content, IsVisible = true });
+        }
+
+        for (int idx = 0; idx < textSelection.Length; idx++)
+        {
+            string textContent = textSelection[idx].TrimStart('\n').TrimEnd('\n');
+
+            if (textContent.Length > 1)
+            {
+                if (idx > 0) { textContent = "\n" + textContent; }
+                if (idx < textSelection.Length - 1) { textContent += "\n"; }
+            }
+
+            if (idx < sections.Count)
+            {
+                sections[idx].TextContent = textContent;
+            }
+            else
+            {
+                sections.Add(new CodeMessage { TextContent = textContent, IsVisible = false });
+            }
+
+
+            sections[idx].Idx = idx;
+        }
+
+        return sections;
+    }
+
+    private async void ExecuteSendChatInputCommand(object obj)
+    {
+        if (_isProcessAIChat) return;
+
+        int index = (obj is null) ? AIChatMessages.Count : (int)obj;
+        _isProcessAIChat = true;
+
+        IsShowIntro = false;
+        AIChatMessages.Insert(
+            index,
+            new AIChatMessage 
+            {
+                IsUser = true,
+                IsLoading = false,
+                Message = AIChatInputMessage,
+                Idx = index,
+                DetailMessage = new ObservableCollection<CodeMessage>
+                {
+                    new CodeMessage
+                    {
+                        TextContent = AIChatInputMessage,
+                        IsVisible = false,
+                    },
+                },
+            }
+        );
+
+        //AIChatSidebarEventTrigger.PublishChatIdxChanged(index, EventArgs.Empty);
+        string tmpMessage = AIChatInputMessage;
+
+        AIChatMessages.Insert(
+            index + 1,
+            new AIChatMessage
+            {
+                IsServer = true,
+                IsLoading = true,
+                Message = "",
+                Idx = index + 1,
+                DetailMessage = new ObservableCollection<CodeMessage>
+                {
+                    new CodeMessage
+                    {
+                        TextContent = "",
+                        IsVisible = false,
+                    },
+                },
+            }
+        );
+
+
+        //AIChatSidebarEventTrigger.PublishChatIdxChanged(index + 1, EventArgs.Empty);
+        AIChatInputMessage = "";
+
+        int lastIndex = index + 1;
+        string responseMessage = await JarvisApi.Instance.ChatHandler(tmpMessage, AIChatMessages);
+
+        AIChatMessages.RemoveAt(lastIndex);
+        AIChatMessages.Insert(
+            index + 1,
+            new AIChatMessage
+            {
+                IsServer = true,
+                CopyCommand = new RelayCommand(o => { Clipboard.SetText(responseMessage); }, o => true),
+                RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true),
+                IsLoading = false,
+                Message = responseMessage,
+                Idx = index + 1,
+                DetailMessage = RetrieveCodeSection(responseMessage),
+            }
+        );
+
+
+        //AIChatSidebarEventTrigger.PublishChatIdxChanged(index + 1, EventArgs.Empty);
+        _isProcessAIChat = false;
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
+    }
+
+
+    private async void ExecuteRedoCommand(object obj)
+    {
+        if (_isProcessAIChat) return;
+        int idx = (int)obj;
+        AIChatInputMessage = AIChatMessages[idx - 1].Message;
+        idx -= 1;
+        AIChatMessages.RemoveAt(idx);
+        AIChatMessages.RemoveAt(idx);
+        SendChatInputCommand.Execute(idx);
+    }
 }
-
-//public class AIChatSidebarViewModel : ViewModelBase
-//{
-//    private PopupDictionaryService _popupDictionaryService;
-//    private GoogleAnalyticService _sendEventGA4;
-
-//    private bool _isTextEmpty;
-//    private string _sendMessage;
-//    private string _remainingAPIUsage;
-
-//    public RelayCommand SendCommand { get; set; }
-//    public RelayCommand NewChatCommand { get; set; }
-//    public RelayCommand HideAIChatSidebarCommand { get; set; }
-
-//    private ObservableCollection<AIChatMessage> _aIChatMessages;
-//    public ObservableCollection<AIChatMessage> AIChatMessages
-//    {
-//        get { return _aIChatMessages; }
-//        set
-//        {
-//            _aIChatMessages = value;
-//            OnPropertyChanged();
-//        }
-//    }
-
-//    public PopupDictionaryService PopupDictionaryService
-//    {
-//        get { return _popupDictionaryService; }
-//        set
-//        {
-//            _popupDictionaryService = value;
-//            OnPropertyChanged();
-//        }
-//    }
-//    public GoogleAnalyticService GoogleAnalyticService
-//    {
-//        get { return _sendEventGA4; }
-//        set
-//        {
-//            _sendEventGA4 = value;
-//            OnPropertyChanged();
-//        }
-//    }
-//    public bool IsTextEmpty
-//    {
-//        get
-//        {
-//            if (string.IsNullOrWhiteSpace(SendMessage)) _isTextEmpty = true;
-//            else _isTextEmpty = false;
-//            return _isTextEmpty;
-//        }
-//        set
-//        {
-//            _isTextEmpty = value;
-//            OnPropertyChanged();
-//        }
-//    }
-
-//    public string SendMessage
-//    {
-//        get { return _sendMessage; }
-//        set
-//        {
-//            _sendMessage = value;
-//            OnPropertyChanged();
-//            OnPropertyChanged(nameof(IsTextEmpty));
-//        }
-//    }
-
-//    public string RemainingAPIUsage
-//    {
-//        get { return _remainingAPIUsage; }
-//        set
-//        {
-//            _remainingAPIUsage = value;
-//            OnPropertyChanged();
-//        }
-//    }
-
-//    public AIChatSidebarViewModel(PopupDictionaryService popupDictionaryService, GoogleAnalyticService sendEventGA4)
-//    {
-//        PopupDictionaryService = popupDictionaryService;
-//        GoogleAnalyticService = sendEventGA4;
-//        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
-
-//        HideAIChatSidebarCommand = new RelayCommand(ExecuteHideAIChatSidebarCommand, o => true);
-//        SendCommand = new RelayCommand(ExecuteSendCommand, o => true);
-//        NewChatCommand = new RelayCommand(o => { ChatMessagesClear(); }, o => true);
-
-//        ChatMessages = new ObservableCollection<ChatMessage>();
-//        ChatMessagesClear();
-//        EventAggregator.JarvisActionPositionChanged += OnJarvisActionPositionChanged; // Check whether text is in AI ChatSidebar or in external applications
-//    }
-
-//    private void OnJarvisActionPositionChanged(object sender, EventArgs e)
-//    {
-//        string objID = (string)sender;
-//    }
-
-//    private async void ExecuteHideAIChatSidebarCommand(object obj)
-//    {
-//        PopupDictionaryService.ShowAIChatSidebar(false);
-//        PopupDictionaryService.ShowAIChatBubble(true);
-//        ChatMessagesClear();
-//    }
-
-//    void ChatMessagesClear()
-//    {
-//        AIChatMessages.Clear();
-//        AIChatMessages.Add(new AIChatMessage 
-//        { 
-//            ImageSource = "../../../../Assets/Images/jarvis_logo.png",
-//            Message = "Hi, I am Jarvis, your powerful AI assistant. How can I help you?",
-//            IsLoading = false,
-//            IsBorderVisible = true
-//        });
-//    }
-
-//    private async void ExecuteSendCommand(object obj)
-//    {
-//        AIChatMessages.Add(new AIChatMessage
-//        {
-//            ImageSource = "../../../../Assets/Images/pencil.png",
-//            Message = SendMessage,
-//            IsLoading = false,
-//            IsBorderVisible = false
-//        });
-
-//        string tmpMessage = SendMessage;
-
-//        AIChatMessages.Add(new AIChatMessage
-//        {
-//            ImageSource = "../../../../Assets/Images/jarvis_logo.png",
-//            Message = "",
-//            IsLoading = true,
-//            IsBorderVisible = true
-//        });
-
-
-//        SendMessage = "";
-
-//        int lastIndex = AIChatMessages.Count - 1;
-//        string responseMessage = await JarvisApi.Instance.ChatHandler(tmpMessage, AIChatMessages);
-
-//        AIChatMessages.RemoveAt(lastIndex);
-//        AIChatMessages.Add(new AIChatMessage
-//        {
-//            ImageSource = "../../../../Assets/Images/jarvis_logo.png",
-//            Message = responseMessage,
-//            IsLoading = false,
-//            IsBorderVisible = true
-//        });
-
-//        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
-//    }
-//}
-
-//public class AIChatMessage
-//{
-//    public string ImageSource { get; set; }
-//    public string Message { get; set; }
-//    public bool IsLoading { get; set; }
-//    public bool IsBorderVisible { get; set; }
-//}

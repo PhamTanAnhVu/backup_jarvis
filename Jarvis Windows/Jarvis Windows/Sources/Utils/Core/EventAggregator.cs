@@ -1,3 +1,4 @@
+using Jarvis_Windows.Sources.MVVM.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,13 @@ public static class EventAggregator
     public static event EventHandler<EventArgs>? MouseOverAIChatPanelChanged;
     public static event EventHandler<EventArgs>? SettingVisibilityChanged;
     public static event EventHandler<EventArgs>? LoginStatusChanged;
-   
+    
+    public static event EventHandler<EventArgs>? PropertyMessageChanged;
+    public static void PublishPropertyMessageChanged(PropertyMessage message, EventArgs e)
+    {
+        PropertyMessageChanged?.Invoke(message, e);
+    }
+
     public static void PublishLanguageSelectionChanged(object sender, EventArgs e)
     {
         LanguageSelectionChanged?.Invoke(sender, e);

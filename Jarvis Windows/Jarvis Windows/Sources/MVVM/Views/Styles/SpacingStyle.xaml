@@ -1,217 +1,170 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Border Radius Styles -->
-    <Style x:Key="BorderRadiusNone" TargetType="Border">
-        <Setter Property="CornerRadius" Value="0"/>
-    </Style>
+    <!-- CornerRadius Styles -->
+    <!--Full CornerRadius-->
+    <CornerRadius x:Key="BorderRadiusNone">0</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusSm">2</CornerRadius>
+    <CornerRadius x:Key="BorderRadius">4</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusMd">6</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusLg">8</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusXl">12</CornerRadius>
+    <CornerRadius x:Key="BorderRadius2Xl">16</CornerRadius>
+    <CornerRadius x:Key="BorderRadius3Xl">24</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusFull">9999</CornerRadius>
+    
+    <!--Left CornerRadius-->
+    <CornerRadius x:Key="BorderRadiusLeftSm">2 0 0 2</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusLeft">4 0 0 4</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusLeftMd">6 0 0 6</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusLeftLg">8 0 0 8</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusLeftXl">12 0 0 12</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusLeft2Xl">16 0 0 16</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusLeft3Xl">24 0 0 24</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusLeftFull">9999 0 0 9999</CornerRadius>
 
-    <Style x:Key="BorderRadiusSm" TargetType="Border">
-        <Setter Property="CornerRadius" Value="2"/>
-    </Style>
+    <!--Top CornerRadius-->
+    <CornerRadius x:Key="BorderRadiusTopSm">2 2 0 0</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusTop">4 4 0 0</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusTopMd">6 6 0 0</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusTopLg">8 8 0 0</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusTopXl">12 12 0 0</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusTop2Xl">16 16 0 0</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusTop3Xl">24 24 0 0</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusTopFull">9999 9999 0 0</CornerRadius>
 
-    <Style x:Key="BorderRadius" TargetType="Border">
-        <Setter Property="CornerRadius" Value="4"/>
-    </Style>
+    <!--Right CornerRadius-->
+    <CornerRadius x:Key="BorderRadiusRightSm">0 2 0 2</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusRight">0 4 0 4</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusRightMd">0 6 0 6</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusRightLg">0 8 0 8</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusRightXl">0 12 0 12</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusRight2Xl">0 16 0 16</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusRight3Xl">0 24 0 24</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusRightFull">0 9999 0 9999</CornerRadius>
 
-    <Style x:Key="BorderRadiusMd" TargetType="Border">
-        <Setter Property="CornerRadius" Value="6"/>
-    </Style>
+    <!--Bottom CornerRadius-->
+    <CornerRadius x:Key="BorderRadiusBottomSm">0 0 2 2</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusBottom">0 0 4 4</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusBottomMd">0 0 6 6</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusBottomLg">0 0 8 8</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusBottomXl">0 0 12 12</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusBottom2Xl">0 0 16 16</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusBottom3Xl">0 0 24 24</CornerRadius>
+    <CornerRadius x:Key="BorderRadiusBottomFull">0 0 9999 9999</CornerRadius>
 
-    <Style x:Key="BorderRadiusLg" TargetType="Border">
-        <Setter Property="CornerRadius" Value="8"/>
-    </Style>
-
-    <Style x:Key="BorderRadiusXl" TargetType="Border">
-        <Setter Property="CornerRadius" Value="12"/>
-    </Style>
-
-    <Style x:Key="BorderRadius2Xl" TargetType="Border">
-        <Setter Property="CornerRadius" Value="16"/>
-    </Style>
-
-    <Style x:Key="BorderRadius3Xl" TargetType="Border">
-        <Setter Property="CornerRadius" Value="24"/>
-    </Style>
-
-    <Style x:Key="BorderRadiusFull" TargetType="Border">
-        <Setter Property="CornerRadius" Value="9999"/>
-    </Style>
 
     <!-- Padding Styles -->
-    <Style x:Key="Spacing0" TargetType="Border">
-        <Setter Property="Padding" Value="0"/>
-    </Style>
+    <Thickness x:Key="Padding0">0</Thickness>
+    <Thickness x:Key="Padding0.5">2</Thickness>
+    <Thickness x:Key="Padding1">4</Thickness>
+    <Thickness x:Key="Padding1.5">6</Thickness>
+    <Thickness x:Key="Padding2">8</Thickness>
+    <Thickness x:Key="Padding2.5">10</Thickness>
+    <Thickness x:Key="Padding3">12</Thickness>
+    <Thickness x:Key="Padding3.5">14</Thickness>
+    <Thickness x:Key="Padding4">16</Thickness>
+    <Thickness x:Key="Padding4.5">18</Thickness>
+    <Thickness x:Key="Padding5">20</Thickness>
+    <Thickness x:Key="Padding5.5">22</Thickness>
+    <Thickness x:Key="Padding6">24</Thickness>
+    <Thickness x:Key="Padding6.5">26</Thickness>
+    <Thickness x:Key="Padding7">28</Thickness>
+    <Thickness x:Key="Padding7.5">30</Thickness>
+    <Thickness x:Key="Padding8">32</Thickness>
+    <Thickness x:Key="Padding8.5">34</Thickness>
+    <Thickness x:Key="Padding9">36</Thickness>
+    <Thickness x:Key="Padding9.5">38</Thickness>
+    <Thickness x:Key="Padding10">40</Thickness>
 
-    <Style x:Key="Spacing0.5" TargetType="Border">
-        <Setter Property="Padding" Value="2"/>
-    </Style>
+    <Thickness x:Key="PaddingVertical0">0 0 0 0</Thickness>
+    <Thickness x:Key="PaddingVertical0.5">0 2 0 2</Thickness>
+    <Thickness x:Key="PaddingVertical1">0 4 0 4</Thickness>
+    <Thickness x:Key="PaddingVertical1.5">0 6 0 6</Thickness>
+    <Thickness x:Key="PaddingVertical2">0 8 0 8</Thickness>
+    <Thickness x:Key="PaddingVertical2.5">0 10 0 10</Thickness>
+    <Thickness x:Key="PaddingVertical3">0 12 0 12</Thickness>
+    <Thickness x:Key="PaddingVertical3.5">0 14 0 14</Thickness>
+    <Thickness x:Key="PaddingVertical4">0 16 0 16</Thickness>
+    <Thickness x:Key="PaddingVertical4.5">0 18 0 18</Thickness>
+    <Thickness x:Key="PaddingVertical5">0 20 0 20</Thickness>
+    <Thickness x:Key="PaddingVertical5.5">0 22 0 22</Thickness>
+    <Thickness x:Key="PaddingVertical6">0 24 0 24</Thickness>
+    <Thickness x:Key="PaddingVertical6.5">0 26 0 26</Thickness>
+    <Thickness x:Key="PaddingVertical7">0 28 0 28</Thickness>
+    <Thickness x:Key="PaddingVertical7.5">0 30 0 30</Thickness>
+    <Thickness x:Key="PaddingVertical8">0 32 0 32</Thickness>
+    <Thickness x:Key="PaddingVertical8.5">0 34 0 34</Thickness>
+    <Thickness x:Key="PaddingVertical9">0 36 0 36</Thickness>
+    <Thickness x:Key="PaddingVertical9.5">0 38 0 38</Thickness>
+    <Thickness x:Key="PaddingVertical10">0 40 0 40</Thickness>
 
-    <Style x:Key="Spacing1" TargetType="Border">
-        <Setter Property="Padding" Value="4"/>
-    </Style>
+    <Thickness x:Key="PaddingHorizontal0">0 0 0 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal0.5">2 0 2 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal1">4 0 4 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal1.5">6 0 6 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal2">8 0 8 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal2.5">10 0 10 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal3">12 0 12 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal3.5">14 0 14 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal4">16 0 16 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal4.5">18 0 18 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal5">20 0 20 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal5.5">22 0 22 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal6">24 0 24 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal6.5">26 0 26 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal7">28 0 28 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal7.5">30 0 30 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal8">32 0 32 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal8.5">34 0 34 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal9">36 0 36 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal9.5">38 0 38 0</Thickness>
+    <Thickness x:Key="PaddingHorizontal10">40 0 40 0</Thickness>
 
-    <Style x:Key="Spacing1.5" TargetType="Border">
-        <Setter Property="Padding" Value="6"/>
-    </Style>
+    
+    <!--Row/Column Gap-->
+    <Thickness x:Key="RowGap0">0 0 0 0</Thickness>
+    <Thickness x:Key="RowGap0.5">0 0 0 2</Thickness>
+    <Thickness x:Key="RowGap1">0 0 0 4</Thickness>
+    <Thickness x:Key="RowGap1.5">0 0 0 6</Thickness>
+    <Thickness x:Key="RowGap2">0 0 0 8</Thickness>
+    <Thickness x:Key="RowGap2.5">0 0 0 10</Thickness>
+    <Thickness x:Key="RowGap3">0 0 0 12</Thickness>
+    <Thickness x:Key="RowGap3.5">0 0 0 14</Thickness>
+    <Thickness x:Key="RowGap4">0 0 0 16</Thickness>
+    <Thickness x:Key="RowGap4.5">0 0 0 18</Thickness>
+    <Thickness x:Key="RowGap5">0 0 0 20</Thickness>
+    <Thickness x:Key="RowGap5.5">0 0 0 22</Thickness>
+    <Thickness x:Key="RowGap6">0 0 0 24</Thickness>
+    <Thickness x:Key="RowGap6.5">0 0 0 26</Thickness>
+    <Thickness x:Key="RowGap7">0 0 0 28</Thickness>
+    <Thickness x:Key="RowGap7.5">0 0 0 30</Thickness>
+    <Thickness x:Key="RowGap8">0 0 0 32</Thickness>
+    <Thickness x:Key="RowGap8.5">0 0 0 34</Thickness>
+    <Thickness x:Key="RowGap9">0 0 0 36</Thickness>
+    <Thickness x:Key="RowGap9.5">0 0 0 38</Thickness>
+    <Thickness x:Key="RowGap10">0 0 0 40</Thickness>
 
-    <Style x:Key="Spacing2" TargetType="Border">
-        <Setter Property="Padding" Value="8"/>
-    </Style>
-
-    <Style x:Key="Spacing2.5" TargetType="Border">
-        <Setter Property="Padding" Value="10"/>
-    </Style>
-
-    <Style x:Key="Spacing3" TargetType="Border">
-        <Setter Property="Padding" Value="12"/>
-    </Style>
-
-    <Style x:Key="Spacing3.5" TargetType="Border">
-        <Setter Property="Padding" Value="14"/>
-    </Style>
-
-    <Style x:Key="Spacing4" TargetType="Border">
-        <Setter Property="Padding" Value="16"/>
-    </Style>
-
-    <Style x:Key="Spacing4.5" TargetType="Border">
-        <Setter Property="Padding" Value="18"/>
-    </Style>
-
-    <Style x:Key="Spacing5" TargetType="Border">
-        <Setter Property="Padding" Value="20"/>
-    </Style>
-
-    <Style x:Key="Spacing5.5" TargetType="Border">
-        <Setter Property="Padding" Value="22"/>
-    </Style>
-
-    <Style x:Key="Spacing6" TargetType="Border">
-        <Setter Property="Padding" Value="24"/>
-    </Style>
-
-    <Style x:Key="Spacing6.5" TargetType="Border">
-        <Setter Property="Padding" Value="26"/>
-    </Style>
-
-    <Style x:Key="Spacing7" TargetType="Border">
-        <Setter Property="Padding" Value="28"/>
-    </Style>
-
-    <Style x:Key="Spacing7.5" TargetType="Border">
-        <Setter Property="Padding" Value="30"/>
-    </Style>
-
-    <Style x:Key="Spacing8" TargetType="Border">
-        <Setter Property="Padding" Value="32"/>
-    </Style>
-
-    <Style x:Key="Spacing8.5" TargetType="Border">
-        <Setter Property="Padding" Value="34"/>
-    </Style>
-
-    <Style x:Key="Spacing9" TargetType="Border">
-        <Setter Property="Padding" Value="36"/>
-    </Style>
-
-    <Style x:Key="Spacing9.5" TargetType="Border">
-        <Setter Property="Padding" Value="38"/>
-    </Style>
-
-    <Style x:Key="Spacing10" TargetType="Border">
-        <Setter Property="Padding" Value="40"/>
-    </Style>
-
-
-    <!-- Grid Row Gap Styles -->
-    <Style x:Key="RowGapSpacing0" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 0 0"/>
-    </Style>
-
-    <Style x:Key="RowGapSpacing0.5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 2 0"/>
-    </Style>
-
-    <Style x:Key="RowGapSpacing1" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 4 0"/>
-    </Style>
-
-    <Style x:Key="RowGapSpacing1.5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 6 0"/>
-    </Style>
-
-    <Style x:Key="RowGapSpacing2" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 8 0"/>
-    </Style>
-
-    <Style x:Key="RowGapSpacing2.5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 10 0"/>
-    </Style>
-
-    <Style x:Key="RowGapSpacing3" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 12 0"/>
-    </Style>
-
-    <Style x:Key="RowGapSpacing3.5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 14 0"/>
-    </Style>
-
-    <Style x:Key="RowGapSpacing4" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 16 0"/>
-    </Style>
-
-    <Style x:Key="RowGapSpacing4.5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 18 0"/>
-    </Style>
-
-    <Style x:Key="RowGapSpacing5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 20 0"/>
-    </Style>
-
-    <!-- Grid Column Gap Styles -->
-    <Style x:Key="ColumnGapSpacing0" TargetType="Grid">
-        <Setter Property="Margin" Value="0 0 0 0"/>
-    </Style>
-
-    <Style x:Key="ColumnGapSpacing0.5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 2 0 0"/>
-    </Style>
-
-    <Style x:Key="ColumnGapSpacing1" TargetType="Grid">
-        <Setter Property="Margin" Value="0 4 0 0"/>
-    </Style>
-
-    <Style x:Key="ColumnGapSpacing1.5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 6 0 0"/>
-    </Style>
-
-    <Style x:Key="ColumnGapSpacing2" TargetType="Grid">
-        <Setter Property="Margin" Value="0 8 0 0"/>
-    </Style>
-
-    <Style x:Key="ColumnGapSpacing2.5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 10 0 0"/>
-    </Style>
-
-    <Style x:Key="ColumnGapSpacing3" TargetType="Grid">
-        <Setter Property="Margin" Value="0 12 0 0"/>
-    </Style>
-
-    <Style x:Key="ColumnGapSpacing3.5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 14 0 0"/>
-    </Style>
-
-    <Style x:Key="ColumnGapSpacing4" TargetType="Grid">
-        <Setter Property="Margin" Value="0 16 0 0"/>
-    </Style>
-
-    <Style x:Key="ColumnGapSpacing4.5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 18 0 0"/>
-    </Style>
-
-    <Style x:Key="ColumnGapSpacing5" TargetType="Grid">
-        <Setter Property="Margin" Value="0 20 0 0"/>
-    </Style>
+    <Thickness x:Key="ColumnGap0">0 0 0 0</Thickness>
+    <Thickness x:Key="ColumnGap0.5">0 0 2 0</Thickness>
+    <Thickness x:Key="ColumnGap1">0 0 4 0</Thickness>
+    <Thickness x:Key="ColumnGap1.5">0 0 6 0</Thickness>
+    <Thickness x:Key="ColumnGap2">0 0 8 0</Thickness>
+    <Thickness x:Key="ColumnGap2.5">0 0 10 0</Thickness>
+    <Thickness x:Key="ColumnGap3">0 0 12 0</Thickness>
+    <Thickness x:Key="ColumnGap3.5">0 0 14 0</Thickness>
+    <Thickness x:Key="ColumnGap4">0 0 16 0</Thickness>
+    <Thickness x:Key="ColumnGap4.5">0 0 18 0</Thickness>
+    <Thickness x:Key="ColumnGap5">0 0 20 0</Thickness>
+    <Thickness x:Key="ColumnGap5.5">0 0 22 0</Thickness>
+    <Thickness x:Key="ColumnGap6">0 0 24 0</Thickness>
+    <Thickness x:Key="ColumnGap6.5">0 0 26 0</Thickness>
+    <Thickness x:Key="ColumnGap7">0 0 28 0</Thickness>
+    <Thickness x:Key="ColumnGap7.5">0 0 30 0</Thickness>
+    <Thickness x:Key="ColumnGap8">0 0 32 0</Thickness>
+    <Thickness x:Key="ColumnGap8.5">0 0 34 0</Thickness>
+    <Thickness x:Key="ColumnGap9">0 0 36 0</Thickness>
+    <Thickness x:Key="ColumnGap9.5">0 0 38 0</Thickness>
+    <Thickness x:Key="ColumnGap10">0 0 40 0</Thickness>
 
 </ResourceDictionary>

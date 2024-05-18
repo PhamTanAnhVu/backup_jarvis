@@ -1,0 +1,324 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView.ChatHistoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView"
+             xmlns:li="http://github.com/zeluisping/loadingIndicators/xaml/controls"
+             mc:Ignorable="d" 
+             xmlns:style="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Styles"
+             Height="934" Width="474"
+             Style="{StaticResource PageAppearEffect}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/AIChatStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid x:Name="MainChatHistoryGrid">
+        <Border x:Name="MainChatHistoryBorder" Style="{StaticResource AIChatHistoryBorder}" VerticalAlignment="Bottom">
+            <Grid>
+                <StackPanel Orientation="Vertical">
+                    <Border Background="Transparent" Padding="{StaticResource Padding4}"
+                            IsHitTestVisible="{Binding ChatHistoryViewModel.IsHitTestVisible}">
+                        <Grid>
+                            <TextBox Style="{StaticResource XlTextBox700}"
+                                 Text="Conversation History" HorizontalAlignment="Left"/>
+
+                            <Button x:Name="CloseAIChatHistoryButton" Width="24" Height="24"
+                                    Style="{StaticResource CloseJarvisUpdatedButton}" HorizontalAlignment="Right"
+                                    Command="{Binding ShowChatHistory}" CommandParameter="0">
+                                <Button.Content>
+                                    <Viewbox Height="16" Width="16">
+                                        <Grid>
+                                            <Path Fill="#00213B" Data="M2.14645 2.85355C1.95118 2.65829 1.95118 2.34171 2.14645 2.14645C2.34171 1.95118 2.65829 1.95118 2.85355 2.14645L8 7.29289L13.1464 2.14645C13.3417 1.95118 13.6583 1.95118 13.8536 2.14645C14.0488 2.34171 14.0488 2.65829 13.8536 2.85355L8.70711 8L13.8536 13.1464C14.0488 13.3417 14.0488 13.6583 13.8536 13.8536C13.6583 14.0488 13.3417 14.0488 13.1464 13.8536L8 8.70711L2.85355 13.8536C2.65829 14.0488 2.34171 14.0488 2.14645 13.8536C1.95119 13.6583 1.95119 13.3417 2.14645 13.1464L7.29289 8L2.14645 2.85355Z" />
+                                        </Grid>
+                                    </Viewbox>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap3}"
+                                Margin="16 0 0 16" IsHitTestVisible="{Binding ChatHistoryViewModel.IsHitTestVisible}">
+                        <Border Style="{StaticResource AIChatHistorySearchBorder}">
+                            <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2.5}">
+                                <Viewbox x:Name="SearchIconSVG" Width="16" Height="16">
+                                    <Canvas Width="16" Height="16">
+                                        <Path Fill="#334155" Data="M11.7422 10.3439C12.5329 9.2673 13 7.9382 13 6.5C13 2.91015 10.0899 0 6.5 0C2.91015 0 0 2.91015 0 6.5C0 10.0899 2.91015 13 6.5 13C7.93858 13 9.26801 12.5327 10.3448 11.7415L10.3439 11.7422C10.3734 11.7822 10.4062 11.8204 10.4424 11.8566L14.2929 15.7071C14.6834 16.0976 15.3166 16.0976 15.7071 15.7071C16.0976 15.3166 16.0976 14.6834 15.7071 14.2929L11.8566 10.4424C11.8204 10.4062 11.7822 10.3734 11.7422 10.3439ZM12 6.5C12 9.53757 9.53757 12 6.5 12C3.46243 12 1 9.53757 1 6.5C1 3.46243 3.46243 1 6.5 1C9.53757 1 12 3.46243 12 6.5Z"/>
+                                    </Canvas>
+                                </Viewbox>
+
+                                <Grid>
+                                    <TextBox x:Name="AIChatHistory_SearchBar_InputTextBox" Style="{StaticResource AIChatHistorySearchTextBox}"
+                                             Text="{Binding ChatHistoryViewModel.AIChatHistorySearchMessage, UpdateSourceTrigger=PropertyChanged}"
+                                             PreviewMouseDown="ChatHistory_EditTitleTextBox_PreviewMouseDown">
+                                    </TextBox>
+                                    <TextBlock x:Name="AIChatHistory_SearchBar_PreText" Style="{StaticResource AIChatHistorySearchPreText}"
+                                               Text="Search" VerticalAlignment="Center"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Button x:Name="FilterFavoriteChatsButton"
+                                Style="{StaticResource AIChatHistoryGeneralButton}"
+                                Command="{Binding ChatHistoryViewModel.FilterFavoriteChatCommand}" CommandParameter="change"
+                                MouseEnter="MouseEnter_FilterFavoriteButton" MouseLeave="MouseLeave_FilterFavoriteButton" Click="MouseClick_FilterFavoriteButton">
+                            <Button.Content>
+                                <Viewbox Width="18" Height="18">
+                                    <Grid>
+                                        <Path x:Name="StartIconSVG" 
+                                              Fill="{Binding ChatHistoryViewModel.FilterFavoriteColor}" Data="M3.22435 16.7071C3.13682 17.206 3.62909 17.5965 4.06383 17.3731L9.00171 14.8351L13.9396 17.3731C14.3743 17.5965 14.8666 17.206 14.7791 16.7071L13.8456 11.3864L17.8083 7.6102C18.1786 7.25729 17.9869 6.61204 17.4908 6.54156L11.98 5.7587L9.52285 0.891343C9.3015 0.452886 8.70191 0.452886 8.48057 0.891343L6.02344 5.7587L0.512652 6.54156C0.0165395 6.61204 -0.175161 7.25729 0.195168 7.6102L4.15779 11.3864L3.22435 16.7071ZM8.74203 13.5929L4.59556 15.7241L5.37659 11.2722C5.41341 11.0623 5.34418 10.8474 5.1935 10.7038L1.92331 7.58745L6.48215 6.93983C6.67061 6.91305 6.83516 6.79269 6.92406 6.61658L9.00171 2.50096L11.0794 6.61658C11.1683 6.79269 11.3328 6.91305 11.5213 6.93983L16.0801 7.58745L12.8099 10.7038C12.6592 10.8474 12.59 11.0623 12.6268 11.2722L13.4079 15.7241L9.26139 13.5929C9.0976 13.5088 8.90582 13.5088 8.74203 13.5929Z"/>
+                                    </Grid>
+                                </Viewbox>
+                            </Button.Content>
+                        </Button>
+
+                        <Button x:Name="ClearChatHistoryButton"
+                                Style="{StaticResource AIChatHistoryGeneralButton}"
+                                Command="{Binding ChatHistoryViewModel.OpenDeletePopupCommand}"
+                            MouseEnter="MouseEnter_ClearChatButton" MouseLeave="MouseLeave_ClearChatButton">
+                            <Button.Content>
+                                <Viewbox Width="18" Height="18">
+                                    <Grid>
+                                        <Path x:Name="TrashIconSVG"
+                                        Fill="#94A3B8" Data="M7.3125 1.125H10.6875C10.9982 1.125 11.25 1.37684 11.25 1.6875V2.8125H6.75V1.6875C6.75 1.37684 7.00184 1.125 7.3125 1.125ZM12.375 2.8125V1.6875C12.375 0.75552 11.6195 0 10.6875 0H7.3125C6.38052 0 5.625 0.755519 5.625 1.6875V2.8125H2.81886C2.81504 2.81246 2.81121 2.81246 2.80737 2.8125H1.6875C1.37684 2.8125 1.125 3.06434 1.125 3.375C1.125 3.68566 1.37684 3.9375 1.6875 3.9375H2.2932L3.25256 15.9294C3.3461 17.0988 4.32233 18 5.49539 18H12.5046C13.6777 18 14.6539 17.0988 14.7474 15.9294L15.7068 3.9375H16.3125C16.6232 3.9375 16.875 3.68566 16.875 3.375C16.875 3.06434 16.6232 2.8125 16.3125 2.8125H15.1926C15.1888 2.81246 15.185 2.81246 15.1811 2.8125H12.375ZM14.5782 3.9375L13.626 15.8397C13.5793 16.4244 13.0911 16.875 12.5046 16.875H5.49539C4.90886 16.875 4.42075 16.4244 4.37397 15.8397L3.4218 3.9375H14.5782ZM6.15447 5.06347C6.46459 5.04523 6.73079 5.28184 6.74903 5.59197L7.31153 15.1545C7.32977 15.4646 7.09316 15.7308 6.78303 15.749C6.47291 15.7673 6.20671 15.5307 6.18847 15.2205L5.62597 5.65803C5.60773 5.34791 5.84435 5.08171 6.15447 5.06347ZM11.8455 5.06347C12.1557 5.08171 12.3923 5.34791 12.374 5.65803L11.8115 15.2205C11.7933 15.5307 11.5271 15.7673 11.217 15.749C10.9068 15.7308 10.6702 15.4646 10.6885 15.1545L11.251 5.59197C11.2692 5.28184 11.5354 5.04523 11.8455 5.06347ZM9 5.0625C9.31066 5.0625 9.5625 5.31434 9.5625 5.625V15.1875C9.5625 15.4982 9.31066 15.75 9 15.75C8.68934 15.75 8.4375 15.4982 8.4375 15.1875V5.625C8.4375 5.31434 8.68934 5.0625 9 5.0625Z"/>
+                                    </Grid>
+                                </Viewbox>
+
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+
+                    <ScrollViewer Height="660" VerticalScrollBarVisibility="Hidden" Visibility="{Binding ChatHistoryViewModel.IsNotEmptyChatHistory, Converter={StaticResource VisibilityConverter}}">
+                        <ItemsControl ItemsSource="{Binding ChatHistoryViewModel.ConversationList}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical" IsHitTestVisible="{Binding IsHitTestVisible}"
+                                                Margin="8 0 0 0" Visibility="{Binding IsShowConversation, Converter={StaticResource VisibilityConverter}}">
+                                        <Button x:Name="ConversationButton" Style="{StaticResource ConversationButton}"
+                                                Command="{Binding SelectConversationCommand}" CommandParameter="{Binding Idx}">
+                                            <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap1.5}">
+                                                <Border x:Name="Header" Height="25">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Border Grid.Column="0" x:Name="CurrentTagBorder" Style="{StaticResource CurrentTagBorder}" 
+                                                                Visibility="{Binding IsSelected, Converter={StaticResource VisibilityConverter}}" Margin="0 0 8 0">
+                                                            <TextBlock Style="{StaticResource XsTextblock400}" VerticalAlignment="Center"
+                                                                        Text="Current" Foreground="#FFF"/>
+                                                        </Border>
+
+                                                        <TextBlock Grid.Column="1" x:Name="TitleChatBorder" Style="{StaticResource SmTextblock600}"
+                                                                    Text="{Binding Title}" VerticalAlignment="Center" Margin="0 0 8 0" MaxWidth="250"
+                                                                    TextTrimming="CharacterEllipsis"/>
+
+                                                        <Button Grid.Column="2" x:Name="EditTitleButton" Style="{StaticResource ConversationEditButton}"
+                                                                Command="{Binding EditTitleCommand}" CommandParameter="{Binding Idx}">
+                                                            <Button.Content>
+                                                                <Viewbox Width="12" Height="12">
+                                                                    <Grid>
+                                                                        <Path Data="M9.10985,0.109835 C9.25629,-0.0366117 9.49373,-0.0366117 9.64018,0.109835 L11.8902,2.35984 C12.0366,2.50628 12.0366,2.74372 11.8902,2.89016 L4.39018,10.3902 C4.35427,10.4261 4.31144,10.4543 4.26428,10.4732 L0.514282,11.9732 C0.375001,12.0289 0.215919,11.9962 0.109846,11.8902 C0.00377242,11.7841 -0.0288804,11.625 0.0268322,11.4857 L1.52683,7.73573 C1.54569,7.68858 1.57394,7.64575 1.60985,7.60983 L9.10985,0.109835 Z M8.40534,1.875 L10.125,3.59467 L11.0947,2.625 L9.37501,0.90533 L8.40534,1.875 Z M9.59468,4.125 L7.87501,2.40533 L3.00001,7.28033 V7.5 H3.37501 C3.58212,7.5 3.75001,7.66789 3.75001,7.875 V8.25 H4.12501 C4.33212,8.25 4.50001,8.41789 4.50001,8.625 V9 H4.71968 L9.59468,4.125 Z M2.27375,8.00659 L2.1946,8.08574 L1.04816,10.9519 L3.91427,9.80541 L3.99342,9.72626 C3.85122,9.67297 3.75001,9.5358 3.75001,9.375 V9 H3.37501 C3.1679,9 3.00001,8.83211 3.00001,8.625 V8.25 H2.62501 C2.46421,8.25 2.32704,8.14879 2.27375,8.00659 Z" Fill="#00213B"/>
+                                                                    </Grid>
+                                                                </Viewbox>
+                                                            </Button.Content>
+                                                        </Button>
+
+                                                        <TextBlock Grid.Column="3" x:Name="LastUpdatedTime" Style="{StaticResource XsTextblock400}" HorizontalAlignment="Right"
+                                                                   Text="{Binding LastUpdatedTime}" VerticalAlignment="Center" Foreground="{StaticResource SolidColorBrushSlate400}"/>
+
+                                                    </Grid>
+                                                </Border>
+
+                                                <TextBlock x:Name="LastMessage" Style="{StaticResource SmTextblock400}" Width="438"
+                                                            TextWrapping="NoWrap" Foreground="{StaticResource SolidColorBrushSlate500}"
+                                                            Text="{Binding LastMessage}" TextTrimming="CharacterEllipsis"/>
+
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Height="20">
+                                                    <Button x:Name="MarkFavoriteButton" Style="{StaticResource ConversationExtendButton}"
+                                                            Command="{Binding MarkFavoriteCommand}" CommandParameter="{Binding Idx}">
+                                                        <Button.Content>
+                                                            <Viewbox Width="12" Height="12">
+                                                                <Path Fill="{Binding FavoriteColor}" Data="{Binding FavoriteData}"/>
+                                                            </Viewbox>
+                                                        </Button.Content>
+                                                    </Button>
+
+                                                    <Button x:Name="DeleteButton" Style="{StaticResource ConversationExtendButton}"
+                                                            Command="{Binding OpenDeletePopupCommand}" CommandParameter="{Binding Idx}">
+                                                        <Button.Content>
+                                                            <Viewbox Width="12" Height="12">
+                                                                <Grid>
+                                                                    <Path 
+                                                                        Fill="#64748B" Data="M7.3125 1.125H10.6875C10.9982 1.125 11.25 1.37684 11.25 1.6875V2.8125H6.75V1.6875C6.75 1.37684 7.00184 1.125 7.3125 1.125ZM12.375 2.8125V1.6875C12.375 0.75552 11.6195 0 10.6875 0H7.3125C6.38052 0 5.625 0.755519 5.625 1.6875V2.8125H2.81886C2.81504 2.81246 2.81121 2.81246 2.80737 2.8125H1.6875C1.37684 2.8125 1.125 3.06434 1.125 3.375C1.125 3.68566 1.37684 3.9375 1.6875 3.9375H2.2932L3.25256 15.9294C3.3461 17.0988 4.32233 18 5.49539 18H12.5046C13.6777 18 14.6539 17.0988 14.7474 15.9294L15.7068 3.9375H16.3125C16.6232 3.9375 16.875 3.68566 16.875 3.375C16.875 3.06434 16.6232 2.8125 16.3125 2.8125H15.1926C15.1888 2.81246 15.185 2.81246 15.1811 2.8125H12.375ZM14.5782 3.9375L13.626 15.8397C13.5793 16.4244 13.0911 16.875 12.5046 16.875H5.49539C4.90886 16.875 4.42075 16.4244 4.37397 15.8397L3.4218 3.9375H14.5782ZM6.15447 5.06347C6.46459 5.04523 6.73079 5.28184 6.74903 5.59197L7.31153 15.1545C7.32977 15.4646 7.09316 15.7308 6.78303 15.749C6.47291 15.7673 6.20671 15.5307 6.18847 15.2205L5.62597 5.65803C5.60773 5.34791 5.84435 5.08171 6.15447 5.06347ZM11.8455 5.06347C12.1557 5.08171 12.3923 5.34791 12.374 5.65803L11.8115 15.2205C11.7933 15.5307 11.5271 15.7673 11.217 15.749C10.9068 15.7308 10.6702 15.4646 10.6885 15.1545L11.251 5.59197C11.2692 5.28184 11.5354 5.04523 11.8455 5.06347ZM9 5.0625C9.31066 5.0625 9.5625 5.31434 9.5625 5.625V15.1875C9.5625 15.4982 9.31066 15.75 9 15.75C8.68934 15.75 8.4375 15.4982 8.4375 15.1875V5.625C8.4375 5.31434 8.68934 5.0625 9 5.0625Z"/>
+                                                                </Grid>
+                                                            </Viewbox>
+
+                                                        </Button.Content>
+                                                    </Button>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Rectangle Width="438" Height="1" Fill="{StaticResource SolidColorBrushSlate200}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}" VerticalAlignment="Center" Margin="0 200"
+                                Visibility="{Binding ChatHistoryViewModel.IsEmptyChatHistory, Converter={StaticResource VisibilityConverter}}">
+                        <Image Source="C:\Users\vupham\Desktop\Cacdume\jarvis-windows\Jarvis Windows\Jarvis Windows\Assets\Images\NotFound.png"
+                                   Width="186.5" Height="196"/>
+                        <TextBox Style="{StaticResource MdTextBox600}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                     Text="No conversation found"/>
+                    </StackPanel>
+                </StackPanel>
+
+                
+            </Grid>
+        </Border>
+
+        <Popup x:Name="EditPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+               PlacementTarget="{Binding ElementName=MainChatHistoryBorder}" IsOpen="{Binding ChatHistoryViewModel.IsTitleEditable}" 
+               VerticalOffset="0" HorizontalOffset="0" MouseEnter="HistoryPopup_MouseEnter" MouseLeave="HistoryPopup_MouseLeave">
+            <Border x:Name="EditBorder" Style="{StaticResource EditBorder}">
+                <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}">
+                    <Grid Width="308">
+                        <TextBox x:Name="HeaderName" Style="{StaticResource MdTextBox600}"
+                                 Text="Edit title" VerticalAlignment="Center"/>
+
+                        <Button x:Name="CloseEditTitleButton" Style="{StaticResource CloseJarvisUpdatedButton}"
+                                Command="{Binding ChatHistoryViewModel.CloseEditTitleCommand}"
+                                HorizontalAlignment="Right">
+                            <Button.Content>
+                                <Viewbox Width="16" Height="16">
+                                    <Grid>
+                                        <Path Data="M2.14645,2.85355 C1.95118,2.65829 1.95118,2.34171 2.14645,2.14645 C2.34171,1.95118 2.65829,1.95118 2.85355,2.14645 L8,7.29289 L13.1464,2.14645 C13.3417,1.95118 13.6583,1.95118 13.8536,2.14645 C14.0488,2.34171 14.0488,2.65829 13.8536,2.85355 L8.70711,8 L13.8536,13.1464 C14.0488,13.3417 14.0488,13.6583 13.8536,13.8536 C13.6583,14.0488 13.3417,14.0488 13.1464,13.8536 L8,8.70711 L2.85355,13.8536 C2.65829,14.0488 2.34171,14.0488 2.14645,13.8536 C1.95119,13.6583 1.95119,13.3417 2.14645,13.1464 L7.29289,8 L2.14645,2.85355 Z" Fill="#00213B"/>
+                                    </Grid>
+                                </Viewbox>
+
+                            </Button.Content>
+                        </Button>
+                    </Grid>
+
+                    <Border Background="{StaticResource SolidColorBrushSlate100}" CornerRadius="{StaticResource BorderRadiusXl}"
+                            Padding="12 10" Height="40">
+                        <TextBox x:Name="TitleTextBox" Style="{StaticResource SmTextBox400}" TextWrapping="NoWrap"
+                                 Text="{Binding ChatHistoryViewModel.Title}" IsReadOnly="False"
+                                 PreviewMouseDown="ChatHistory_EditTitleTextBox_PreviewMouseDown"/>
+                    </Border>
+
+                    <StackPanel Margin="0 2 0 0" Orientation="Horizontal" HorizontalAlignment="Right" 
+                                style:MarginSetter.Margin="{StaticResource ColumnGap3}">
+                        <Button x:Name="CancelEditTitleButton" Style="{StaticResource EditTitleButton}"
+                                Command="{Binding ChatHistoryViewModel.CloseEditTitleCommand}">
+                            <Button.Content>
+                                <TextBlock Style="{StaticResource SmTextblock600}" VerticalAlignment="Center"
+                                           Text="Cancel" Foreground="{StaticResource TailwindPrimary8}"/>
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="SaveEditTitleButton" Style="{StaticResource EditTitleButton}"
+                                BorderThickness="0" Command="{Binding ChatHistoryViewModel.SaveEditTitleCommand}">
+                            <Button.Background>
+                                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <TransformGroup>
+                                            <RotateTransform CenterY="0.5" CenterX="0.5" Angle="273"/>
+                                            <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                            <TranslateTransform Y="0.5"/>
+                                        </TransformGroup>
+                                    </LinearGradientBrush.RelativeTransform>
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStop Offset="0" Color="#0078D4"/>
+                                        <GradientStop Offset="0.9081" Color="#9692FF"/>
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+
+                            </Button.Background>
+                            <Button.Content>
+                                <TextBlock Style="{StaticResource SmTextblock600}" VerticalAlignment="Center"
+                                            Text="Save" Foreground="#FFF"/>
+                            </Button.Content>
+                        </Button>
+
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </Popup>
+
+        <Popup x:Name="DeletePopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+               PlacementTarget="{Binding ElementName=MainChatHistoryBorder}" IsOpen="{Binding ChatHistoryViewModel.IsOpenDeletePopup}" 
+               VerticalOffset="0" HorizontalOffset="0" MouseEnter="HistoryPopup_MouseEnter" MouseLeave="HistoryPopup_MouseLeave">
+            <Border x:Name="DeleteBorder" Style="{StaticResource EditBorder}">
+                <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}">
+                    <Grid Width="308">
+                        <TextBox x:Name="DeleteHeaderName" Style="{StaticResource MdTextBox600}"
+                                 Text="Jarvis Says" VerticalAlignment="Center"/>
+
+                        <Button x:Name="CloseDelelteTitleButton" Style="{StaticResource CloseJarvisUpdatedButton}"
+                                Command="{Binding ChatHistoryViewModel.CloseDeletePopupCommand}"
+                                HorizontalAlignment="Right">
+                            <Button.Content>
+                                <Viewbox Width="16" Height="16">
+                                    <Grid>
+                                        <Path Data="M2.14645,2.85355 C1.95118,2.65829 1.95118,2.34171 2.14645,2.14645 C2.34171,1.95118 2.65829,1.95118 2.85355,2.14645 L8,7.29289 L13.1464,2.14645 C13.3417,1.95118 13.6583,1.95118 13.8536,2.14645 C14.0488,2.34171 14.0488,2.65829 13.8536,2.85355 L8.70711,8 L13.8536,13.1464 C14.0488,13.3417 14.0488,13.6583 13.8536,13.8536 C13.6583,14.0488 13.3417,14.0488 13.1464,13.8536 L8,8.70711 L2.85355,13.8536 C2.65829,14.0488 2.34171,14.0488 2.14645,13.8536 C1.95119,13.6583 1.95119,13.3417 2.14645,13.1464 L7.29289,8 L2.14645,2.85355 Z" Fill="#00213B"/>
+                                    </Grid>
+                                </Viewbox>
+
+                            </Button.Content>
+                        </Button>
+                    </Grid>
+
+
+                    <TextBox Width="328" MinHeight="44" MaxHeight="62" x:Name="DeleteMessageTextBox" Style="{StaticResource SmTextBox400}"
+                                Text="{Binding ChatHistoryViewModel.DeleteDescription}" VerticalAlignment="Center"/>
+
+
+                    <StackPanel Margin="0 0 0 0" Orientation="Horizontal" HorizontalAlignment="Right" 
+                                style:MarginSetter.Margin="{StaticResource ColumnGap3}">
+                        <Button x:Name="CancelDeleteConversationButton" Style="{StaticResource EditTitleButton}"
+                                Command="{Binding ChatHistoryViewModel.CloseDeletePopupCommand}">
+                            <Button.Content>
+                                <TextBlock Style="{StaticResource SmTextblock600}" VerticalAlignment="Center"
+                                           Text="Cancel" Foreground="{StaticResource TailwindPrimary8}"/>
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="DeleteConversationButton" Style="{StaticResource EditTitleButton}" Background="{StaticResource SolidColorBrushRed500}"
+                               BorderBrush="{StaticResource SolidColorBrushRed500}" Command="{Binding ChatHistoryViewModel.DeleteCommand}">
+                            <Button.Content>
+                                <TextBlock Style="{StaticResource SmTextblock600}" VerticalAlignment="Center"
+                                            Text="Delete" Foreground="#FFF"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Popup>
+
+        <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
+            Visibility="{Binding ChatHistoryViewModel.IsShowPopup, Converter={StaticResource VisibilityConverter}}">
+            <Border.Effect>
+                <StaticResource ResourceKey="BlurEffect"/>
+            </Border.Effect>
+        </Border>
+    </Grid>
+
+</UserControl>

@@ -1,3 +1,5 @@
+using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
+using Jarvis_Windows.Sources.MVVM.Views.MainNavigationView;
 using Jarvis_Windows.Sources.MVVM.ViewModels;
 using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
 using Jarvis_Windows.Sources.MVVM.Views.MainView;
@@ -24,8 +26,8 @@ public class PopupDictionaryService : ObserveralObject
     private bool _jarvisActionVisibility;
     private bool _textMenuSelectionVisibility;
     private bool _isShowAIBubbleFromTrayMenu;
-    private bool _isShowAIChatBubble;
-    private bool _isShowAIChatSidebar;
+    private bool _isShowAIChatBubble; 
+    private bool _isShowMainNavigation; 
     private bool _isPinMenuSelectionResponse;
     private bool _isShowPinTextMenuAPI;
     private bool _isShowPopupTextMenu;
@@ -45,7 +47,6 @@ public class PopupDictionaryService : ObserveralObject
     private Point _menuSelectionPopupListPosition;
 
     private Point _aIChatBubblePosition;
-    private Point _aIChatSidebarPosition;
     private static String? _targetLanguage;
     private Point _automationElementVisualPos;
     private TextMenuViewModel? _textMenuViewModel = null;
@@ -104,12 +105,12 @@ public class PopupDictionaryService : ObserveralObject
             OnPropertyChanged();
         }
     }
-    public bool IsShowAIChatSidebar
+    public bool IsShowMainNavigation
     {
-        get { return _isShowAIChatSidebar; }
+        get { return _isShowMainNavigation; }
         set
         {
-            _isShowAIChatSidebar = value;
+            _isShowMainNavigation = value;
             OnPropertyChanged();
         }
     }
@@ -158,15 +159,6 @@ public class PopupDictionaryService : ObserveralObject
         set
         {
             _aIChatBubblePosition = value;
-            OnPropertyChanged();
-        }
-    }
-    public Point AIChatSidebarPosition
-    {
-        get { return _aIChatSidebarPosition; }
-        set
-        {
-            _aIChatSidebarPosition = value;
             OnPropertyChanged();
         }
     }
@@ -341,16 +333,21 @@ public class PopupDictionaryService : ObserveralObject
         IsShowJarvisAction = false;
         IsShowMenuOperations = false;
         IsShowAIChatBubble = true;
-        IsShowAIChatSidebar = false;
 
         JarvisActionPosition = new Point(0, 0);
         MenuOperationsPosition = new Point(0, 0);
-        AIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right - 30), (int)(SystemParameters.WorkArea.Bottom - 30) / 2);
-        AIChatSidebarPosition = new Point((int)(SystemParameters.WorkArea.Right - 520), (int)(SystemParameters.WorkArea.Bottom - 700) / 2);
+
+        AIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right), (int)(SystemParameters.WorkArea.Bottom) / 2);
+        
+        //InitInjectionAction();
+        //InitMenuSelectionActions();
+        //InitMenuSelectionResponse();
+        //InitMenuSelectionPopupList();
     }
     public void ShowJarvisAction(bool isShow)
     {
         IsShowJarvisAction = isShow;
+
         //IsShowJarvisAction = isShow & JarvisActionVisibility;
     }
     private void JarvisButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -607,12 +604,6 @@ public class PopupDictionaryService : ObserveralObject
         }*/
     }
 
-    public void ShowMenuSelectionActions(bool isShow)
-    {
-        IsShowMenuSelectionActions = isShow;
-        //IsShowMenuSelectionActions = isShow & TextMenuSelectionVisibility;
-    }
-
     public void UpdateMenuOperationsPosition(Point systemPoint, Rect elementRectBounding)
     {
         /*double screenHeight = SystemParameters.PrimaryScreenHeight;
@@ -639,6 +630,12 @@ public class PopupDictionaryService : ObserveralObject
         Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
     }
 
+    public void ShowMenuSelectionActions(bool isShow)
+    {
+        IsShowMenuSelectionActions = isShow;
+        //IsShowMenuSelectionActions = isShow & TextMenuSelectionVisibility;
+    }
+
     public void ShowAIChatBubble(bool isShow)
     {
         IsShowAIChatBubble = isShow;
@@ -650,16 +647,12 @@ public class PopupDictionaryService : ObserveralObject
         AIChatBubblePosition = visualPoint;
     }
 
-    public void ShowAIChatSidebar(bool isShow)
-    {
-        IsShowAIChatSidebar = isShow;
-    }
 
-    public void UpdateAIChatSidebarPosition(Point systemPoint)
-    {
-        Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
-        AIChatSidebarPosition = visualPoint;
-    }
+    //public void UpdateAIChatSidebarPosition(Point systemPoint)
+    //{
+    //    Point visualPoint = ConvertFromSystemCoorToVisualCoord(systemPoint);
+    //    AIChatSidebarPosition = visualPoint;
+    //}
 
     internal void ShowSelectionResponseView(bool bIsShow)
     {

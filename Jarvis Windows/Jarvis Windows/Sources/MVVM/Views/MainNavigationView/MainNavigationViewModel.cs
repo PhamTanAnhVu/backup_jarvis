@@ -21,20 +21,39 @@ using System.Windows.Input;
 using System.Windows;
 using Gma.System.MouseKeyHook;
 using System.Windows.Forms;
+using Jarvis_Windows.Sources.Utils.Services;
+using Jarvis_Windows.Sources.MVVM.Models;
+using Newtonsoft.Json.Linq;
+using System.Windows.Media;
+using System.Collections.ObjectModel;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 {
     public class MainNavigationViewModel : ViewModelBase
     {
         #region Fields
-        private object _currentViewModel = new AIChatSidebarViewModel(); //Default view model
+        private object _currentViewModel; //Default view model
         private Dictionary<string, object> _viewModels = new Dictionary<string, object>();
         private Visibility _sidebarVisibility;
         private bool _makeSidebarTopmost;
+        private bool _isShowAIChatBubble;
+        private bool _isShowMainNavigation;
         private IKeyboardMouseEvents _globalKeyboardHook;
+        private static MainNavigationViewModel? _instance = null;
+        public ObservableCollection<MainNavigationFillColor> _navButtonColors;
+        public ObservableCollection<MainNavigationBarColor> _navBarColors;
+
         #endregion
 
         #region Properties
+        public static MainNavigationViewModel Instance()
+        {
+            if (_instance == null)
+            {
+                _instance = new MainNavigationViewModel();
+            }
+            return _instance;
+        }
         public object CurrentViewModel
         {
             get => _currentViewModel;
@@ -64,16 +83,63 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                 OnPropertyChanged();
             }
         }
+        public bool IsShowAIChatBubble
+        {
+            get
+            {
+                _isShowAIChatBubble = PopupDictionaryService.Instance().IsShowAIChatBubble;
+                return _isShowAIChatBubble;
+            }
+            set
+            {
+                _isShowAIChatBubble = PopupDictionaryService.Instance().IsShowAIChatBubble = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool IsShowMainNavigation
+        {
+            get
+            {
+                _isShowMainNavigation = PopupDictionaryService.Instance().IsShowMainNavigation;
+                return _isShowMainNavigation;
+            }
+            set
+            {
+                _isShowMainNavigation = PopupDictionaryService.Instance().IsShowMainNavigation = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<MainNavigationFillColor> NavButtonColors
+        {
+            get { return _navButtonColors; }
+            set
+            {
+                _navButtonColors = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<MainNavigationBarColor> NavBarColors
+        {
+            get { return _navBarColors; }
+            set
+            {
+                _navBarColors = value;
+                OnPropertyChanged();
+            }
+        }
 
         #endregion
 
         #region Commands
         public RelayCommand NavigateCommand { get; set; }
+        public RelayCommand CloseMainNavigationCommand { get; set; }
         #endregion
 
         public MainNavigationViewModel()
         {
             NavigateCommand = new RelayCommand(OnNavigate, o => true);
+            CloseMainNavigationCommand = new RelayCommand(ExecuteCloseMainNavigationCommand, o => true);
 
             _viewModels.Add("Chat", new AIChatSidebarViewModel());
             _viewModels.Add("Read", new AIReadViewModel()); 
@@ -85,11 +151,62 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             _viewModels.Add("Settings", new SettingsViewModel());
             _viewModels.Add("Profile", new ProfileViewModel());
 
+            _currentViewModel = _viewModels["Chat"];
             _sidebarVisibility = Visibility.Visible;
             _makeSidebarTopmost = false;
 
             _globalKeyboardHook = Hook.GlobalEvents();
             _globalKeyboardHook.KeyDown += KeyboardShortcutEvents;
+
+            IsShowAIChatBubble = true;
+            IsShowMainNavigation = false;
+
+            EventAggregator.PropertyMessageChanged += OnPropertyMessageChanged;
+            NavButtonColors = new ObservableCollection<MainNavigationFillColor>();
+            NavBarColors = new ObservableCollection<MainNavigationBarColor>();
+            string[] buttonNames = ["chat", "read", "search", "write", "translate", "art"];
+
+            for (int i = 0; i < 6; i++)
+            {
+                MainNavigationFillColor fillColor = new MainNavigationFillColor
+                {
+                    C1 = "#64748B",
+                    C2 = "#64748B",
+                    Name = buttonNames[i],
+                };
+
+                MainNavigationBarColor barColor = new MainNavigationBarColor
+                {
+                    C1 = "Transparent",
+                    C2 = "Transparent",
+                    Name = buttonNames[i],
+                };
+
+
+                NavButtonColors.Add(fillColor);
+                NavBarColors.Add(barColor);
+            }
+
+            NavButtonColors[0].C1 = NavBarColors[0].C1 = "#0078D4";
+            NavButtonColors[0].C2 = NavBarColors[0].C2 = "#9692FF";
+        }
+
+        private void OnPropertyMessageChanged(object sender, EventArgs e)
+        {
+            PropertyMessage message = (PropertyMessage)sender;
+            bool value = (bool)message.Value;
+            if (message == null) return;
+
+            switch (message.PropertyName)
+            {
+                case "IsShowAIChatBubble":
+                    IsShowAIChatBubble = value;
+                    break;
+                case "IsShowMainNavigation":
+                    IsShowMainNavigation = value;
+                    IsShowAIChatBubble = false;
+                    break;
+            }
         }
 
         private void OnNavigate(object obj)
@@ -102,7 +219,32 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
                 if(_viewModels.ContainsKey(targetViewModel))
                     CurrentViewModel = _viewModels[targetViewModel];
+
+              ChangeNavColor(targetViewModel);
             }
+        }
+
+        private void ChangeNavColor(string buttonName)
+        {
+            for (int idx = 0; idx < NavButtonColors.Count; idx++)
+            {
+                NavButtonColors[idx].C1 = NavButtonColors[idx].C2 = "#64748B";
+                NavBarColors[idx].C1 = NavBarColors[idx].C2 = "Transparent";
+                if (buttonName.ToLower().Contains(NavButtonColors[idx].Name))
+                {
+                    NavButtonColors[idx].C1 = NavBarColors[idx].C1 = "#0078D4";
+                    NavButtonColors[idx].C2 = NavBarColors[idx].C2 = "#9692FF";
+                }
+            }
+
+            OnPropertyChanged(nameof(NavButtonColors));
+            OnPropertyChanged(nameof(NavBarColors));
+        }
+
+        private void ExecuteCloseMainNavigationCommand(object obj)
+        {
+            IsShowMainNavigation = false;
+            IsShowAIChatBubble = true;
         }
 
         private void KeyboardShortcutEvents(object? sender, System.Windows.Forms.KeyEventArgs e)

@@ -6,7 +6,7 @@
 
         <Setter Property="RenderTransform">
             <Setter.Value>
-                <TranslateTransform X="50"
+                <TranslateTransform X="0"
                                     Y="0" />
             </Setter.Value>
         </Setter>

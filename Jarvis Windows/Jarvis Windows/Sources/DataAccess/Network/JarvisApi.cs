@@ -10,7 +10,8 @@ using System.Net.Http.Headers;
 using Jarvis_Windows.Sources.DataAccess.Local;
 using System.IO;
 using Jarvis_Windows.Sources.MVVM.Models;
-using System.Windows.Forms;
+using Jarvis_Windows.Sources.MVVM.Views.AIRead;
+using System.Windows;
 
 namespace Jarvis_Windows.Sources.DataAccess.Network;
 
@@ -70,6 +71,7 @@ public sealed class JarvisApi
 
     public async Task<string> APIUsageHandler()
     {
+        //return "";
         try
         {
             HttpResponseMessage response;
@@ -126,6 +128,7 @@ public sealed class JarvisApi
 
     public async Task<string?> ApiHandler(string requestBody, string endPoint)
     {
+        //return "";
         var contentData = new StringContent(requestBody, Encoding.UTF8, "application/json");
         try
         {
