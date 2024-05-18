@@ -588,10 +588,10 @@ public class PopupDictionaryService : ObserveralObject
         horizontalBinding.Source = this;
         _menuSelectionPopupListPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
 
-        JarvisActionPosition = new Point(0, 0);
-        MenuOperationsPosition = new Point(0, 0);
+        _jarvisActionPosition = new Point(0, 0);
+        _menuOperationsPosition = new Point(0, 0);
 
-        AIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right), (int)(SystemParameters.WorkArea.Bottom) / 2);
+        _aIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right), (int)(SystemParameters.WorkArea.Bottom) / 2);
         
         //InitInjectionAction();
         //InitMenuSelectionActions();

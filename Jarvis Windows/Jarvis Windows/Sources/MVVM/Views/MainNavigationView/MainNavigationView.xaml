@@ -15,10 +15,11 @@
         Height="auto" Width="auto"
         WindowStyle="None"
         Background="Transparent"
-        Topmost="{Binding MakeSidebarTopmost}"
+        Topmost="True"
         WindowStartupLocation="Manual"
         ResizeMode="NoResize"
         AllowsTransparency="True"
+        Visibility="{Binding SidebarVisibility}"
         ShowInTaskbar="False">
     <Window.Resources>
         <ResourceDictionary>

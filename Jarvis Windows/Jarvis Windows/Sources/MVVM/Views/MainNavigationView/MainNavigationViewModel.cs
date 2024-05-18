@@ -1,5 +1,4 @@
-﻿using Jarvis_Windows.Sources.MVVM.ViewModels;
-using Jarvis_Windows.Sources.MVVM.Views.AIArt;
+﻿using Jarvis_Windows.Sources.MVVM.Views.AIArt;
 using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 using Jarvis_Windows.Sources.MVVM.Views.AISearch;
 using Jarvis_Windows.Sources.MVVM.Views.AITranslate;
@@ -9,7 +8,6 @@ using Jarvis_Windows.Sources.MVVM.Views.Profile;
 using Jarvis_Windows.Sources.MVVM.Views.Settings;
 using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 using Jarvis_Windows.Sources.Utils.Core;
-using Microsoft.Expression.Interactivity.Core;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -395,6 +393,9 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         {
             IsShowMainNavigation = false;
             IsShowAIChatBubble = true;
+            EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", false), new EventArgs());
+            SidebarVisibility = Visibility.Hidden;
+            MakeSidebarTopmost = false;
         }
 
         private void ChangeNavColor(string buttonName)
@@ -466,12 +467,10 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
         private void KeyboardShortcutEvents(object? sender, System.Windows.Forms.KeyEventArgs e)
         {
-            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.J)
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.J)
             {
-                SidebarVisibility = Visibility.Visible;
-                MakeSidebarTopmost = true;
+                EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", true), new EventArgs());
                 e.Handled = true;
-                Debug.WriteLine("⌨️⌨️⌨️⌨️ Alt + J pressed");
             }
         }
     }
