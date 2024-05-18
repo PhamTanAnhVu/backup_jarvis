@@ -60,7 +60,7 @@
                                     </TextBox>
                                     <TextBlock x:Name="AIChatHistory_SearchBar_PreText" Style="{StaticResource AIChatHistorySearchPreText}"
                                                Text="Search" VerticalAlignment="Center"/>
-                                </Grid> 
+                                </Grid>
                             </StackPanel>
                         </Border>
 

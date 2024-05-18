@@ -590,8 +590,13 @@ public class PopupDictionaryService : ObserveralObject
 
         JarvisActionPosition = new Point(0, 0);
         MenuOperationsPosition = new Point(0, 0);
-        AIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right - 30), (int)(SystemParameters.WorkArea.Bottom - 30) / 2);
-        AIChatSidebarPosition = new Point((int)(SystemParameters.WorkArea.Right - 520), (int)(SystemParameters.WorkArea.Bottom - 700) / 2);
+
+        AIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right), (int)(SystemParameters.WorkArea.Bottom) / 2);
+        
+        //InitInjectionAction();
+        //InitMenuSelectionActions();
+        //InitMenuSelectionResponse();
+        //InitMenuSelectionPopupList();
     }
 
     public void InitMenuInjectionActions()
@@ -873,12 +878,6 @@ public class PopupDictionaryService : ObserveralObject
         {
             _menuinjectionActionsView.Hide();
         }*/
-    }
-
-    public void ShowMenuSelectionActions(bool isShow)
-    {
-        IsShowMenuSelectionActions = isShow;
-        //IsShowMenuSelectionActions = isShow & TextMenuSelectionVisibility;
     }
 
     public void UpdateMenuOperationsPosition(Point systemPoint, Rect elementRectBounding)

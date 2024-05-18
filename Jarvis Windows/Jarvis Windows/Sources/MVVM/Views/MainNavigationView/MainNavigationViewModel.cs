@@ -369,7 +369,32 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                 string targetViewModel = (string)obj;
                 if (_viewModels.ContainsKey(targetViewModel))
                     CurrentViewModel = _viewModels[targetViewModel];
+
+              ChangeNavColor(targetViewModel);
             }
+        }
+
+        private void ChangeNavColor(string buttonName)
+        {
+            for (int idx = 0; idx < NavButtonColors.Count; idx++)
+            {
+                NavButtonColors[idx].C1 = NavButtonColors[idx].C2 = "#64748B";
+                NavBarColors[idx].C1 = NavBarColors[idx].C2 = "Transparent";
+                if (buttonName.ToLower().Contains(NavButtonColors[idx].Name))
+                {
+                    NavButtonColors[idx].C1 = NavBarColors[idx].C1 = "#0078D4";
+                    NavButtonColors[idx].C2 = NavBarColors[idx].C2 = "#9692FF";
+                }
+            }
+
+            OnPropertyChanged(nameof(NavButtonColors));
+            OnPropertyChanged(nameof(NavBarColors));
+        }
+
+        private void ExecuteCloseMainNavigationCommand(object obj)
+        {
+            IsShowMainNavigation = false;
+            IsShowAIChatBubble = true;
         }
 
         private void ChangeNavColor(string buttonName)

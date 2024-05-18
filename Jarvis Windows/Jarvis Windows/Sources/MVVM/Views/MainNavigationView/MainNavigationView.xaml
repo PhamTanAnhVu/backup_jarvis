@@ -19,7 +19,6 @@
         WindowStartupLocation="Manual"
         ResizeMode="NoResize"
         AllowsTransparency="True"
-        Visibility="{Binding SidebarVisibility}"
         ShowInTaskbar="False">
     <Window.Resources>
         <ResourceDictionary>

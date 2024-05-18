@@ -56,23 +56,23 @@ public class CustomRichTextBox : RichTextBox
                 innerText = innerText.Trim('\n');
 
                 innerText = string.Join("\n", innerText.Split('\n').Select(line => line.Trim())).Trim();
-                var specialText = new TextBlock(new Run(innerText))
-                {
-                    Foreground = Brushes.Black,
+            var specialText = new TextBlock(new Run(innerText))
+            {
+                Foreground = Brushes.Black,
                     VerticalAlignment = VerticalAlignment.Center,
-                };
+            };
 
-                var borderSpecialText = new Border
-                {
+            var borderSpecialText = new Border
+            {
                     Background = new BrushConverter().ConvertFromString("#E5E7EB") as Brush,
-                    CornerRadius = new CornerRadius(4),
+                CornerRadius = new CornerRadius(4),
                     VerticalAlignment = VerticalAlignment.Center,
-                    Padding = new Thickness(4, 0, 4, 0),
+                Padding = new Thickness(4, 0, 4, 0),
                     Margin = new Thickness(0, 0, 0, -4),
-                    Child = specialText
-                };
+                Child = specialText
+            };
 
-                paragraph.Inlines.Add(new InlineUIContainer(borderSpecialText));
+            paragraph.Inlines.Add(new InlineUIContainer(borderSpecialText));
             }
             else if (matchValue.StartsWith("**"))
             {

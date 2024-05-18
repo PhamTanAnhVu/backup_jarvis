@@ -27,6 +27,9 @@ public class ChatHistoryViewModel : ViewModelBase
     private bool _isShowPopup;
     private bool _isNotEmptyChatHistory;
     private bool _isEmptyChatHistory;
+
+    private string[] _favoriteColors;
+    private string[] _favoriteDatas;
     public RelayCommand AIChatHistorySearchSendCommand { get; set; }
     public RelayCommand FilterFavoriteChatCommand { get; set; }
     public RelayCommand CloseEditTitleCommand { get; set; }
@@ -206,6 +209,9 @@ public class ChatHistoryViewModel : ViewModelBase
         DeleteCommand = new RelayCommand(ExecuteDeleteCommand, o => true);
         SaveEditTitleCommand = new RelayCommand(ExecuteSaveEditTitleCommand, o => true);
         FilterFavoriteChatCommand = new RelayCommand(ExecuteFilterFavoriteChatCommand, o => true);
+
+        IsNotEmptyChatHistory = (ConversationList.Count != 0);
+        IsEmptyChatHistory = (ConversationList.Count == 0);
     }
 
     private void InitConversationList()
@@ -224,11 +230,11 @@ public class ChatHistoryViewModel : ViewModelBase
     }
 
     public void InitConversation(int conversationIdx)
-    {
+            {
         var conversation = ConversationManager.Instance().GetConversation(conversationIdx);
 
         if (conversation.SelectConversationCommand is null)
-        {
+            {
             conversation.SelectConversationCommand = new RelayCommand(ExecuteSelectConversationCommand, o => true);
             conversation.EditTitleCommand = new RelayCommand(ExecuteEditTitleCommand, o => true);
             conversation.MarkFavoriteCommand = new RelayCommand(ExecuteMarkFavoriteCommand, o => true);
@@ -236,12 +242,12 @@ public class ChatHistoryViewModel : ViewModelBase
         }
 
         if (conversation.IsSelected)
-        {
+            {
             ConversationManager.Instance()._selectedIdx = conversationIdx;
         }
 
         if (conversationIdx >= ConversationList.Count)
-        {
+            {
             ConversationList.Add(conversation);
         }
         else
@@ -375,6 +381,7 @@ public class ChatHistoryViewModel : ViewModelBase
             }
 
             IsOpenDeletePopup = false;
+
             IsNotEmptyChatHistory = (ConversationList.Count != 0);
             AIChatSidebarEventTrigger.PublishSelectConversationChanged(-1, EventArgs.Empty); // Get new conversation after deletion
             return;
@@ -401,7 +408,9 @@ public class ChatHistoryViewModel : ViewModelBase
         }
 
         IsOpenDeletePopup = false;
+
         IsNotEmptyChatHistory = (ConversationList.Count != 0);
+        IsEmptyChatHistory = (ConversationList.Count == 0);
     }
 
     private async void ExecuteSaveEditTitleCommand(object obj)
