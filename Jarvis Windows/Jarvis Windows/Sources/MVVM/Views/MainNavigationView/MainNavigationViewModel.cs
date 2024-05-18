@@ -170,12 +170,11 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             _currentViewModel = _viewModels["Chat"];
             _sidebarVisibility = Visibility.Visible;
             _makeSidebarTopmost = false;
+            _isShowAIChatBubble = false;
+            _isShowMainNavigation = true;
 
             _globalKeyboardHook = Hook.GlobalEvents();
             _globalKeyboardHook.KeyDown += KeyboardShortcutEvents;
-
-            IsShowAIChatBubble = true;
-            IsShowMainNavigation = false;
 
             EventAggregator.PropertyMessageChanged += OnPropertyMessageChanged;
             NavButtonColors = new ObservableCollection<MainNavigationFillColor>();
