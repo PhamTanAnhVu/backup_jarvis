@@ -22,11 +22,11 @@
             </Storyboard>
 
             <Storyboard x:Key="FadeInStoryBoard">
-                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1"/>
+                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5"/>
             </Storyboard>
 
             <Storyboard x:Key="FadeOutStoryBoard">
-                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:1"/>
+                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.5"/>
             </Storyboard>
 
             <Style x:Key="ImageButtonStyle" TargetType="Button">
@@ -50,15 +50,6 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-
-                <Style.Triggers>
-                    <Trigger Property="Visibility" Value="Collapsed">
-                        <Setter Property="Opacity" Value="0"/>
-                    </Trigger>
-                    <EventTrigger RoutedEvent="UserControl.Loaded">
-                        <BeginStoryboard Storyboard="{StaticResource FadeInStoryBoard}"/>
-                    </EventTrigger>
-                </Style.Triggers>
             </Style>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
@@ -86,7 +77,7 @@
                     Command="{Binding ShowMenuOperationsCommand}"
                     IsEnabled="True">
                         <Border>
-                            <Image x:Name="img" Source="../../../../Assets/Images/jarvis_logo_large.png"
+                            <Image x:Name="img" Source="/Assets/Images/logo-new/logo96x96.png"
                                    RenderOptions.BitmapScalingMode="HighQuality">
                                 <Image.RenderTransformOrigin>
                                     <Point X="0.5" Y="0.5"/>

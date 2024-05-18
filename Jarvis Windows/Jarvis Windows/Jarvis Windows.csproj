@@ -85,6 +85,12 @@
     <None Remove="Assets\Images\guideline2.png" />
     <None Remove="Assets\Images\jarvis_logo.png" />
     <None Remove="Assets\Images\jarvis_logo_large.png" />
+    <None Remove="Assets\Images\logo-new\logo12x12.png" />
+    <None Remove="Assets\Images\logo-new\logo24x24.png" />
+    <None Remove="Assets\Images\logo-new\logo48x48.png" />
+    <None Remove="Assets\Images\logo-new\logo512x512.png" />
+    <None Remove="Assets\Images\logo-new\logo72x72.png" />
+    <None Remove="Assets\Images\logo-new\logo96x96.png" />
     <None Remove="Assets\Images\navigate_next.png" />
     <None Remove="Assets\Images\pencil.png" />
     <None Remove="Assets\Images\scissors.png" />
@@ -148,6 +154,21 @@
 	<Content Include="Assets\Images\jarvis_logo_large.png">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
+	<Content Include="Assets\Images\logo-new\logo24x24.png">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	<Content Include="Assets\Images\logo-new\logo48x48.png">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	<Content Include="Assets\Images\logo-new\logo512x512.png">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	<Content Include="Assets\Images\logo-new\logo72x72.png">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
+	<Content Include="Assets\Images\logo-new\logo96x96.png">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -198,6 +219,9 @@
     <Resource Include="Assets\Images\jarvis_logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Content Include="Assets\Images\logo-new\logo12x12.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Assets\Images\navigate_next.png" />
     <Resource Include="Assets\Images\pencil.png" />
     <Resource Include="Assets\Images\scissors.png" />

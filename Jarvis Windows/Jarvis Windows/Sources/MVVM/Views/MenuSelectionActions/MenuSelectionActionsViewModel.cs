@@ -186,7 +186,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
     static System.Windows.Point _lastMousePoint = new System.Windows.Point();
     private async void MouseDragFinished(object sender, System.Windows.Forms.MouseEventArgs e)
     {
-        if (_isMouseOver_AppUI)
+        if (_isMouseOver_AppUI || PopupDictionaryService.Instance().IsDragging)
         {
             PopupDictionaryService.Instance().IsShowMenuSelectionActions = false;
             return;

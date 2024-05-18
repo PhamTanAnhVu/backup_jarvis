@@ -1,4 +1,4 @@
-using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
+﻿using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
 using Jarvis_Windows.Sources.MVVM.Views.MainNavigationView;
 using Jarvis_Windows.Sources.MVVM.ViewModels;
 using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
@@ -16,6 +16,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using Point = System.Drawing.Point;
+using System.Windows.Threading;
+using System.Windows.Media.Animation;
 
 namespace Jarvis_Windows.Sources.Utils.Services;
 
@@ -36,6 +38,8 @@ public class PopupDictionaryService : ObserveralObject
     private bool _isShowMenuSelectionActions;
     private bool _isShowMenuSelectionResponse;
     private bool _isShowMenuSelectionPopupList;
+    private DispatcherTimer _timer;
+    private const int AutoCloseTimeInSeconds = 30;
 
     private Point _jarvisActionPosition;
     private Point _menuOperationsPosition;
@@ -338,22 +342,68 @@ public class PopupDictionaryService : ObserveralObject
         _menuOperationsPosition = new Point(0, 0);
 
         _aIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right), (int)(SystemParameters.WorkArea.Bottom) / 2);
-        
-        //InitInjectionAction();
-        //InitMenuSelectionActions();
-        //InitMenuSelectionResponse();
-        //InitMenuSelectionPopupList();
+
+        _timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(AutoCloseTimeInSeconds)
+        };
+        _timer.Tick += Timer_Tick;
     }
+
+    private void Timer_Tick(object? sender, EventArgs e)
+    {
+        if (IsShowJarvisAction)
+        {
+            var storyboard = new Storyboard();
+            var fadeOutAnimation = new DoubleAnimation
+            {
+                From = 1.0,
+                To = 0.0,
+                Duration = new Duration(TimeSpan.FromSeconds(0.5))
+            };
+
+            Storyboard.SetTarget(fadeOutAnimation, _injectionActionPopup?.Child);
+            Storyboard.SetTargetProperty(fadeOutAnimation, new PropertyPath("Opacity"));
+            storyboard.Children.Add(fadeOutAnimation);
+            storyboard.Completed += (s, a) => {
+                IsShowJarvisAction = false;
+                _timer.Stop();
+            };
+            storyboard.Begin();
+        }
+    }
+
     public void ShowJarvisAction(bool isShow)
     {
         IsShowJarvisAction = isShow;
+        if(isShow)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => //Access to the UI thread
+            {
+                var storyboard = new Storyboard();
+                var fadeInAnimation = new DoubleAnimation
+                {
+                    From = 0.0,
+                    To = 1.0,
+                    Duration = new Duration(TimeSpan.FromSeconds(0.5))
+                };
 
-        //IsShowJarvisAction = isShow & JarvisActionVisibility;
+                Storyboard.SetTarget(fadeInAnimation, _injectionActionPopup?.Child);
+                Storyboard.SetTargetProperty(fadeInAnimation, new PropertyPath("Opacity"));
+                storyboard.Children.Add(fadeInAnimation);
+                storyboard.Completed += (s, a) => {
+                    IsShowJarvisAction = true;
+                    _timer.Start();
+                };
+                storyboard.Begin();
+            }));
+        }
     }
     private void JarvisButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         IsDragging = false;
         _jarvisButtonPoint = e.GetPosition(null);
+        _timer.Stop();
     }
 
     private void JarvisButton_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -378,6 +428,11 @@ public class PopupDictionaryService : ObserveralObject
         }
     }
 
+    private void JarviseButton_MouseLeave(object sender, MouseEventArgs e)
+    {
+        _timer.Start();
+    }
+
     public void InitInjectionAction()
     {
         _injectionActionPopup = new DragMoveablePopup();
@@ -390,7 +445,7 @@ public class PopupDictionaryService : ObserveralObject
         _injectionActionPopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
         _injectionActionPopup.PreviewMouseLeftButtonDown += JarvisButton_PreviewMouseLeftButtonDown;
         _injectionActionPopup.PreviewMouseMove += JarvisButton_MouseMove;
-
+        _injectionActionPopup.MouseLeave += JarviseButton_MouseLeave;
 
         Binding verticalBinding = new Binding("JarvisActionPosition.Y");
         verticalBinding.NotifyOnSourceUpdated = true;
@@ -406,11 +461,6 @@ public class PopupDictionaryService : ObserveralObject
         isOpenBinding.Source = this;
         isOpenBinding.NotifyOnSourceUpdated = true;
         _injectionActionPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
-    }
-
-    private void _injectionActionPopup_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        throw new NotImplementedException();
     }
 
     public void InitMenuSelectionActions()
