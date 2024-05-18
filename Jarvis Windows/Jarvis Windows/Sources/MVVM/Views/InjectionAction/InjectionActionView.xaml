@@ -51,15 +51,6 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-
-                <Style.Triggers>
-                    <Trigger Property="Visibility" Value="Collapsed">
-                        <Setter Property="Opacity" Value="0"/>
-                    </Trigger>
-                    <EventTrigger RoutedEvent="UserControl.Loaded">
-                        <BeginStoryboard Storyboard="{StaticResource FadeInStoryBoard}"/>
-                    </EventTrigger>
-                </Style.Triggers>
             </Style>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>

@@ -1,4 +1,4 @@
-using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
+﻿using Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
 using Jarvis_Windows.Sources.MVVM.Views.MainNavigationView;
 using Jarvis_Windows.Sources.MVVM.ViewModels;
 using Jarvis_Windows.Sources.MVVM.Views.InjectionAction;
@@ -592,11 +592,12 @@ public class PopupDictionaryService : ObserveralObject
         _menuOperationsPosition = new Point(0, 0);
 
         _aIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right), (int)(SystemParameters.WorkArea.Bottom) / 2);
-        
-        //InitInjectionAction();
-        //InitMenuSelectionActions();
-        //InitMenuSelectionResponse();
-        //InitMenuSelectionPopupList();
+
+        _timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(AutoCloseTimeInSeconds)
+        };
+        _timer.Tick += Timer_Tick;
     }
 
     public void InitMenuInjectionActions()
@@ -635,6 +636,7 @@ public class PopupDictionaryService : ObserveralObject
     {
         IsDragging = false;
         _jarvisButtonPoint = e.GetPosition(null);
+        _timer.Stop();
     }
 
     private void JarvisButton_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -659,6 +661,11 @@ public class PopupDictionaryService : ObserveralObject
         }
     }
 
+    private void JarviseButton_MouseLeave(object sender, MouseEventArgs e)
+    {
+        _timer.Start();
+    }
+
     public void InitInjectionAction()
     {
         _injectionActionPopup = new DragMoveablePopup();
@@ -671,7 +678,7 @@ public class PopupDictionaryService : ObserveralObject
         _injectionActionPopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
         _injectionActionPopup.PreviewMouseLeftButtonDown += JarvisButton_PreviewMouseLeftButtonDown;
         _injectionActionPopup.PreviewMouseMove += JarvisButton_MouseMove;
-
+        _injectionActionPopup.MouseLeave += JarviseButton_MouseLeave;
 
         Binding verticalBinding = new Binding("JarvisActionPosition.Y");
         verticalBinding.NotifyOnSourceUpdated = true;
@@ -687,11 +694,6 @@ public class PopupDictionaryService : ObserveralObject
         isOpenBinding.Source = this;
         isOpenBinding.NotifyOnSourceUpdated = true;
         _injectionActionPopup.SetBinding(Popup.IsOpenProperty, isOpenBinding);
-    }
-
-    private void _injectionActionPopup_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        throw new NotImplementedException();
     }
 
     public void InitMenuSelectionActions()
