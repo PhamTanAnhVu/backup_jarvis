@@ -14,10 +14,11 @@
         Height="auto" Width="auto"
         WindowStyle="None"
         Background="Transparent"
-        Topmost="{Binding MakeSidebarTopmost}"
+        Topmost="True"
         WindowStartupLocation="Manual"
         ResizeMode="NoResize"
         AllowsTransparency="True"
+        Visibility="{Binding SidebarVisibility}"
         ShowInTaskbar="False">
     <Window.Resources>
         <ResourceDictionary>
@@ -30,15 +31,6 @@
     <Window.DataContext>
         <local:MainNavigationViewModel/>
     </Window.DataContext>
-    
-    <!--<Window.CommandBindings>
-        <CommandBinding Command="{x:Reference local:MainNavigationView}" 
-                     Executed="MyCommandExecuted"/>
-    </Window.CommandBindings>
-
-    <Window.InputBindings>
-        <KeyBinding Gesture="Alt+J" Command="{Binding OpenFromShortcutCommand}"/>
-    </Window.InputBindings>-->
 
     <!--<Grid Visibility="{Binding IsShowMainNavigation, Converter={StaticResource VisibilityConverter}}">-->
     <Border Background="{StaticResource TailwindPrimary1}" CornerRadius="12">
@@ -392,7 +384,7 @@
                             </Button>
 
                             <!--Item Profile-->
-                            <Button x:Name="btnNavigateProfile" Width="40" Height="40" Margin="0 20"
+                            <Button x:Name="btnNavigateProfile" Width="40" Height="40" Margin="0 60 0 0"
                         Command="{Binding NavigateCommand}"
                         CommandParameter="{Binding ElementName=btnNavigateProfile}"
                         Background="Transparent" BorderBrush="Transparent" BorderThickness="0">
@@ -410,12 +402,12 @@
             </Grid>
 
             <Popup x:Name="aIChatBubblePopup" Placement="Absolute"
-           HorizontalOffset="auto"
-           VerticalOffset="auto"
-           IsOpen="{Binding IsShowAIChatBubble}"
-           AllowsTransparency="True" PopupAnimation="Fade"   
-           Focusable="True" ForceCursor="True" StaysOpen="True"
-           Width="Auto" Height="Auto" Grid.RowSpan="3">
+                   HorizontalOffset="auto"
+                   VerticalOffset="auto"
+                   IsOpen="{Binding IsShowAIChatBubble}"
+                   AllowsTransparency="True" PopupAnimation="Fade"   
+                   Focusable="True" ForceCursor="True" StaysOpen="True"
+                   Width="Auto" Height="Auto" Grid.RowSpan="3">
                 <aIChatBubble:AIChatBubbleView/>
             </Popup>
         </Grid>

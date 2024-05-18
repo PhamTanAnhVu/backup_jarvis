@@ -131,7 +131,7 @@
                     Command="{Binding ShowMainNavigationCommand}">
                 <Button.Content>
                     <Grid>
-                        <Image Source="C:\Users\vupham\Desktop\jarvis-windows\Jarvis Windows\Jarvis Windows\Assets\Icons\Vector.ico"
+                        <Image Source="/Assets/Icons/Vector.ico" RenderOptions.BitmapScalingMode="Linear"
                             Width="24" Height="24" HorizontalAlignment="Left"/>
                         <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
                             Width="18" Height="18" Margin="3 2 0 0" HorizontalAlignment="Left">

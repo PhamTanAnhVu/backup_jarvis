@@ -18,7 +18,7 @@ public static class EventAggregator
     public static event EventHandler<EventArgs>? LoginStatusChanged;
     
     public static event EventHandler<EventArgs>? PropertyMessageChanged;
-    public static void PublishPropertyMessageChanged(PropertyMessage message, EventArgs e)
+    public static void PublishPropertyMessageChanged(PropertyMessage message, EventArgs? e)
     {
         PropertyMessageChanged?.Invoke(message, e);
     }

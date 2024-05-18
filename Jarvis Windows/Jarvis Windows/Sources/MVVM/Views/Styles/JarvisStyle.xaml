@@ -59,7 +59,7 @@
         <Setter Property="Background" Value="{StaticResource TailwindPrimary0.5}"/>
         <Setter Property="Foreground" Value="{StaticResource TailwindPrimary6}"/>
         <Setter Property="HorizontalAlignment" Value="Right"/>
-        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="BorderBrush" Value="White"/>
         <Setter Property="Padding" Value="10 8 8 10"/>
         <Setter Property="Template">

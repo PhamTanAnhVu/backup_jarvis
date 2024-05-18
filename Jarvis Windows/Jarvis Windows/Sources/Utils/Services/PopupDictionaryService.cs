@@ -330,14 +330,14 @@ public class PopupDictionaryService : ObserveralObject
 
     private PopupDictionaryService()
     {
-        IsShowJarvisAction = false;
-        IsShowMenuOperations = false;
-        IsShowAIChatBubble = true;
+        _isShowJarvisAction = false;
+        _isShowMenuOperations = false;
+        _isShowAIChatBubble = false;
 
-        JarvisActionPosition = new Point(0, 0);
-        MenuOperationsPosition = new Point(0, 0);
+        _jarvisActionPosition = new Point(0, 0);
+        _menuOperationsPosition = new Point(0, 0);
 
-        AIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right), (int)(SystemParameters.WorkArea.Bottom) / 2);
+        _aIChatBubblePosition = new Point((int)(SystemParameters.WorkArea.Right), (int)(SystemParameters.WorkArea.Bottom) / 2);
         
         //InitInjectionAction();
         //InitMenuSelectionActions();

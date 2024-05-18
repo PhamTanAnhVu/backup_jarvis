@@ -1,5 +1,4 @@
-﻿using Jarvis_Windows.Sources.MVVM.ViewModels;
-using Jarvis_Windows.Sources.MVVM.Views.AIArt;
+﻿using Jarvis_Windows.Sources.MVVM.Views.AIArt;
 using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 using Jarvis_Windows.Sources.MVVM.Views.AISearch;
 using Jarvis_Windows.Sources.MVVM.Views.AITranslate;
@@ -9,22 +8,13 @@ using Jarvis_Windows.Sources.MVVM.Views.Profile;
 using Jarvis_Windows.Sources.MVVM.Views.Settings;
 using Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 using Jarvis_Windows.Sources.Utils.Core;
-using Microsoft.Expression.Interactivity.Core;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows;
 using Gma.System.MouseKeyHook;
 using System.Windows.Forms;
 using Jarvis_Windows.Sources.Utils.Services;
 using Jarvis_Windows.Sources.MVVM.Models;
-using Newtonsoft.Json.Linq;
-using System.Windows.Media;
 using System.Collections.ObjectModel;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
@@ -271,16 +261,17 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         {
             IsShowMainNavigation = false;
             IsShowAIChatBubble = true;
+            EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", false), new EventArgs());
+            SidebarVisibility = Visibility.Hidden;
+            MakeSidebarTopmost = false;
         }
 
         private void KeyboardShortcutEvents(object? sender, System.Windows.Forms.KeyEventArgs e)
         {
-            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.J)
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.J)
             {
-                SidebarVisibility = Visibility.Visible;
-                MakeSidebarTopmost = true;
+                EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", true), new EventArgs());
                 e.Handled = true;
-                Debug.WriteLine("⌨️⌨️⌨️⌨️ Alt + J pressed");
             }
         }
     }

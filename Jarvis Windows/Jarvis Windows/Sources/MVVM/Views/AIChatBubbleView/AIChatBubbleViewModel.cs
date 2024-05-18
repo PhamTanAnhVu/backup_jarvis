@@ -49,14 +49,14 @@ public class AIChatBubbleViewModel : ViewModelBase
     {
         PopupDictionaryService.Instance().IsShowMainNavigation = true;
         EventAggregator.PublishPropertyMessageChanged(
-            InitPropertyMessage("IsShowMainNavigation", true), EventArgs.Empty
+            InitPropertyMessage("IsShowMainNavigation", true), null
         );
     }
     public async void ExecuteCloseAIBubbleCommand(object obj)
     {
         PopupDictionaryService.Instance().IsShowAIChatBubble = false;
         EventAggregator.PublishPropertyMessageChanged(
-            InitPropertyMessage("IsShowAIChatBubble", false), EventArgs.Empty
+            InitPropertyMessage("IsShowAIChatBubble", false), null
         );
     }
 

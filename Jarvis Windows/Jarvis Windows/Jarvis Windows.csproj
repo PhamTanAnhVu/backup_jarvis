@@ -77,6 +77,7 @@
     <None Remove="AppSettings\Configs\supported_apps.json" />
     <None Remove="Assets\Icons\jarvis_icon.ico" />
     <None Remove="Assets\Icons\jarvis_logo_large.ico" />
+    <None Remove="Assets\Icons\Vector.ico" />
     <None Remove="Assets\Images\close.png" />
     <None Remove="Assets\Images\cross.png" />
     <None Remove="Assets\Images\default-avatar.png" />
@@ -206,6 +207,12 @@
 
   <ItemGroup>
     <Folder Include="Sources\MVVM\Views\MainView\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Icons\Vector.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
