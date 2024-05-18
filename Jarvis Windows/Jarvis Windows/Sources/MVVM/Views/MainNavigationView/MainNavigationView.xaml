@@ -11,7 +11,7 @@
         xmlns:chatAI="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView"
         mc:Ignorable="d"
         Title="MainNavigationView" 
-        Height="950" Width="560"
+        Height="auto" Width="auto"
         WindowStyle="None"
         Background="Transparent"
         Topmost="{Binding MakeSidebarTopmost}"
@@ -41,377 +41,384 @@
     </Window.InputBindings>-->
 
     <!--<Grid Visibility="{Binding IsShowMainNavigation, Converter={StaticResource VisibilityConverter}}">-->
-    <Grid Visibility="Visible" Background="{StaticResource TailwindPrimary1}" 
-          Width="560" Height="950">
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="474"/>
-                <ColumnDefinition Width="8"/>
-                <ColumnDefinition Width="62"/>
-            </Grid.ColumnDefinitions>
-        
-            <!--Main Content-->
-            <UserControl Grid.Column="0"> 
-                <ContentControl x:Name="PageContent"
-                                Content="{Binding CurrentViewModel}" />
-            </UserControl>
-        
-            <!--Navigation Bar-->
-            <Border Grid.Column="2" Background="White" CornerRadius="12">
-                <StackPanel Orientation="Vertical">
-                    <!--Top: Hide and Expand Button-->
-                    <StackPanel Orientation="Horizontal" Width="auto" Height="44" HorizontalAlignment="Center">
-                        <Button Width="20" Height="20" Margin="0 0 8 0" Style="{StaticResource JarvisPrimaryButton}"
-                                Command="{Binding CloseMainNavigationCommand}">
-                            <Button.Content>
-                                <Path Fill="{StaticResource SolidColorBrushSlate500}" Data="M4.146 3.646a.5.5 0 0 0 0 .708L7.793 8l-3.647 3.646a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708 0M11.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5"/>
-                            </Button.Content>
-                        </Button>
+    <Border Background="{StaticResource TailwindPrimary1}" CornerRadius="12">
+        <Grid Visibility="Visible" Background="Transparent" 
+              Height="auto" Width="auto">
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="474"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="62"/>
+                </Grid.ColumnDefinitions>
 
-                        <Button Width="20" Height="20" Style="{StaticResource JarvisPrimaryButton}">
-                            <Button.Content>
-                                <Path Fill="{StaticResource SolidColorBrushSlate500}" Data="M3.646 10.146a.5.5 0 0 1 .708 0L8 13.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708m0-4.292a.5.5 0 0 0 .708 0L8 2.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8"/>
-                            </Button.Content>
-                            <Button.RenderTransform>
-                                <RotateTransform CenterX="10" CenterY="10" Angle="90" />
-                            </Button.RenderTransform>
-                        </Button>
-                    </StackPanel>
+                <!--Main Content-->
+                <UserControl x:Name="userControlMainContent" Grid.Column="0">
+                    <ContentControl x:Name="PageContent"
+                            Content="{Binding CurrentViewModel}" />
+                </UserControl>
 
-                    <!--Navigation Items-->
-                    <StackPanel Orientation="Vertical" Width="auto" Height="500">
-                        <!--Item Chat-->
-                        <Button x:Name="btnNavigateChat" Width="auto" Height="54"
-                                Command="{Binding NavigateCommand}"
-                                CommandParameter="{Binding ElementName=btnNavigateChat}"
-                                Style="{StaticResource NavigateButton}">
-                            <Button.Content>
-                                <Grid Width="auto" Height="54" VerticalAlignment="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition Width="4"/>
-                                    </Grid.ColumnDefinitions>
+                <!--Navigation Bar-->
+                <Border Grid.Column="2" Background="White" CornerRadius="12">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.5*"/>
+                            <RowDefinition Height="7*"/>
+                            <RowDefinition Height="2.5*"/>
+                        </Grid.RowDefinitions>
+                        <!--Top: Hide and Expand Button-->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Width="auto" Height="44" HorizontalAlignment="Center">
+                            <Button Width="20" Height="20" Margin="0 0 8 0" Style="{StaticResource JarvisPrimaryButton}"
+                            Command="{Binding CloseMainNavigationCommand}">
+                                <Button.Content>
+                                    <Path Fill="{StaticResource SolidColorBrushSlate500}" Data="M4.146 3.646a.5.5 0 0 0 0 .708L7.793 8l-3.647 3.646a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708 0M11.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5"/>
+                                </Button.Content>
+                            </Button>
 
-                                    <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
-                                        <Path HorizontalAlignment="Center" 
-                                              VerticalAlignment="Center"
-                                              Data="M26 12C26 17.3157 21.0751 21.625 15 21.625C13.877 21.625 12.7932 21.4777 
-                                              11.7727 21.2041C10.9699 21.6109 9.12564 22.3928 6.02362 22.9007C5.74997 22.9455 
-                                              5.5405 22.6592 5.6486 22.4038C6.13549 21.2536 6.57469 19.7222 6.70845 18.3251C5.02171 
-                                              16.6336 4 14.4212 4 12C4 6.68426 8.92487 2.375 15 2.375C21.0751 2.375 26 6.68426 26 12ZM10.1875 
-                                              7.875C9.8078 7.875 9.5 8.1828 9.5 8.5625C9.5 8.9422 9.8078 9.25 10.1875 9.25H19.8125C20.1922 9.25 
-                                              20.5 8.9422 20.5 8.5625C20.5 8.1828 20.1922 7.875 19.8125 7.875H10.1875ZM10.1875 11.3125C9.8078 11.3125 
-                                              9.5 11.6203 9.5 12C9.5 12.3797 9.8078 12.6875 10.1875 12.6875H19.8125C20.1922 12.6875 20.5 12.3797 20.5 
-                                              12C20.5 11.6203 20.1922 11.3125 19.8125 11.3125H10.1875ZM10.1875 14.75C9.8078 14.75 9.5 15.0578 9.5 15.4375C9.5 
-                                              15.8172 9.8078 16.125 10.1875 16.125H15.6875C16.0672 16.125 16.375 15.8172 16.375 15.4375C16.375 15.0578 16.0672 14.75 15.6875 14.75H10.1875Z">
-                                            <Path.Fill>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="{Binding NavButtonColors[0].C1}" Offset="1"/>
-                                                    <GradientStop Color="{Binding NavButtonColors[0].C2}" Offset="0"/>
-                                                </LinearGradientBrush>
-                                            </Path.Fill>
-                                        </Path>
+                            <Button Width="20" Height="20" Style="{StaticResource JarvisPrimaryButton}">
+                                <Button.Content>
+                                    <Path Fill="{StaticResource SolidColorBrushSlate500}" Data="M3.646 10.146a.5.5 0 0 1 .708 0L8 13.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708m0-4.292a.5.5 0 0 0 .708 0L8 2.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8"/>
+                                </Button.Content>
+                                <Button.RenderTransform>
+                                    <RotateTransform CenterX="10" CenterY="10" Angle="90" />
+                                </Button.RenderTransform>
+                            </Button>
+                        </StackPanel>
 
-                                        <TextBlock Text="Chat"
-                                               Margin="0 5 0 0"
-                                               HorizontalAlignment="Center" 
-                                               VerticalAlignment="Center" 
-                                               FontSize="10" Foreground="{Binding NavButtonColors[0].C1}"
-                                               FontFamily="Inter"
-                                               FontWeight="SemiBold"/>
-                                    </StackPanel>
-
-                                    <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
-                                                <GradientStop Color="{Binding NavBarColors[0].C1}" Offset="1"/>
-                                                <GradientStop Color="{Binding NavBarColors[0].C2}" Offset="0"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                    </Border>
-                                </Grid>
-                            </Button.Content>
-                        </Button>
-
-                        <!--Item Read-->
-                        <Button Name="btnNavigateRead" Width="auto" Height="54" Margin="0 10"
+                        <!--Navigation Items-->
+                        <StackPanel Grid.Row="1" Orientation="Vertical" Width="auto" Height="auto">
+                            <!--Item Chat-->
+                            <Button x:Name="btnNavigateChat" Width="auto" Height="54"
                             Command="{Binding NavigateCommand}"
-                            CommandParameter="{Binding ElementName=btnNavigateRead}"
+                            CommandParameter="{Binding ElementName=btnNavigateChat}"
                             Style="{StaticResource NavigateButton}">
-                            <Button.Content>
-                                <Grid Width="auto" Height="54" VerticalAlignment="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition Width="4"/>
-                                    </Grid.ColumnDefinitions>
+                                <Button.Content>
+                                    <Grid Width="auto" Height="54" VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="4"/>
+                                        </Grid.ColumnDefinitions>
 
-                                    <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
-                                        <Path HorizontalAlignment="Center" 
-                                              VerticalAlignment="Center"
-                                              Data="M11.6875 3.69422C12.5862 2.74737 14.1378 2.47613 15.9669 2.66063C17.6634 2.83174 19.4082 3.37948 20.625 3.88791V17.5327C19.3632 17.0516 17.728 16.5813 16.1049 16.4176C14.6016 16.2659 12.973 16.366 11.6875 17.0948V3.69422ZM11 2.45171C9.64574 1.28764 7.68189 1.11234 5.89507 1.29257C3.81317 1.50256 1.71131 2.21698 0.40301 2.81166C0.157577 2.92322 0 3.16793 0 3.43753V18.5625C0 18.7963 0.118767 19.014 0.315297 19.1406C0.511827 19.2671 0.759192 19.2851 0.971989 19.1884C2.18453 18.6373 4.13891 17.9767 6.03306 17.7856C7.96902 17.5904 9.59402 17.9056 10.4632 18.992C10.5936 19.1551 10.7911 19.25 11 19.25C11.2089 19.25 11.4064 19.1551 11.5368 18.992C12.406 17.9056 14.031 17.5904 15.9669 17.7856C17.8611 17.9767 19.8155 18.6373 21.028 19.1884C21.2408 19.2851 21.4882 19.2671 21.6847 19.1406C21.8812 19.014 22 18.7963 22 18.5625V3.43753C22 3.16793 21.8424 2.92322 21.597 2.81166C20.2887 2.21698 18.1868 1.50256 16.1049 1.29257C14.3181 1.11234 12.3543 1.28764 11 2.45171Z">
-                                            <Path.Fill>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="{Binding NavButtonColors[1].C1}" Offset="1"/>
-                                                    <GradientStop Color="{Binding NavButtonColors[1].C2}" Offset="0"/>
-                                                </LinearGradientBrush>
-                                            </Path.Fill>
-                                        </Path>
-                                        
-                                        <TextBlock Text="Read" 
-                                               Margin="0 5 0 0"
-                                               HorizontalAlignment="Center" 
-                                               VerticalAlignment="Center" 
-                                               FontSize="10" Foreground="{Binding NavButtonColors[1].C1}"
-                                               FontFamily="Inter"
-                                               FontWeight="SemiBold"/>
-                                    </StackPanel>
-
-                                    <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
-                                                <GradientStop Color="{Binding NavBarColors[1].C1}" Offset="1"/>
-                                                <GradientStop Color="{Binding NavBarColors[1].C2}" Offset="0"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                    </Border>
-                                </Grid>
-                            </Button.Content>
-                        </Button>
-
-                        <!--Item Search-->
-                        <Button Name="btnNavigateSearch" Width="auto" Height="54"
-                            Command="{Binding NavigateCommand}"
-                            CommandParameter="{Binding ElementName=btnNavigateSearch}"
-                            Style="{StaticResource NavigateButton}">
-                            <Button.Content>
-                                <Grid Width="auto" Height="54" VerticalAlignment="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition Width="4"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
-                                        <Path HorizontalAlignment="Center" 
+                                        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
+                                            <Path HorizontalAlignment="Center" 
                                           VerticalAlignment="Center"
-                                          Data="M16.1455 14.2228C17.2328 12.7425 17.875 10.915 17.875 8.9375C17.875 4.00145 13.8735 0 8.9375 0C4.00145 0 0 4.00145 0 8.9375C0 13.8735 4.00145 17.875 8.9375 17.875C10.9156 17.875 12.7435 17.2324 14.224 16.1446L14.2228 16.1455C14.2634 16.2005 14.3086 16.2531 14.3583 16.3029L19.6527 21.5973C20.1897 22.1342 21.0603 22.1342 21.5973 21.5973C22.1342 21.0603 22.1342 20.1897 21.5973 19.6527L16.3029 14.3583C16.2531 14.3086 16.2005 14.2634 16.1455 14.2228ZM16.5 8.9375C16.5 13.1142 13.1142 16.5 8.9375 16.5C4.76085 16.5 1.375 13.1142 1.375 8.9375C1.375 4.76085 4.76085 1.375 8.9375 1.375C13.1142 1.375 16.5 4.76085 16.5 8.9375Z">
-                                            <Path.Fill>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="{Binding NavButtonColors[2].C1}" Offset="1"/>
-                                                    <GradientStop Color="{Binding NavButtonColors[2].C2}" Offset="0"/>
-                                                </LinearGradientBrush>
-                                            </Path.Fill>
-                                        </Path>
-
-                                        <TextBlock Text="Search" 
-                                               Margin="0 5 0 0"
-                                               HorizontalAlignment="Center" 
-                                               VerticalAlignment="Center" 
-                                               FontSize="10" Foreground="{Binding NavButtonColors[2].C1}"
-                                               FontFamily="Inter"
-                                               FontWeight="SemiBold"/>
-                                    </StackPanel>
-
-                                    <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
-                                                <GradientStop Color="{Binding NavBarColors[2].C1}" Offset="1"/>
-                                                <GradientStop Color="{Binding NavBarColors[2].C2}" Offset="0"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                    </Border>
-                                </Grid>
-                            </Button.Content>
-                        </Button>
-
-                        <!--Item Write-->
-                        <Button Name="btnNavigateWrite" Width="auto" Height="54" Margin="0 10"
-                            Command="{Binding NavigateCommand}"
-                            CommandParameter="{Binding ElementName=btnNavigateWrite}"
-                            Style="{StaticResource NavigateButton}">
-                            <Button.Content>
-                                <Grid Width="auto" Height="54" VerticalAlignment="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition Width="4"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
-                                        <Path HorizontalAlignment="Center" 
-                                              VerticalAlignment="Center"
-                                              Data="M14.6389 0.888864C14.9073 0.620379 15.3426 0.620379 15.6111 0.888864L21.1111 6.38886C21.3796 6.65735 21.3796 7.09265 21.1111 7.36114L18.4958 9.97648L17.3567 14.533C17.1802 15.2387 16.6451 15.7992 15.9484 16.0083L1.72461 20.2754L5.99175 6.0516C6.20077 5.35486 6.76134 4.81975 7.46703 4.64333L12.0235 3.50421L14.6389 0.888864ZM12.1641 4.88638L7.80052 5.97728C7.56529 6.03609 7.37843 6.21446 7.30876 6.4467L3.77538 18.2246L15.5533 14.6912C15.7855 14.6216 15.9639 14.4347 16.0227 14.1995L17.1136 9.83589L12.1641 4.88638Z">
-                                            <Path.Fill>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="{Binding NavButtonColors[3].C1}" Offset="1"/>
-                                                    <GradientStop Color="{Binding NavButtonColors[3].C2}" Offset="0"/>
-                                                </LinearGradientBrush>
-                                            </Path.Fill>
-                                        </Path>
-
-                                        <TextBlock Text="Write" 
-                                               Margin="0 5 0 0"
-                                               HorizontalAlignment="Center" 
-                                               VerticalAlignment="Center" 
-                                               FontSize="10" Foreground="{Binding NavButtonColors[3].C1}"
-                                               FontFamily="Inter"
-                                               FontWeight="SemiBold"/>
-                                    </StackPanel>
-
-                                    <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
-                                                <GradientStop Color="{Binding NavBarColors[3].C1}" Offset="1"/>
-                                                <GradientStop Color="{Binding NavBarColors[3].C2}" Offset="0"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                    </Border>
-                                </Grid>
-                            </Button.Content>
-                        </Button>
-
-                        <!--Item Translate-->
-                        <Button x:Name="btnNavigateTranslate" Width="auto" Height="54"
-                                Command="{Binding NavigateCommand}"
-                                CommandParameter="{Binding ElementName=btnNavigateTranslate}"
-                                Style="{StaticResource NavigateButton}">
-                            <Button.Content>
-                                <Grid Width="auto" Height="54" VerticalAlignment="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition Width="4"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
-                                        
-                                        <Canvas Width="22" Height="22">
-                                            <Path Data="M6.24898 9.23214L5.65091 11H4.125L6.68496 4.125H8.45122L11 11H9.39583L8.79776 9.23214H6.24898ZM8.49593 8.21978L7.5625 5.43956H7.49543L6.56199 8.21978H8.49593Z">
+                                          Data="M26 12C26 17.3157 21.0751 21.625 15 21.625C13.877 21.625 12.7932 21.4777 
+                                          11.7727 21.2041C10.9699 21.6109 9.12564 22.3928 6.02362 22.9007C5.74997 22.9455 
+                                          5.5405 22.6592 5.6486 22.4038C6.13549 21.2536 6.57469 19.7222 6.70845 18.3251C5.02171 
+                                          16.6336 4 14.4212 4 12C4 6.68426 8.92487 2.375 15 2.375C21.0751 2.375 26 6.68426 26 12ZM10.1875 
+                                          7.875C9.8078 7.875 9.5 8.1828 9.5 8.5625C9.5 8.9422 9.8078 9.25 10.1875 9.25H19.8125C20.1922 9.25 
+                                          20.5 8.9422 20.5 8.5625C20.5 8.1828 20.1922 7.875 19.8125 7.875H10.1875ZM10.1875 11.3125C9.8078 11.3125 
+                                          9.5 11.6203 9.5 12C9.5 12.3797 9.8078 12.6875 10.1875 12.6875H19.8125C20.1922 12.6875 20.5 12.3797 20.5 
+                                          12C20.5 11.6203 20.1922 11.3125 19.8125 11.3125H10.1875ZM10.1875 14.75C9.8078 14.75 9.5 15.0578 9.5 15.4375C9.5 
+                                          15.8172 9.8078 16.125 10.1875 16.125H15.6875C16.0672 16.125 16.375 15.8172 16.375 15.4375C16.375 15.0578 16.0672 14.75 15.6875 14.75H10.1875Z">
                                                 <Path.Fill>
                                                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                        <GradientStop Color="{Binding NavButtonColors[4].C1}" Offset="1"/>
-                                                        <GradientStop Color="{Binding NavButtonColors[4].C2}" Offset="0"/>
+                                                        <GradientStop Color="{Binding NavButtonColors[0].C1}" Offset="1"/>
+                                                        <GradientStop Color="{Binding NavButtonColors[0].C2}" Offset="0"/>
                                                     </LinearGradientBrush>
                                                 </Path.Fill>
                                             </Path>
-                                            <Path Data="M0 2.75C0 1.23122 1.23122 0 2.75 0H12.375C13.8938 0 15.125 1.23122 15.125 2.75V6.875H19.25C20.7688 6.875 22 8.10622 22 9.625V19.25C22 20.7688 20.7688 22 19.25 22H9.625C8.10622 22 6.875 20.7688 6.875 19.25V15.125H2.75C1.23122 15.125 0 13.8938 0 12.375V2.75ZM2.75 1.375C1.99061 1.375 1.375 1.99061 1.375 2.75V12.375C1.375 13.1344 1.99061 13.75 2.75 13.75H12.375C13.1344 13.75 13.75 13.1344 13.75 12.375V2.75C13.75 1.99061 13.1344 1.375 12.375 1.375H2.75ZM12.5643 15.1186C12.8297 15.5323 13.1175 15.92 13.4302 16.2813C12.4026 17.0723 11.1308 17.6578 9.625 18.0584C9.86919 18.3563 10.2456 18.9316 10.3881 19.25C11.9346 18.7569 13.2471 18.0892 14.3561 17.1956C15.4244 18.1098 16.7471 18.798 18.3852 19.2192C18.5683 18.8699 18.9549 18.2947 19.25 17.9968C17.7035 17.6475 16.4215 17.0415 15.3735 16.23C16.3096 15.2028 17.0523 13.9598 17.6017 12.4396H19.25V11H15.125V12.375C15.125 12.3966 15.1248 12.4181 15.1243 12.4396H16.1773C15.7398 13.6003 15.1599 14.5659 14.4273 15.3671C14.225 15.1522 14.0349 14.9271 13.8566 14.6921C13.4789 14.9342 13.0381 15.0864 12.5643 15.1186Z">
+
+                                            <TextBlock Text="Chat"
+                                           Margin="0 5 0 0"
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" 
+                                           FontSize="10" Foreground="{Binding NavButtonColors[0].C1}"
+                                           FontFamily="Inter"
+                                           FontWeight="SemiBold"/>
+                                        </StackPanel>
+
+                                        <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
+                                                    <GradientStop Color="{Binding NavBarColors[0].C1}" Offset="1"/>
+                                                    <GradientStop Color="{Binding NavBarColors[0].C2}" Offset="0"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                    </Grid>
+                                </Button.Content>
+                            </Button>
+
+                            <!--Item Read-->
+                            <Button Name="btnNavigateRead" Width="auto" Height="54" Margin="0 10"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="{Binding ElementName=btnNavigateRead}"
+                        Style="{StaticResource NavigateButton}">
+                                <Button.Content>
+                                    <Grid Width="auto" Height="54" VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="4"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
+                                            <Path HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center"
+                                          Data="M11.6875 3.69422C12.5862 2.74737 14.1378 2.47613 15.9669 2.66063C17.6634 2.83174 19.4082 3.37948 20.625 3.88791V17.5327C19.3632 17.0516 17.728 16.5813 16.1049 16.4176C14.6016 16.2659 12.973 16.366 11.6875 17.0948V3.69422ZM11 2.45171C9.64574 1.28764 7.68189 1.11234 5.89507 1.29257C3.81317 1.50256 1.71131 2.21698 0.40301 2.81166C0.157577 2.92322 0 3.16793 0 3.43753V18.5625C0 18.7963 0.118767 19.014 0.315297 19.1406C0.511827 19.2671 0.759192 19.2851 0.971989 19.1884C2.18453 18.6373 4.13891 17.9767 6.03306 17.7856C7.96902 17.5904 9.59402 17.9056 10.4632 18.992C10.5936 19.1551 10.7911 19.25 11 19.25C11.2089 19.25 11.4064 19.1551 11.5368 18.992C12.406 17.9056 14.031 17.5904 15.9669 17.7856C17.8611 17.9767 19.8155 18.6373 21.028 19.1884C21.2408 19.2851 21.4882 19.2671 21.6847 19.1406C21.8812 19.014 22 18.7963 22 18.5625V3.43753C22 3.16793 21.8424 2.92322 21.597 2.81166C20.2887 2.21698 18.1868 1.50256 16.1049 1.29257C14.3181 1.11234 12.3543 1.28764 11 2.45171Z">
                                                 <Path.Fill>
                                                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                        <GradientStop Color="{Binding NavButtonColors[4].C1}" Offset="1"/>
-                                                        <GradientStop Color="{Binding NavButtonColors[4].C2}" Offset="0"/>
+                                                        <GradientStop Color="{Binding NavButtonColors[1].C1}" Offset="1"/>
+                                                        <GradientStop Color="{Binding NavButtonColors[1].C2}" Offset="0"/>
                                                     </LinearGradientBrush>
                                                 </Path.Fill>
                                             </Path>
-                                        </Canvas>
-                                        
-                                        <TextBlock Text="Translate" 
-                                               Margin="0 5 0 0"
-                                               HorizontalAlignment="Center" 
-                                               VerticalAlignment="Center" 
-                                               FontSize="10" Foreground="{Binding NavButtonColors[4].C1}"
-                                               FontFamily="Inter"
-                                               FontWeight="SemiBold"/>
-                                    </StackPanel>
 
-                                    <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
-                                                <GradientStop Color="{Binding NavBarColors[4].C1}" Offset="1"/>
-                                                <GradientStop Color="{Binding NavBarColors[4].C2}" Offset="0"/>
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                    </Border>
-                                </Grid>
-                            </Button.Content>
-                        </Button>
+                                            <TextBlock Text="Read" 
+                                           Margin="0 5 0 0"
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" 
+                                           FontSize="10" Foreground="{Binding NavButtonColors[1].C1}"
+                                           FontFamily="Inter"
+                                           FontWeight="SemiBold"/>
+                                        </StackPanel>
 
-                        <!--Item Art-->
-                        <Button x:Name="btnNavigateArt" Width="auto" Height="54" Margin="0 10"
-                            Command="{Binding NavigateCommand}"
-                            CommandParameter="{Binding ElementName=btnNavigateArt}"
-                            Style="{StaticResource NavigateButton}">
-                            <Button.Content>
-                                <Grid Width="auto" Height="54" VerticalAlignment="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition Width="4"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
-                                        <Path HorizontalAlignment="Center" 
-                                            VerticalAlignment="Center"
-                                            Data="M17.0958 13.8459C19.4337 14.5544 22 15.332 22 11C22 4.92487 17.0751 0 11 0C4.92487 0 0 4.92487 0 11C0 17.0751 4.92487 22 11 22C13.7441 22 13.5113 19.9314 13.2673 17.7641C13.097 16.2506 12.9212 14.689 13.75 13.75C14.3893 13.0257 15.7019 13.4235 17.0958 13.8459ZM11 6.875C9.86091 6.875 8.9375 5.95159 8.9375 4.8125C8.9375 3.67341 9.86091 2.75 11 2.75C12.1391 2.75 13.0625 3.67341 13.0625 4.8125C13.0625 5.95159 12.1391 6.875 11 6.875ZM17.1875 11C16.0484 11 15.125 10.0766 15.125 8.9375C15.125 7.79841 16.0484 6.875 17.1875 6.875C18.3266 6.875 19.25 7.79841 19.25 8.9375C19.25 10.0766 18.3266 11 17.1875 11ZM6.875 8.9375C6.875 10.0766 5.95159 11 4.8125 11C3.67341 11 2.75 10.0766 2.75 8.9375C2.75 7.79841 3.67341 6.875 4.8125 6.875C5.95159 6.875 6.875 7.79841 6.875 8.9375ZM7.5625 17.875C6.42341 17.875 5.5 16.9516 5.5 15.8125C5.5 14.6734 6.42341 13.75 7.5625 13.75C8.70159 13.75 9.625 14.6734 9.625 15.8125C9.625 16.9516 8.70159 17.875 7.5625 17.875Z">
-                                            <Path.Fill>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                    <GradientStop Color="{Binding NavButtonColors[5].C1}" Offset="1"/>
-                                                    <GradientStop Color="{Binding NavButtonColors[5].C2}" Offset="0"/>
+                                        <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
+                                                    <GradientStop Color="{Binding NavBarColors[1].C1}" Offset="1"/>
+                                                    <GradientStop Color="{Binding NavBarColors[1].C2}" Offset="0"/>
                                                 </LinearGradientBrush>
-                                            </Path.Fill>
-                                        </Path>
-                                        <TextBlock Text="Art" 
-                                               Margin="0 5 0 0"
-                                               HorizontalAlignment="Center" 
-                                               VerticalAlignment="Center" 
-                                               FontSize="10" Foreground="{Binding NavButtonColors[5].C1}"
-                                               FontFamily="Inter"
-                                               FontWeight="SemiBold"/>
-                                    </StackPanel>
+                                            </Border.Background>
+                                        </Border>
+                                    </Grid>
+                                </Button.Content>
+                            </Button>
 
-                                    <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
+                            <!--Item Search-->
+                            <Button Name="btnNavigateSearch" Width="auto" Height="54"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="{Binding ElementName=btnNavigateSearch}"
+                        Style="{StaticResource NavigateButton}">
+                                <Button.Content>
+                                    <Grid Width="auto" Height="54" VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="4"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
+                                            <Path HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"
+                                      Data="M16.1455 14.2228C17.2328 12.7425 17.875 10.915 17.875 8.9375C17.875 4.00145 13.8735 0 8.9375 0C4.00145 0 0 4.00145 0 8.9375C0 13.8735 4.00145 17.875 8.9375 17.875C10.9156 17.875 12.7435 17.2324 14.224 16.1446L14.2228 16.1455C14.2634 16.2005 14.3086 16.2531 14.3583 16.3029L19.6527 21.5973C20.1897 22.1342 21.0603 22.1342 21.5973 21.5973C22.1342 21.0603 22.1342 20.1897 21.5973 19.6527L16.3029 14.3583C16.2531 14.3086 16.2005 14.2634 16.1455 14.2228ZM16.5 8.9375C16.5 13.1142 13.1142 16.5 8.9375 16.5C4.76085 16.5 1.375 13.1142 1.375 8.9375C1.375 4.76085 4.76085 1.375 8.9375 1.375C13.1142 1.375 16.5 4.76085 16.5 8.9375Z">
+                                                <Path.Fill>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                        <GradientStop Color="{Binding NavButtonColors[2].C1}" Offset="1"/>
+                                                        <GradientStop Color="{Binding NavButtonColors[2].C2}" Offset="0"/>
+                                                    </LinearGradientBrush>
+                                                </Path.Fill>
+                                            </Path>
+
+                                            <TextBlock Text="Search" 
+                                           Margin="0 5 0 0"
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" 
+                                           FontSize="10" Foreground="{Binding NavButtonColors[2].C1}"
+                                           FontFamily="Inter"
+                                           FontWeight="SemiBold"/>
+                                        </StackPanel>
+
+                                        <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
+                                                    <GradientStop Color="{Binding NavBarColors[2].C1}" Offset="1"/>
+                                                    <GradientStop Color="{Binding NavBarColors[2].C2}" Offset="0"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                    </Grid>
+                                </Button.Content>
+                            </Button>
+
+                            <!--Item Write-->
+                            <Button Name="btnNavigateWrite" Width="auto" Height="54" Margin="0 10"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="{Binding ElementName=btnNavigateWrite}"
+                        Style="{StaticResource NavigateButton}">
+                                <Button.Content>
+                                    <Grid Width="auto" Height="54" VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="4"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
+                                            <Path HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center"
+                                          Data="M14.6389 0.888864C14.9073 0.620379 15.3426 0.620379 15.6111 0.888864L21.1111 6.38886C21.3796 6.65735 21.3796 7.09265 21.1111 7.36114L18.4958 9.97648L17.3567 14.533C17.1802 15.2387 16.6451 15.7992 15.9484 16.0083L1.72461 20.2754L5.99175 6.0516C6.20077 5.35486 6.76134 4.81975 7.46703 4.64333L12.0235 3.50421L14.6389 0.888864ZM12.1641 4.88638L7.80052 5.97728C7.56529 6.03609 7.37843 6.21446 7.30876 6.4467L3.77538 18.2246L15.5533 14.6912C15.7855 14.6216 15.9639 14.4347 16.0227 14.1995L17.1136 9.83589L12.1641 4.88638Z">
+                                                <Path.Fill>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                        <GradientStop Color="{Binding NavButtonColors[3].C1}" Offset="1"/>
+                                                        <GradientStop Color="{Binding NavButtonColors[3].C2}" Offset="0"/>
+                                                    </LinearGradientBrush>
+                                                </Path.Fill>
+                                            </Path>
+
+                                            <TextBlock Text="Write" 
+                                           Margin="0 5 0 0"
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" 
+                                           FontSize="10" Foreground="{Binding NavButtonColors[3].C1}"
+                                           FontFamily="Inter"
+                                           FontWeight="SemiBold"/>
+                                        </StackPanel>
+
+                                        <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
+                                                    <GradientStop Color="{Binding NavBarColors[3].C1}" Offset="1"/>
+                                                    <GradientStop Color="{Binding NavBarColors[3].C2}" Offset="0"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                    </Grid>
+                                </Button.Content>
+                            </Button>
+
+                            <!--Item Translate-->
+                            <Button x:Name="btnNavigateTranslate" Width="auto" Height="54"
+                            Command="{Binding NavigateCommand}"
+                            CommandParameter="{Binding ElementName=btnNavigateTranslate}"
+                            Style="{StaticResource NavigateButton}">
+                                <Button.Content>
+                                    <Grid Width="auto" Height="54" VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="4"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
+
+                                            <Canvas Width="22" Height="22">
+                                                <Path Data="M6.24898 9.23214L5.65091 11H4.125L6.68496 4.125H8.45122L11 11H9.39583L8.79776 9.23214H6.24898ZM8.49593 8.21978L7.5625 5.43956H7.49543L6.56199 8.21978H8.49593Z">
+                                                    <Path.Fill>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                            <GradientStop Color="{Binding NavButtonColors[4].C1}" Offset="1"/>
+                                                            <GradientStop Color="{Binding NavButtonColors[4].C2}" Offset="0"/>
+                                                        </LinearGradientBrush>
+                                                    </Path.Fill>
+                                                </Path>
+                                                <Path Data="M0 2.75C0 1.23122 1.23122 0 2.75 0H12.375C13.8938 0 15.125 1.23122 15.125 2.75V6.875H19.25C20.7688 6.875 22 8.10622 22 9.625V19.25C22 20.7688 20.7688 22 19.25 22H9.625C8.10622 22 6.875 20.7688 6.875 19.25V15.125H2.75C1.23122 15.125 0 13.8938 0 12.375V2.75ZM2.75 1.375C1.99061 1.375 1.375 1.99061 1.375 2.75V12.375C1.375 13.1344 1.99061 13.75 2.75 13.75H12.375C13.1344 13.75 13.75 13.1344 13.75 12.375V2.75C13.75 1.99061 13.1344 1.375 12.375 1.375H2.75ZM12.5643 15.1186C12.8297 15.5323 13.1175 15.92 13.4302 16.2813C12.4026 17.0723 11.1308 17.6578 9.625 18.0584C9.86919 18.3563 10.2456 18.9316 10.3881 19.25C11.9346 18.7569 13.2471 18.0892 14.3561 17.1956C15.4244 18.1098 16.7471 18.798 18.3852 19.2192C18.5683 18.8699 18.9549 18.2947 19.25 17.9968C17.7035 17.6475 16.4215 17.0415 15.3735 16.23C16.3096 15.2028 17.0523 13.9598 17.6017 12.4396H19.25V11H15.125V12.375C15.125 12.3966 15.1248 12.4181 15.1243 12.4396H16.1773C15.7398 13.6003 15.1599 14.5659 14.4273 15.3671C14.225 15.1522 14.0349 14.9271 13.8566 14.6921C13.4789 14.9342 13.0381 15.0864 12.5643 15.1186Z">
+                                                    <Path.Fill>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                            <GradientStop Color="{Binding NavButtonColors[4].C1}" Offset="1"/>
+                                                            <GradientStop Color="{Binding NavButtonColors[4].C2}" Offset="0"/>
+                                                        </LinearGradientBrush>
+                                                    </Path.Fill>
+                                                </Path>
+                                            </Canvas>
+
+                                            <TextBlock Text="Translate" 
+                                           Margin="0 5 0 0"
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" 
+                                           FontSize="10" Foreground="{Binding NavButtonColors[4].C1}"
+                                           FontFamily="Inter"
+                                           FontWeight="SemiBold"/>
+                                        </StackPanel>
+
+                                        <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
+                                                    <GradientStop Color="{Binding NavBarColors[4].C1}" Offset="1"/>
+                                                    <GradientStop Color="{Binding NavBarColors[4].C2}" Offset="0"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                    </Grid>
+                                </Button.Content>
+                            </Button>
+
+                            <!--Item Art-->
+                            <Button x:Name="btnNavigateArt" Width="auto" Height="54" Margin="0 10"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="{Binding ElementName=btnNavigateArt}"
+                        Style="{StaticResource NavigateButton}">
+                                <Button.Content>
+                                    <Grid Width="auto" Height="54" VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="4"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
+                                            <Path HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center"
+                                        Data="M17.0958 13.8459C19.4337 14.5544 22 15.332 22 11C22 4.92487 17.0751 0 11 0C4.92487 0 0 4.92487 0 11C0 17.0751 4.92487 22 11 22C13.7441 22 13.5113 19.9314 13.2673 17.7641C13.097 16.2506 12.9212 14.689 13.75 13.75C14.3893 13.0257 15.7019 13.4235 17.0958 13.8459ZM11 6.875C9.86091 6.875 8.9375 5.95159 8.9375 4.8125C8.9375 3.67341 9.86091 2.75 11 2.75C12.1391 2.75 13.0625 3.67341 13.0625 4.8125C13.0625 5.95159 12.1391 6.875 11 6.875ZM17.1875 11C16.0484 11 15.125 10.0766 15.125 8.9375C15.125 7.79841 16.0484 6.875 17.1875 6.875C18.3266 6.875 19.25 7.79841 19.25 8.9375C19.25 10.0766 18.3266 11 17.1875 11ZM6.875 8.9375C6.875 10.0766 5.95159 11 4.8125 11C3.67341 11 2.75 10.0766 2.75 8.9375C2.75 7.79841 3.67341 6.875 4.8125 6.875C5.95159 6.875 6.875 7.79841 6.875 8.9375ZM7.5625 17.875C6.42341 17.875 5.5 16.9516 5.5 15.8125C5.5 14.6734 6.42341 13.75 7.5625 13.75C8.70159 13.75 9.625 14.6734 9.625 15.8125C9.625 16.9516 8.70159 17.875 7.5625 17.875Z">
+                                                <Path.Fill>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                        <GradientStop Color="{Binding NavButtonColors[5].C1}" Offset="1"/>
+                                                        <GradientStop Color="{Binding NavButtonColors[5].C2}" Offset="0"/>
+                                                    </LinearGradientBrush>
+                                                </Path.Fill>
+                                            </Path>
+                                            <TextBlock Text="Art" 
+                                           Margin="0 5 0 0"
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" 
+                                           FontSize="10" Foreground="{Binding NavButtonColors[5].C1}"
+                                           FontFamily="Inter"
+                                           FontWeight="SemiBold"/>
+                                        </StackPanel>
+
+                                        <Border Grid.Column="1" CornerRadius="2 0 0 2" Height="36">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
+                                                    <GradientStop Color="{Binding NavBarColors[5].C1}" Offset="1"/>
+                                                    <GradientStop Color="{Binding NavBarColors[5].C2}" Offset="0"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                    </Grid>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+
+                        <!--Option Items-->
+                        <StackPanel Grid.Row="2" Orientation="Vertical" Width="auto" Height="auto" Margin="0 0 0 0">
+                            <!--Item More Info-->
+                            <Button x:Name="btnNavigateMoreInfo" Width="32" Height="32" Margin="0 10"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="{Binding ElementName=btnNavigateMoreInfo}"
+                        Style="{StaticResource NavigateButton}">
+
+                            </Button>
+
+                            <!--Item Settings-->
+                            <Button x:Name="btnNavigateSettings" Width="32" Height="32"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="{Binding ElementName=btnNavigateSettings}"
+                        Style="{StaticResource NavigateButton}">
+
+                            </Button>
+
+                            <!--Item Profile-->
+                            <Button x:Name="btnNavigateProfile" Width="40" Height="40" Margin="0 20"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="{Binding ElementName=btnNavigateProfile}"
+                        Background="Transparent" BorderBrush="Transparent" BorderThickness="0">
+                                <Button.Content>
+                                    <Border CornerRadius="18" Width="36" Height="36">
                                         <Border.Background>
-                                            <LinearGradientBrush StartPoint="0 0" EndPoint="1 0">
-                                                <GradientStop Color="{Binding NavBarColors[5].C1}" Offset="1"/>
-                                                <GradientStop Color="{Binding NavBarColors[5].C2}" Offset="0"/>
-                                            </LinearGradientBrush>
+                                            <ImageBrush Stretch="Fill" ImageSource="/Assets/Images/default-avatar.png"/>
                                         </Border.Background>
                                     </Border>
-                                </Grid>
-                            </Button.Content>
-                        </Button>
-                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
 
-                    <!--Option Items-->
-                    <StackPanel Orientation="Vertical" Width="auto" Height="auto" Margin="0 218 0 0">
-                        <!--Item More Info-->
-                        <Button x:Name="btnNavigateMoreInfo" Width="32" Height="32" Margin="0 10"
-                            Command="{Binding NavigateCommand}"
-                            CommandParameter="{Binding ElementName=btnNavigateMoreInfo}"
-                            Style="{StaticResource NavigateButton}">
-
-                        </Button>
-
-                        <!--Item Settings-->
-                        <Button x:Name="btnNavigateSettings" Width="32" Height="32"
-                            Command="{Binding NavigateCommand}"
-                            CommandParameter="{Binding ElementName=btnNavigateSettings}"
-                            Style="{StaticResource NavigateButton}">
-
-                        </Button>
-
-                        <!--Item Profile-->
-                        <Button x:Name="btnNavigateProfile" Width="40" Height="40" Margin="0 20 0 28"
-                            Command="{Binding NavigateCommand}"
-                            CommandParameter="{Binding ElementName=btnNavigateProfile}"
-                            Background="Transparent" BorderBrush="Transparent" BorderThickness="0">
-                            <Button.Content>
-                                <Border CornerRadius="18" Width="36" Height="36">
-                                    <Border.Background>
-                                        <ImageBrush Stretch="Fill" ImageSource="/Assets/Images/default-avatar.png"/>
-                                    </Border.Background>
-                                </Border>
-                            </Button.Content>
-                        </Button>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+            <Popup x:Name="aIChatBubblePopup" Placement="Absolute"
+           HorizontalOffset="auto"
+           VerticalOffset="auto"
+           IsOpen="{Binding IsShowAIChatBubble}"
+           AllowsTransparency="True" PopupAnimation="Fade"   
+           Focusable="True" ForceCursor="True" StaysOpen="True"
+           Width="Auto" Height="Auto" Grid.RowSpan="3">
+                <aIChatBubble:AIChatBubbleView/>
+            </Popup>
         </Grid>
-
-        <Popup Name="aIChatBubblePopup" Placement="Absolute"
-               HorizontalOffset="1880"
-               VerticalOffset="516"
-               IsOpen="{Binding IsShowAIChatBubble}"
-               AllowsTransparency="True" PopupAnimation="Fade"   
-               Focusable="True" ForceCursor="True" StaysOpen="True"
-               Width="Auto" Height="Auto" Grid.RowSpan="3">
-            <aIChatBubble:AIChatBubbleView/>
-        </Popup>
-    </Grid>
+    </Border>
 
 </Window>

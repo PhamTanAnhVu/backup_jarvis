@@ -42,6 +42,8 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         private static MainNavigationViewModel? _instance = null;
         public ObservableCollection<MainNavigationFillColor> _navButtonColors;
         public ObservableCollection<MainNavigationBarColor> _navBarColors;
+        private double _sidebarChatWidth;
+        private double _sidebarChatHeight;
 
         #endregion
 
@@ -129,6 +131,25 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             }
         }
 
+        public double SidebarChatWidth 
+        { 
+            get => _sidebarChatWidth;
+            set
+            {
+                _sidebarChatWidth = value;
+                OnPropertyChanged();
+            }
+        }
+        public double SidebarChatHeight
+        { 
+            get => _sidebarChatHeight; 
+            set
+            {
+                _sidebarChatHeight = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Commands
@@ -138,6 +159,11 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
         public MainNavigationViewModel()
         {
+            _sidebarChatWidth = /*SystemParameters.WorkArea.Width*/560;
+            _sidebarChatHeight = SystemParameters.WorkArea.Height;
+            _navBarColors = new ObservableCollection<MainNavigationBarColor>();
+            _navButtonColors = new ObservableCollection<MainNavigationFillColor>();
+
             NavigateCommand = new RelayCommand(OnNavigate, o => true);
             CloseMainNavigationCommand = new RelayCommand(ExecuteCloseMainNavigationCommand, o => true);
 

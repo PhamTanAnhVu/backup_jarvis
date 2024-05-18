@@ -10,7 +10,7 @@
         xmlns:li="http://github.com/zeluisping/loadingIndicators/xaml/controls"   
         xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d"
-        Height="934" Width="474"
+        Height="auto" Width="474"
         Style="{StaticResource PageAppearEffect}">
 
     <UserControl.Resources>
@@ -25,11 +25,15 @@
 
     <Grid x:Name="MainChatSidebarGrid">
         <Border x:Name="MainChatSidebarBorder" Background="White" CornerRadius="{StaticResource BorderRadiusXl}">
-            <StackPanel Orientation="Vertical">
-                <Grid x:Name="DisplayGrid">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="7*"/>
+                    <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" x:Name="DisplayGrid">
                     <Border x:Name="ExtraBorder" Padding="{StaticResource Padding5}">
                         <ScrollViewer Padding="{StaticResource PaddingVertical4}" 
-                                      Height="668" VerticalScrollBarVisibility="Hidden"
+                                      Height="auto" VerticalScrollBarVisibility="Hidden"
                                       Visibility="{Binding IsShowIntro, Converter={StaticResource VisibilityConverter}}">
                             <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap5}">
                                 <Border Padding="{StaticResource PaddingHorizontal4}">
@@ -463,7 +467,7 @@
                     </Border>
 
                     <Border x:Name="ChatConversationBorder" Padding="20 20 0 20">
-                        <ScrollViewer x:Name="MainScrollViewer" Height="668"
+                        <ScrollViewer x:Name="MainScrollViewer" Height="auto"
                                       Visibility="{Binding IsShowChatConversation, Converter={StaticResource VisibilityConverter}}">
                             <ItemsControl ItemsSource="{Binding AIChatMessages}">
                                 <ItemsControl.ItemsPanel>
@@ -615,7 +619,7 @@
                     </Border>
                 </Grid>
 
-                <Border x:Name="InputBorder" Padding="14 10">
+                <Border Grid.Row="1" x:Name="InputBorder" Padding="14 10">
                     <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap3}">
                         <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap3}">
                             <Grid x:Name="SelectAIModelButtonGrid">
@@ -1151,15 +1155,15 @@
                        VerticalOffset="0" HorizontalOffset="50" MouseEnter="HistoryPopup_MouseEnter" MouseLeave="HistoryPopup_MouseLeave">
                     <local:ChatHistoryView/>
                 </Popup>
-            </StackPanel>
+            </Grid>
         </Border>
 
-        <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
+        <!--<Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
                 Visibility="{Binding IsShowChatHistory, Converter={StaticResource VisibilityConverter}}">
             <Border.Effect>
                 <StaticResource ResourceKey="BlurEffect"/>
             </Border.Effect>
-        </Border>
+        </Border>-->
     </Grid>
 
 </UserControl>

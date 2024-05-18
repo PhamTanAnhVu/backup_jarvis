@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIWrite"
              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
              mc:Ignorable="d" 
-             Height="934" Width="474"
+             Height="auto" Width="474"
              Style="{StaticResource PageAppearEffect}">
 
     <UserControl.Resources>
