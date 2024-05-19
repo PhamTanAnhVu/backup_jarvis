@@ -30,6 +30,7 @@ public class AIChatSidebarViewModel : ViewModelBase
     private bool _isShowChatHistory;
     private bool _isShowIntro;
     private bool _isShowChatConversation;
+    private bool _isOpenSelectAIModel;
     private bool _isProcessAIChat;
 
     private GoogleAnalyticService _googleAnalyticService;
@@ -41,6 +42,8 @@ public class AIChatSidebarViewModel : ViewModelBase
     public RelayCommand NewAIChatWindowCommand { get; set; }
     public RelayCommand CloseJarvisUpdatedCommand { get; set; }
     public RelayCommand ShowChatHistory { get; set; }
+    public RelayCommand OpenSelectAIModelCommand { get; set; }
+    public RelayCommand SelectModel { get; set; }
     public GoogleAnalyticService GoogleAnalyticService
     {
         get { return _googleAnalyticService; }
@@ -159,6 +162,15 @@ public class AIChatSidebarViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    public bool IsOpenSelectAIModel
+    {
+        get { return _isOpenSelectAIModel; }
+        set
+        {
+            _isOpenSelectAIModel = value;
+            OnPropertyChanged();
+        }
+    }
 
     private List<DispatcherTimer> StopDotTimer { get; set; }
     public ObservableCollection<AddToolsToggleButton> ToggleButtons { get; set; }
@@ -188,6 +200,8 @@ public class AIChatSidebarViewModel : ViewModelBase
         SendChatInputCommand = new RelayCommand(ExecuteSendChatInputCommand, o => true);
         CloseJarvisUpdatedCommand = new RelayCommand(ExecuteCloseJarvisUpdatedCommand, o => true);
         NewAIChatWindowCommand = new RelayCommand(o => { AIChatMessages.Clear(); IsShowIntro = true; }, o => true);
+        OpenSelectAIModelCommand = new RelayCommand(o => { IsOpenSelectAIModel = !IsOpenSelectAIModel; }, o => true);
+        SelectModel = new RelayCommand(o => { IsOpenSelectAIModel = false; }, o => true);
         // ShowChatHistory = new RelayCommand(o => { IsShowChatHistory = !IsShowChatHistory; }, o => true);
         JarvisUpdatedBorderVisibility = true; 
         

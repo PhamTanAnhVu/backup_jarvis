@@ -417,7 +417,7 @@
                                                     <TextBlock Style="{StaticResource SmTextblock400}" Margin="{StaticResource RowGap1}"
                                                            Text="1. Jarvis features Claude 3, switch your chat bot to use."/>
                                                     <TextBlock Style="{StaticResource SmTextblock400}"
-                                                           Text="2. Translate and Explain actions of contextual toolbar has been optimized for providing better results.."/>
+                                                           Text="2. Translate and Explain actions of contextual toolbar has been optimized for providing better results."/>
                                                 </StackPanel>
 
                                                 <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap3}"
@@ -623,7 +623,8 @@
                     <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap3}">
                         <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap3}">
                             <Grid x:Name="SelectAIModelButtonGrid">
-                                <Button x:Name="SelectAIModelButton" Style="{StaticResource SelectAIModelButton}">
+                                <Button x:Name="SelectAIModelButton" Style="{StaticResource SelectAIModelButton}"
+                                        Command="{Binding OpenSelectAIModelCommand}">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
                                             <Viewbox Width="18" Height="18">
@@ -647,14 +648,23 @@
                                     </Button.Content>
                                 </Button>
 
-                                <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                <!--<Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
                                        PlacementTarget="{Binding ElementName=SelectAIModelButton}" VerticalOffset="-30" HorizontalOffset="0"
                                        IsOpen="{Binding ElementName=SelectAIModelButton, Path=IsMouseOver, Mode=OneWay}">
                                     <Border Style="{StaticResource UnderMessageBorder}">
                                         <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
                                                     Text="Coming soon"/>
                                     </Border>
+                                </Popup>-->
+                                
+                                <Popup Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                       PlacementTarget="{Binding ElementName=SelectAIModelButton}" VerticalOffset="0" HorizontalOffset="0"
+                                       IsOpen="{Binding IsOpenSelectAIModel}">
+
+                                    <local:SelectionModelView/>
                                 </Popup>
+                                
+                                
                             </Grid>
 
                             <StackPanel Width="158" Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap1.5}">
