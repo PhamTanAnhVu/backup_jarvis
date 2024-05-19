@@ -17,6 +17,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
     private int _languageSelectedIndex;
     private bool _isAPIUsageRemain;
     private bool _isNoAPIUsageRemain;
+    private bool _isActionTranslate;
     private bool _isSpinningJarvisIcon;
     private string _remainingAPIUsage;
     private string _selectionTextResponse;
@@ -91,6 +92,15 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    public bool IsActionTranslate
+    {
+        get { return _isActionTranslate; }
+        set
+        {
+            _isActionTranslate = value;
+            OnPropertyChanged();
+        }
+    }
     public bool IsSpinningJarvisIcon
     {
         get { return _isSpinningJarvisIcon; }
@@ -140,9 +150,16 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         LanguageSelectedIndex = 14;
         UpdateAPIUsage();
 
+        
         MenuSelectionSharedData.MenuSelectionCommandExecuted += (sender, e) =>
         {
             MenuSelectionCommand.Execute(sender);
+        };
+
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+        EventAggregator.ApiUsageChanged += (sender, e) =>
+        {
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
         };
     }
 
@@ -168,6 +185,12 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         {
             // Turn off PinCommand for buttons in MenuSelectionResponse View
             MenuSelectionSharedData.PublishMenuSelectionPopupListExecuted(false, EventArgs.Empty);
+            PopupDictionaryService.Instance().MenuSelectionPopupListPosition = new System.Drawing.Point
+            (
+                PopupDictionaryService.Instance().MenuSelectionResponsePosition.X + 15,
+                PopupDictionaryService.Instance().MenuSelectionResponsePosition.Y + 45
+            );
+
         }
     }
 
@@ -184,6 +207,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
 
     public async void ExecuteTranslateCommand(object obj)
     {
+        IsActionTranslate = true;
         AIButton buttonInfo = new AIButton
         {
             CommandParameter = "Translate it",
@@ -214,6 +238,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             ScrollBarHeight = 88;
             SelectionTextResponse = "";
             IsSpinningJarvisIcon = true;
+            IsActionTranslate = false;
             SelectionResponseHeaderName = _buttonInfo.Content;
             PopupDictionaryService.Instance().IsShowMenuSelectionResponse = true;
 
@@ -222,6 +247,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
 
             if (_buttonInfo.CommandParameter == "Translate it")
             {
+                IsActionTranslate = true;
                 SelectionTextResponse = await JarvisApi.Instance.TranslateHandler(textFromElement, _targetLanguage);
                 _aiAction = "translate";
             }

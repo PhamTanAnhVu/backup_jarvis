@@ -9,6 +9,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
 public static class AIChatBubbleEventTrigger
 {
     public static event EventHandler<EventArgs>? HoverExtraButtonEvent;
+    public static bool IsBubbleDragged;
 
     public static void PublishHoverExtraButtonEvent(object sender, EventArgs e)
     {

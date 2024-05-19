@@ -23,7 +23,9 @@
         <local:MenuSelectionResponseViewModel/>
     </UserControl.DataContext>
 
-    <Border CornerRadius="15" Padding="8 8 8 8">
+    <Border CornerRadius="15" Padding="8 8 8 8"
+            MouseEnter="MenuSelectionResponse_MouseEnter"
+            MouseLeave="MenuSelectionResponse_MouseLeave">
         <Border.Background>
             <LinearGradientBrush MappingMode="RelativeToBoundingBox" 
                             StartPoint="0,1" EndPoint="0,0">
@@ -66,10 +68,12 @@
                             <Button Background="Transparent" Style="{StaticResource AskButton}"
                                     BorderThickness="0" Width="130" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" 
                                     Foreground="#232329" FontFamily="monica-ext-font_YIBBBFG, -apple-system, 'system-ui', 'Segoe UI'"
-                                    Command="{Binding ShowMenuSelectionPopupListCommand}">
+                                    Command="{Binding ShowMenuSelectionPopupListCommand}" 
+                                    MouseEnter="MenuSelectionPopup_MouseEnter"
+                                    MouseLeave="MenuSelectionPopup_MouseLeave">
                                 <Button.Content>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding TextMenuAPIHeaderActionName}"/>
+                                        <TextBlock Text="{Binding SelectionResponseHeaderName}"/>
                                         <Path Stroke="#232329" Width="12" Height="16" Stretch="Uniform" Margin="5 0 0 0"
                                         Data="M26.666 10.667 16 21.333 5.333 10.667"/>
                                     </StackPanel>
@@ -77,12 +81,12 @@
                             </Button>
                         </Border>
 
-                        <Popup Name="PopupTextMenu" IsOpen="{Binding IsTextMenuAPIHeaderAction}" 
+                        <!--<Popup Name="PopupTextMenu" IsOpen="{Binding IsShowSelectionPopupMenu}" 
                                 Placement="Bottom" VerticalOffset="-15" HorizontalOffset="+10"
                                 AllowsTransparency="True" PopupAnimation="Slide" ForceCursor="True" StaysOpen="False"
                                 Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
                             <popupTextMenu:PopupTextMenuView/>
-                        </Popup>
+                        </Popup>-->
                     </Grid>
 
                     <Grid Grid.Column="1" Visibility="{Binding IsActionTranslate, Converter={StaticResource VisibilityConverter}}">

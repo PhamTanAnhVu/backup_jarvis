@@ -94,6 +94,11 @@ public static class WindowLocalStorage
             LocalStorageUnpackage.Store(key, value);
             LocalStorageUnpackage.Persist();
         }
+
+        if (key == "ApiUsageRemaining")
+        {
+            EventAggregator.PublishApiUsageChanged(true, EventArgs.Empty);
+        }
     }
 
     public static void RemoveLocalStorage(string key)

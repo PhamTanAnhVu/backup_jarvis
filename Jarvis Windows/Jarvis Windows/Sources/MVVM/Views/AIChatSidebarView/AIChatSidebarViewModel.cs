@@ -1,4 +1,4 @@
-using Jarvis_Windows.Sources.DataAccess.Network;
+ï»¿using Jarvis_Windows.Sources.DataAccess.Network;
 using Jarvis_Windows.Sources.Utils.Core;
 using Jarvis_Windows.Sources.Utils.Services;
 using System;
@@ -14,6 +14,7 @@ using System.Linq;
 using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 public class AIChatSidebarViewModel : ViewModelBase
@@ -178,6 +179,8 @@ public class AIChatSidebarViewModel : ViewModelBase
 
     public AIChatSidebarViewModel()
     {
+        Task.Run(async () => await ResetAPIUsageDaily()).Wait();
+        
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
 
         OpenJarvisWebsiteCommand = new RelayCommand(ExecuteOpenJarvisWebsiteCommand, o => true);
@@ -215,6 +218,17 @@ public class AIChatSidebarViewModel : ViewModelBase
         {
             ExecuteInfoPopupCommand(-1);
         };
+
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
+        EventAggregator.ApiUsageChanged += (sender, e) =>
+        {
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
+        };
+    }
+
+    private async Task ResetAPIUsageDaily()
+    {
+        await JarvisApi.Instance.APIUsageHandler();
     }
 
     // Extra bullshit
@@ -253,13 +267,13 @@ public class AIChatSidebarViewModel : ViewModelBase
         ToggleButtons = new ObservableCollection<AddToolsToggleButton>();
         StopDotTimer = new List<DispatcherTimer>();
         
-        string[] headers = { "Web Access", "Create Images (DALL·E 3)", "Book Calendar Events", "Advanced Data Analysis" };
+        string[] headers = { "Web Access", "Create Images (DALLÂ·E 3)", "Book Calendar Events", "Advanced Data Analysis" };
         string[] popupDescription = 
         { 
             "When needed, Jarvis can search the internet or\n read the URLs you provide to obtain the real-time information and reduce hallucinations.",
-            "Jarvis can use DALL·E 3 to create images for you based on your needs and continue to improve it according to your requirements.",
+            "Jarvis can use DALLÂ·E 3 to create images for you based on your needs and continue to improve it according to your requirements.",
             "Jarvis can create calendar events from your request or from a flight screenshot. The event will be sent to you via email. You can then add the event to your favorite calendar app from the email.",
-            "Jarvis can use DALL·E 3 to create images for you based on your needs and continue to improve it according to your requirements."
+            "Jarvis can use DALLÂ·E 3 to create images for you based on your needs and continue to improve it according to your requirements."
         };
 
         string[] popupButtonName = { "Search for latest AI news", "Draw a cute dog", "Create a schedule for my family part", "Generate a revenue report" };
@@ -489,7 +503,8 @@ public class AIChatSidebarViewModel : ViewModelBase
         AIChatInputMessage = "";
 
         int lastIndex = index + 1;
-        string responseMessage = await JarvisApi.Instance.ChatHandler(tmpMessage, AIChatMessages);
+        string outOfTokenMessage = "```java\nYou have reached your daily token limit. To continue using Jarvis,\nplease log in or upgrade your plan to get additional tokens.\n```";
+        string responseMessage = (RemainingAPIUsage != "0") ? await JarvisApi.Instance.ChatHandler(tmpMessage, AIChatMessages) : outOfTokenMessage;
 
         AIChatMessages.RemoveAt(lastIndex);
         AIChatMessages.Insert(

@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using Jarvis_Windows.Sources.Utils.Services;
 using Jarvis_Windows.Sources.MVVM.Models;
 using System.Collections.ObjectModel;
+using Point = System.Drawing.Point;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 {
@@ -28,6 +29,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         private bool _makeSidebarTopmost;
         private bool _isShowAIChatBubble;
         private bool _isShowMainNavigation;
+        private Point _aIChatBubblePosition;
         private IKeyboardMouseEvents _globalKeyboardHook;
         private static MainNavigationViewModel? _instance = null;
         public ObservableCollection<MainNavigationFillColor> _navButtonColors;
@@ -102,6 +104,22 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             }
         }
 
+        public Point AIChatBubblePosition
+        {
+            get
+            {
+                _aIChatBubblePosition = PopupDictionaryService.Instance().AIChatBubblePosition;
+                return _aIChatBubblePosition;
+            }
+            set
+            {
+                _aIChatBubblePosition = PopupDictionaryService.Instance().AIChatBubblePosition = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
         public ObservableCollection<MainNavigationFillColor> NavButtonColors
         {
             get { return _navButtonColors; }
@@ -145,6 +163,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         #region Commands
         public RelayCommand NavigateCommand { get; set; }
         public RelayCommand CloseMainNavigationCommand { get; set; }
+        public RelayCommand OpenJarvisWebsiteCommand { get; set; }
         #endregion
 
         public MainNavigationViewModel()
@@ -156,6 +175,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
             NavigateCommand = new RelayCommand(OnNavigate, o => true);
             CloseMainNavigationCommand = new RelayCommand(ExecuteCloseMainNavigationCommand, o => true);
+            OpenJarvisWebsiteCommand = new RelayCommand(ExecuteOpenJarvisWebsiteCommand, o => true);
 
             _viewModels.Add("Chat", new AIChatSidebarViewModel());
             _viewModels.Add("Read", new AIReadViewModel()); 
@@ -170,8 +190,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             _currentViewModel = _viewModels["Chat"];
             _sidebarVisibility = Visibility.Visible;
             _makeSidebarTopmost = false;
-            _isShowAIChatBubble = false;
-            _isShowMainNavigation = true;
+            
+            IsShowAIChatBubble = true;
+            IsShowMainNavigation = false;
+
+
+            AIChatBubblePosition = new Point();
 
             _globalKeyboardHook = Hook.GlobalEvents();
             _globalKeyboardHook.KeyDown += KeyboardShortcutEvents;
@@ -254,6 +278,16 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
             OnPropertyChanged(nameof(NavButtonColors));
             OnPropertyChanged(nameof(NavBarColors));
+        }
+
+        private async void ExecuteOpenJarvisWebsiteCommand(object obj)
+        {
+            string websiteUrl = (string)obj;
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = websiteUrl,
+                UseShellExecute = true
+            });
         }
 
         private void ExecuteCloseMainNavigationCommand(object obj)

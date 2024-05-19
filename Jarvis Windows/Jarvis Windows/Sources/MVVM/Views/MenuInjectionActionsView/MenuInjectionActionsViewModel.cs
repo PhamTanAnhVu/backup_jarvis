@@ -35,7 +35,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
         private bool? _isNoAPIUsageRemain;
         private bool? _isActionTranslate;
         private int? _previousCommandIdx;
-        private static bool? _isMouseOver_AppUI;
         private string _authUrl;
         private Visibility _exhaustedGridVisibility;
         private double _horizontalOffset;
@@ -228,13 +227,13 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
             IsNoAPIUsageRemain = !IsAPIUsageRemain;
 
             //TEST AUTO RESET API USAGE
-            if (IsAPIUsageRemain == false)
-            {
-                WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
-                WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
-                RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-                IsAPIUsageRemain = true;
-            }
+            //if (IsAPIUsageRemain == false)
+            //{
+            //    WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
+            //    WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
+            //    RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+            //    IsAPIUsageRemain = true;
+            //}
 
             ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
             HideMenuOperationsCommand = new RelayCommand(ExecuteHideMenuOperationsCommand, o => true);
@@ -265,8 +264,10 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
             catch { }
 
             InitializeButtons();
-            EventAggregator.MouseOverAppUIChanged += (sender, e) => {
-                _isMouseOver_AppUI = (sender != null) ? (bool)sender : false;
+
+            EventAggregator.ApiUsageChanged += (sender, e) =>
+            {
+                RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
             };
         }
 

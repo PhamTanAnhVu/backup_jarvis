@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/ScrollBarStyle.xaml"/>
         <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/ColorStyle.xaml"/>
         <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/SpacingStyle.xaml"/>
         <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/TextStyle.xaml"/>
@@ -911,6 +912,38 @@
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NavigationExtraButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{StaticResource BorderRadiusLg}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource PrimaryBrushColor0.5}"/>
+                        </Trigger>
+                        <!--<Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Offset="0" Color="#CFD1D4"/>
+                                        <GradientStop Offset="1" Color="#E6EEFA"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

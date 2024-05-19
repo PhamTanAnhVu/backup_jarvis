@@ -18,7 +18,9 @@
         <local:MenuSelectionPopupListViewModel/>
     </UserControl.DataContext>
 
-    <Border CornerRadius="16" Background="#D7E7FF" BorderThickness="0" Padding="5 8 8 12">
+    <Border CornerRadius="16" Background="#D7E7FF" BorderThickness="0" Padding="5 8 8 12"
+            MouseEnter="MenuSelectionPopup_MouseEnter"
+            MouseLeave="MenuSelectionPopup_MouseLeave">
         <ScrollViewer MaxHeight="170">
             <ItemsControl ItemsSource="{Binding MenuSelectionButtons}">
                 <ItemsControl.ItemsPanel>
@@ -70,7 +72,7 @@
 
                                 <Grid Grid.Column="2" Visibility="{Binding ExtraIconVisibility, Converter={StaticResource VisibilityConverter}}">
                                     <Button Style="{StaticResource PopupMenuButtonPin}"
-                                        Command="{Binding PinCommand}" CommandParameter="{Binding Idx}">
+                                            Command="{Binding PinCommand}" CommandParameter="{Binding Idx}">
                                         <Button.Content>
                                             <Path Fill="{Binding PinColor}" Stroke="#232329" StrokeThickness="0.5" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
                                               Height="14" VerticalAlignment="Center" Stretch="Uniform"/>

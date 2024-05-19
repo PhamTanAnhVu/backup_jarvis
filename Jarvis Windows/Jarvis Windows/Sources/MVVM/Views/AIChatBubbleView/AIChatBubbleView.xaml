@@ -7,7 +7,8 @@
         xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
         xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView"
         mc:Ignorable="d"
-        Height="Auto" Width="Auto" HorizontalAlignment="Right">
+        Height="Auto" Width="Auto" HorizontalAlignment="Right"
+        x:Name="BubbleUserControl">
     
     <UserControl.Resources>
         <ResourceDictionary>
@@ -21,7 +22,7 @@
         <local:AIChatBubbleViewModel/>
     </UserControl.DataContext>
 
-    <Grid>
+    <Grid x:Name="BubbleGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="10"/>
@@ -128,7 +129,7 @@
 
         <Grid Grid.Row="2">
             <Button x:Name="BubbleButton" Style="{StaticResource AIBubbleButton}" MouseEnter="MouseEnter_BubbleButton"
-                    Command="{Binding ShowMainNavigationCommand}">
+                    Command="{Binding ShowMainNavigationCommand}" Opacity="0.5">
                 <Button.Content>
                     <Grid>
                         <Image Source="/Assets/Icons/Vector.ico" RenderOptions.BitmapScalingMode="Linear"
@@ -148,25 +149,21 @@
                 </Button.Content>
             </Button>
 
-            <Popup x:Name="CloseBubblePopup" PlacementTarget="{Binding ElementName=BubbleButton}"
-                   Placement="Left" StaysOpen="True" AllowsTransparency="True" VerticalOffset="0" HorizontalOffset="-50">
-                <Border Width="10" Height="10" Background="{StaticResource SolidColorBrushSlate500}" 
-                        CornerRadius="{StaticResource BorderRadiusLg}">
-                    <Button Style="{StaticResource CloseAIBubbleButton}"
-                            Command="{Binding CloseAIBubbleCommand}">
-                        <Button.Content>
-                            <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="8" Height="8">
-                                <Canvas Width="8" Height="8">
-                                    <Path Fill="White" Data="M0.646447 0.646447C0.841709 0.451184 1.15829 0.451184 1.35355 0.646447L4 3.29289L6.64645 0.646447C6.84171 0.451184 7.15829 0.451184 7.35355 0.646447C7.54882 0.841709 7.54882 1.15829 7.35355 1.35355L4.70711 4L7.35355 6.64645C7.54882 6.84171 7.54882 7.15829 7.35355 7.35355C7.15829 7.54882 6.84171 7.54882 6.64645 7.35355L4 4.70711L1.35355 7.35355C1.15829 7.54882 0.841709 7.54882 0.646447 7.35355C0.451184 7.15829 0.451184 6.84171 0.646447 6.64645L3.29289 4L0.646447 1.35355C0.451184 1.15829 0.451184 0.841709 0.646447 0.646447Z"/>
-                                </Canvas>
-                            </Viewbox>
+            <Border x:Name="CloseBubbleBorder" Width="10" Height="10" Background="{StaticResource SolidColorBrushSlate500}" 
+                    CornerRadius="{StaticResource BorderRadiusLg}" Visibility="Collapsed">
+                <Button Style="{StaticResource CloseAIBubbleButton}"
+                        Command="{Binding CloseAIBubbleCommand}">
+                    <Button.Content>
+                        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="8" Height="8">
+                            <Canvas Width="8" Height="8">
+                                <Path Fill="White" Data="M0.646447 0.646447C0.841709 0.451184 1.15829 0.451184 1.35355 0.646447L4 3.29289L6.64645 0.646447C6.84171 0.451184 7.15829 0.451184 7.35355 0.646447C7.54882 0.841709 7.54882 1.15829 7.35355 1.35355L4.70711 4L7.35355 6.64645C7.54882 6.84171 7.54882 7.15829 7.35355 7.35355C7.15829 7.54882 6.84171 7.54882 6.64645 7.35355L4 4.70711L1.35355 7.35355C1.15829 7.54882 0.841709 7.54882 0.646447 7.35355C0.451184 7.15829 0.451184 6.84171 0.646447 6.64645L3.29289 4L0.646447 1.35355C0.451184 1.15829 0.451184 0.841709 0.646447 0.646447Z"/>
+                            </Canvas>
+                        </Viewbox>
 
-                        </Button.Content>
-                    </Button>
-                </Border>
-            </Popup>
+                    </Button.Content>
+                </Button>
+            </Border>
         </Grid>
-
 
         <Grid Grid.Row="4">
             <Button x:Name="SettingButton" Visibility="Hidden"

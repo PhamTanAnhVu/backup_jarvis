@@ -242,18 +242,28 @@
     <Style x:Key="AIChatInputBorder" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource SolidColorBrushSlate100}"/>
         <Setter Property="Width" Value="446"/>
-        <Setter Property="Height" Value="126"/>
+        <Setter Property="MinHeight" Value="126"/>
+        <Setter Property="MaxHeight" Value="166"/>
         <Setter Property="Padding" Value="16 12"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="CornerRadius" Value="{StaticResource BorderRadius2Xl}"/>
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsKeyboardFocused, ElementName=AIChatInputTextBox}" Value="True">
+                <Setter Property="BorderBrush" Value="#0078D4"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="AIChatInputTextBox" BasedOn="{StaticResource SmTextBox400}" TargetType="TextBox">
-        <Setter Property="Foreground" Value="{StaticResource SolidColorBrushSlate400}"/>
+        <Setter Property="Foreground" Value="{StaticResource TailwindPrimary9.5}"/>
         <Setter Property="IsReadOnly" Value="False"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Width" Value="414"/>
-        <Setter Property="Height" Value="72"/>
+        <Setter Property="MinHeight" Value="72"/>
+        <Setter Property="MaxHeight" Value="112"/>
     </Style>
 
     <Style x:Key="AIChatPreText" BasedOn="{StaticResource SmTextblock400}" TargetType="TextBlock">
@@ -330,7 +340,7 @@
     <Style x:Key="RemainingAPIUsageBorder" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource SolidColorBrushSlate100}"/>
         <Setter Property="CornerRadius" Value="{StaticResource BorderRadiusXl}"/>
-        <Setter Property="Width" Value="40.3"/>
+        <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="22"/>
         <Setter Property="Padding" Value="6 3"/>
     </Style>

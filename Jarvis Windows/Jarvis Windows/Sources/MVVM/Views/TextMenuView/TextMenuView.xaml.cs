@@ -18,12 +18,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.TextMenuView
 
         private void TextMenuPopup_MouseEnter(object sender, EventArgs e)
         {
-            EventAggregator.PublishMouseOverTextMenuPopupChanged(true, EventArgs.Empty);
+            //EventAggregator.PublishMouseOverTextMenuPopupChanged(true, EventArgs.Empty);
         }
 
         private void TextMenuPopup_MouseLeave(object sender, EventArgs e)
         {
-            EventAggregator.PublishMouseOverTextMenuPopupChanged(false, EventArgs.Empty);
+            //EventAggregator.PublishMouseOverTextMenuPopupChanged(false, EventArgs.Empty);
         }
 
 

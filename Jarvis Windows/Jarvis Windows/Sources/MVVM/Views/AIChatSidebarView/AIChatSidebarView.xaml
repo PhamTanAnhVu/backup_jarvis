@@ -536,7 +536,7 @@
                                                                                         TextContent="{Binding TextContent, Mode=TwoWay}"/>
                                                                 
                                                                 <Border Grid.Row="1" CornerRadius="{StaticResource BorderRadiusMd}"
-                                                                        Padding="{StaticResource Padding2}" Background="#E5E7FF" MaxWidth="406"
+                                                                        Padding="8 8 0 8" Background="{StaticResource SolidColorBrushGray200}" MaxWidth="408"
                                                                         Visibility="{Binding IsVisible, Converter={StaticResource VisibilityConverter}}">
 
                                                                     <avalonedit:TextEditor x:Name="textEditor" Style="{StaticResource AvalonEditStyle}" Tag="{Binding Idx}"
@@ -551,7 +551,7 @@
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
 
-                                                <li:LoadingIndicator HorizontalAlignment="Left" Foreground="Black" Margin="28 0 0 0"
+                                                <li:LoadingIndicator HorizontalAlignment="Left" Foreground="Black" Margin="24 0 0 0"
                                                             SpeedRatio="2" IsActive="{Binding IsLoading}" Mode="ThreeDots">
                                                     <li:LoadingIndicator.RenderTransform>
                                                         <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
@@ -826,7 +826,7 @@
                                                    Text="Ask me anything, press ‘/’ for prompts..." Grid.Row="0"/>
                                     <TextBox x:Name="AIChatInputTextBox" Style="{StaticResource AIChatInputTextBox}"
                                                  Text="{Binding AIChatInputMessage, UpdateSourceTrigger=PropertyChanged}"
-                                                 AcceptsReturn="True" MaxHeight="72" VerticalScrollBarVisibility="Visible"
+                                                 AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
                                                  PreviewMouseWheel="AIChatInputTextBox_PreviewMouseWheel"
                                                  TextChanged="AIChatInputTextBox_TextChanged" >
                                         <TextBox.InputBindings>
@@ -1002,7 +1002,8 @@
                                 </Border>
 
                                 <Grid x:Name="UpgradeButtonGrid">
-                                    <Button x:Name="UpgradeButton" Style="{StaticResource UpgradeButton}">
+                                    <Button x:Name="UpgradeButton" Style="{StaticResource UpgradeButton}"
+                                            Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://admin.jarvis.cx/pricing/overview">
                                         <Button.Content>
                                             <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap1}" 
                                                     HorizontalAlignment="Left">

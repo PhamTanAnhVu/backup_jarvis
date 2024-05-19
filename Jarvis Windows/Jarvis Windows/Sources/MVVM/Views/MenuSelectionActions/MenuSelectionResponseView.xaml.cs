@@ -28,6 +28,26 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions
             InitializeComponent();
         }
 
+        private void MenuSelectionResponse_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MenuSelectionSharedData.PublishMouseOverResponse(true, EventArgs.Empty);
+        }
+
+        private void MenuSelectionResponse_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MenuSelectionSharedData.PublishMouseOverResponse(false, EventArgs.Empty);
+        }
+
+        private void MenuSelectionPopup_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MenuSelectionSharedData.PublishMouseOverPopup(true, EventArgs.Empty);
+        }
+
+        private void MenuSelectionPopup_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MenuSelectionSharedData.PublishMouseOverPopup(false, EventArgs.Empty);
+        }
+
         private void MenuSelectionResponseView_TextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             TextBox textBox = (TextBox)sender;

@@ -74,9 +74,9 @@ public class AccessibilityService
     public AccessibilityService()
     {
         _automationElementValueService = DependencyInjection.GetService<IAutomationElementValueService>();
-        EventAggregator.MouseOverAppUIChanged += (sender, e) => {
-            _isMouseOverAppUI = sender as bool?;
-        };
+        //EventAggregator.MouseOverAppUIChanged += (sender, e) => {
+        //    _isMouseOverAppUI = sender as bool?;
+        //};
     }
 
     public void SubscribeToElementFocusChanged()

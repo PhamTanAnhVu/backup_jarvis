@@ -443,6 +443,7 @@ public class PopupDictionaryService : ObserveralObject
         _injectionActionPopup.SetCurrentValue(Popup.AllowsTransparencyProperty, true);
         _injectionActionPopup.SetCurrentValue(Popup.PlacementProperty, PlacementMode.AbsolutePoint);
         _injectionActionPopup.SetCurrentValue(Popup.StaysOpenProperty, true);
+        _injectionActionPopup.SetCurrentValue(Popup.PopupAnimationProperty, PopupAnimation.Fade);
         _injectionActionPopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
         _injectionActionPopup.PreviewMouseLeftButtonDown += JarvisButton_PreviewMouseLeftButtonDown;
         _injectionActionPopup.PreviewMouseMove += JarvisButton_MouseMove;
@@ -473,6 +474,7 @@ public class PopupDictionaryService : ObserveralObject
         _menuSelectionActionsPopup.SetCurrentValue(Popup.AllowsTransparencyProperty, true);
         _menuSelectionActionsPopup.SetCurrentValue(Popup.PlacementProperty, PlacementMode.AbsolutePoint);
         _menuSelectionActionsPopup.SetCurrentValue(Popup.StaysOpenProperty, true);
+        _menuSelectionActionsPopup.SetCurrentValue(Popup.PopupAnimationProperty, PopupAnimation.Fade);
         _menuSelectionActionsPopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
 
         Binding verticalBinding = new Binding("MenuSelectionActionsPosition.Y");
@@ -500,6 +502,7 @@ public class PopupDictionaryService : ObserveralObject
         _menuSelectionResponsePopup.SetCurrentValue(Popup.AllowsTransparencyProperty, true);
         _menuSelectionResponsePopup.SetCurrentValue(Popup.PlacementProperty, PlacementMode.AbsolutePoint);
         _menuSelectionResponsePopup.SetCurrentValue(Popup.StaysOpenProperty, true);
+        _menuSelectionResponsePopup.SetCurrentValue(Popup.PopupAnimationProperty, PopupAnimation.Fade);
         _menuSelectionResponsePopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
 
         MenuSelectionResponsePosition = new Point(100, 500);
@@ -529,6 +532,7 @@ public class PopupDictionaryService : ObserveralObject
         _menuSelectionPopupListPopup.SetCurrentValue(Popup.AllowsTransparencyProperty, true);
         _menuSelectionPopupListPopup.SetCurrentValue(Popup.PlacementProperty, PlacementMode.AbsolutePoint);
         _menuSelectionPopupListPopup.SetCurrentValue(Popup.StaysOpenProperty, true);
+        _menuSelectionPopupListPopup.SetCurrentValue(Popup.PopupAnimationProperty, PopupAnimation.Slide);
         _menuSelectionPopupListPopup.SetCurrentValue(UIElement.IsEnabledProperty, true);
 
         MenuSelectionPopupListPosition = new Point(1000, 500);

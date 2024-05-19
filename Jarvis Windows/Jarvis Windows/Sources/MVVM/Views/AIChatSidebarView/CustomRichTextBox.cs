@@ -65,7 +65,7 @@ public class CustomRichTextBox : RichTextBox
 
             var borderSpecialText = new Border
             {
-                Background = Brushes.LightBlue,
+                Background = new BrushConverter().ConvertFromString("#E5E7EB") as Brush,
                 CornerRadius = new CornerRadius(4),
                 Padding = new Thickness(4, 0, 4, 0),
                 Margin = new Thickness(0, 1, 0, -4),

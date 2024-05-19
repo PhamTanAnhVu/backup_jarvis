@@ -53,11 +53,11 @@ public partial class SettingView : Window
 
     private void Setting_MouseEnter(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAppUIChanged(true, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAppUIChanged(true, EventArgs.Empty);
     }
 
     private void Setting_MouseLeave(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
     }
 }

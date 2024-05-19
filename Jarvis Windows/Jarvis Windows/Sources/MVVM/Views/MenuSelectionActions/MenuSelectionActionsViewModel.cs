@@ -14,10 +14,10 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionActionsViewModel : ViewModelBase
 {
-    private static bool _isMouseOver_AppUI;
-    private bool _isMouseOver_TextMenuSelection;
-    private bool _isMouseOver_TextMenuPopup;
     private IKeyboardMouseEvents _globalMouseHook;
+    private bool _isMouseOverActions;
+    private bool _isMouseOverResponse;
+    private bool _isMouseOverPopup;
     public RelayCommand MenuSelectionCommand { get; set; }
     public RelayCommand MenuSelectionPinCommand { get; set; }
     public RelayCommand ShowMenuSelectionPopupListCommand { get; set; }
@@ -34,17 +34,31 @@ public class MenuSelectionActionsViewModel : ViewModelBase
         _globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
         _globalMouseHook.MouseDragFinished += MouseDragFinished;
         _globalMouseHook.MouseClick += MouseClicked;
-        EventAggregator.MouseOverAppUIChanged += (sender, e) =>
+
+        RegisterEvents();
+    }
+
+    private void RegisterEvents()
+    {
+        MenuSelectionSharedData.MouseOverActions += (sender, e) =>
         {
-            _isMouseOver_AppUI = (bool)sender;
+            _isMouseOverActions = (bool)sender;
         };
-        EventAggregator.MouseOverTextMenuSelectionChanged += (sender, e) =>
+
+        MenuSelectionSharedData.MouseOverResponse += (sender, e) =>
         {
-            _isMouseOver_TextMenuSelection = (bool)sender;
+            _isMouseOverResponse = (bool)sender;
         };
-        EventAggregator.MouseOverTextMenuPopupChanged += (sender, e) =>
+
+        MenuSelectionSharedData.MouseOverPopup += (sender, e) =>
         {
-            _isMouseOver_TextMenuPopup = (bool)sender;
+            _isMouseOverPopup = (bool)sender;
+        };
+
+        MenuSelectionSharedData.MenuSelectionPopupPinExecuted += (sender, e) =>
+        {
+            int idx = (int)sender;
+            MenuSelectionButtons[idx].Visibility = !MenuSelectionButtons[idx].Visibility;
         };
     }
 
@@ -62,17 +76,17 @@ public class MenuSelectionActionsViewModel : ViewModelBase
 
     private void UpdateMenuSelectionPopupListPosition()
     {
-        int textMenuWidth = 32;
+        int selectionActionsWidth = 32;
         foreach (var action in MenuSelectionButtons)
         {
             action.ExtraIconVisibility = true;
-            if (action.Visibility) textMenuWidth += 32;
+            if (action.Visibility) selectionActionsWidth += 32;
         }
 
         PopupDictionaryService.Instance().MenuSelectionPopupListPosition = new System.Drawing.Point
         (
-            PopupDictionaryService.Instance().MenuSelectionPopupListPosition.X + (textMenuWidth - 195),
-            PopupDictionaryService.Instance().MenuSelectionPopupListPosition.Y + 40
+            PopupDictionaryService.Instance().MenuSelectionActionsPosition.X + (selectionActionsWidth - 190),
+            PopupDictionaryService.Instance().MenuSelectionActionsPosition.Y + 40
         );
     }
 
@@ -80,7 +94,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
     {
         UpdateMenuSelectionPopupListPosition();
         PopupDictionaryService.Instance().IsShowMenuSelectionPopupList = !PopupDictionaryService.Instance().IsShowMenuSelectionPopupList;
-        
+
         if (!PopupDictionaryService.Instance().IsPinMenuSelectionResponse)
         {
             // Turn off MenuSelectionResponse View if not pinned
@@ -105,22 +119,21 @@ public class MenuSelectionActionsViewModel : ViewModelBase
 
     private void MouseClicked(object? sender, System.Windows.Forms.MouseEventArgs e)
     {
-        double screenHeight = SystemParameters.PrimaryScreenHeight;
-        double screenWidth = SystemParameters.PrimaryScreenWidth;
-        double xScale = screenWidth / 1920;
-        double yScale = screenHeight / 1080;
-        Point mousePoint = new Point((int)(e.X * xScale), (int)(e.Y * yScale));
-
-        //TODO::Check if the mouse is not over menu text selection
-        if (PopupDictionaryService.Instance().IsShowMenuSelectionActions)
+        //TODO::Check if the mouse is not over menu selection actions
+        if (PopupDictionaryService.Instance().IsShowMenuSelectionActions && !_isMouseOverActions)
         {
-            if (_isMouseOver_TextMenuPopup || _isMouseOver_TextMenuSelection)
-            {
-                return;
-            }
-
             PopupDictionaryService.Instance().IsShowMenuSelectionActions = false;
+        }
+
+        if (PopupDictionaryService.Instance().IsShowMenuSelectionPopupList && !_isMouseOverPopup)
+        {
             PopupDictionaryService.Instance().IsShowMenuSelectionPopupList = false;
+        }
+        
+
+        if (PopupDictionaryService.Instance().IsShowMenuSelectionResponse && !PopupDictionaryService.Instance().IsPinMenuSelectionResponse && !_isMouseOverResponse)
+        {
+            PopupDictionaryService.Instance().IsShowMenuSelectionResponse = false;
         }
     }
     private async void MouseDoubleClicked(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -186,7 +199,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
     static System.Windows.Point _lastMousePoint = new System.Windows.Point();
     private async void MouseDragFinished(object sender, System.Windows.Forms.MouseEventArgs e)
     {
-        if (_isMouseOver_AppUI || PopupDictionaryService.Instance().IsDragging)
+        if (PopupDictionaryService.Instance().IsDragging)
         {
             PopupDictionaryService.Instance().IsShowMenuSelectionActions = false;
             return;
@@ -210,7 +223,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
 
         try
         {
-            if (System.Windows.Clipboard.ContainsText())
+            if (!_isMouseOverResponse && System.Windows.Clipboard.ContainsText())
             {
                 AccessibilityService.GetInstance().CurrentSelectedText = Clipboard.GetText();
                 Debug.WriteLine("Clipboard text: " + Clipboard.GetText());

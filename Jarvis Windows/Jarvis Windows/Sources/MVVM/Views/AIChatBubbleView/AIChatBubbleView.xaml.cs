@@ -5,6 +5,8 @@ using Gma.System.MouseKeyHook;
 using Jarvis_Windows.Sources.Utils.Services;
 using System.IO;
 using System;
+using Stfu.Linq;
+using Jarvis_Windows.Sources.MVVM.Models;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView;
 public partial class AIChatBubbleView : UserControl
@@ -67,8 +69,8 @@ public partial class AIChatBubbleView : UserControl
         }
 
         _isShowExtraButtons = false;
-        CloseBubblePopup.IsOpen = false;
-
+        CloseBubbleBorder.Visibility = Visibility.Collapsed;
+        BubbleButton.Opacity = 0.5;
         ExtraButton.Visibility = Visibility.Hidden;
         SettingButton.Visibility = Visibility.Hidden;
 
@@ -82,7 +84,9 @@ public partial class AIChatBubbleView : UserControl
         if (_isShowExtraButtons) return;
 
         _isShowExtraButtons = true;
-        CloseBubblePopup.IsOpen = true;
+        BubbleButton.Opacity = 1;
+        CloseBubbleBorder.Visibility = Visibility.Visible;
+        CloseBubbleBorder.Margin = new Thickness(-BubbleButton.ActualWidth - 35, -BubbleButton.ActualHeight + 5, 0, 0);
 
         ExtraButton.Visibility = Visibility.Visible;
         SettingButton.Visibility = Visibility.Visible;

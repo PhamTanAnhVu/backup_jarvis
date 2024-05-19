@@ -1,5 +1,6 @@
 using Hardcodet.Wpf.TaskbarNotification;
 using Jarvis_Windows.Sources.Utils.Services;
+using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows;
@@ -19,14 +20,14 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions
             InitializeComponent();
         }
 
-        //private void TextMenuPopup_MouseEnter(object sender, EventArgs e)
-        //{
-        //    EventAggregator.PublishMouseOverTextMenuPopupChanged(true, EventArgs.Empty);
-        //}
+        private void MenuSelectionActions_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MenuSelectionSharedData.PublishMouseOverActions(true, EventArgs.Empty);
+        }
 
-        //private void TextMenuPopup_MouseLeave(object sender, EventArgs e)
-        //{
-        //    EventAggregator.PublishMouseOverTextMenuPopupChanged(false, EventArgs.Empty);
-        //}
+        private void MenuSelectionActions_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MenuSelectionSharedData.PublishMouseOverActions(false, EventArgs.Empty);
+        }
     }
 }

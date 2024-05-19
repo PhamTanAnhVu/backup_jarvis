@@ -69,31 +69,31 @@ public partial class MainView : Window
 
     private void App_MouseEnter(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAppUIChanged(true, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAppUIChanged(true, EventArgs.Empty);
     }
 
     private void App_MouseLeave(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
     }
     private void TextMenuSelection_MouseEnter(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverTextMenuSelectionChanged(true, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverTextMenuSelectionChanged(true, EventArgs.Empty);
     }
 
     private void TextMenuSelection_MouseLeave(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverTextMenuSelectionChanged(false, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverTextMenuSelectionChanged(false, EventArgs.Empty);
     }
     
     private async void AIChatSidebar_MouseEnter(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAIChatPanelChanged(true, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAIChatPanelChanged(true, EventArgs.Empty);
     }
 
     private async void AIChatSidebar_MouseLeave(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAIChatPanelChanged(false, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAIChatPanelChanged(false, EventArgs.Empty);
     }
 
     private void Sidebar_Click(object sender, EventArgs e)

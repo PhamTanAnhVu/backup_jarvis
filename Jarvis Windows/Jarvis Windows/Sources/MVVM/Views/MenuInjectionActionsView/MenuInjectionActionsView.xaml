@@ -171,7 +171,8 @@
                 </Grid>
             </Grid>
 
-            <Grid Grid.Row="2" Style="{StaticResource GridIsAPIUsageRemain}">
+            <Grid Grid.Row="2" Style="{StaticResource GridIsAPIUsageRemain}"
+                  Visibility="{Binding IsAPIUsageRemain, Converter={StaticResource VisibilityConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition MinHeight="50" MaxHeight="70"/>
@@ -330,7 +331,8 @@
                 </Grid>
             </Grid>
 
-            <Grid Grid.Row="3" Style="{StaticResource GridIsNoAPIUsageRemain}" Height="318">
+            <Grid Grid.Row="3" Style="{StaticResource GridIsNoAPIUsageRemain}" Height="318"
+                  Visibility="{Binding IsNoAPIUsageRemain, Converter={StaticResource VisibilityConverter}}">
                 <Border Background="White" CornerRadius="20" Width="316" Height="203" Padding="20">
                     <Grid>
                         <Grid.RowDefinitions>

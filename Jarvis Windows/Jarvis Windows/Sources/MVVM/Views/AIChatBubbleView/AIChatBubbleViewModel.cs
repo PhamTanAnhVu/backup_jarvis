@@ -47,6 +47,11 @@ public class AIChatBubbleViewModel : ViewModelBase
 
     public async void ExecuteShowMainNavigationCommand(object obj)
     {
+        if (AIChatBubbleEventTrigger.IsBubbleDragged)
+        {
+            AIChatBubbleEventTrigger.IsBubbleDragged = false;
+            return;
+        }
         PopupDictionaryService.Instance().IsShowMainNavigation = true;
         EventAggregator.PublishPropertyMessageChanged(
             InitPropertyMessage("IsShowMainNavigation", true), null

@@ -71,6 +71,8 @@ public class MenuSelectionPopupListViewModel : ViewModelBase
             PopupDictionaryService.Instance().MenuSelectionActionsPosition.Y
         );
 
+
+        MenuSelectionSharedData.PublishMenuSelectionPopupPinExecuted(idx, EventArgs.Empty);
         //UpdateMenuSelectionPopupListPosition();
 
         PopupDictionaryService.Instance().IsShowMenuSelectionActions = true;
@@ -78,4 +80,6 @@ public class MenuSelectionPopupListViewModel : ViewModelBase
         MenuSelectionButtons[idx].PinColor = colors[Convert.ToInt32(visibilityStatus)];
         OnPropertyChanged(nameof(MenuSelectionButtons));
     }
+
+
 }

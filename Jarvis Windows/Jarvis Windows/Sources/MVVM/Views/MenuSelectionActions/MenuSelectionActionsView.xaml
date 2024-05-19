@@ -20,9 +20,9 @@
         <local:MenuSelectionActionsViewModel/>
     </UserControl.DataContext>
 
-    <Border CornerRadius="10" Background="#FFFFFF" BorderBrush="#FFFFFF" BorderThickness="1">
-        <!--MouseEnter="TextSelection_MouseEnter"
-        MouseLeave="TextSelection_MouseLeave">-->
+    <Border CornerRadius="10" Background="#FFFFFF" BorderBrush="#FFFFFF" BorderThickness="1"
+            MouseEnter="MenuSelectionActions_MouseEnter"
+            MouseLeave="MenuSelectionActions_MouseLeave">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
