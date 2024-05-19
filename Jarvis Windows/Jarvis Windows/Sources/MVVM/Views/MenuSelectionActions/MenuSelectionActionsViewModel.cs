@@ -15,9 +15,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
 public class MenuSelectionActionsViewModel : ViewModelBase
 {
-    private static bool _isMouseOver_AppUI;
-    private bool _isMouseOver_TextMenuSelection;
-    private bool _isMouseOver_TextMenuPopup;
     private IKeyboardMouseEvents _globalMouseHook;
     private bool _isMouseOverActions;
     private bool _isMouseOverResponse;
@@ -98,7 +95,7 @@ public class MenuSelectionActionsViewModel : ViewModelBase
     {
         UpdateMenuSelectionPopupListPosition();
         PopupDictionaryService.Instance().IsShowMenuSelectionPopupList = !PopupDictionaryService.Instance().IsShowMenuSelectionPopupList;
-        
+
         if (!PopupDictionaryService.Instance().IsPinMenuSelectionResponse)
         {
             // Turn off MenuSelectionResponse View if not pinned

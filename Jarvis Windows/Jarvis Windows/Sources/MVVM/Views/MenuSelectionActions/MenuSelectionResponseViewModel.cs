@@ -148,6 +148,12 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         {
             MenuSelectionCommand.Execute(sender);
         };
+
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+        EventAggregator.ApiUsageChanged += (sender, e) =>
+        {
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+        };
     }
 
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
