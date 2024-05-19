@@ -111,6 +111,7 @@
 
                 <Button BorderBrush="Transparent" Background="Transparent"
                         x:Name="pinPositionButton"
+                        Margin="2 0"
                         Command="{Binding PinJarvisButtonCommand}" Width="30" Height="30">
                     <Button.Content>
                         <Path

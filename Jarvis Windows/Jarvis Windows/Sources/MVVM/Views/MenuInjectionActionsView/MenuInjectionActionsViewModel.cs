@@ -361,6 +361,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
         private void ExecuteHideMenuOperationsCommand(object obj)
         {
             PopupDictionaryService.Instance().IsShowMenuOperations = false;
+            PopupDictionaryService.Instance().ShowJarvisAction(true);
         }
 
         private void ExecuteQuitAppCommand(object obj)
