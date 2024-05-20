@@ -1,4 +1,4 @@
-ï»¿using Jarvis_Windows.Sources.Utils.Services;
+using Jarvis_Windows.Sources.Utils.Services;
 using System.Diagnostics;
 using System;
 using System.Drawing;
@@ -9,12 +9,9 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
 {
     public class CustomContextMenuView : ContextMenuStrip
     {
-        private SendEventGA4 _googleAnalytic;
-
         public CustomContextMenuView()
         {
             DecorateMenuItems();
-            _googleAnalytic = DependencyInjection.GetService<SendEventGA4>();
         }
 
         private void DecorateMenuItems()
@@ -37,11 +34,11 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
             EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
         }
 
-        private async void QuitMenuItem_Click(object? sender, EventArgs e)
+        private void QuitMenuItem_Click(object? sender, EventArgs e)
         {
             try
             {
-                await _googleAnalytic.SendEvent("quit_app");
+                _ = GoogleAnalyticService.Instance().SendEvent("quit_app");
                 Process.GetCurrentProcess().Kill();
             }
             catch
@@ -61,14 +58,14 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
                 //Rectangle rc = new Rectangle(System.Drawing.Point.Empty, e.Item.Size);
                 //e.Graphics.FillRectangle(System.Drawing.Brushes.Transparent, rc);
                 //e.Graphics.DrawRectangle(Pens.Transparent, 1, 0, rc.Width - 2, rc.Height - 1);
-                /*int borderRadius = 10; // KÃ­ch thÆ°á»›c gÃ³c bo trÃ²n
+                /*int borderRadius = 10; // Kích thu?c góc bo tròn
                 int arcSize = borderRadius * 2;
                 using (GraphicsPath path = new GraphicsPath())
                 {
-                    path.AddArc(rc.X, rc.Y, arcSize, arcSize, 180, 90); // GÃ³c trÃªn bÃªn trÃ¡i
-                    path.AddArc(rc.Right - arcSize, rc.Y, arcSize, arcSize, 270, 90); // GÃ³c trÃªn bÃªn pháº£i
-                    path.AddArc(rc.Right - arcSize, rc.Bottom - arcSize, arcSize, arcSize, 0, 90); // GÃ³c dÆ°á»›i bÃªn pháº£i
-                    path.AddArc(rc.X, rc.Bottom - arcSize, arcSize, arcSize, 90, 90); // GÃ³c dÆ°á»›i bÃªn trÃ¡i
+                    path.AddArc(rc.X, rc.Y, arcSize, arcSize, 180, 90); // Góc trên bên trái
+                    path.AddArc(rc.Right - arcSize, rc.Y, arcSize, arcSize, 270, 90); // Góc trên bên ph?i
+                    path.AddArc(rc.Right - arcSize, rc.Bottom - arcSize, arcSize, arcSize, 0, 90); // Góc du?i bên ph?i
+                    path.AddArc(rc.X, rc.Bottom - arcSize, arcSize, arcSize, 90, 90); // Góc du?i bên trái
                     path.CloseFigure();
 
                     e.Graphics.FillPath(Brushes.Transparent, path);

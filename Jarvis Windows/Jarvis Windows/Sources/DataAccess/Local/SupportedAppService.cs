@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.MVVM.Models;
+using Jarvis_Windows.Sources.MVVM.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

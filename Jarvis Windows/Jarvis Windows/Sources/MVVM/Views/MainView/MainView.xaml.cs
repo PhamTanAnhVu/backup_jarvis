@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Forms;
@@ -17,7 +17,7 @@ using System.Windows.Media;
 namespace Jarvis_Windows.Sources.MVVM.Views.MainView;
 public partial class MainView : Window
 {
-    // private SendEventGA4 _sendEventGA4;
+    // private GoogleAnalyticService _sendEventGA4;
     private NotifyIcon _notifyIcon;
 
     private bool _isMainWindowOpened;
@@ -29,12 +29,12 @@ public partial class MainView : Window
     private System.Windows.Point _menuActionPoint;
     private System.Windows.Point _jarvisButtonPoint;
     private System.Windows.Point _textMenuAPIPoint;
-    //public SendEventGA4 SendEventGA4
+    //public GoogleAnalyticService GoogleAnalyticService
     //{
     //    get { return _sendEventGA4; }
     //    set { _sendEventGA4 = value; }
     //}
-    public SendEventGA4 SendEventGA4 { get; internal set; }
+    public GoogleAnalyticService GoogleAnalyticService { get; internal set; }
     public PopupDictionaryService PopupDictionaryService { get; internal set; }
 
     public MainView()
@@ -61,7 +61,7 @@ public partial class MainView : Window
             this.Show();
             this.Activate();
             if (_isMainWindowOpened == false)
-                await SendEventGA4.SendEvent("open_main_window");
+                await GoogleAnalyticService.SendEvent("open_main_window");
 
             _isMainWindowOpened = true;
         }
@@ -69,31 +69,31 @@ public partial class MainView : Window
 
     private void App_MouseEnter(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAppUIChanged(true, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAppUIChanged(true, EventArgs.Empty);
     }
 
     private void App_MouseLeave(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
     }
-    private void TextSelectionMenu_MouseEnter(object sender, EventArgs e)
+    private void TextMenuSelection_MouseEnter(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverTextSelectionMenuChanged(true, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverTextMenuSelectionChanged(true, EventArgs.Empty);
     }
 
-    private void TextSelectionMenu_MouseLeave(object sender, EventArgs e)
+    private void TextMenuSelection_MouseLeave(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverTextSelectionMenuChanged(false, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverTextMenuSelectionChanged(false, EventArgs.Empty);
     }
     
     private async void AIChatSidebar_MouseEnter(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAIChatPanelChanged(true, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAIChatPanelChanged(true, EventArgs.Empty);
     }
 
     private async void AIChatSidebar_MouseLeave(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAIChatPanelChanged(false, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAIChatPanelChanged(false, EventArgs.Empty);
     }
 
     private void Sidebar_Click(object sender, EventArgs e)
@@ -105,7 +105,7 @@ public partial class MainView : Window
     {
         try
         {
-            await SendEventGA4.SendEvent("quit_app");
+            await GoogleAnalyticService.SendEvent("quit_app");
             Process.GetCurrentProcess().Kill(); //DaiTT fix
         }
 
@@ -241,7 +241,7 @@ public partial class MainView : Window
             double newY = Math.Min(Math.Max(AbsolutePos.Y - _textMenuAPIPoint.Y, screenBounds.Top), maxY);
 
             // PopupDictionaryService.IsShowTextMenuOperations = false;
-            PopupDictionaryService.TextMenuAPIPosition = new System.Drawing.Point((int)newX, (int)newY);
+            PopupDictionaryService.MenuSelectionResponsePosition = new System.Drawing.Point((int)newX, (int)newY);
         }
     }
 

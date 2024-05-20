@@ -3,9 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:style="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Styles"
+        xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
         xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView"
         mc:Ignorable="d"
-        Height="38" Width="Auto" HorizontalAlignment="Right">
+        Height="Auto" Width="Auto" HorizontalAlignment="Right"
+        x:Name="BubbleUserControl">
     
     <UserControl.Resources>
         <ResourceDictionary>
@@ -15,11 +18,168 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-        <Button Style="{StaticResource AIBubbleButton}"
-                    Command="{Binding ShowAIChatSidebarCommand}">
-        <Button.Content>
-            <Image Source="../../../../Assets/Images/jarvis_logo_large.png" Width="24" Height="24" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
-        </Button.Content>
-    </Button>
-     
+    <UserControl.DataContext>
+        <local:AIChatBubbleViewModel/>
+    </UserControl.DataContext>
+
+    <Grid x:Name="BubbleGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="44"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" x:Name="ExtraButton" Visibility="Hidden" HorizontalAlignment="Right"
+                CornerRadius="20" Background="White" Width="40" Height="Auto">
+            <StackPanel Orientation="Vertical">
+                <Grid Margin="{StaticResource PaddingVertical1.5}">
+                    <Button x:Name="ScreenshotAskButton" Width="34" Height="34"
+                            Style="{StaticResource ExtendAIBubbleButton}"
+                            MouseEnter="MouseEnter_ExtraButton" MouseLeave="MouseLeave_ExtraButton" CommandParameter="0">
+                        <Button.Content>
+                            <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="18" Height="18">
+                                <Canvas Width="18" Height="18">
+                                    <Path Fill="{Binding AIBubbleButton[0].Color}" Data="M4.02553 0.51758C4.02553 0.231732 3.79381 7.62939e-06 3.50796 7.62939e-06C3.22211 7.62939e-06 2.99039 0.231732 2.99039 0.51758V2.58787H0.920099C0.634252 2.58787 0.402527 2.81959 0.402527 3.10544C0.402527 3.39129 0.634252 3.62301 0.920099 3.62301H2.99039V9.71886H4.02553V0.51758ZM8.28112 13.9744V15.0096H14.377V17.0799C14.377 17.3657 14.6087 17.5975 14.8945 17.5975C15.1804 17.5975 15.4121 17.3657 15.4121 17.0799V15.0096H17.4824C17.7682 15.0096 18 14.7779 18 14.492C18 14.2062 17.7682 13.9744 17.4824 13.9744H8.28112ZM6.61339 2.58787C6.32754 2.58787 6.09582 2.81959 6.09582 3.10544C6.09582 3.39129 6.32754 3.62301 6.61339 3.62301H14.377V11.3866C14.377 11.6724 14.6087 11.9042 14.8945 11.9042C15.1804 11.9042 15.4121 11.6724 15.4121 11.3866V3.10544C15.4121 2.81959 15.1804 2.58787 14.8945 2.58787H6.61339Z"/>
+                                    <Path Fill="{Binding AIBubbleButton[0].Color}" Data="M3.68053 10.639L4.30967 12.5264C4.49284 13.076 4.92404 13.5072 5.47355 13.6903L7.36102 14.3195L5.47355 14.9486C4.92404 15.1318 4.49284 15.563 4.30967 16.1125L3.68053 18L3.05136 16.1125C2.86818 15.563 2.43699 15.1318 1.88748 14.9486L0 14.3195L1.88748 13.6903C2.43699 13.5072 2.86818 13.076 3.05136 12.5265L3.68053 10.639Z"/>
+                                </Canvas>
+                            </Viewbox>
+                        </Button.Content>
+                    </Button>
+
+                    <Popup PlacementTarget="{Binding ElementName=ScreenshotAskButton}" IsOpen="{Binding IsMouseOver, ElementName=ScreenshotAskButton, Mode=OneWay}" 
+                           Placement="Left" StaysOpen="True" VerticalOffset="5" HorizontalOffset="-10">
+                        <Border Width="Auto" Height="24" Background="#1C2024" CornerRadius="4" Padding="8 4 8 4">
+                            <TextBlock Text="Screenshot and ask AI" Foreground="White"
+                                       Style="{StaticResource XsTextblock400}"/>
+                        </Border>
+                    </Popup>
+                </Grid>
+
+                <Grid Margin="{StaticResource PaddingVertical1.5}">
+                    <Button x:Name="ScreenshotButton" Width="34" Height="34"
+                            Style="{StaticResource ExtendAIBubbleButton}"
+                            MouseEnter="MouseEnter_ExtraButton" MouseLeave="MouseLeave_ExtraButton" CommandParameter="1">
+                        <Button.Content>
+                            <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="20" Height="20">
+                                <Canvas Width="20" Height="20">
+                                    <Path Fill="{Binding AIBubbleButton[1].Color}" Data="M3.8125 0.4375C4.12316 0.4375 4.375 0.68934 4.375 1V15.625H19C19.3107 15.625 19.5625 15.8768 19.5625 16.1875C19.5625 16.4982 19.3107 16.75 19 16.75H16.75V19C16.75 19.3107 16.4982 19.5625 16.1875 19.5625C15.8768 19.5625 15.625 19.3107 15.625 19V16.75H3.8125C3.50184 16.75 3.25 16.4982 3.25 16.1875V4.375H1C0.68934 4.375 0.4375 4.12316 0.4375 3.8125C0.4375 3.50184 0.68934 3.25 1 3.25H3.25V1C3.25 0.68934 3.50184 0.4375 3.8125 0.4375ZM6.625 3.8125C6.625 3.50184 6.87684 3.25 7.1875 3.25H16.1875C16.4982 3.25 16.75 3.50184 16.75 3.8125V12.8125C16.75 13.1232 16.4982 13.375 16.1875 13.375C15.8768 13.375 15.625 13.1232 15.625 12.8125V4.375H7.1875C6.87684 4.375 6.625 4.12316 6.625 3.8125Z"/>
+                                </Canvas>
+                            </Viewbox>
+                        </Button.Content>
+                    </Button>
+
+                    <Popup PlacementTarget="{Binding ElementName=ScreenshotButton}" IsOpen="{Binding IsMouseOver, ElementName=ScreenshotButton, Mode=OneWay}" 
+                           Placement="Left" StaysOpen="True" VerticalOffset="5" HorizontalOffset="-10">
+                        <Border Width="Auto" Height="24" Background="#1C2024" CornerRadius="4" Padding="8 4 8 4">
+                            <TextBlock Text="Screenshot" Foreground="White"
+                                       Style="{StaticResource XsTextblock400}"/>
+                        </Border>
+                    </Popup>
+                </Grid>
+
+                <Grid Margin="{StaticResource PaddingVertical1.5}">
+                    <Button x:Name="SummarizePageButton" Width="34" Height="34"
+                            Style="{StaticResource ExtendAIBubbleButton}"
+                            MouseEnter="MouseEnter_ExtraButton" MouseLeave="MouseLeave_ExtraButton" CommandParameter="2">
+                        <Button.Content>
+                            <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="18" Height="18">
+                                <Canvas Width="18" Height="18">
+                                    <Path Fill="{Binding AIBubbleButton[2].Color}" Data="M1.125 3.18098C2.1206 2.76499 3.54814 2.31684 4.93614 2.17684C6.43274 2.02589 7.7022 2.24781 8.4375 3.02251V13.9866C7.38575 13.3903 6.05323 13.3085 4.82324 13.4325C3.49529 13.5665 2.15742 13.9512 1.125 14.3449V3.18098ZM9.5625 3.02251C10.2978 2.24781 11.5673 2.02589 13.0639 2.17684C14.4519 2.31684 15.8794 2.76499 16.875 3.18098V14.3449C15.8426 13.9512 14.5047 13.5665 13.1768 13.4325C11.9468 13.3085 10.6143 13.3903 9.5625 13.9866V3.02251ZM9 2.00591C7.89197 1.05349 6.28518 0.910062 4.82324 1.05752C3.11987 1.22933 1.40016 1.81386 0.329736 2.30041C0.128927 2.39169 0 2.59191 0 2.81249V15.1875C0 15.3787 0.0971731 15.5569 0.257971 15.6604C0.418768 15.764 0.621157 15.7787 0.795264 15.6996C1.78734 15.2486 3.38638 14.7082 4.93614 14.5518C6.52011 14.3921 7.84965 14.65 8.56076 15.5389C8.66751 15.6723 8.82912 15.75 9 15.75C9.17088 15.75 9.33249 15.6723 9.43924 15.5389C10.1503 14.65 11.4799 14.3921 13.0639 14.5518C14.6136 14.7082 16.2127 15.2486 17.2047 15.6996C17.3788 15.7787 17.5812 15.764 17.742 15.6604C17.9028 15.5569 18 15.3787 18 15.1875V2.81249C18 2.59191 17.8711 2.39169 17.6703 2.30041C16.5998 1.81386 14.8801 1.22933 13.1768 1.05752C11.7148 0.910062 10.108 1.05349 9 2.00591Z"/>
+                                </Canvas>
+                            </Viewbox>
+
+                        </Button.Content>
+                    </Button>
+                    <Popup PlacementTarget="{Binding ElementName=SummarizePageButton}" IsOpen="{Binding IsMouseOver, ElementName=SummarizePageButton, Mode=OneWay}" 
+                            Placement="Left" StaysOpen="True" VerticalOffset="5" HorizontalOffset="-10">
+                        <Border Width="Auto" Height="24" Background="#1C2024" CornerRadius="4" Padding="8 4 8 4">
+                            <TextBlock Text="Summarize this page" Foreground="White"
+                                       Style="{StaticResource XsTextblock400}"/>
+                        </Border>
+                    </Popup>
+                </Grid>
+
+                <Grid Margin="{StaticResource PaddingVertical1.5}">
+                    <Button x:Name="TranslateButton" Width="34" Height="34"
+                            Style="{StaticResource ExtendAIBubbleButton}"
+                            MouseEnter="MouseEnter_ExtraButton" MouseLeave="MouseLeave_ExtraButton" CommandParameter="3">
+                        <Button.Content>
+                            <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="18" Height="18">
+                                <Canvas Width="18" Height="18">
+                                    <Path Fill="{Binding AIBubbleButton[3].Color}" Data="M4.54472 6.71429L4.10976 8H3L4.86179 3H6.14634L8 8H6.83333L6.39837 6.71429H4.54472ZM6.17886 5.97802L5.5 3.95604H5.45122L4.77236 5.97802H6.17886Z"/>
+                                    <Path Fill="{Binding AIBubbleButton[3].Color}" Data="M0 2C0 0.89543 0.895431 0 2 0H9C10.1046 0 11 0.895431 11 2V5H14C15.1046 5 16 5.89543 16 7V14C16 15.1046 15.1046 16 14 16H7C5.89543 16 5 15.1046 5 14V11H2C0.895431 11 0 10.1046 0 9V2ZM2 1C1.44772 1 1 1.44772 1 2V9C1 9.55228 1.44772 10 2 10H9C9.55228 10 10 9.55228 10 9V2C10 1.44772 9.55229 1 9 1H2ZM9.13769 10.9953C9.33066 11.2962 9.53999 11.5782 9.76744 11.841C9.02008 12.4162 8.09514 12.842 7 13.1334C7.17759 13.35 7.45137 13.7684 7.55497 14C8.6797 13.6414 9.63425 13.1558 10.4408 12.5059C11.2178 13.1708 12.1797 13.6713 13.371 13.9776C13.5042 13.7236 13.7854 13.3052 14 13.0886C12.8753 12.8346 11.9429 12.3938 11.1808 11.8036C11.8615 11.0566 12.4017 10.1526 12.8013 9.04696H14V8H11V9C11 9.01569 10.9998 9.03135 10.9995 9.04696H11.7653C11.4471 9.89114 11.0254 10.5934 10.4926 11.1761C10.3454 11.0198 10.2072 10.856 10.0775 10.6852C9.80282 10.8612 9.48223 10.9719 9.13769 10.9953Z"/>
+                                </Canvas>
+                            </Viewbox>
+
+                        </Button.Content>
+                    </Button>
+
+                    <Popup PlacementTarget="{Binding ElementName=TranslateButton}" IsOpen="{Binding IsMouseOver, ElementName=TranslateButton, Mode=OneWay}" 
+                           Placement="Left" StaysOpen="True" VerticalOffset="5" HorizontalOffset="-10">
+                        <Border Width="Auto" Height="24" Background="#1C2024" CornerRadius="4" Padding="8 4 8 4">
+                            <TextBlock Text="Web translation" Foreground="White"
+                                       Style="{StaticResource XsTextblock400}"/>
+                        </Border>
+                    </Popup>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Button x:Name="BubbleButton" Style="{StaticResource AIBubbleButton}" MouseEnter="MouseEnter_BubbleButton"
+                    Command="{Binding ShowMainNavigationCommand}" Opacity="0.5">
+                <Button.Content>
+                    <Grid>
+                        <Image Source="/Assets/Icons/Vector.ico" RenderOptions.BitmapScalingMode="Linear"
+                            Width="24" Height="24" HorizontalAlignment="Left"/>
+                        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+                            Width="18" Height="18" Margin="3 2 0 0" HorizontalAlignment="Left">
+                            <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="18" Height="15">
+                                <Path Fill="White" Data="M12.175 3.97188H14.5783C15.2119 3.97188 15.5946 4.71524 15.2542 5.28132L9.7072 14.4927C9.37682 15.0417 8.62137 15.0417 8.28998 14.4927L8.17012 14.2933L7.06213 12.453L12.175 3.97289V3.97188Z"/>
+                                <Path Fill="White" Data="M7.26863 10.5545C6.95336 11.0773 6.23317 11.0773 5.9179 10.5545L0.452499 1.47806C0.0949212 0.883776 0.496818 0.104156 1.1606 0.104156H3.5045L8.52871 8.46643L7.26964 10.5555L7.26863 10.5545Z"/>
+                                <Path Fill="White" Data="M17.5447 1.4769L16.5475 3.13384H6.26235L5.22789 1.41244C4.88743 0.845347 5.2712 0.102997 5.90376 0.102997H16.8366C17.5014 0.102997 17.9033 0.882617 17.5447 1.4769Z"/>
+                            </Canvas>
+                        </Viewbox>
+
+                        <TextBlock x:Name="BubbleButtonName" Margin="34 0 0 0" Visibility="Collapsed" VerticalAlignment="Center" LineHeight="1.5" FontFamily="Inter"
+                                   Text="Ctrl+J" Style="{StaticResource MdTextblock500}" Foreground="{StaticResource TailwindPrimary6}"/>
+                    </Grid>
+                </Button.Content>
+            </Button>
+
+            <Border x:Name="CloseBubbleBorder" Width="10" Height="10" Background="{StaticResource SolidColorBrushSlate500}" 
+                    CornerRadius="{StaticResource BorderRadiusLg}" Visibility="Collapsed">
+                <Button Style="{StaticResource CloseAIBubbleButton}"
+                        Command="{Binding CloseAIBubbleCommand}">
+                    <Button.Content>
+                        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="8" Height="8">
+                            <Canvas Width="8" Height="8">
+                                <Path Fill="White" Data="M0.646447 0.646447C0.841709 0.451184 1.15829 0.451184 1.35355 0.646447L4 3.29289L6.64645 0.646447C6.84171 0.451184 7.15829 0.451184 7.35355 0.646447C7.54882 0.841709 7.54882 1.15829 7.35355 1.35355L4.70711 4L7.35355 6.64645C7.54882 6.84171 7.54882 7.15829 7.35355 7.35355C7.15829 7.54882 6.84171 7.54882 6.64645 7.35355L4 4.70711L1.35355 7.35355C1.15829 7.54882 0.841709 7.54882 0.646447 7.35355C0.451184 7.15829 0.451184 6.84171 0.646447 6.64645L3.29289 4L0.646447 1.35355C0.451184 1.15829 0.451184 0.841709 0.646447 0.646447Z"/>
+                            </Canvas>
+                        </Viewbox>
+
+                    </Button.Content>
+                </Button>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <Button x:Name="SettingButton" Visibility="Hidden"
+                    Style="{StaticResource SettingAIBubbleButton}"
+                    MouseEnter="MouseEnter_ExtraButton" MouseLeave="MouseLeave_ExtraButton" CommandParameter="4">
+                <Button.Content>
+                    <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="16" Height="16">
+                        <Path Fill="{Binding AIBubbleButton[4].Color}" Data="M2 4.58032L8.00002 1.15179L14 4.58032L14 11.4198L8.00002 14.8483L2 11.4197L2 4.58032ZM1 11.4197C1 11.7786 1.19229 12.1099 1.50387 12.288L7.50389 15.7165C7.81132 15.8922 8.18872 15.8922 8.49615 15.7165L14.4961 12.288C14.8077 12.11 15 11.7786 15 11.4198L15 4.58032C15 4.22147 14.8077 3.89012 14.4962 3.71208L8.49615 0.283542C8.18872 0.107869 7.81132 0.107868 7.50389 0.283541L1.50387 3.71208C1.19229 3.89012 1 4.22146 1 4.58032L1 11.4197Z"/>
+                        <Path Fill="{Binding AIBubbleButton[4].Color}" Data="M5.93303 9.15192C6.62339 10.3477 8.15236 10.7573 9.3481 10.067C10.5438 9.37663 10.9535 7.84765 10.2632 6.65192C9.5728 5.45619 8.04383 5.0465 6.8481 5.73686C5.65236 6.42721 5.24268 7.95619 5.93303 9.15192ZM9.8481 10.933C8.17407 11.8995 6.03351 11.3259 5.06701 9.65192C4.10051 7.9779 4.67407 5.83733 6.3481 4.87083C8.02212 3.90433 10.1627 4.4779 11.1292 6.15192C12.0957 7.82594 11.5221 9.96651 9.8481 10.933Z"/>
+                    </Canvas>
+                </Button.Content>
+            </Button>
+        </Grid>
+    
+
+
+    </Grid>
+
 </UserControl>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 namespace Jarvis_Windows.Sources.Utils.WindowsAPI
@@ -62,5 +62,24 @@ namespace Jarvis_Windows.Sources.Utils.WindowsAPI
 
         [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll", EntryPoint = "WindowFromPoint", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr WindowFromPoint(System.Windows.Point pt);
+
+        [DllImport("user32.dll", EntryPoint = "SendMessageW")]
+        public static extern int SendMessageW([InAttribute] System.IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
+        public const int WM_GETTEXT = 13;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        internal static extern IntPtr GetFocus();
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern int GetWindowThreadProcessId(int handle, out int processId);
+
+        [DllImport("user32", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
+        internal static extern int AttachThreadInput(int idAttach, int idAttachTo, bool fAttach);
+
+        [DllImport("kernel32.dll")]
+        internal static extern int GetCurrentThreadId();
     }
 }

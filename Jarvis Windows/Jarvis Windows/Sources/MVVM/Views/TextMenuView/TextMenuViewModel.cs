@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.DataAccess.Network;
+using Jarvis_Windows.Sources.DataAccess.Network;
 using Jarvis_Windows.Sources.Utils.Accessibility;
 using Jarvis_Windows.Sources.Utils.Constants;
 using Jarvis_Windows.Sources.Utils.Core;
@@ -16,9 +16,9 @@ namespace Jarvis_Windows.Sources.MVVM.ViewModels;
 
 public class TextMenuViewModel : ViewModelBase
 {
-    private PopupDictionaryService _popupDictionaryService;
-    private UIElementDetector _uIElementDetector;
-    private SendEventGA4 _sendEventGA4;
+    //private PopupDictionaryService _popupDictionaryService;
+    private AccessibilityService _uIElementDetector;
+    private GoogleAnalyticService _sendEventGA4;
 
     private int _languageSelectedIndex;
     private string _remainingAPIUsage;
@@ -26,14 +26,14 @@ public class TextMenuViewModel : ViewModelBase
     private bool _isSpinningJarvisIconTextMenu;
     private double _textMenuAPIscrollBarHeight;
 
-    private ObservableCollection<ButtonViewModel> _textMenuButtons;
+    private ObservableCollection<AIButton> _textMenuButtons;
     public List<Language> TextMenuLanguages { get; set; }
     public RelayCommand TextMenuAICommand { get; set; }
     public RelayCommand ShowTextMenuOperationsCommand { get; set; }
     public RelayCommand HideTextMenuAPICommand { get; set; }
     public RelayCommand LanguageComboBoxCommand { get; set; }
     
-    public PopupDictionaryService PopupDictionaryService
+    /*public PopupDictionaryService PopupDictionaryService
     {
         get { return _popupDictionaryService; }
         set
@@ -41,9 +41,9 @@ public class TextMenuViewModel : ViewModelBase
             _popupDictionaryService = value;
             OnPropertyChanged();
         }
-    }
+    }*/
 
-    public UIElementDetector UIElementDetector
+    public AccessibilityService AccessibilityService
     {
         get { return _uIElementDetector; }
         set
@@ -53,7 +53,7 @@ public class TextMenuViewModel : ViewModelBase
         }
     }
 
-    public SendEventGA4 SendEventGA4
+    public GoogleAnalyticService GoogleAnalyticService
     {
         get { return _sendEventGA4; }
         set
@@ -63,7 +63,7 @@ public class TextMenuViewModel : ViewModelBase
         }
     }
 
-    public ObservableCollection<ButtonViewModel> TextMenuButtons
+    public ObservableCollection<AIButton> TextMenuButtons
     {
         get { return _textMenuButtons; }
         set
@@ -126,11 +126,11 @@ public class TextMenuViewModel : ViewModelBase
         }
     }
 
-    public TextMenuViewModel(PopupDictionaryService popupDictionaryService, UIElementDetector uIElementDetector, SendEventGA4 sendEventGA4)
+    public TextMenuViewModel(/*PopupDictionaryService popupDictionaryService, */AccessibilityService uIElementDetector, GoogleAnalyticService sendEventGA4)
     {
-        PopupDictionaryService = popupDictionaryService;
-        UIElementDetector = uIElementDetector;
-        SendEventGA4 = sendEventGA4;
+        //PopupDictionaryService = popupDictionaryService;
+        AccessibilityService = uIElementDetector;
+        GoogleAnalyticService = sendEventGA4;
 
         TextMenuAICommand = new RelayCommand(ExecuteTextMenuAICommand, o => true);
         ShowTextMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
@@ -155,13 +155,13 @@ public class TextMenuViewModel : ViewModelBase
 
     public async void ExecuteShowMenuOperationsCommand(object obj)
     {
-        bool _menuShowStatus = PopupDictionaryService.IsShowMenuOperations;
+        bool _menuShowStatus = PopupDictionaryService.Instance().IsShowMenuOperations;
 
-        PopupDictionaryService.ShowMenuOperations(!_menuShowStatus);
-        PopupDictionaryService.ShowJarvisAction(false);
+        PopupDictionaryService.Instance().ShowMenuOperations(!_menuShowStatus);
+        PopupDictionaryService.Instance().ShowJarvisAction(false);
 
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
-        TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
+        TextMenuButtons = aIActionTemplate.MenuSelectionButtonList;
 
         if (_menuShowStatus == false)
         {
@@ -170,23 +170,23 @@ public class TextMenuViewModel : ViewModelBase
                 // Some processing before the await (if needed)
                 await Task.Delay(0); // This allows the method to yield to the caller
 
-                await SendEventGA4.SendEvent("open_input_actions");
+                await GoogleAnalyticService.SendEvent("open_input_actions");
             });
         }
     }
 
     public async void ExecuteHideTextMenuAPICommand(object obj)
     {
-        PopupDictionaryService.ShowTextMenuAPIOperations(false);
+        PopupDictionaryService.Instance().ShowTextMenuAPIOperations(false);
 
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
-        TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
+        TextMenuButtons = aIActionTemplate.MenuSelectionButtonList;
     }
 
     private void InitializeButtons()
     {
         AIActionTemplate aIActionTemplate = new AIActionTemplate();
-        TextMenuButtons = aIActionTemplate.TextMenuAIActionList;
+        TextMenuButtons = aIActionTemplate.MenuSelectionButtonList;
     }
 
     private void OnLanguageSelectionChanged(object sender, EventArgs e)
@@ -205,10 +205,10 @@ public class TextMenuViewModel : ViewModelBase
             TextMenuAPI = "";
             TextMenuAPIscrollBarHeight = 88;
             IsSpinningJarvisIconTextMenu = true;
-            PopupDictionaryService.IsShowTextMenuAPI = true;
+            PopupDictionaryService.Instance().IsShowTextMenuAPI = true;
 
             //var textFromElement = "Jarvis AI Assistant, your all-in-one solution that harnesses the formidable capabilities of ChatGPT, which provides large and wide knowledge, GPT 4 for cutting-edge language understanding, Claude AI for advanced innovations, Llama 2 for next-level text generation, Bard for creative content creation, Bing Chat for seamless communication, Meta AI for deep learning potential, Chat GPT for conversational prowess, Chatting GPT for natural dialogue, GPT Chat for interactive communication, GPT4 for state-of-the-art language processing, and the transformative power of Ajax AI (also known as AjaxAI), OpenAI and latest AI model Gemini.";
-            var textFromElement = UIElementDetector.GetSelectedText();
+            var textFromElement = AccessibilityService.GetSelectedText();
 
             var textFromAPI = "";
 
@@ -240,12 +240,12 @@ public class TextMenuViewModel : ViewModelBase
 
             if (textFromAPI == null)
             {
-                Debug.WriteLine($"🆘🆘🆘 {ErrorConstant.translateError}");
+                Debug.WriteLine($"?????? {ErrorConstant.translateError}");
                 return;
             }
 
             //TODO: Test
-            UIElementDetector.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError);
+            AccessibilityService.SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError);
 
             TextMenuAPI = textFromAPI;
         }
@@ -263,7 +263,7 @@ public class TextMenuViewModel : ViewModelBase
             else if (_aiAction == "custom")
                 eventParams.Add("ai_action_custom", _actionType);
 
-            await SendEventGA4.SendEvent("do_ai_action", eventParams);
+            await GoogleAnalyticService.SendEvent("do_ai_action", eventParams);
         }
     }
 

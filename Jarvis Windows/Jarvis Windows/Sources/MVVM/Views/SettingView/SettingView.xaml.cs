@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.Utils.Services;
+using Jarvis_Windows.Sources.Utils.Services;
 using Stfu.Linq;
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.SettingView;
 
 public partial class SettingView : Window
 {
-    public SendEventGA4 SendEventGA4 { get; internal set; }
+    public GoogleAnalyticService GoogleAnalyticService { get; internal set; }
     public PopupDictionaryService PopupDictionaryService { get; internal set; }
     public SettingView()
     {
@@ -53,11 +53,11 @@ public partial class SettingView : Window
 
     private void Setting_MouseEnter(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAppUIChanged(true, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAppUIChanged(true, EventArgs.Empty);
     }
 
     private void Setting_MouseLeave(object sender, EventArgs e)
     {
-        EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
+        //EventAggregator.PublishMouseOverAppUIChanged(false, EventArgs.Empty);
     }
 }

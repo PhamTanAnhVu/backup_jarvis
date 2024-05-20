@@ -1,0 +1,141 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.InjectionAction.InjectionActionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.InjectionAction"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:media="clr-namespace:System.Windows.Media;assembly=PresentationCore"
+             xmlns:controls="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
+             xmlns:animations="clr-namespace:System.Windows.Media.Animation;assembly=PresentationCore"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="60"
+             RenderOptions.BitmapScalingMode="Linear">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <!-- Spinning animation storyboard -->
+            <Storyboard x:Key="SpinAnimation">
+                <DoubleAnimation
+                    Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                    From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+            </Storyboard>
+
+            <Storyboard x:Key="FadeInStoryBoard">
+                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5"/>
+            </Storyboard>
+
+            <Storyboard x:Key="FadeOutStoryBoard">
+                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.5"/>
+            </Storyboard>
+
+            <Style x:Key="ImageButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Width" Value="26"/>
+                <Setter Property="Height" Value="26"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="Transparent"
+                        BorderBrush="Transparent"
+                        BorderThickness="0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <!--<ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Width" Value="22"/>
+                                    <Setter Property="Height" Value="22"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>-->
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <UserControl.DataContext>
+        <local:InjectionActionViewModel/>
+    </UserControl.DataContext>
+
+    <Border RenderOptions.BitmapScalingMode="Linear" 
+            Width="auto" Height="30" 
+            Background="White" x:Name="parrentBorder" 
+            BorderBrush="White" BorderThickness="0" 
+            CornerRadius="{Binding CustomCornerRadius}">
+        <!--<Border.Background>
+            <LinearGradientBrush StartPoint="0,1" EndPoint="1,1">
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Color="{StaticResource PrimaryColor0.5}" Offset="0.3"/>
+                    <GradientStop Color="{StaticResource PrimaryColor1}" Offset="1"/>
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+        </Border.Background>-->
+        <Grid Background="Transparent" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave" >
+            <StackPanel Orientation="Horizontal">
+                <Border Margin="2 0 0 0" Background="Transparent" BorderBrush="Transparent" BorderThickness="0">
+                    <Button Style="{StaticResource ImageButtonStyle}"
+                    Command="{Binding ShowMenuOperationsCommand}"
+                    IsEnabled="True">
+                        <Border>
+                            <Image x:Name="img" Source="/Assets/Images/logo-new/logo96x96.png"
+                                   RenderOptions.BitmapScalingMode="HighQuality">
+                                <Image.RenderTransformOrigin>
+                                    <Point X="0.5" Y="0.5"/>
+                                </Image.RenderTransformOrigin>
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="True">
+                                                <Setter Property="RenderTransform">
+                                                    <Setter.Value>
+                                                        <RotateTransform Angle="360"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard Storyboard="{StaticResource SpinAnimation}" />
+                                                </DataTrigger.EnterActions>
+                                            </DataTrigger>
+                                            <!--<DataTrigger Binding="{Binding IsSpinning}" Value="False">
+                                            </DataTrigger>-->
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Border>
+                    </Button>
+                </Border>
+
+                <Button BorderBrush="Transparent" Background="Transparent"
+                        x:Name="pinPositionButton"
+                        Margin="2 0"
+                        Command="{Binding PinJarvisButtonCommand}" Width="30" Height="30">
+                    <Button.Content>
+                        <Path
+                              Width="26" Height="26"
+                              Stretch="Fill"
+                              Fill="{StaticResource TailwindPrimary6}"
+                              StrokeThickness="0.5" 
+                              Stroke="{StaticResource TailwindPrimary5}" 
+                              Data="M8.5.5a.5.5 0 0 0-1 0v.518A7 7 0 0 0 1.018 7.5H.5a.5.5 0 0 0 0 1h.518A7 7 0 0 0 7.5 14.982v.518a.5.5 0 0 0 1 0v-.518A7 7 0 0 0 14.982 8.5h.518a.5.5 0 0 0 0-1h-.518A7 7 0 0 0 8.5 1.018zm-6.48 7A6 6 0 0 1 7.5 2.02v.48a.5.5 0 0 0 1 0v-.48a6 6 0 0 1 5.48 5.48h-.48a.5.5 0 0 0 0 1h.48a6 6 0 0 1-5.48 5.48v-.48a.5.5 0 0 0-1 0v.48A6 6 0 0 1 2.02 8.5h.48a.5.5 0 0 0 0-1zM8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                    </Button.Content>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Border" Background="Transparent" BorderBrush="Transparent" BorderThickness="1">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

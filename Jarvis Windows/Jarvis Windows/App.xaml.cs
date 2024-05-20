@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.Utils.Services;
+using Jarvis_Windows.Sources.Utils.Services;
 using Microsoft.Win32;
 using System;
 using System.Windows;
@@ -9,12 +9,12 @@ using Jarvis_Windows.Sources.DataAccess.Network;
 using System.Web;
 using Jarvis_Windows.Sources.MVVM.Models;
 using System.Reflection;
-using Jarvis_Windows.Sources.MVVM.Views.MainView;
 using Windows.ApplicationModel.Activation;
-using System.Linq;
-using WinRT;
 using System.Diagnostics;
-using Jarvis_Windows.Sources.MVVM.Views.SettingView;
+using Jarvis_Windows.Sources.MVVM.Views.MainView;
+using Jarvis_Windows.Sources.MVVM.Views.MainNavigationView;
+using System.IO;
+using Windows.ApplicationModel.Contacts;
 
 namespace Jarvis_Windows
 {
@@ -46,11 +46,16 @@ namespace Jarvis_Windows
         {
             DestroyOldProcesses(); //Single instance application
 
-            MainView mainView = DependencyInjection.GetService<MainView>();
-            SettingView settingView = DependencyInjection.GetService<SettingView>();
-            mainView.Show();
+            MainNavigationView mainNavigationView = new MainNavigationView();
+            mainNavigationView.Show();
 
-            DependencyInjection.GetService<PopupDictionaryService>().MainWindow = mainView;
+            AccessibilityService.GetInstance().SubscribeToElementFocusChanged();
+
+            PopupDictionaryService.Instance().InitInjectionAction();
+            PopupDictionaryService.Instance().InitMenuInjectionActions();
+            PopupDictionaryService.Instance().InitMenuSelectionActions();
+            PopupDictionaryService.Instance().InitMenuSelectionPopupList();
+            PopupDictionaryService.Instance().InitMenuSelectionResponse();
 
             if (e.Args.Length > 0) //Activation from URI scheme
             {
@@ -74,9 +79,24 @@ namespace Jarvis_Windows
 
                         //tODO:call remaining usage 
                         _ = JarvisApi.Instance.APIUsageHandler();
-                        mainViewModel.RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+                        mainViewModel.RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
                     }
                 }
+            }
+
+            //Decoupling breath service
+            ///Lock test
+            Process processBreath = new Process();
+            string? packagePath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName);
+            if(!IsDebugMode())
+            {
+                packagePath = packagePath?.Replace("Jarvis Windows", "Jarvis Background Service");
+                processBreath.StartInfo.FileName = Path.Combine(packagePath, "Jarvis Background Service.exe");
+                if (!File.Exists(processBreath.StartInfo.FileName))
+                {
+                    MessageBox.Show(processBreath.StartInfo.FileName);
+                }
+                processBreath.Start();
             }
         }
 
@@ -174,11 +194,11 @@ namespace Jarvis_Windows
         {
             if (e.Mode == PowerModes.Suspend)
             {
-                UIElementDetector.GetInstance().UnSubscribeToElementFocusChanged();
+                AccessibilityService.GetInstance().UnSubscribeToElementFocusChanged();
             }
             else if (e.Mode == PowerModes.Resume)
             {
-                UIElementDetector.GetInstance().SubscribeToElementFocusChanged();
+                AccessibilityService.GetInstance().SubscribeToElementFocusChanged();
             }
         }
 
@@ -209,8 +229,8 @@ namespace Jarvis_Windows
         private void DestroyOldProcesses()
         {
             string currentProcessName = Process.GetCurrentProcess().ProcessName;
-            Process[] processes = Process.GetProcessesByName(currentProcessName);
-            foreach (Process process in processes)
+            Process[] foundProcesses = Process.GetProcessesByName(currentProcessName);
+            foreach (Process process in foundProcesses)
             {
                 if (process.Id != Process.GetCurrentProcess().Id)
                 {

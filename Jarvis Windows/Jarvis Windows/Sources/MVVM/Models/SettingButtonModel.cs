@@ -1,4 +1,4 @@
-﻿using Jarvis_Windows.Sources.Utils.Core;
+using Jarvis_Windows.Sources.Utils.Core;
 
 namespace Jarvis_Windows.Sources.MVVM.Models;
 

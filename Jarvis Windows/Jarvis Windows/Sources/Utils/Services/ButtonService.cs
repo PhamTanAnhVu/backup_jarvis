@@ -1,171 +1,14 @@
-﻿using Jarvis_Windows.Sources.Utils.Core;
-using System.Collections.Generic;
+﻿using Jarvis_Windows.Sources.MVVM.Models;
 using System.Collections.ObjectModel;
 using System.Windows;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Jarvis_Windows.Sources.Utils.Services;
-public class ButtonViewModel : ViewModelBase
-{
-    private int _idx;
-    private string _content;
-    private string _icon;
-    private string _commandParameter;
-    private RelayCommand _command;
-    private RelayCommand _pinCommand;
-    private string _pinColor;
-    private double _width;
-    private bool _visibility;
-    private bool _extraIconVisibility;
-    private Thickness _margin;
-    private string _horizontalAlignment;
-    private string _cornerRadius;
-    private double _separateLineWidth;
-    public int Idx
-    {
-        get { return _idx; }
-        set
-        {
-            _idx = value;
-            OnPropertyChanged();
-        }
-    }
-    
-    public string Content
-    {
-        get { return _content; }
-        set
-        {
-            _content = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string Icon
-    {
-        get { return _icon; }
-        set
-        {
-            _icon = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool Visibility
-    {
-        get { return _visibility; }
-        set
-        {
-            _visibility = value;
-            OnPropertyChanged();
-        }
-    }
-    
-    public bool ExtraIconVisibility
-    {
-        get { return _extraIconVisibility; }
-        set
-        {
-            _extraIconVisibility = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public RelayCommand Command
-    {
-        get { return _command; }
-        set
-        {
-            _command = value;
-            OnPropertyChanged();
-        }
-    }
-    
-    public RelayCommand PinCommand
-    {
-        get { return _pinCommand; }
-        set
-        {
-            _pinCommand = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string CommandParameter
-    {
-        get { return _commandParameter; }
-        set
-        {
-            _commandParameter = value;
-            OnPropertyChanged();
-        }
-    }
-    public string PinColor
-    {
-        get { return _pinColor; }
-        set
-        {
-            _pinColor = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public double Width
-    {
-        get { return _width; }
-        set
-        {
-            _width = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public Thickness Margin
-    {
-        get { return _margin; }
-        set
-        {
-            _margin = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string HorizontalAlignment
-    {
-        get { return _horizontalAlignment; }
-        set
-        {
-            _horizontalAlignment = value;
-            OnPropertyChanged();
-        }
-    }
-    
-    public string CornerRadius
-    {
-        get { return _cornerRadius; }
-        set
-        {
-            _cornerRadius = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public double SeparateLineWidth
-    {
-        get { return _separateLineWidth; }
-        set
-        {
-            _separateLineWidth = value;
-            OnPropertyChanged();
-        }
-    }
-}
 
 public class AIActionTemplate
 {
-    public ObservableCollection<ButtonViewModel> FixedAIActionList { get; set; } = new ObservableCollection<ButtonViewModel>
+    public ObservableCollection<AIButton> FixedAIActionList { get; set; } = new ObservableCollection<AIButton>
     {
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "🌐",
             Content = "Translate it",
@@ -175,7 +18,7 @@ public class AIActionTemplate
             Width = 221,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "✏️",
             Content = "Revise it",
@@ -186,9 +29,9 @@ public class AIActionTemplate
             Margin = new Thickness(0, 0, 10, 10)
         }
     };
-    public ObservableCollection<ButtonViewModel> DynamicAIActionList { get; set; } = new ObservableCollection<ButtonViewModel>
+    public ObservableCollection<AIButton> DynamicAIActionList { get; set; } = new ObservableCollection<AIButton>
     {
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "📌",
             Content = "Extract the main information",
@@ -198,7 +41,7 @@ public class AIActionTemplate
             Width = 230,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "🚀",
             Content = "More",
@@ -208,7 +51,7 @@ public class AIActionTemplate
             Width = 90,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "👋",
             Content = "Make it constructive",
@@ -218,7 +61,7 @@ public class AIActionTemplate
             Width = 179,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "🖼️",
             Content = "Make it more detailed",
@@ -228,7 +71,7 @@ public class AIActionTemplate
             Width = 189,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "🎯",
             Content = "Make it persuasive",
@@ -238,7 +81,7 @@ public class AIActionTemplate
             Width = 171,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "🖋️",
             Content = "Paraphrase it",
@@ -248,7 +91,7 @@ public class AIActionTemplate
             Width = 137,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "📝",
             Content = "Summarize it",
@@ -258,7 +101,7 @@ public class AIActionTemplate
             Width = 135,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "✂️",
             Content = "Simplify it",
@@ -268,7 +111,7 @@ public class AIActionTemplate
             Width = 114.695,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "📜",
             Content = "Give a quote",
@@ -278,7 +121,7 @@ public class AIActionTemplate
             Width = 133,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "🙂",
             Content = "Give a random name",
@@ -288,7 +131,7 @@ public class AIActionTemplate
             Width = 184,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "✉️",
             Content = "Give an asking for help email template",
@@ -298,7 +141,7 @@ public class AIActionTemplate
             Width = 292,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "📧",
             Content = "Give a thank you for help email template",
@@ -308,7 +151,7 @@ public class AIActionTemplate
             Width = 305,
             Margin = new Thickness(0, 0, 10, 10)
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "🔼",
             Content = "Less",
@@ -319,9 +162,9 @@ public class AIActionTemplate
             Margin = new Thickness(0, 0, 10, 10)
         },
     };
-    public ObservableCollection<ButtonViewModel> TextMenuAIActionList { get; set; } = new ObservableCollection<ButtonViewModel>
+    public ObservableCollection<AIButton> MenuSelectionButtonList { get; set; } = new ObservableCollection<AIButton>
     {
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "🌐",
             Visibility = true,
@@ -332,7 +175,7 @@ public class AIActionTemplate
             CornerRadius = "16 0 0 16",
             PinColor = "#6841EA"
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "✏️",
             Visibility = true,
@@ -343,7 +186,7 @@ public class AIActionTemplate
             CornerRadius = "0",
             PinColor = "#6841EA"
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "📌",
             Visibility = false,
@@ -352,8 +195,8 @@ public class AIActionTemplate
             CommandParameter = "Extract the main information",
             Content = "Extract",
             CornerRadius = "0"
-        },   
-        new ButtonViewModel
+        },
+        new AIButton
         {
             Icon = "👋",
             Visibility = false,
@@ -362,7 +205,7 @@ public class AIActionTemplate
             Content = "Constructive",
             CornerRadius = "0"
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "🖼️",
             Visibility = false,
@@ -371,7 +214,7 @@ public class AIActionTemplate
             Content = "Detail",
             CornerRadius = "0"
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "🎯",
             Visibility = false,
@@ -380,7 +223,7 @@ public class AIActionTemplate
             Content = "Persuasive",
             CornerRadius = "0"
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "🖋️",
             Visibility = false,
@@ -389,7 +232,7 @@ public class AIActionTemplate
             Content = "Paraphrase",
             CornerRadius = "0"
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "📝",
             Visibility = false,
@@ -398,7 +241,7 @@ public class AIActionTemplate
             Content = "Summarize",
             CornerRadius = "0"
         },
-        new ButtonViewModel
+        new AIButton
         {
             Icon = "✂️",
             Visibility = false,

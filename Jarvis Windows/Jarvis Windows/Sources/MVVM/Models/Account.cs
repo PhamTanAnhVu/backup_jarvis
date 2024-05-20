@@ -1,4 +1,4 @@
-﻿namespace Jarvis_Windows.Sources.MVVM.Models
+namespace Jarvis_Windows.Sources.MVVM.Models
 {
     public class Account
     {

@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:menuOperation="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuOperatorsView"
-        xmlns:jarvisAction="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.JarvisActionView"
+        xmlns:menuOperation="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView"
+        xmlns:jarvisAction="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.InjectionAction"
         xmlns:textMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuView"
         xmlns:textMenuAPI="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.TextMenuAPIView"
         xmlns:aIChatBubble="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatBubbleView"
@@ -290,7 +290,7 @@
                     </Grid>
                 </Grid>
 
-                <Popup x:Name="jarvisActionPopup" Placement="AbsolutePoint" 
+                <!--<Popup x:Name="jarvisActionPopup" Placement="AbsolutePoint" 
                        VerticalOffset="{Binding PopupDictionaryService.JarvisActionPosition.Y}" 
                        HorizontalOffset="{Binding PopupDictionaryService.JarvisActionPosition.X}" 
                        AllowsTransparency="True" PopupAnimation="Fade" 
@@ -301,7 +301,11 @@
                        MouseLeave="App_MouseLeave"
                        IsOpen="{Binding PopupDictionaryService.IsShowJarvisAction}"
                        Width="50" Height="30">
-                    <jarvisAction:JarvisActionView/>
+                    <jarvisAction:InjectionActionView/>
+                </Popup>-->
+
+                <Popup x:Name="jarvisActionPopup">
+                    
                 </Popup>
 
                 <Popup x:Name="jarvisMenuPopup" Placement="AbsolutePoint"
@@ -316,7 +320,7 @@
                        Focusable="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowMenuOperations}"
                        Width="420" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
-                    <menuOperation:MenuOperatorsView/>
+                    <menuOperation:MenuInjectionActionsView/>
                 </Popup>
 
                 <Popup x:Name="textMenuPopup" Placement="Absolute"
@@ -325,8 +329,8 @@
                        AllowsTransparency="True" PopupAnimation="Fade"
                        PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown"
                        PreviewMouseLeftButtonUp="Popup_PreviewMouseLeftButtonUp"
-                       MouseEnter="TextSelectionMenu_MouseEnter"
-                       MouseLeave="TextSelectionMenu_MouseLeave"
+                       MouseEnter="TextMenuSelection_MouseEnter"
+                       MouseLeave="TextMenuSelection_MouseLeave"
                        Focusable="True" ForceCursor="True" StaysOpen="True"
                        IsOpen="{Binding PopupDictionaryService.IsShowTextMenuOperations}"
                        Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
@@ -362,7 +366,7 @@
                     <aIChatBubble:AIChatBubbleView/>
                 </Popup>
 
-                <Popup Name="aIChatSidebarPopup" Placement="Absolute"
+                <!--<Popup Name="aIChatSidebarPopup" Placement="Absolute"
                        VerticalOffset="{Binding PopupDictionaryService.AIChatSidebarPosition.Y}"
                        HorizontalOffset="{Binding PopupDictionaryService.AIChatSidebarPosition.X}"
                        AllowsTransparency="True" PopupAnimation="Fade"
@@ -374,7 +378,7 @@
                        IsOpen="{Binding PopupDictionaryService.IsShowAIChatSidebar}"
                        Width="Auto" Height="Auto" Grid.RowSpan="3">
                     <aIChatSidebar:AIChatSidebarView/>
-                </Popup>
+                </Popup>-->
             </Grid>
         </Grid>
     </Border>

@@ -9,6 +9,9 @@ using System.Diagnostics;
 using System.Net.Http.Headers;
 using Jarvis_Windows.Sources.DataAccess.Local;
 using System.IO;
+using Jarvis_Windows.Sources.MVVM.Models;
+using Jarvis_Windows.Sources.MVVM.Views.AIRead;
+using System.Windows;
 
 namespace Jarvis_Windows.Sources.DataAccess.Network;
 
@@ -66,8 +69,12 @@ public sealed class JarvisApi
 
     public IAuthenticationService AuthenService { get; set; }
 
-    public async Task<string>? APIUsageHandler()
+    public async Task<string> APIUsageHandler()
     {
+        if (WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining") == "0")
+        {
+            return "";
+        }
         try
         {
             HttpResponseMessage response;
@@ -91,7 +98,7 @@ public sealed class JarvisApi
                 string responseContent = response.Content.ReadAsStringAsync().Result;
                 dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
                 int remainingUsage = responseObject.availableTokens;
-                int dailyUsage = responseObject.dailyTokens;
+                int dailyUsage = responseObject.totalTokens;
                 string dateString = responseObject.date;
                 //if (DateTime.TryParseExact(dateString, "MM/dd/yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out DateTime dateTime))
                 //{
@@ -111,6 +118,11 @@ public sealed class JarvisApi
 
             return null;
         }
+        catch (HttpRequestException e)
+        {
+            MessageBox.Show("Network error");
+            throw new HttpRequestException();
+        }
         catch (Exception ex)
         {
             throw ex.GetBaseException();
@@ -119,6 +131,7 @@ public sealed class JarvisApi
 
     public async Task<string?> ApiHandler(string requestBody, string endPoint)
     {
+        //return "";
         var contentData = new StringContent(requestBody, Encoding.UTF8, "application/json");
         try
         {
@@ -171,6 +184,11 @@ public sealed class JarvisApi
 
             return string.Empty;
         }
+        catch (HttpRequestException e)
+        {
+            MessageBox.Show("Network error");
+            throw new HttpRequestException();
+        }
         catch (Exception ex)
         {
             throw ex.GetBaseException();
@@ -216,7 +234,7 @@ public sealed class JarvisApi
         return await ApiHandler(requestBody, _actionEndpoint);
     }
 
-    public async Task<string?> ChatHandler(string content, ObservableCollection<MVVM.Views.MainView.AIChatMessage> ChatHistory)
+    public async Task<string?> ChatHandler(string content, ObservableCollection<AIChatMessage> ChatHistory)
     {
         List<Dictionary<string, string>> messages = new List<Dictionary<string, string>>();
 

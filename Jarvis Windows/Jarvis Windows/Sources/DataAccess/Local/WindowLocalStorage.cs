@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Windows.Storage;
 using Hanssens.Net;
 using System;
@@ -93,6 +93,11 @@ public static class WindowLocalStorage
         {
             LocalStorageUnpackage.Store(key, value);
             LocalStorageUnpackage.Persist();
+        }
+
+        if (key == "ApiUsageRemaining")
+        {
+            EventAggregator.PublishApiUsageChanged(true, EventArgs.Empty);
         }
     }
 

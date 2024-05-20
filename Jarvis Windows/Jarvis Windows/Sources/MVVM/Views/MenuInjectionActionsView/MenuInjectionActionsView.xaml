@@ -1,34 +1,31 @@
-﻿<Window x:Class="Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView.MenuInjectionActionsView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView"
-        xmlns:vm="clr-namespace:Jarvis_Windows.Sources.MVVM.ViewModels"
-        xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        mc:Ignorable="d"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
-        Title="MenuInjectionActionsView"
-        MouseDown="Window_MouseDown"
-        Height="Auto" Width="420">
-    <Window.Resources>
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView.MenuInjectionActionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             Name="JarvisMenuOperatorsView"
+             mc:Ignorable="d" 
+             Height="Auto" Width="420">
+    <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </Window.Resources>
-    <Window.DataContext>
-        <vm:MenuInjectionActionsViewModel/>
-    </Window.DataContext>
+    </UserControl.Resources>
 
-    <Border CornerRadius="20" BorderBrush="White" BorderThickness="2.5" Padding="10.4">
+    <UserControl.DataContext>
+        <local:MenuInjectionActionsViewModel/>
+    </UserControl.DataContext>
+
+    <Border CornerRadius="20" BorderBrush="White" BorderThickness="2.5" Padding="10.4"
+            Name="BorderPopupMenu">
         <Border.Background>
             <LinearGradientBrush MappingMode="RelativeToBoundingBox" 
-                 StartPoint="0,1" EndPoint="0,0">
+                     StartPoint="0,1" EndPoint="0,0">
                 <LinearGradientBrush.RelativeTransform>
                     <TransformGroup>
                         <RotateTransform CenterY="0.5" CenterX="0.5" Angle="86"/>
@@ -47,7 +44,7 @@
             </LinearGradientBrush>
         </Border.Background>
 
-
+ 
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
@@ -67,14 +64,14 @@
 
                 <Grid Grid.Column="0">
                     <Image 
-                    Source="../../../../Assets/Images/jarvis_logo_large.png" 
-                    Margin="0 0 8 0"
-                    Width="22" Height="22"
-                    HorizontalAlignment="Left"
-                    RenderOptions.BitmapScalingMode="HighQuality"/>
+                        Source="../../../../Assets/Images/jarvis_logo_large.png" 
+                        Margin="0 0 8 0"
+                        Width="22" Height="22"
+                        HorizontalAlignment="Left"
+                        RenderOptions.BitmapScalingMode="HighQuality"/>
 
                     <TextBlock Margin="30 0 0 0" VerticalAlignment="Center"
-                        FontSize="16" FontFamily="sans-serif" FontWeight="Bold" Foreground="#1450A3" Text="Jarvis"/>
+                            FontSize="16" FontFamily="sans-serif" FontWeight="Bold" Foreground="#1450A3" Text="Jarvis"/>
 
                 </Grid>
 
@@ -87,28 +84,28 @@
 
 
                 <!--<Grid Grid.Column="3">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Style="{StaticResource JarvisNomalButton}" Command="{Binding UndoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanUndo}"
-                    Width="37" Height="37" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" Kind="Undo" Width="20" Height="20" VerticalAlignment="Center"/>
-                </Button>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource JarvisNomalButton}" Command="{Binding UndoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanUndo}"
+                        Width="37" Height="37" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" Kind="Undo" Width="20" Height="20" VerticalAlignment="Center"/>
+                    </Button>
 
-                <Button Style="{StaticResource JarvisNomalButton}" Command="{Binding RedoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanRedo}"
-                    Margin="5 0 5 0" Width="37" Height="37" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" Kind="Redo" Width="20" Height="20" VerticalAlignment="Center" />
-                </Button>
-            </StackPanel>
-        </Grid>-->
+                    <Button Style="{StaticResource JarvisNomalButton}" Command="{Binding RedoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanRedo}"
+                        Margin="5 0 5 0" Width="37" Height="37" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" Kind="Redo" Width="20" Height="20" VerticalAlignment="Center" />
+                    </Button>
+                </StackPanel>
+            </Grid>-->
 
                 <!--<Grid Grid.Column="4" Width="37" Height="37">
-            <Button x:Name="btnCloseIntroduction"
-                        Width="37"
-                        Height="37"
-                        Style="{StaticResource JarvisNomalButton}"
-                        Command="{Binding HideMenuOperationsCommand}">
-                <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" Kind="Close" Width="20" Height="20" VerticalAlignment="Center" />
-            </Button>
-        </Grid>-->
+                <Button x:Name="btnCloseIntroduction"
+                            Width="37"
+                            Height="37"
+                            Style="{StaticResource JarvisNomalButton}"
+                            Command="{Binding HideMenuOperationsCommand}">
+                    <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}" Kind="Close" Width="20" Height="20" VerticalAlignment="Center" />
+                </Button>
+            </Grid>-->
                 <Grid Grid.Column="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -122,11 +119,11 @@
 
                     <Grid Grid.Column="0">
                         <Button Style="{StaticResource JarvisNomalButton}" Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"
-                        Command="{Binding UndoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanUndo}">
+                            Command="{Binding UndoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanUndo}">
                             <Button.Content>
                                 <Path Data="M5.921 11.9 1.353 8.62a.72.72 0 0 1 0-1.238L5.921 4.1A.716.716 0 0 1 7 4.719V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z"
-                            VerticalAlignment="Center" HorizontalAlignment="Center"
-                            Fill="#1450A2" Height="10" Stretch="Fill" Width="13"/>
+                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Fill="#1450A2" Height="10" Stretch="Fill" Width="13"/>
 
                             </Button.Content>
                         </Button>
@@ -134,23 +131,23 @@
 
                     <Grid Grid.Column="2">
                         <Button Style="{StaticResource JarvisNomalButton}" 
-                        Command="{Binding RedoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanRedo}"
-                        Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            Command="{Binding RedoCommand}" IsEnabled="{Binding AutomationElementValueService.IsCanRedo}"
+                            Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Button.Content>
                                 <Path Data="M5.921 11.9 1.353 8.62a.72.72 0 0 1 0-1.238L5.921 4.1A.716.716 0 0 1 7 4.719V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z"
-                            VerticalAlignment="Center" HorizontalAlignment="Center"
-                            Fill="#1450A2" Height="10" Stretch="Fill" Width="13" FlowDirection="RightToLeft"/>
+                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Fill="#1450A2" Height="10" Stretch="Fill" Width="13" FlowDirection="RightToLeft"/>
                             </Button.Content>
                         </Button>
                     </Grid>
 
                     <Grid Grid.Column="4">
                         <Button  Padding="8 0 8 0"
-                            Style="{StaticResource MenuTopButton}"
-                            Width="56.242" Height="30">
+                                Style="{StaticResource MenuTopButton}"
+                                Width="56.242" Height="30">
                             <Button.Content>
                                 <emoji:TextBlock Text="{Binding RemainingAPIUsage}" 
-                                        FontFamily="sans-serif" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            FontFamily="sans-serif" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Button.Content>
                         </Button>
                     </Grid>
@@ -159,14 +156,14 @@
                     </Grid>
                     <Grid Grid.Column="6">
                         <Button x:Name="btnCloseIntroduction" BorderThickness="1"
-                            Style="{StaticResource JarvisNomalButton}"
-                            Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center"
-                            Command="{Binding HideMenuOperationsCommand}" CommandParameter="ClickUI">
+                                Style="{StaticResource JarvisNomalButton}"
+                                Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Command="{Binding HideMenuOperationsCommand}" CommandParameter="ClickUI">
                             <Button.Content>
                                 <!--<Image Source="../../../../Assets/Images/cross.png" Width="14" Height="14" />-->
                                 <materialDesign:PackIcon Kind="Close" Width="20" Height="20" 
-                                                     VerticalAlignment="Center" 
-                                                     Foreground="#1450A2"/>
+                                                         VerticalAlignment="Center" 
+                                                         Foreground="#1450A2"/>
                             </Button.Content>
 
                         </Button>
@@ -174,14 +171,15 @@
                 </Grid>
             </Grid>
 
-            <Grid Grid.Row="2" Style="{StaticResource GridIsAPIUsageRemain}">
+            <Grid Grid.Row="2" Style="{StaticResource GridIsAPIUsageRemain}"
+                  Visibility="{Binding IsAPIUsageRemain, Converter={StaticResource VisibilityConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition MinHeight="50" MaxHeight="70"/>
                 </Grid.RowDefinitions>
 
                 <ScrollViewer Grid.Row="0" Height="{Binding ScrollBarHeight}" Margin="0 3 0 3"
-                        VerticalScrollBarVisibility="Auto" Width="400">
+                            VerticalScrollBarVisibility="Auto" Width="400">
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -198,22 +196,22 @@
                             <Grid Grid.Column="0">
                                 <Border Margin="{Binding FixedButtons[0].Margin}" Width ="Auto" Height="Auto">
                                     <Button Style="{StaticResource JarvisOperationButton}"
-                                    Command="{Binding FixedButtons[0].Command}" CommandParameter="Translate it"
-                                    Visibility="{Binding FixedButtons[0].Visibility, Converter={StaticResource VisibilityConverter}}"
-                                    Width ="221" Height="38">
+                                        Command="{Binding FixedButtons[0].Command}" CommandParameter="Translate it"
+                                        Visibility="{Binding FixedButtons[0].Visibility, Converter={StaticResource VisibilityConverter}}"
+                                        Width ="221" Height="38">
 
                                         <StackPanel Orientation="Horizontal">
                                             <emoji:TextBlock Text="🌐" FontFamily="sans-serif" 
-                                                FontSize="18" Width= "21" Height="28" HorizontalAlignment="Center" 
-                                                VerticalAlignment="Top" Margin="0 0 10 0"/>
+                                                    FontSize="18" Width= "21" Height="28" HorizontalAlignment="Center" 
+                                                    VerticalAlignment="Top" Margin="0 0 10 0"/>
 
                                             <TextBlock Text="Translate to " FontFamily ="sans-serif" 
-                                                FontSize="14" Foreground="#082041" VerticalAlignment="Center"/>
+                                                    FontSize="14" Foreground="#082041" VerticalAlignment="Center"/>
 
                                             <ComboBox Width="79" SelectionChanged="languageComboBox_SelectionChanged" 
-                                                FontFamily ="sans-serif" Style="{StaticResource JarvisComboBox}" 
-                                                Name="languageComboBox" ItemsSource="{Binding Languages}" 
-                                                DisplayMemberPath="Value"/>
+                                                    FontFamily ="sans-serif" Style="{StaticResource JarvisComboBox}" 
+                                                    Name="languageComboBox" ItemsSource="{Binding Languages}" 
+                                                    DisplayMemberPath="Value"/>
                                         </StackPanel>
                                     </Button>
                                 </Border>
@@ -222,17 +220,17 @@
                             <Grid Grid.Column="1">
                                 <Border Margin="{Binding FixedButtons[1].Margin}" Width="Auto" Height="Auto">
                                     <Button Style="{StaticResource JarvisOperationButton}"
-                                        Command="{Binding FixedButtons[1].Command}" CommandParameter="Revise it"
-                                        Visibility="{Binding FixedButtons[1].Visibility, Converter={StaticResource VisibilityConverter}}"
-                                        Width="107.484" Height="38">
+                                            Command="{Binding FixedButtons[1].Command}" CommandParameter="Revise it"
+                                            Visibility="{Binding FixedButtons[1].Visibility, Converter={StaticResource VisibilityConverter}}"
+                                            Width="107.484" Height="38">
 
                                         <StackPanel Orientation="Horizontal">
                                             <emoji:TextBlock Text="✏️" FontFamily="sans-serif" 
-                                                        FontSize="18" Width="21" Height="28" HorizontalAlignment="Center" 
-                                                        VerticalAlignment="Top" Margin="0 0 10 0"/>
+                                                            FontSize="18" Width="21" Height="28" HorizontalAlignment="Center" 
+                                                            VerticalAlignment="Top" Margin="0 0 10 0"/>
 
                                             <TextBlock Text="Revise it" FontFamily ="sans-serif" 
-                                                FontSize="14" Foreground="#082041" VerticalAlignment="Center"/>
+                                                    FontSize="14" Foreground="#082041" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Button>
                                 </Border>
@@ -252,14 +250,14 @@
                                     <DataTemplate>
                                         <Border Margin="{Binding Margin}" Width="Auto" Height="41">
                                             <Button Width="{Binding Width}" Height="38"     
-                                            Style="{StaticResource JarvisOperationButton}"
-                                            Command="{Binding Command}" CommandParameter="{Binding CommandParameter}"
-                                            Visibility="{Binding Visibility, Converter={StaticResource VisibilityConverter}}">
+                                                Style="{StaticResource JarvisOperationButton}"
+                                                Command="{Binding Command}" CommandParameter="{Binding CommandParameter}"
+                                                Visibility="{Binding Visibility, Converter={StaticResource VisibilityConverter}}">
 
                                                 <StackPanel Orientation="Horizontal">
                                                     <emoji:TextBlock Text="{Binding Icon}" FontFamily="sans-serif" 
-                                                        FontSize="18" Width="21" Height="28" HorizontalAlignment="Left" 
-                                                        VerticalAlignment="Center" Margin="0 0 8 0"/>
+                                                            FontSize="18" Width="21" Height="28" HorizontalAlignment="Left" 
+                                                            VerticalAlignment="Center" Margin="0 0 8 0"/>
                                                     <TextBlock Text="{Binding Content}" FontFamily="sans-serif" FontSize="14" Foreground="#082041" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                                 </StackPanel>
                                             </Button>
@@ -281,23 +279,23 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Column="0" Height="Auto">
-                                <TextBox Height="Auto" Width="332.812" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="0"
-                                 FontFamily="sans-serif" FontSize="14"
-                                 Padding="11.2 7.2 11.2 7.2" TextWrapping="Wrap"
-                                 PreviewMouseDown="Jarvis_Custom_Action_TextBox_PreviewMouseDown"
-                                 x:Name="Jarvis_Custom_Action_TextBox" 
-                                 AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
-                                 Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}">
-                                    <TextBox.InputBindings>
-                                        <KeyBinding Command="{Binding AICommand}" CommandParameter="Ask" Key="Return"/>
-                                    </TextBox.InputBindings>
-                                </TextBox>
+                        <Grid Grid.Column="0" Height="Auto">
+                            <TextBox Height="Auto" Width="332.812" HorizontalAlignment="Left" VerticalAlignment="Center" BorderThickness="0"
+                                     FontFamily="sans-serif" FontSize="14"
+                                     Padding="11.2 7.2 11.2 7.2" TextWrapping="Wrap"
+                                     PreviewMouseDown="Jarvis_Custom_Action_TextBox_PreviewMouseDown"
+                                     x:Name="Jarvis_Custom_Action_TextBox" 
+                                     AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
+                                     Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Command="{Binding AICommand}" CommandParameter="Ask" Key="Return"/>
+                                </TextBox.InputBindings>
+                            </TextBox>
 
                                 <TextBlock Text="Ask Jarvis to..." Foreground="#FF104082" Opacity="0.7"
-                                    VerticalAlignment="Center" HorizontalAlignment="Left" 
-                                    FontSize="14" FontFamily="inherit" TextWrapping="Wrap"
-                                    Margin="11.2 7.2 11.2 7.2" Padding="0" IsHitTestVisible="False">
+                                        VerticalAlignment="Center" HorizontalAlignment="Left" 
+                                        FontSize="14" FontFamily="inherit" TextWrapping="Wrap"
+                                        Margin="11.2 7.2 11.2 7.2" Padding="0" IsHitTestVisible="False">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Style.Triggers>
@@ -316,13 +314,13 @@
                             <Grid Grid.Column="2">
                                 <Border CornerRadius="12" Width="32" Height="32" VerticalAlignment="Bottom" Margin="0 0 0 8" Style="{StaticResource AskButtonBorder}">
                                     <Button Width="32" Height="32"
-                                    Style="{StaticResource AskButton}"
-                                    Command="{Binding AICommand}" CommandParameter="Ask">
+                                        Style="{StaticResource AskButton}"
+                                        Command="{Binding AICommand}" CommandParameter="Ask">
                                         <Button.Content>
 
                                             <Path Data="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.73 1.73 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.73 1.73 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.73 1.73 0 0 0 3.407 2.31zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z" 
-                                            VerticalAlignment="Center" HorizontalAlignment="Center"
-                                            Fill="White" Height="18" Stretch="Fill" Width="13.5"/>
+                                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                Fill="White" Height="18" Stretch="Fill" Width="13.5"/>
                                         </Button.Content>
                                     </Button>
 
@@ -333,7 +331,8 @@
                 </Grid>
             </Grid>
 
-            <Grid Grid.Row="3" Style="{StaticResource GridIsNoAPIUsageRemain}" Height="318">
+            <Grid Grid.Row="3" Style="{StaticResource GridIsNoAPIUsageRemain}" Height="318"
+                  Visibility="{Binding IsNoAPIUsageRemain, Converter={StaticResource VisibilityConverter}}">
                 <Border Background="White" CornerRadius="20" Width="316" Height="203" Padding="20">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -344,23 +343,23 @@
 
                         <Grid Grid.Row="0">
                             <emoji:TextBlock Text="🧯" FontFamily="sans-serif" FontSize="30" Height="36" 
-                            HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                HorizontalAlignment="Center" VerticalAlignment="Top"/>
                         </Grid>
 
                         <Grid Grid.Row="1">
                             <TextBlock Text="You have exhausted all of your DAILY tokens. Let get more tokens to fireeee!" 
-                                    Width="273" Height="40" FontFamily="sans-serif" FontSize="14" TextWrapping="Wrap" 
-                                    TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                        Width="273" Height="40" FontFamily="sans-serif" FontSize="14" TextWrapping="Wrap" 
+                                        TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                         </Grid>
 
                         <Grid Grid.Row="2">
                             <Button Command="{Binding UpgradePlanCommand}"
-                                FontFamily="sans-serif" FontSize="14"
-                                HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Width="273" Height="44" Style="{StaticResource UpgradePlanButton}">
+                                    FontFamily="sans-serif" FontSize="14"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Width="273" Height="44" Style="{StaticResource UpgradePlanButton}">
                                 <Button.Content>
                                     <emoji:TextBlock Text="🔥Upgrade your plan now" FontFamily="sans-serif" FontSize="14"
-                                    Foreground="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                        Foreground="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                                 </Button.Content>
                             </Button>
                         </Grid>
@@ -370,4 +369,4 @@
         </Grid>
     </Border>
 
-</Window>
+</UserControl>
