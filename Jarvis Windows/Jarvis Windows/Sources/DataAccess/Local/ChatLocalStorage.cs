@@ -109,6 +109,7 @@ public class ConversationManager
                 SelectedModelIdx INTEGER
             )";
 
+
         _connection.Execute(createTableQuery);
     }
 

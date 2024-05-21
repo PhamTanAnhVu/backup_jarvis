@@ -1275,7 +1275,7 @@
             </Grid>
         </Border>
 
-        <!--<Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
+        <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
                 Visibility="{Binding IsShowChatHistory, Converter={StaticResource VisibilityConverter}}">
             <Border.Effect>
                 <StaticResource ResourceKey="BlurEffect"/>

@@ -106,7 +106,7 @@ public partial class AIChatSidebarView : UserControl
     }
     private void ChatHistoryPopup_MouseLeave(object sender, MouseEventArgs e)
     {
-        _isMouseOverHistoryPopup = false;
+        _isMouseOverOutOfTokenPopup = false;
     }
     private void Item_Loaded(object sender, RoutedEventArgs e)
     {
