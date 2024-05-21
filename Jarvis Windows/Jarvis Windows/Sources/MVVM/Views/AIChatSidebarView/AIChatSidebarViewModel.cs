@@ -469,7 +469,7 @@ public class AIChatSidebarViewModel : ViewModelBase
             IsLoading = isLoading,
             Message = message,
             Idx = idx,
-            CopyCommand = new RelayCommand(o => { Clipboard.SetText(message); }, o => true),
+            CopyCommand = new RelayCommand(o => { Clipboard.SetDataObject(message); }, o => true),
             RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true),
             DetailMessage = (isUser) 
                                 ? new ObservableCollection<CodeMessage> { new CodeMessage { TextContent = message, IsVisible = false } } 
