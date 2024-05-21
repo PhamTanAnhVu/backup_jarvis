@@ -300,8 +300,8 @@ public class MainViewModel : ViewModelBase
     public RelayCommand HideAIChatSidebarCommand { get; set; }
 
 
-    private ObservableCollection<AIChatMessage> _aIChatMessages;
-    public ObservableCollection<AIChatMessage> AIChatMessages
+    private ObservableCollection<Models.AIChatMessage> _aIChatMessages;
+    public ObservableCollection<Models.AIChatMessage> AIChatMessages
     {
         get { return _aIChatMessages; }
         set

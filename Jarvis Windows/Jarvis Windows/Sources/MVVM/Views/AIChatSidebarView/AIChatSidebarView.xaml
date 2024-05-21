@@ -535,16 +535,47 @@
                                                                                         Background="Transparent" GotFocus="RichTextBox_GotFocus"
                                                                                         TextContent="{Binding TextContent, Mode=TwoWay}"/>
                                                                 
-                                                                <Border Grid.Row="1" CornerRadius="{StaticResource BorderRadiusMd}"
-                                                                        Padding="8 8 0 8" Background="{StaticResource SolidColorBrushGray200}" MaxWidth="408"
+                                                                <Border Grid.Row="1" CornerRadius="{StaticResource BorderRadiusMd}" VerticalAlignment="Center"
+                                                                        Background="{StaticResource SolidColorBrushGray200}" MaxWidth="406"
                                                                         Visibility="{Binding IsVisible, Converter={StaticResource VisibilityConverter}}">
 
-                                                                    <avalonedit:TextEditor x:Name="textEditor" Style="{StaticResource AvalonEditStyle}" Tag="{Binding Idx}"
-                                                                                            Loaded="CodeEditor_Loaded" MouseEnter="MouseEnter_CodeScrollViewer" 
-                                                                                            MouseLeave="MouseLeave_CodeScrollViewer" VerticalAlignment="Center"
-                                                                                            GotFocus="TextEditor_GotFocus" 
-                                                                                            LostFocus="TextEditor_LostFocus">
-                                                                    </avalonedit:TextEditor>
+                                                                    <StackPanel Orientation="Vertical">
+                                                                        <Border CornerRadius="{StaticResource BorderRadiusTopMd}" Padding="16 6" Width="406"
+                                                                                Background="{StaticResource TailwindPrimary2}">
+                                                                            <Grid>
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition/>
+                                                                                </Grid.ColumnDefinitions>
+
+                                                                                <TextBox Grid.Column="0" Style="{StaticResource XsTextBox400}" 
+                                                                                         Text="{Binding Language}" VerticalAlignment="Center"/>
+
+                                                                                <Button Grid.Column="1" HorizontalAlignment="Right" 
+                                                                                        Style="{StaticResource UnderChatMessageButton}" Width="Auto"
+                                                                                        Click="Execute_CopyCode">
+                                                                                    <Button.Content>
+                                                                                        <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap1}">
+                                                                                            <Viewbox Width="12" Height="12" VerticalAlignment="Bottom">
+                                                                                                <Grid>
+                                                                                                    <Path Fill="#64748B" Data="M4,2.5 C4,1.67157 4.67157,1 5.5,1 L11.5,1 C12.3284,1 13,1.67157 13,2.5 L13,8.5 C13,9.32843 12.3284,10 11.5,10 L5.5,10 C4.67157,10 4,9.32843 4,8.5 L4,2.5 Z M5.5,1.75 C5.08579,1.75 4.75,2.08579 4.75,2.5 L4.75,8.5 C4.75,8.91421 5.08579,9.25 5.5,9.25 L11.5,9.25 C11.9142,9.25 12.25,8.91421 12.25,8.5 L12.25,2.5 C12.25,2.08579 11.9142,1.75 11.5,1.75 L5.5,1.75 Z M2.5,4.75 C2.08579,4.75 1.75,5.08579 1.75,5.5 L1.75,11.5 C1.75,11.9142 2.08579,12.25 2.5,12.25 L8.5,12.25 C8.91421,12.25 9.25,11.9142 9.25,11.5 L10,10.75 L10,11.5 C10,12.3284 9.32843,13 8.5,13 L2.5,13 C1.67157,13 1,12.3284 1,11.5 L1,5.5 C1,4.67157 1.67157,4 2.5,4 L3.25,4.75 L2.5,4.75 Z"/>
+                                                                                                </Grid>
+                                                                                            </Viewbox>
+
+                                                                                            <TextBlock Style="{StaticResource XsTextblock400}" Text="Copy code"/>
+                                                                                        </StackPanel>
+                                                                                    </Button.Content>
+                                                                                </Button>
+                                                                            </Grid>
+                                                                        </Border>
+                                                                        
+                                                                        <avalonedit:TextEditor x:Name="textEditor" Style="{StaticResource AvalonEditStyle}" Tag="{Binding Idx}" 
+                                                                                                Loaded="CodeEditor_Loaded" MouseEnter="MouseEnter_CodeScrollViewer" 
+                                                                                                MouseLeave="MouseLeave_CodeScrollViewer" VerticalAlignment="Center"
+                                                                                                GotFocus="TextEditor_GotFocus" LostFocus="TextEditor_LostFocus"
+                                                                                                Margin="16 16 16 8">
+                                                                        </avalonedit:TextEditor>
+                                                                    </StackPanel>
                                                                 </Border>
                                                             </Grid>
                                                         </DataTemplate>
@@ -1163,18 +1194,77 @@
 
                 <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
                        PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsShowChatHistory}" 
-                       VerticalOffset="0" HorizontalOffset="50" MouseEnter="HistoryPopup_MouseEnter" MouseLeave="HistoryPopup_MouseLeave">
+                       VerticalOffset="0" HorizontalOffset="50">
                     <local:ChatHistoryView/>
                 </Popup>
+                
+                <Popup x:Name="OutOfTokenPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                       PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsOutOfToken}" 
+                       VerticalOffset="0" HorizontalOffset="0" MouseEnter="OutOfTokenPopup_MouseEnter" MouseLeave="OutOfTokenPopup_MouseLeave">
+                    <Border Style="{StaticResource OutOfTokenBorder}">
+                        <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}">
+                            <Grid x:Name="OutOfTokenHeaderGrid">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" Text="Insufficient Tokens"/>
+                                
+                                <Button Grid.Column="1" x:Name="CloseOutOfTokenPopupButton" HorizontalAlignment="Right"
+                                        Style="{StaticResource UnderChatMessageButton}"
+                                        Command="{Binding CloseOutOfTokenPopupCommand}">
+                                    <Button.Content>
+                                        <Viewbox Height="16" Width="16">
+                                            <Grid>
+                                                <Path Fill="#00213B" Data="M2.14645 2.85355C1.95118 2.65829 1.95118 2.34171 2.14645 2.14645C2.34171 1.95118 2.65829 1.95118 2.85355 2.14645L8 7.29289L13.1464 2.14645C13.3417 1.95118 13.6583 1.95118 13.8536 2.14645C14.0488 2.34171 14.0488 2.65829 13.8536 2.85355L8.70711 8L13.8536 13.1464C14.0488 13.3417 14.0488 13.6583 13.8536 13.8536C13.6583 14.0488 13.3417 14.0488 13.1464 13.8536L8 8.70711L2.85355 13.8536C2.65829 14.0488 2.34171 14.0488 2.14645 13.8536C1.95119 13.6583 1.95119 13.3417 2.14645 13.1464L7.29289 8L2.14645 2.85355Z" />
+                                            </Grid>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+
+                            <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                                <Border Width="296" Height="210" CornerRadius="{StaticResource BorderRadiusXl}">
+                                    <Border.Background>
+                                        <ImageBrush Stretch="Fill" ImageSource="\Assets\Images\out_of_tokens.png"/>
+                                    </Border.Background>
+                                </Border>
+                                
+                                <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" Text="Upgrade plans for more tokens"/>
+                                <TextBox Style="{StaticResource SmTextBox400}" 
+                                         Text="Your current daily tokens are insufficient.&#x0a;You can immediately gain an unlimited&#x0a;amount of tokens by upgrading your plan."/>
+
+                            </StackPanel>
+
+                            <Button x:Name="UpgradePlanButton" Style="{StaticResource UpgradePlanButton}" Margin="0 8 0 0"
+                                    Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://admin.jarvis.cx/pricing">
+                                <Button.Content>
+                                    <TextBlock Style="{StaticResource SmTextblock600}" Foreground="White"
+                                               Text="Get more tokens"/>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+                
+                
             </Grid>
         </Border>
 
-        <!--<Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
+        <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
                 Visibility="{Binding IsShowChatHistory, Converter={StaticResource VisibilityConverter}}">
             <Border.Effect>
                 <StaticResource ResourceKey="BlurEffect"/>
             </Border.Effect>
-        </Border>-->
+        </Border>
+
+        <Border x:Name="OverlayOutOfToken" Background="{StaticResource DarkenedBackground}" 
+                Visibility="{Binding IsOutOfToken, Converter={StaticResource VisibilityConverter}}">
+            <Border.Effect>
+                <StaticResource ResourceKey="BlurEffect"/>
+            </Border.Effect>
+        </Border>
     </Grid>
 
 </UserControl>

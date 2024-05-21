@@ -17,6 +17,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using System.Windows.Documents;
 using System.Windows.Media;
 using Windows.Security.Authentication.Identity.Provider;
+using System.Globalization;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 
@@ -24,10 +25,10 @@ public partial class AIChatSidebarView : UserControl
 {
     private readonly IKeyboardMouseEvents _globalHook;
     private bool _isMouseOverInfoPopup;
-    private bool _isMouseOverHistoryPopup;
+    private bool _isMouseOverOutOfTokenPopup;
     private int _idx;
     private int _itemIdx;
-
+    
     private TextEditor? _textEditor;
     private RichTextBox? _richTextBox;
     public AIChatSidebarView()
@@ -45,14 +46,21 @@ public partial class AIChatSidebarView : UserControl
             AIChatSidebarEventTrigger.PublishMouseOverInfoPopup(true, EventArgs.Empty);
         }
 
-        //Point mousePosition = new Point(e.X, e.Y);
-        //Point SidebarPosition = MainChatSidebarBorder.PointToScreen(new Point(0, 0));
-        //SidebarPosition.Y += 154;
+        if (MainChatSidebarBorder is null) return;
+        if (PresentationSource.FromVisual(MainChatSidebarBorder) == null) return;
 
-        //if ((mousePosition.Y < SidebarPosition.Y || mousePosition.Y > SidebarPosition.Y + 780 || mousePosition.X < SidebarPosition.X || mousePosition.X > SidebarPosition.X + 474))
-        //{
-        //    AIChatSidebarEventTrigger.PublishMouseOverHistoryPopup(true, EventArgs.Empty);
-        //}
+        Point mousePosition = new Point(e.X, e.Y);
+        Point SidebarPosition = MainChatSidebarBorder.PointToScreen(new Point(0, 0));
+        SidebarPosition.Y += 154;
+
+        if ((mousePosition.Y < SidebarPosition.Y || mousePosition.Y > SidebarPosition.Y + 780 || mousePosition.X < SidebarPosition.X || mousePosition.X > SidebarPosition.X + 474))
+        {
+            AIChatSidebarEventTrigger.PublishMouseOverHistoryPopup(true, EventArgs.Empty);
+        }
+        else if (!_isMouseOverOutOfTokenPopup)
+        {
+            OutOfTokenPopup.SetCurrentValue(Popup.IsOpenProperty, false);
+        }
     }
 
     private void InfoPopup_MouseEnter(object sender, MouseEventArgs e)
@@ -64,18 +72,16 @@ public partial class AIChatSidebarView : UserControl
     {
         _isMouseOverInfoPopup = false;
     }
-    
-    private void HistoryPopup_MouseEnter(object sender, MouseEventArgs e)
+
+    private void OutOfTokenPopup_MouseEnter(object sender, MouseEventArgs e)
     {
-        _isMouseOverHistoryPopup = true;
-    }
-    
-    private void HistoryPopup_MouseLeave(object sender, MouseEventArgs e)
-    {
-        _isMouseOverHistoryPopup = false;
+        _isMouseOverOutOfTokenPopup = true;
     }
 
-
+    private void OutOfTokenPopup_MouseLeave(object sender, MouseEventArgs e)
+    {
+        _isMouseOverOutOfTokenPopup = false;
+    }
 
     private void Item_Loaded(object sender, RoutedEventArgs e)
     {
@@ -112,6 +118,46 @@ public partial class AIChatSidebarView : UserControl
             }
         }
     }
+
+    private void Execute_CopyCode(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        var parent = VisualTreeHelper.GetParent(button);
+        while (parent != null && !(parent is StackPanel))
+        {
+            parent = VisualTreeHelper.GetParent(parent);
+        }
+
+        if (parent == null) { return; }
+        var textEditor = FindChild<TextEditor>(parent);
+        if (textEditor != null) {  Clipboard.SetText(textEditor.Text); }
+
+    }
+
+    public static T FindChild<T>(DependencyObject parent) where T : DependencyObject
+    {
+        if (parent == null) return null;
+
+        int childCount = VisualTreeHelper.GetChildrenCount(parent);
+        for (int i = 0; i < childCount; i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T childOfType)
+            {
+                return childOfType;
+            }
+
+            var childItem = FindChild<T>(child);
+            if (childItem != null)
+            {
+                return childItem;
+            }
+        }
+
+        return null;
+    }
+
+
     private void TextEditor_GotFocus(object sender, RoutedEventArgs e)
     {
         _textEditor = sender as TextEditor;

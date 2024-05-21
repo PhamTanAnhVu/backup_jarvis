@@ -238,7 +238,7 @@ public sealed class JarvisApi
     {
         List<Dictionary<string, string>> messages = new List<Dictionary<string, string>>();
 
-        for (int i = 1; i < ChatHistory.Count - 2; i++)
+        for (int i = 0; i < ChatHistory.Count - 2; i++)
         {
             string chatMessage = ChatHistory[i].Message;
             string role = (i % 2 == 0) ? "user" : "assistant";
