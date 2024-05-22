@@ -847,7 +847,7 @@
                                            IsOpen="{Binding ElementName=AIChatHistoryButton, Path=IsMouseOver, Mode=OneWay}">
                                         <Border Style="{StaticResource UnderMessageBorder}">
                                             <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                        Text="Coming soon - Chat history"/>
+                                                        Text="Chat history"/>
                                         </Border>
                                     </Popup>
                                 </Grid>
