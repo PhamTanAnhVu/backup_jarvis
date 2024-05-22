@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System;
 using System.Diagnostics;
+using System.Windows.Automation;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
 
@@ -199,7 +200,8 @@ public class MenuSelectionActionsViewModel : ViewModelBase
     static System.Windows.Point _lastMousePoint = new System.Windows.Point();
     private async void MouseDragFinished(object sender, System.Windows.Forms.MouseEventArgs e)
     {
-        if (PopupDictionaryService.Instance().IsDragging)
+        AutomationElement rootElement = AutomationElement.FromHandle(NativeUser32API.GetForegroundWindow());
+        if (PopupDictionaryService.Instance().IsDragging || rootElement.Current.Name.Equals("MainNavigationView"))
         {
             PopupDictionaryService.Instance().IsShowMenuSelectionActions = false;
             return;
