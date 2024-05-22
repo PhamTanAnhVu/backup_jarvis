@@ -177,7 +177,7 @@ public class AccessibilityService
          
         if (newFocusElement != null && newFocusElement != _focusingElement)
         {
-            if (newFocusElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") ||
+            if (newFocusElement.Current.AutomationId.Equals("MenuInjectionInputTextBox") ||
                 newFocusElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox"))
             {
                 PopupDictionaryService.Instance().ShowJarvisAction(false);

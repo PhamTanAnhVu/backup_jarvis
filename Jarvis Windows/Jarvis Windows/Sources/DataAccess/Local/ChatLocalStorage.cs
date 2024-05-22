@@ -31,7 +31,7 @@ public class ConversationManager
     {
         if (_instance is null)
         {
-            string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "conversations.db");
+            string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Jarvis_Windows_Conversations.db");
             _instance = new ConversationManager(dbPath);
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -51,21 +52,13 @@ public class CustomRichTextBox : RichTextBox
             string matchValue = match.Value;
             if (matchValue.StartsWith("`") || matchValue.StartsWith("`"))
             {
-                var innerText = matchValue.Trim('`').Trim();
-                while (innerText.StartsWith("\n"))
-                {
-                    innerText = innerText.Substring(1).Trim(' ');
-                }
-                while (innerText.EndsWith("\n"))
-                {
-                    innerText = innerText.Substring(0, innerText.Length - 1).Trim(' ');
-                }
+                var innerText = matchValue.Trim('`');
+                innerText = innerText.Trim('\n');
 
+                innerText = string.Join("\n", innerText.Split('\n').Select(line => line.Trim())).Trim();
                 var specialText = new TextBlock(new Run(innerText))
                 {
                     Foreground = Brushes.Black,
-                    FontWeight = FontWeights.Bold,
-                    TextAlignment = TextAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
                 };
 
@@ -75,7 +68,7 @@ public class CustomRichTextBox : RichTextBox
                     CornerRadius = new CornerRadius(4),
                     VerticalAlignment = VerticalAlignment.Center,
                     Padding = new Thickness(4, 0, 4, 0),
-                    Margin = new Thickness(0, 1, 0, -4),
+                    Margin = new Thickness(0, 0, 0, -4),
                     Child = specialText
                 };
 

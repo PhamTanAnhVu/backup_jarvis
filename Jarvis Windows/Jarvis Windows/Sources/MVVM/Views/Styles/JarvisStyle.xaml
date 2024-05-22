@@ -481,6 +481,31 @@
         </Setter>
     </Style>-->
 
+    <Style x:Key="MenuInjectionInputTextBox" BasedOn="{StaticResource SmTextBox400}" TargetType="TextBox">
+        <Setter Property="Foreground" Value="{StaticResource TailwindPrimary9.5}"/>
+        <Setter Property="IsReadOnly" Value="False"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Width" Value="320"/>
+    </Style>
+
+    <Style x:Key="MenuInjectionInputTextBoxPreText" BasedOn="{StaticResource SmTextblock400}" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource SolidColorBrushSlate400}"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Width" Value="320"/>
+        <Setter Property="Opacity" Value="0.7"/>
+        <Setter Property="IsHitTestVisible" Value="False"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsTextEmpty}" Value="True">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsTextEmpty}" Value="False">
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="AskButtonBorder" TargetType="Border">
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsTextEmpty}" Value="True">
@@ -775,90 +800,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
-
-    <!--<Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
-        <Setter Property="OverridesDefaultStyle" Value="true"/>
-        <Setter Property="IsTabStop" Value="false"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Border x:Name="rectangle" Background="#f0f4fa" 
-                        SnapsToDevicePixels="True" Width="6" CornerRadius="4"/>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" TargetName="rectangle" Value="#f0f4fa"/>
-                        </Trigger>
-                        <Trigger Property="IsDragging" Value="true">
-                            <Setter Property="Background" TargetName="rectangle" Value="#f0f4fa"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="ScrollBarThumbHorizontal" TargetType="{x:Type Thumb}">
-        <Setter Property="Visibility" Value="Collapsed"/>
-    </Style>
-
-
-    <Style TargetType="{x:Type ScrollBar}">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ScrollBar}">
-                    <Grid x:Name="Bg" SnapsToDevicePixels="true">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            --><!-- Adjust the row definitions as needed --><!--
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        --><!-- Vertical ScrollBar --><!--
-                        <ScrollBar x:Name="PART_VerticalScrollBar" Grid.Row="0" Visibility="Collapsed"/>
-
-                        --><!-- Horizontal ScrollBar --><!--
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
-                        <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
-                            <Track.DecreaseRepeatButton>
-                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
-                            </Track.DecreaseRepeatButton>
-                            <Track.IncreaseRepeatButton>
-                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                            </Track.IncreaseRepeatButton>
-                            <Track.Thumb>
-                                <Thumb Style="{StaticResource ScrollBarThumbVertical}"/>
-                            </Track.Thumb>
-                        </Track>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>-->
-
-
-
-    <Style x:Key="GridIsAPIUsageRemain" TargetType="Grid">
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding IsAPIUsageRemain}" Value="True">
-                <Setter Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding IsAPIUsageRemain}" Value="False">
-                <Setter Property="Visibility" Value="Collapsed"/>
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="GridIsNoAPIUsageRemain" TargetType="Grid">
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding IsNoAPIUsageRemain, Mode=TwoWay}" Value="True">
-                <Setter Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding IsNoAPIUsageRemain, Mode=TwoWay}" Value="False">
-                <Setter Property="Visibility" Value="Collapsed"/>
-            </DataTrigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="JarvisPrimaryWindowBorder" TargetType="Border">

@@ -109,6 +109,8 @@ public partial class AIChatSidebarView : UserControl
                 //if (_idx >= viewModel.AIChatMessages[_itemIdx].DetailMessage.Count) 
                 //    _itemIdx = _tempItemIdx;
                 string codeContent = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].CodeContent;
+                Logging.Log($"\n{viewModel.AIChatMessages[_itemIdx].Message}");
+                Logging.Log($"================");
                 string language = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].Language;
                 if (string.IsNullOrEmpty(codeContent))
                 {
@@ -125,6 +127,7 @@ public partial class AIChatSidebarView : UserControl
     {
         var button = sender as Button;
         var parent = VisualTreeHelper.GetParent(button);
+        TextBlock? underMessagePopupText = null;
         while (parent != null && !(parent is StackPanel))
         {
             parent = VisualTreeHelper.GetParent(parent);
@@ -135,8 +138,12 @@ public partial class AIChatSidebarView : UserControl
             var textEditor = FindChild<TextEditor>(parent);
             if (textEditor != null)
             {
-                Clipboard.Clear();
-                Clipboard.SetDataObject(textEditor.Text);
+                try
+                {
+                    Clipboard.Clear();
+                    Clipboard.SetDataObject(textEditor.Text);
+                }
+                catch { return; }
             }
         }
 
@@ -178,6 +185,11 @@ public partial class AIChatSidebarView : UserControl
                 textBlock.SetCurrentValue(TextBlock.TextProperty, "Copy code");
                 size = 14;
             }
+            if (underMessagePopupText is not null)
+            {
+                underMessagePopupText.SetCurrentValue(TextBlock.TextProperty, "Copy");
+            }
+
             viewBox.SetCurrentValue(WidthProperty, size);
             viewBox.SetCurrentValue(HeightProperty, size);
 

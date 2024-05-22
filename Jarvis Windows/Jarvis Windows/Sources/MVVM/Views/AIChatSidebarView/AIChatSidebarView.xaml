@@ -483,7 +483,7 @@
                                             <StackPanel Orientation="Horizontal" x:Name="UserLogo" style:MarginSetter.Margin="{StaticResource ColumnGap2}"
                                                         Visibility="{Binding IsUser, Converter={StaticResource VisibilityConverter}}">
                                                 <Grid>
-                                                    <Image Source="C:\Users\vupham\Desktop\jarvis-windows\Jarvis Windows\Jarvis Windows\Assets\Icons\Vector.ico"
+                                                    <Image Source="\Assets\Icons\Vector.ico"
                                                            Width="20" Height="20"/>
                                                     <Viewbox Width="14" Height="14" Margin="0 2 0 0">
                                                         <Grid>
@@ -573,7 +573,7 @@
                                                                                                 Loaded="CodeEditor_Loaded" MouseEnter="MouseEnter_CodeScrollViewer" 
                                                                                                 MouseLeave="MouseLeave_CodeScrollViewer" VerticalAlignment="Center"
                                                                                                 GotFocus="TextEditor_GotFocus" LostFocus="TextEditor_LostFocus"
-                                                                                                Margin="16 16 16 8">
+                                                                                                Margin="16 8 16 8">
                                                                         </avalonedit:TextEditor>
                                                                     </StackPanel>
                                                                 </Border>
@@ -864,12 +864,12 @@
                             <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap0.5}">
                                 <Grid x:Name="AIChatInputGrid">
                                     <TextBlock x:Name="AIChatPreText" Style="{StaticResource AIChatPreText}"
-                                                   Text="Ask me anything, press ‘/’ for prompts..." Grid.Row="0"/>
+                                                   Text="Ask me anything, press ‘/’ for prompts..."/>
                                     <TextBox x:Name="AIChatInputTextBox" Style="{StaticResource AIChatInputTextBox}"
                                                  Text="{Binding AIChatInputMessage, UpdateSourceTrigger=PropertyChanged}"
                                                  AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
                                                  PreviewMouseWheel="AIChatInputTextBox_PreviewMouseWheel"
-                                                 TextChanged="AIChatInputTextBox_TextChanged" >
+                                                 TextChanged="AIChatInputTextBox_TextChanged">
                                         <TextBox.InputBindings>
                                             <KeyBinding Command="{Binding SendChatInputCommand}" Key="Return"/>
                                         </TextBox.InputBindings>
@@ -1192,7 +1192,7 @@
                     </StackPanel>
                 </Border>
 
-                <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                <Popup x:Name="ChatHistoryPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
                        PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsShowChatHistory}" 
                        VerticalOffset="0" HorizontalOffset="50">
                     <local:ChatHistoryView/>
@@ -1200,7 +1200,7 @@
                 
                 <Popup x:Name="OutOfTokenPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
                        PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsOutOfToken}" 
-                       VerticalOffset="0" HorizontalOffset="0" MouseEnter="OutOfTokenPopup_MouseEnter" MouseLeave="OutOfTokenPopup_MouseLeave">
+                       VerticalOffset="50" HorizontalOffset="0" MouseEnter="OutOfTokenPopup_MouseEnter" MouseLeave="OutOfTokenPopup_MouseLeave">
                     <Border Style="{StaticResource OutOfTokenBorder}">
                         <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}">
                             <Grid x:Name="OutOfTokenHeaderGrid">
@@ -1247,8 +1247,7 @@
                         </StackPanel>
                     </Border>
                 </Popup>
-                
-                
+                              
             </Grid>
         </Border>
 

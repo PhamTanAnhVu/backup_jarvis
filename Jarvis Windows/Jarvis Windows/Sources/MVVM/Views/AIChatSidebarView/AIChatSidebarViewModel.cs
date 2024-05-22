@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using Windows.Media.Audio;
 using System.Reflection;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Windows.Forms;
+using Windows.Globalization;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 public class AIChatSidebarViewModel : ViewModelBase
@@ -469,7 +471,7 @@ public class AIChatSidebarViewModel : ViewModelBase
             IsLoading = isLoading,
             Message = message,
             Idx = idx,
-            CopyCommand = new RelayCommand(o => { Clipboard.SetDataObject(message); }, o => true),
+            CopyCommand = new RelayCommand(ExecuteCopyCommand, o => true),
             RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true),
             DetailMessage = (isUser) 
                                 ? new ObservableCollection<CodeMessage> { new CodeMessage { TextContent = message, IsVisible = false } } 
@@ -477,6 +479,17 @@ public class AIChatSidebarViewModel : ViewModelBase
         };
 
         return chatMessage;
+    }
+
+    private async void ExecuteCopyCommand(object obj)
+    {
+        int idx = (int)obj;
+        try 
+        {
+            System.Windows.Clipboard.Clear();
+            System.Windows.Clipboard.SetDataObject(AIChatMessages[idx].Message);
+        }
+        catch { return;}
     }
 
     private async void ExecuteNewAIChatWindowCommand(object obj)
@@ -561,13 +574,17 @@ public class AIChatSidebarViewModel : ViewModelBase
             string Language = match.Groups["Language"].Value;
             if (Language == "csharp") { Language = "c#"; }
             if (Language == "cpp") { Language = "c++"; }
+            if (Language == "javascript") { Language = "JavaScript"; }
+            if (Language == "html" || Language == "css" || Language == "xml" || Language == "php")
+            {
+                Language = Language.ToUpper();
+            }
 
             if (!string.IsNullOrEmpty(Language))
             {
                 Language = char.ToUpper(Language[0]) + Language.Substring(1);
             }
-            string content = match.Groups["content"].Value.Trim();
-
+            string content = match.Groups["content"].Value.Trim('\n');
             sections.Add(new CodeMessage { Language = Language, CodeContent = content, IsVisible = true });
         }
 
