@@ -80,9 +80,16 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             // Bring the window to the front when it's activated
             if (message?.PropertyName == "IsShowMainNavigation" && (bool)message.Value == true)
             {
-                //Activate();
-                this.SetCurrentValue(VisibilityProperty, Visibility.Visible);
-                aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, false);
+                if (this.Visibility == Visibility.Visible)
+                {
+                    this.SetCurrentValue(VisibilityProperty, Visibility.Collapsed);
+                    aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, true);
+                }
+                else
+                {
+                    this.SetCurrentValue(VisibilityProperty, Visibility.Visible);
+                    aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, false);
+                }
             }
             else if(e != null)
             {
