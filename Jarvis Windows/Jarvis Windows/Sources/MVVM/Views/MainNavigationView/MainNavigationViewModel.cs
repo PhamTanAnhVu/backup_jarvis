@@ -189,10 +189,10 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
             _currentViewModel = _viewModels["Chat"];
             _sidebarVisibility = Visibility.Visible;
-            _makeSidebarTopmost = false;
+            _makeSidebarTopmost = true;
             
-            IsShowAIChatBubble = true;
-            IsShowMainNavigation = false;
+            IsShowAIChatBubble = false;
+            IsShowMainNavigation = true;
 
 
             AIChatBubblePosition = new Point();
