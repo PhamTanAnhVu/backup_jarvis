@@ -233,7 +233,6 @@ public class AIChatSidebarViewModel : ViewModelBase
 
     private void EventSubscribe()
     {
-        AIChatSidebarEventTrigger.MouseOverHistoryPopup += OnMouseOverHistoryPopup;
         AIChatSidebarEventTrigger.SelectConversationChanged += OnSelectConversation;
 
         AIChatSidebarEventTrigger.MouseOverInfoPopup += (sender, e) =>
@@ -245,14 +244,6 @@ public class AIChatSidebarViewModel : ViewModelBase
         {
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
         };
-    }
-
-    private void OnMouseOverHistoryPopup(object obj, EventArgs e)
-    {
-        if (ChatHistoryViewModel.IsTitleEditable) { ChatHistoryViewModel.IsTitleEditable = false; }
-        else if (ChatHistoryViewModel.IsOpenDeletePopup) { ChatHistoryViewModel.IsOpenDeletePopup = false; }
-        else if (IsOutOfToken) { IsOutOfToken = false; }
-        else { IsShowChatHistory = false; }
     }
 
     private void OnSelectConversation(object obj, EventArgs e)
@@ -573,7 +564,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         {
             string Language = match.Groups["Language"].Value;
             if (Language == "csharp") { Language = "c#"; }
-            if (Language == "cpp") { Language = "c++"; }
+            if (Language == "cpp" || Language == "c") { Language = "c++"; }
             if (Language == "javascript") { Language = "JavaScript"; }
             if (Language == "html" || Language == "css" || Language == "xml" || Language == "php")
             {

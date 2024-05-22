@@ -226,6 +226,9 @@
 	<Content Include="Assets\Images\out_of_tokens.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+	<Content Include="Assets\Images\NotFound.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Assets\Images\navigate_next.png" />
     <Resource Include="Assets\Images\pencil.png" />
     <Resource Include="Assets\Images\scissors.png" />

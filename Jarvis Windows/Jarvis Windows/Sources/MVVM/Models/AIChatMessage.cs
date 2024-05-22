@@ -28,23 +28,3 @@ public class CodeMessage
     public string Language { get; set; }
     public string CodeContent { get; set; }
 }
-
-public static class Logging
-{
-    private static bool isLogging = true;
-    public static void Log(string message)
-    {
-        if (!isLogging) return;
-
-        string _logFilePath = "C:\\Users\\vupham\\Desktop\\logJarvis.txt";
-        try
-        {
-            using (StreamWriter _streamWriter = new StreamWriter(_logFilePath, true))
-            {
-                _streamWriter.WriteLine($"{DateTime.Now} - {message}");
-            }
-        }
-
-        catch { return; }
-    }
-}

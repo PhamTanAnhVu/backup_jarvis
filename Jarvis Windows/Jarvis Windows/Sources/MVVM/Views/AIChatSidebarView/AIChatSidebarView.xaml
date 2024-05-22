@@ -830,7 +830,7 @@
                                            IsOpen="{Binding ElementName=AIChatHistoryButton, Path=IsMouseOver, Mode=OneWay}">
                                         <Border Style="{StaticResource UnderMessageBorder}">
                                             <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                        Text="Coming soon - Chat history"/>
+                                                        Text="Chat history"/>
                                         </Border>
                                     </Popup>
                                 </Grid>
@@ -1194,7 +1194,7 @@
 
                 <Popup x:Name="ChatHistoryPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
                        PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsShowChatHistory}" 
-                       VerticalOffset="0" HorizontalOffset="50">
+                       VerticalOffset="0" HorizontalOffset="50" MouseEnter="ChatHistoryPopup_MouseEnter" MouseLeave="ChatHistoryPopup_MouseLeave">
                     <local:ChatHistoryView/>
                 </Popup>
                 

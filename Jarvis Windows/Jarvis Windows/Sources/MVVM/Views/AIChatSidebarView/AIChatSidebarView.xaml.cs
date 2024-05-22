@@ -28,6 +28,8 @@ public partial class AIChatSidebarView : UserControl
     private readonly IKeyboardMouseEvents _globalHook;
     private bool _isMouseOverInfoPopup;
     private bool _isMouseOverOutOfTokenPopup;
+    private bool _isMouseOverHistoryPopup;
+    private bool _isMouseOverEditablePopup;
     private int _idx;
     private int _itemIdx;
     
@@ -39,6 +41,10 @@ public partial class AIChatSidebarView : UserControl
         _globalHook = Hook.GlobalEvents();
         _globalHook.MouseClick += Global_MouseClick;
         _globalHook.MouseWheelExt += GlobalMouseHook_MouseWheelExt;
+        AIChatSidebarEventTrigger.MouseOverHistoryPopup += (sender, e) =>
+        {
+            _isMouseOverEditablePopup = (bool)sender;
+        };
     }
 
     private void Global_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -53,12 +59,14 @@ public partial class AIChatSidebarView : UserControl
 
         Point mousePosition = new Point(e.X, e.Y);
         Point SidebarPosition = MainChatSidebarBorder.PointToScreen(new Point(0, 0));
-        SidebarPosition.Y += 154;
 
-        if ((mousePosition.Y < SidebarPosition.Y || mousePosition.Y > SidebarPosition.Y + 780 || mousePosition.X < SidebarPosition.X || mousePosition.X > SidebarPosition.X + 474))
+        var viewModel = DataContext as AIChatSidebarViewModel;
+        if (!_isMouseOverHistoryPopup && mousePosition.X >= SidebarPosition.X && mousePosition.X <= SidebarPosition.X + MainChatSidebarBorder.ActualWidth
+            && !_isMouseOverEditablePopup && !viewModel.ChatHistoryViewModel.IsTitleEditable && !viewModel.ChatHistoryViewModel.IsOpenDeletePopup)
         {
-            AIChatSidebarEventTrigger.PublishMouseOverHistoryPopup(true, EventArgs.Empty);
+            ChatHistoryPopup.SetCurrentValue(Popup.IsOpenProperty, false);
         }
+
         else if (!_isMouseOverOutOfTokenPopup)
         {
             OutOfTokenPopup.SetCurrentValue(Popup.IsOpenProperty, false);
@@ -83,6 +91,14 @@ public partial class AIChatSidebarView : UserControl
     private void OutOfTokenPopup_MouseLeave(object sender, MouseEventArgs e)
     {
         _isMouseOverOutOfTokenPopup = false;
+    }
+    private void ChatHistoryPopup_MouseEnter(object sender, MouseEventArgs e)
+    {
+        _isMouseOverHistoryPopup = true;
+    }
+    private void ChatHistoryPopup_MouseLeave(object sender, MouseEventArgs e)
+    {
+        _isMouseOverHistoryPopup = false;
     }
 
     private void Item_Loaded(object sender, RoutedEventArgs e)
@@ -109,8 +125,6 @@ public partial class AIChatSidebarView : UserControl
                 //if (_idx >= viewModel.AIChatMessages[_itemIdx].DetailMessage.Count) 
                 //    _itemIdx = _tempItemIdx;
                 string codeContent = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].CodeContent;
-                Logging.Log($"\n{viewModel.AIChatMessages[_itemIdx].Message}");
-                Logging.Log($"================");
                 string language = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].Language;
                 if (string.IsNullOrEmpty(codeContent))
                 {
