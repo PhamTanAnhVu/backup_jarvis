@@ -19,6 +19,9 @@ using System.Windows.Shapes;
 using Point = System.Windows.Point;
 
 
+using Point = System.Windows.Point;
+
+
 namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 {
     public partial class MainNavigationView : Window
@@ -41,6 +44,26 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
             aIChatBubblePopup.HorizontalOffset = (int)(SystemParameters.WorkArea.Width - /*aIChatBubblePopup.Width*/ 40);
             aIChatBubblePopup.VerticalOffset = (int)((SystemParameters.WorkArea.Height - /*aIChatBubblePopup.Height*/ 260) / 2);
+        }
+
+        private void InitTrayIcon()
+        {
+            string relativePath = Path.Combine("Assets", "Icons", "jarvis_logo_large.ico");
+            string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
+            _notifyIcon = new NotifyIcon();
+            _notifyIcon.Icon = new Icon(fullPath);
+            _notifyIcon.MouseClick += NotifyIcon_MouseClick;
+            _notifyIcon.Visible = true;
+            _notifyIcon.ContextMenuStrip = new CustomContextMenuView();
+        }
+
+        private void NotifyIcon_MouseClick(object? sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", true), new EventArgs());
+                _ = GoogleAnalyticService.Instance().SendEvent("open_main_window");
+            }
         }
 
         private void InitTrayIcon()
