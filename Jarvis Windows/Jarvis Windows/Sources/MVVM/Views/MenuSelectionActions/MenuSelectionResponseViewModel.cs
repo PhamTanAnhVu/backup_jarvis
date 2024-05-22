@@ -141,7 +141,6 @@ public class MenuSelectionResponseViewModel : ViewModelBase
 
         TranslateLanguages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
         LanguageSelectedIndex = 14;
-        UpdateAPIUsage();
 
         
         MenuSelectionSharedData.MenuSelectionCommandExecuted += (sender, e) =>
@@ -153,6 +152,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         EventAggregator.ApiUsageChanged += (sender, e) =>
         {
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+            IsOutOfToken = (RemainingAPIUsage == "0 🔥");
         };
     }
 
@@ -191,6 +191,17 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             );
 
         }
+    }
+
+    private async void ExecuteCopyToClipboardCommand(object obj)
+    {
+        if (_isProcessing) { return; }
+        try
+        {
+            Clipboard.Clear();
+            Clipboard.SetDataObject(SelectionTextResponse);
+        }
+        catch { return; }
     }
 
     private async void ExecuteCopyToClipboardCommand(object obj)

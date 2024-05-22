@@ -132,6 +132,8 @@ public partial class AIChatSidebarView : UserControl
                 //if (_idx >= viewModel.AIChatMessages[_itemIdx].DetailMessage.Count) 
                 //    _itemIdx = _tempItemIdx;
                 string codeContent = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].CodeContent;
+                Logging.Log($"\n{viewModel.AIChatMessages[_itemIdx].Message}");
+                Logging.Log($"================");
                 string language = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].Language;
                 if (string.IsNullOrEmpty(codeContent))
                 {

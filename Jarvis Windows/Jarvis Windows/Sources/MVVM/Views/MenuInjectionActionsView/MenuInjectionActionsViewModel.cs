@@ -298,17 +298,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             get { return _isAPIUsageRemain; }
             set
             {
-                _isAPIUsageRemain = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool? IsNoAPIUsageRemain
-        {
-            get { return _isNoAPIUsageRemain; }
-            set
-            {
-                _isNoAPIUsageRemain = value;
+                _isOutOfToken = value;
                 OnPropertyChanged();
             }
         }

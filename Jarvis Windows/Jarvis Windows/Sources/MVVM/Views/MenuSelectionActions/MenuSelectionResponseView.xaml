@@ -57,15 +57,15 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="105"/>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="5"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition Width="105"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
 
                     <Grid Grid.Row="0">
                         <Border Background="Transparent" Padding="10 10 10 12">
@@ -93,62 +93,62 @@
                             </Popup>-->
                     </Grid>
 
-                    <Grid Grid.Column="1" Visibility="{Binding IsActionTranslate, Converter={StaticResource VisibilityConverter}}">
-                        <Border Background="#FFFFFF" CornerRadius="16" Height="31" Padding="10 0 5 0">
-                            <ComboBox Width="85" FontFamily ="sans-serif" Style="{StaticResource JarvisComboBox}" 
-                                      Name="textMenuLanguageComboBox" ItemsSource="{Binding TranslateLanguages}" 
-                                      DisplayMemberPath="Value" SelectedIndex="{Binding LanguageSelectedIndex}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <i:InvokeCommandAction Command="{Binding TranslateCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </ComboBox>
-                        </Border>
-                    </Grid>
+                        <Grid Grid.Column="1" Visibility="{Binding IsActionTranslate, Converter={StaticResource VisibilityConverter}}">
+                            <Border Background="#FFFFFF" CornerRadius="16" Height="31" Padding="10 0 5 0">
+                                <ComboBox Width="85" FontFamily ="sans-serif" Style="{StaticResource JarvisComboBox}" 
+                                          Name="textMenuLanguageComboBox" ItemsSource="{Binding TranslateLanguages}" 
+                                          DisplayMemberPath="Value" SelectedIndex="{Binding LanguageSelectedIndex}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding TranslateCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
+                            </Border>
+                        </Grid>
 
-                    <Grid Grid.Column="2">
-                        <Button Style="{StaticResource MenuTopButton}"
-                            Width="56.242" Height="30" Margin="10 0 0 0">
-                            <Button.Content>
-                                <emoji:TextBlock Text="{Binding RemainingAPIUsage}" 
-                                 FontFamily="sans-serif" FontSize="16" 
-                                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Grid Grid.Column="2">
+                            <Button Style="{StaticResource MenuTopButton}"
+                                Width="56.242" Height="30" Margin="10 0 0 0">
+                                <Button.Content>
+                                    <emoji:TextBlock Text="{Binding RemainingAPIUsage}" 
+                                     FontFamily="sans-serif" FontSize="16" 
+                                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                            </Button.Content>
-                        </Button>
-                    </Grid>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
 
-                    <Grid Grid.Column="4" Background="Transparent">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="5"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Width="30" Height="30" HorizontalAlignment="Left"
-                                Style="{StaticResource JarvisNomalButton}"
-                                Command="{Binding MenuSelectionPinCommand}" CommandParameter="-1">
-                            <Button.Content>
-                                <Viewbox Width="16" Height="16" Margin="0 0 0 0">
-                                    <Canvas Width="16" Height="16">
-                                        <Path Width="16" Height="16" Stroke="{StaticResource PrimaryBrushColor4}" StrokeThickness="1" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
-                                                Fill="{Binding SelectionResponsePinColor}"/>
-                                    </Canvas>
-                                </Viewbox>
-                            </Button.Content>
-                        </Button>
-                        <Button Grid.Column="2" Width="30" Height="30"
-                                Style="{StaticResource JarvisNomalButton}"
-                                Command="{Binding HideMenuSelectionResponseCommand}">
-                            <Button.Content>
-                                <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}"
-                             Kind="Close" Width="18" Height="18"
-                             HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Button.Content>
-                        </Button>
+                        <Grid Grid.Column="4" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Width="30" Height="30" HorizontalAlignment="Left"
+                                    Style="{StaticResource JarvisNomalButton}"
+                                    Command="{Binding MenuSelectionPinCommand}" CommandParameter="-1">
+                                <Button.Content>
+                                    <Viewbox Width="16" Height="16" Margin="0 0 0 0">
+                                        <Canvas Width="16" Height="16">
+                                            <Path Width="16" Height="16" Stroke="{StaticResource PrimaryBrushColor4}" StrokeThickness="1" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
+                                                    Fill="{Binding SelectionResponsePinColor}"/>
+                                        </Canvas>
+                                    </Viewbox>
+                                </Button.Content>
+                            </Button>
+                            <Button Grid.Column="2" Width="30" Height="30"
+                                    Style="{StaticResource JarvisNomalButton}"
+                                    Command="{Binding HideMenuSelectionResponseCommand}">
+                                <Button.Content>
+                                    <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}"
+                                 Kind="Close" Width="18" Height="18"
+                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Button.Content>
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
 
                 <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
@@ -161,31 +161,31 @@
                         <Image x:Name="img" Source="../../../../Assets/Images/jarvis_logo_large.png" Width="20" Height="20" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="Fant"
                     Visibility="{Binding IsSpinningJarvisIcon,Converter={StaticResource VisibilityConverter}}" HorizontalAlignment="Left">
 
-                            <Image.RenderTransformOrigin>
-                                <Point X="0.5" Y="0.5"/>
-                            </Image.RenderTransformOrigin>
+                                <Image.RenderTransformOrigin>
+                                    <Point X="0.5" Y="0.5"/>
+                                </Image.RenderTransformOrigin>
 
-                            <Image.Style>
-                                <Style TargetType="Image">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="True">
-                                            <Setter Property="RenderTransform">
-                                                <Setter.Value>
-                                                    <RotateTransform Angle="360"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                            <DataTrigger.EnterActions>
-                                                <BeginStoryboard Storyboard="{StaticResource SpinAnimation}" />
-                                            </DataTrigger.EnterActions>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="False">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="True">
+                                                <Setter Property="RenderTransform">
+                                                    <Setter.Value>
+                                                        <RotateTransform Angle="360"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard Storyboard="{StaticResource SpinAnimation}" />
+                                                </DataTrigger.EnterActions>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="False">
 
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </Border>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Border>
 
                     <Border Background="#FFFFFF" MinHeight="24" MaxHeight="300" CornerRadius="12 12 0 0" Padding="12 10 0 12">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -196,20 +196,20 @@
                                  Style="{StaticResource TextBoxStyle}"/>
                         </ScrollViewer>
 
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="True">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="False">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                    </Border>
-                </Grid>
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                        </Border>
+                    </Grid>
 
                 <Grid Grid.Row="1" Width="382" Margin=" 0 3 0 0">
                     <Border Background="#FFFFFF" CornerRadius="0 0 12 12" Padding="10 12 12 12">
@@ -273,15 +273,15 @@
                                 Width="14" Height="14"
                                 HorizontalAlignment="Left"/>
 
-                                <TextBlock Margin="20 0 0 0" VerticalAlignment="Center"
-                                    FontSize="10" FontFamily="sans-serif" FontWeight="Bold"
-                                    Foreground="#1450A3" Text="Powered by Jarvis"/>
+                                    <TextBlock Margin="20 0 0 0" VerticalAlignment="Center"
+                                        FontSize="10" FontFamily="sans-serif" FontWeight="Bold"
+                                        Foreground="#1450A3" Text="Powered by Jarvis"/>
 
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Border>
+                        </Border>
+                    </Grid>
                 </Grid>
-            </Grid>
 
                 <Grid Grid.Row="1" Visibility="{Binding IsOutOfToken, Converter={StaticResource VisibilityConverter}}">
                     <Border Width="Auto" Height="Auto" Padding="{StaticResource Padding3}" Background="White" CornerRadius="{StaticResource BorderRadius2Xl}">
