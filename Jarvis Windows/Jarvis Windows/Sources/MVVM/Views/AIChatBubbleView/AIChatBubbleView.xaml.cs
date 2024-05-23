@@ -19,6 +19,10 @@ public partial class AIChatBubbleView : UserControl
         InitializeComponent();
         _globalHook = Hook.GlobalEvents();
         _globalHook.MouseMove += Global_MouseMove;
+        CloseBubbleButton.Visibility = Visibility.Collapsed;
+        BubbleButtonName.Visibility = Visibility.Collapsed;
+        UpperExtraBubbleButonBorder.Visibility = Visibility.Hidden;
+        LowerExtraBubbleButonBorder.Visibility = Visibility.Hidden;
     }
 
     private void Global_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -30,7 +34,7 @@ public partial class AIChatBubbleView : UserControl
 
         Point mousePosition = new Point(e.X, e.Y);
         Point bubbleButtonPosition = BubbleButton.PointToScreen(new Point(0, 0));
-        Point extraButtonPosition = ExtraButton.PointToScreen(new Point(0, 0));
+        Point extraButtonPosition = UpperExtraBubbleButonBorder.PointToScreen(new Point(0, 0));
         Point settingButtonPosition = SettingButton.PointToScreen(new Point(0, 0));
 
         double margin = 10;
@@ -48,10 +52,10 @@ public partial class AIChatBubbleView : UserControl
             }
 
             if (mousePosition.Y >= extraButtonPosition.Y - margin &&
-                mousePosition.Y <= extraButtonPosition.Y + margin + ExtraButton.ActualHeight)
+                mousePosition.Y <= extraButtonPosition.Y + margin + UpperExtraBubbleButonBorder.ActualHeight)
             {
                 if (mousePosition.X >= extraButtonPosition.X - margin &&
-                    mousePosition.X <= extraButtonPosition.X + margin + ExtraButton.Width)
+                    mousePosition.X <= extraButtonPosition.X + margin + UpperExtraBubbleButonBorder.Width)
                 {
                     return;
                 }
@@ -69,10 +73,10 @@ public partial class AIChatBubbleView : UserControl
         }
 
         _isShowExtraButtons = false;
-        CloseBubbleBorder.Visibility = Visibility.Collapsed;
+        CloseBubbleButton.Visibility = Visibility.Collapsed;
         BubbleButton.Opacity = 0.5;
-        ExtraButton.Visibility = Visibility.Hidden;
-        SettingButton.Visibility = Visibility.Hidden;
+        UpperExtraBubbleButonBorder.Visibility = Visibility.Hidden;
+        LowerExtraBubbleButonBorder.Visibility = Visibility.Hidden;
 
         BubbleButton.Width = 44;
         BubbleButtonName.Visibility = Visibility.Hidden;
@@ -85,11 +89,10 @@ public partial class AIChatBubbleView : UserControl
 
         _isShowExtraButtons = true;
         BubbleButton.Opacity = 1;
-        CloseBubbleBorder.Visibility = Visibility.Visible;
-        CloseBubbleBorder.Margin = new Thickness(-BubbleButton.ActualWidth - 35, -BubbleButton.ActualHeight + 5, 0, 0);
+        CloseBubbleButton.Visibility = Visibility.Visible;
 
-        ExtraButton.Visibility = Visibility.Visible;
-        SettingButton.Visibility = Visibility.Visible;
+        UpperExtraBubbleButonBorder.Visibility = Visibility.Visible;
+        LowerExtraBubbleButonBorder.Visibility = Visibility.Visible;
         
         BubbleButton.Width = 102;
         BubbleButtonName.Visibility = Visibility.Visible;
