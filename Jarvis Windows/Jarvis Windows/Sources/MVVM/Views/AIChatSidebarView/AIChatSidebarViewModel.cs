@@ -218,7 +218,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         CloseOutOfTokenPopupCommand = new RelayCommand(o => { IsOutOfToken = false; }, o => true);
         SelectModel = new RelayCommand(o => { IsOpenSelectAIModel = false; }, o => true);
         ShowChatHistory = new RelayCommand(o => { IsShowChatHistory = !IsShowChatHistory; ChatHistoryViewModel.UpdateLastUpdatedTime(); }, o => true);
-        JarvisUpdatedBorderVisibility = true; 
+        JarvisUpdatedBorderVisibility = false; 
         
         AddToolsButtonVisibility = true;
         ToggleAddToolsCommand.Execute(null);

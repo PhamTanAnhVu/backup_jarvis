@@ -65,7 +65,7 @@
                                                             <ColumnDefinition/>
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Grid.Column="0" Style="{StaticResource SmTextblock500}"                 
-                                                                    Text="Add more tools to your Jarvis"/>
+                                                                    Text="Coming Soon - Add more tools to your Jarvis"/>
 
                                                         <Viewbox Grid.Column="1" HorizontalAlignment="Right" Width="14" Height="14">
                                                             <Canvas Width="14" Height="14">
@@ -77,7 +77,7 @@
                                             </Button>
 
                                             <Border Style="{StaticResource ExpandAddToolsBorder}" 
-                                                Visibility="{Binding AddToolsButtonVisibility, Converter={StaticResource VisibilityConverter}}">
+                                                    Visibility="{Binding AddToolsButtonVisibility, Converter={StaticResource VisibilityConverter}}">
                                                 <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap3}">
                                                     <TextBox Style="{StaticResource XsTextBox400}" 
                                                          Text="Jarvis will automatically use enabled skills.
@@ -105,7 +105,6 @@
 
                                                                             <Grid Grid.Column="0">
                                                                                 <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap3}">
-
                                                                                     <Viewbox Width="{Binding SvgData.Width}" Height="{Binding SvgData.Height}">
                                                                                         <Grid>
                                                                                             <Path Fill="{Binding SvgData.FillColor}" Data="{Binding SvgData.Data[0]}"/>
@@ -120,11 +119,10 @@
                                                                                         </Grid>
                                                                                     </Viewbox>
 
-
                                                                                     <TextBox Style="{StaticResource SmTextBox500}"
-                                                                                         Text="{Binding Header}" VerticalAlignment="Center"/>
+                                                                                             Text="{Binding Header}" VerticalAlignment="Center"/>
 
-                                                                                    <Grid>
+                                                                                    <Grid x:Name="InfoButtonGrid">
                                                                                         <Button x:Name="InfoButton" Style="{StaticResource InfoButton}"
                                                                                             Command="{Binding InfoPopupCommand}" CommandParameter="{Binding Idx}"
                                                                                             MouseEnter="InfoPopup_MouseEnter" MouseLeave="InfoPopup_MouseLeave">
@@ -144,8 +142,7 @@
                                                                                             <Border Style="{StaticResource InfoPopupBorder}">
                                                                                                 <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
                                                                                                     <TextBox x:Name="AboutText" Style="{StaticResource SmTextBox700}" 
-                                                                                                         Text="About this skill - Coming Soon"
-                                                                                                         TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                                                                                         Text="Coming Soon" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                                                                                     <TextBox x:Name="DescriptionText" Style="{StaticResource SmTextBox400}" 
                                                                                                          Text="{Binding InfoPopupDescription}"
                                                                                                          HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -156,7 +153,7 @@
                                                                                                     <Button x:Name="InfoPopupButton" Style="{StaticResource InfoPopupButton}">
                                                                                                         <Button.Content>
                                                                                                             <TextBlock Style="{StaticResource SmTextblock600}"
-                                                                                                                    Text="{Binding InfoPopupButtonName}" Foreground="{StaticResource TailwindPrimary6}"/>
+                                                                                                                    Text="Coming Soon" Foreground="{StaticResource TailwindPrimary6}"/>
                                                                                                         </Button.Content>
                                                                                                     </Button>
                                                                                                 </StackPanel>
@@ -166,14 +163,14 @@
                                                                                 </StackPanel>
                                                                             </Grid>
 
-                                                                            <Grid Grid.Column="1" HorizontalAlignment="Right">
-                                                                                <Border CornerRadius="8" HorizontalAlignment="Left"
-                                                                                    Height="{Binding ToggleButtonHeight}" Width="{Binding ToggleButtonWidth}" 
-                                                                                    Background="{Binding ToggleBackground}">
+                                                                            <Grid x:Name="ToggleButtonGrid" Grid.Column="1" HorizontalAlignment="Right">
+                                                                                <Border x:Name="ToggleButtonBorder" CornerRadius="8" HorizontalAlignment="Left"
+                                                                                        Height="{Binding ToggleButtonHeight}" Width="{Binding ToggleButtonWidth}" 
+                                                                                        Background="{Binding ToggleBackground}">
 
                                                                                     <ToggleButton Background="Transparent" Width="{Binding ToggleButtonWidth}" 
                                                                                               Style="{StaticResource NoMouseOverStyle}"
-                                                                                              Command="{Binding ToggleCommand}" CommandParameter="{Binding Idx}">
+                                                                                              CommandParameter="{Binding Idx}">
 
                                                                                         <Grid Width="{Binding ToggleButtonWidth}" Height="{Binding ToggleButtonWidth}"
                                                                                           VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -184,6 +181,15 @@
                                                                                         </Grid>
                                                                                     </ToggleButton>
                                                                                 </Border>
+
+                                                                                <Popup Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                                                                       PlacementTarget="{Binding ElementName=ToggleButtonBorder}" VerticalOffset="-5" HorizontalOffset="-35"
+                                                                                       IsOpen="{Binding ElementName=ToggleButtonBorder, Path=IsMouseOver, Mode=OneWay}">
+                                                                                    <Border Style="{StaticResource UnderMessageBorder}">
+                                                                                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                                                                   Text="Coming Soon"/>
+                                                                                    </Border>
+                                                                                </Popup>
                                                                             </Grid>
                                                                         </Grid>
                                                                     </Border>
@@ -226,7 +232,7 @@
                                                                                     <TextBox Style="{StaticResource SmTextBox500}"
                                                                                             Text="{Binding Header}" VerticalAlignment="Center"/>
 
-                                                                                    <Grid>
+                                                                                    <Grid x:Name="InfoButtonGrid">
                                                                                         <Button x:Name="InfoButton" Style="{StaticResource InfoButton}"
                                                                                                 Command="{Binding InfoPopupCommand}" CommandParameter="{Binding Idx}"
                                                                                                 MouseEnter="InfoPopup_MouseEnter" MouseLeave="InfoPopup_MouseLeave">
@@ -247,7 +253,7 @@
                                                                                             <Border Style="{StaticResource InfoPopupBorder}">
                                                                                                 <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
                                                                                                     <TextBox x:Name="AboutText" Style="{StaticResource SmTextBox700}" 
-                                                                                                         Text="About this skill - Coming Soon"
+                                                                                                         Text="Coming Soon"
                                                                                                          TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                                                                                     <TextBox x:Name="DescriptionText" Style="{StaticResource SmTextBox400}" 
                                                                                                          Text="{Binding InfoPopupDescription}"
@@ -259,7 +265,7 @@
                                                                                                     <Button x:Name="InfoPopupButton" Style="{StaticResource InfoPopupButton}">
                                                                                                         <Button.Content>
                                                                                                             <TextBlock Style="{StaticResource SmTextblock600}"
-                                                                                                                    Text="{Binding InfoPopupButtonName}" Foreground="{StaticResource TailwindPrimary6}"/>
+                                                                                                                    Text="Coming Soon" Foreground="{StaticResource TailwindPrimary6}"/>
                                                                                                         </Button.Content>
                                                                                                     </Button>
                                                                                                 </StackPanel>
@@ -269,14 +275,14 @@
                                                                                 </StackPanel>
                                                                             </Grid>
 
-                                                                            <Grid Grid.Column="1" HorizontalAlignment="Right">
-                                                                                <Border CornerRadius="8" HorizontalAlignment="Left"
-                                                                                    Height="{Binding ToggleButtonHeight}" Width="{Binding ToggleButtonWidth}" 
-                                                                                    Background="{Binding ToggleBackground}">
+                                                                            <Grid x:Name="ToggleButtonGrid" Grid.Column="1" HorizontalAlignment="Right">
+                                                                                <Border x:Name="ToggleButtonBorder" CornerRadius="8" HorizontalAlignment="Left"
+                                                                                        Height="{Binding ToggleButtonHeight}" Width="{Binding ToggleButtonWidth}" 
+                                                                                        Background="{Binding ToggleBackground}">
 
                                                                                     <ToggleButton Background="Transparent" Width="{Binding ToggleButtonWidth}" 
                                                                                               Style="{StaticResource NoMouseOverStyle}"
-                                                                                              Command="{Binding ToggleCommand}" CommandParameter="{Binding Idx}">
+                                                                                              CommandParameter="{Binding Idx}">
 
                                                                                         <Grid Width="{Binding ToggleButtonWidth}" Height="{Binding ToggleButtonWidth}"
                                                                                           VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -287,6 +293,15 @@
                                                                                         </Grid>
                                                                                     </ToggleButton>
                                                                                 </Border>
+
+                                                                                <Popup Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                                                                       PlacementTarget="{Binding ElementName=ToggleButtonBorder}" VerticalOffset="-5" HorizontalOffset="-35"
+                                                                                       IsOpen="{Binding ElementName=ToggleButtonBorder, Path=IsMouseOver, Mode=OneWay}">
+                                                                                    <Border Style="{StaticResource UnderMessageBorder}">
+                                                                                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                                                                   Text="Coming Soon"/>
+                                                                                    </Border>
+                                                                                </Popup>
                                                                             </Grid>
                                                                         </Grid>
                                                                     </Border>
@@ -312,7 +327,7 @@
 
                                                     <Border Grid.Column="0" Width="44" Height="44" CornerRadius="{StaticResource BorderRadiusXl}" 
                                                             Background="White">
-                                                        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="16" Height="16">
+                                                        <Viewbox Width="16" Height="16">
                                                             <Grid>
                                                                 <Path Fill="#004578" Data="M17.6132 15.5158C18.7994 13.901 19.5 11.9073 19.5 9.75C19.5 4.36522 15.1348 0 9.75 0C4.36522 0 0 4.36522 0 9.75C0 15.1348 4.36522 19.5 9.75 19.5C11.9079 19.5 13.902 18.799 15.5171 17.6123L15.5158 17.6132C15.5601 17.6732 15.6093 17.7307 15.6636 17.785L21.4393 23.5607C22.0251 24.1465 22.9749 24.1465 23.5607 23.5607C24.1465 22.9749 24.1465 22.0251 23.5607 21.4393L17.785 15.6636C17.7307 15.6093 17.6732 15.5601 17.6132 15.5158ZM18 9.75C18 14.3063 14.3063 18 9.75 18C5.19365 18 1.5 14.3063 1.5 9.75C1.5 5.19365 5.19365 1.5 9.75 1.5C14.3063 1.5 18 5.19365 18 9.75Z"/>
                                                             </Grid>
@@ -322,9 +337,9 @@
                                                     <Grid Grid.Column="2">
                                                         <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap1}">
                                                             <TextBlock Style="{StaticResource MdTextblock600}"                 
-                                                                   Text="AI Search"/>
+                                                                        Text="AI Search"/>
                                                             <TextBlock Style="{StaticResource SmTextblock400}"                 
-                                                                       Text="Smarter and save your time"/>
+                                                                       Text="Coming Soon - Smarter and save your time"/>
                                                         </StackPanel>
                                                     </Grid>
                                                 </Grid>
@@ -370,7 +385,7 @@
                                                                Text="Upload" TextAlignment="Center"/>
 
                                                         <TextBlock Grid.Row="4" HorizontalAlignment="Center" Style="{StaticResource XsTextblock400}"
-                                                               Text="Click/Drag and &#x0a;drop here to chat" TextAlignment="Center"/>
+                                                               Text="Coming Soon - Click/Drag and &#x0a;drop here to chat" TextAlignment="Center"/>
                                                     </Grid>
                                                 </Button.Content>
                                             </Button>
@@ -381,6 +396,8 @@
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto"/>
                                                         <RowDefinition Height="16"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="6"/>
                                                         <RowDefinition Height="Auto"/>
                                                     </Grid.RowDefinitions>
 
@@ -393,6 +410,9 @@
 
                                                     <TextBlock Grid.Row="2" Style="{StaticResource MdTextblock600}"
                                                            Text="Screenshot and Ask AI" TextAlignment="Center"/>
+
+                                                    <TextBlock Grid.Row="4" HorizontalAlignment="Center" Style="{StaticResource XsTextblock400}"
+                                                               Text="Coming Soon" TextAlignment="Center"/>
                                                 </Grid>
 
                                             </Button>
