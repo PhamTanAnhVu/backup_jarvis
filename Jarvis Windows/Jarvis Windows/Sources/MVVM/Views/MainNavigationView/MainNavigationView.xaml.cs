@@ -28,18 +28,16 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             InitializeComponent();
             InitTrayIcon();
 
-            this.Width = 474 + 70;
+            this.Width = 474 + 70 + 24;
             this.Height = SystemParameters.WorkArea.Height * 0.98;
-            userControlMainContent.Height = this.Height;
-            userControlMainContent.Width = this.Width - 70;
+            userControlMainContent.Height = this.Height - 24;
+            userControlMainContent.Width = 474;
             
             this.Left = SystemParameters.WorkArea.Width - this.Width;
             this.Top = (SystemParameters.WorkArea.Height - this.Height) / 2;
 
             aIChatBubblePopup.HorizontalOffset = (int)(SystemParameters.WorkArea.Width - /*aIChatBubblePopup.Width*/ 40);
             aIChatBubblePopup.VerticalOffset = (int)((SystemParameters.WorkArea.Height - /*aIChatBubblePopup.Height*/ 260) / 2);
-
-            EventAggregator.PropertyMessageChanged += MainNavigationView_Activated;
         }
 
         private void InitTrayIcon()
@@ -99,30 +97,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             //else
             //{
             //    aIChatBubblePopup.HorizontalOffset = screenWidth - 44;
-            //}
-        }
-
-        private void MainNavigationView_Activated(object? sender, System.EventArgs e)
-        {
-            PropertyMessage? message = (sender != null) ? (PropertyMessage)sender : null;
-            // Bring the window to the front when it's activated
-            //if (message?.PropertyName == "IsShowMainNavigation" && (bool)message.Value == true)
-            //{
-            //    if (this.Visibility == Visibility.Visible)
-            //    {
-            //        this.SetCurrentValue(VisibilityProperty, Visibility.Collapsed);
-            //        aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, true);
-            //    }
-            //    else
-            //    {
-            //        this.SetCurrentValue(VisibilityProperty, Visibility.Visible);
-            //        aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, false);
-            //    }
-            //}
-            //else if(e != null)
-            //{
-            //    this.SetCurrentValue(VisibilityProperty, Visibility.Collapsed);
-            //    aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, true);
             //}
         }
     }

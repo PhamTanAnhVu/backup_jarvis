@@ -32,7 +32,7 @@ public partial class AIChatSidebarView : UserControl
     private bool _isMouseOverEditablePopup;
     private int _idx;
     private int _itemIdx;
-    
+    private double ChatScrollViewHeight;
     private TextEditor? _textEditor;
     private RichTextBox? _richTextBox;
     public AIChatSidebarView()
@@ -45,6 +45,11 @@ public partial class AIChatSidebarView : UserControl
         {
             _isMouseOverEditablePopup = (bool)sender;
         };
+
+        MainChatSidebarBorder.Height = (SystemParameters.WorkArea.Height * 0.98) - 24;
+        ChatScrollViewHeight = (MainChatSidebarBorder.Height * 0.758) - 10;
+        ExtraBorder.Height = ChatScrollViewHeight;
+        ChatConversationBorder.Height = ChatScrollViewHeight;
     }
 
     private void Global_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -119,7 +124,7 @@ public partial class AIChatSidebarView : UserControl
             {
                 if (_itemIdx == viewModel.AIChatMessages.Count - 1)
                 {
-                    MainScrollViewer.ScrollToBottom();
+                    ChatConversationScrollViewer.ScrollToBottom();
                 }
 
                 //if (_idx >= viewModel.AIChatMessages[_itemIdx].DetailMessage.Count) 
@@ -266,7 +271,7 @@ public partial class AIChatSidebarView : UserControl
     private void GlobalMouseHook_MouseWheelExt(object sender, MouseEventExtArgs e)
     {
         if (!_isMouseOverCodeScrollViewer) return;
-        MainScrollViewer.ScrollToVerticalOffset(MainScrollViewer.VerticalOffset - e.Delta);
+        ChatConversationScrollViewer.ScrollToVerticalOffset(ChatConversationScrollViewer.VerticalOffset - e.Delta);
     }
 
     private bool _isMouseOverCodeScrollViewer;
@@ -297,6 +302,19 @@ public partial class AIChatSidebarView : UserControl
         if (caretRect != Rect.Empty)
         {
             AIChatInputTextBox.ScrollToVerticalOffset(AIChatInputTextBox.VerticalOffset + caretRect.Top);
+        }
+
+        
+    }
+
+    private void InputTextBox_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        // Decrease height of upper scrollview if input textbox height increase.
+        if (e.PreviousSize.Height != e.NewSize.Height && e.PreviousSize.Height != 0)
+        {
+            double diffHeight = e.NewSize.Height - 72;
+            ExtraBorder.SetCurrentValue(HeightProperty, ChatScrollViewHeight - diffHeight);
+            ChatConversationBorder.SetCurrentValue(HeightProperty, ChatScrollViewHeight - diffHeight);
         }
     }
 

@@ -54,14 +54,14 @@
                 <Border Grid.Column="2" Background="White" CornerRadius="12">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="0.5*"/>
-                            <RowDefinition Height="7*"/>
-                            <RowDefinition Height="2.5*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
                         <!--Top: Hide and Expand Button-->
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Width="auto" Height="44" HorizontalAlignment="Center">
                             <Button Width="20" Height="20" Margin="0 0 8 0" Style="{StaticResource JarvisPrimaryButton}"
-                            Command="{Binding CloseMainNavigationCommand}">
+                                    Command="{Binding CloseMainNavigationCommand}">
                                 <Button.Content>
                                     <Path Fill="{StaticResource SolidColorBrushSlate500}" Data="M4.146 3.646a.5.5 0 0 0 0 .708L7.793 8l-3.647 3.646a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708 0M11.5 1a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-1 0v-13a.5.5 0 0 1 .5-.5"/>
                                 </Button.Content>
@@ -367,8 +367,8 @@
                         </StackPanel>
 
                         <!--Option Items-->
-                        <StackPanel Grid.Row="2" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}"
-                                    Width="auto" Height="auto" Margin="0">
+                        <StackPanel Grid.Row="2" VerticalAlignment="Bottom" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}"
+                                    Width="auto">
                             <!--Item More Info-->
                             <Button x:Name="btnNavigateDownloadApp" Width="32" Height="32"
                                     Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://jarvis.cx/#download"
@@ -403,7 +403,7 @@
                                     CommandParameter="{Binding ElementName=btnNavigateSettings}"
                                     Style="{StaticResource NavigationExtraButton}">
                                 <Button.Content>
-                                    <Viewbox Width="18" Height="18">
+                                    <Viewbox Width="20" Height="20">
                                         <Grid>
                                             <Path Fill="#475569" Data="M2.50001,5.72539L10,1.43972L17.5,5.72539L17.5,14.2747L10,18.5603L2.50001,14.2746L2.50001,5.72539ZM1.25001,14.2746C1.25001,14.7232 1.49037,15.1374 1.87984,15.3599L9.37987,19.6456C9.76415,19.8652 10.2359,19.8652 10.6202,19.6456L18.1202,15.36C18.5097,15.1374 18.75,14.7233 18.75,14.2747L18.75,5.72539C18.75,5.27682 18.5097,4.86264 18.1202,4.64009L10.6202,0.354416C10.2359,0.134825 9.76415,0.134825 9.37987,0.354414L1.87984,4.64009C1.49037,4.86264 1.25001,5.27682 1.25001,5.72539L1.25001,14.2746Z" />
                                             <Path Fill="#475569" Data="M7.4163,11.4399C8.27924,12.9346 10.1905,13.4467 11.6851,12.5837C13.1798,11.7208 13.6919,9.80955 12.829,8.31489C11.966,6.82023 10.0548,6.30812 8.56013,7.17106C7.06546,8.03401 6.55335,9.94522 7.4163,11.4399ZM12.3101,13.6663C10.2176,14.8744 7.54189,14.1574 6.33377,12.0649C5.12564,9.97236 5.8426,7.29665 7.93513,6.08853C10.0277,4.88041 12.7034,5.59736 13.9115,7.68989C15.1196,9.78242 14.4027,12.4581 12.3101,13.6663Z" />
@@ -413,7 +413,7 @@
                             </Button>
 
                             <!--Item Profile-->
-                            <Button x:Name="btnNavigateProfile" Width="40" Height="40" Margin="0 12 0 0"
+                            <Button x:Name="btnNavigateProfile" Width="40" Height="40" Margin="0 12 0 28"
                                     Command="{Binding NavigateCommand}"
                                     CommandParameter="{Binding ElementName=btnNavigateProfile}"
                                     Background="Transparent" BorderBrush="Transparent" BorderThickness="0">
