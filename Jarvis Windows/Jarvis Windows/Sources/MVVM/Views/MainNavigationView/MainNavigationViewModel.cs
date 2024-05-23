@@ -368,7 +368,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                 if (_viewModels.ContainsKey(targetViewModel))
                     CurrentViewModel = _viewModels[targetViewModel];
 
-              ChangeNavColor(targetViewModel);
+                ChangeNavColor(targetViewModel);
             }
         }
 
