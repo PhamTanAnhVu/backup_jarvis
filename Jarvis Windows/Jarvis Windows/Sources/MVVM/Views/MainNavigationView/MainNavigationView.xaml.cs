@@ -106,24 +106,24 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         {
             PropertyMessage? message = (sender != null) ? (PropertyMessage)sender : null;
             // Bring the window to the front when it's activated
-            if (message?.PropertyName == "IsShowMainNavigation" && (bool)message.Value == true)
-            {
-                if (this.Visibility == Visibility.Visible)
-                {
-                    this.SetCurrentValue(VisibilityProperty, Visibility.Collapsed);
-                    aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, true);
-                }
-                else
-                {
-                    this.SetCurrentValue(VisibilityProperty, Visibility.Visible);
-                    aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, false);
-                }
-            }
-            else if(e != null)
-            {
-                this.SetCurrentValue(VisibilityProperty, Visibility.Collapsed);
-                aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, true);
-            }
+            //if (message?.PropertyName == "IsShowMainNavigation" && (bool)message.Value == true)
+            //{
+            //    if (this.Visibility == Visibility.Visible)
+            //    {
+            //        this.SetCurrentValue(VisibilityProperty, Visibility.Collapsed);
+            //        aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, true);
+            //    }
+            //    else
+            //    {
+            //        this.SetCurrentValue(VisibilityProperty, Visibility.Visible);
+            //        aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, false);
+            //    }
+            //}
+            //else if(e != null)
+            //{
+            //    this.SetCurrentValue(VisibilityProperty, Visibility.Collapsed);
+            //    aIChatBubblePopup.SetCurrentValue(Popup.IsOpenProperty, true);
+            //}
         }
     }
 }

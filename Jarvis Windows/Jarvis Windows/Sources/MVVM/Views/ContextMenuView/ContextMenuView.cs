@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows;
+using Jarvis_Windows.Sources.MVVM.Models;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
 {
@@ -24,14 +25,25 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
             this.Items.Add("Quit Jarvis", null, QuitMenuItem_Click);
         }
 
+        private PropertyMessage InitPropertyMessage(string propertyName, object value)
+        {
+            return new PropertyMessage(propertyName, value);
+        }
+
         private void Sidebar_Click(object? sender, EventArgs e)
         {
-            EventAggregator.PublishAIChatBubbleStatusChanged(this, EventArgs.Empty);
+            PopupDictionaryService.Instance().IsShowMainNavigation = true;
+            EventAggregator.PublishPropertyMessageChanged(
+                InitPropertyMessage("IsShowMainNavigation-Chat", true), null
+            );
         }
 
         private void Setting_Click(object? sender, EventArgs e)
         {
-            EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
+            PopupDictionaryService.Instance().IsShowMainNavigation = true;
+            EventAggregator.PublishPropertyMessageChanged(
+                InitPropertyMessage("IsShowMainNavigation-Settings", true), null
+            );
         }
 
         private void QuitMenuItem_Click(object? sender, EventArgs e)

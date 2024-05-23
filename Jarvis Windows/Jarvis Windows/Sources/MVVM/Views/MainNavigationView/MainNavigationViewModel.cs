@@ -233,6 +233,10 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         private void OnPropertyMessageChanged(object sender, EventArgs e)
         {
             PropertyMessage message = (PropertyMessage)sender;
+            string[] content = message.PropertyName.Split("-");
+
+            message.PropertyName = content[0];
+            string page = (content.Length > 1) ? content[1] : "";
             bool value = (bool)message.Value;
             if (message == null) return;
 
@@ -243,7 +247,11 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                     break;
                 case "IsShowMainNavigation":
                     IsShowMainNavigation = value;
-                    IsShowAIChatBubble = false;
+                    IsShowAIChatBubble = !IsShowMainNavigation;
+                    if (!string.IsNullOrEmpty(page))
+                    {
+                        NavigateCommand.Execute(page);
+                    }
                     break;
             }
         }
@@ -251,15 +259,21 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         private void OnNavigate(object obj)
         {
             System.Windows.Controls.Button? pressedButton = obj as System.Windows.Controls.Button;
-            if(pressedButton != null)
+            if (pressedButton != null)
             {
                 string token = "btnNavigate";
                 string targetViewModel = pressedButton.Name.ToString().Substring(token.Length);
 
-                if(_viewModels.ContainsKey(targetViewModel))
+                if (_viewModels.ContainsKey(targetViewModel))
                     CurrentViewModel = _viewModels[targetViewModel];
 
-              ChangeNavColor(targetViewModel);
+                ChangeNavColor(targetViewModel);
+            }
+            else if (obj is string)
+            {
+                string targetViewModel = (string)obj;
+                if (_viewModels.ContainsKey(targetViewModel))
+                    CurrentViewModel = _viewModels[targetViewModel];
             }
         }
 
@@ -303,7 +317,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.J)
             {
-                EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", true), new EventArgs());
+                EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", !IsShowMainNavigation), new EventArgs());
                 e.Handled = true;
             }
         }
