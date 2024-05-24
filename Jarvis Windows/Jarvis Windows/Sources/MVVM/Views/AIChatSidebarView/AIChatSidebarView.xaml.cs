@@ -50,6 +50,18 @@ public partial class AIChatSidebarView : UserControl
         ChatScrollViewHeight = (MainChatSidebarBorder.Height * 0.758) - 10;
         ExtraBorder.Height = ChatScrollViewHeight;
         ChatConversationBorder.Height = ChatScrollViewHeight;
+        
+        // Put ChatHistory Popup in the center, then calculate the vertical offset to align it to the MainSidebar. ChatHistory Height is fixed at 780 (no problem)
+        ChatHistoryPopup.VerticalOffset = MainChatSidebarBorder.Height - (MainChatSidebarBorder.Height / 2 + 390); ;
+
+        // Use popup for overlay border because IsOpen property is instantly updated
+        // Create a border gap between ChatHistory and MainBorder at the top and fill in
+        //OverlayPopup.Height = MainChatSidebarBorder.Height - 780;
+        //OverlayPopup.VerticalOffset = -(MainChatSidebarBorder.Height / 2 - OverlayPopup.Height / 2);
+
+        //IsLoadingConversationPopup.Height = 500;
+        //IsLoadingConversationPopup.Width = 400;
+        //IsLoadingConversationPopup.VerticalOffset = -(50 + (MainChatSidebarBorder.Height / 2 - ChatScrollViewHeight / 2));
     }
 
     private void Global_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -129,8 +141,8 @@ public partial class AIChatSidebarView : UserControl
                     ChatConversationScrollViewer.ScrollToBottom();
                 }
 
-                //if (_idx >= viewModel.AIChatMessages[_itemIdx].DetailMessage.Count) 
-                //    _itemIdx = _tempItemIdx;
+                while (_idx >= viewModel.AIChatMessages[_itemIdx].DetailMessage.Count)
+                    _idx--;
                 string codeContent = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].CodeContent;
                 string language = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].Language;
                 if (string.IsNullOrEmpty(codeContent))
@@ -337,5 +349,25 @@ public partial class AIChatSidebarView : UserControl
             var currentAutomation = AutomationElement.FromHandle(handle);
             NativeUser32API.SetForegroundWindow(handle);
         }
+    }
+}
+
+public static class Logging
+{
+    private static bool isLogging = true;
+    public static void Log(string message)
+    {
+        if (!isLogging) return;
+
+        string _logFilePath = "C:\\Users\\vupham\\Desktop\\logJarvis.txt";
+        try
+        {
+            using (StreamWriter _streamWriter = new StreamWriter(_logFilePath, true))
+            {
+                _streamWriter.WriteLine($"{DateTime.Now} - {message}");
+            }
+        }
+
+        catch { return; }
     }
 }

@@ -20,6 +20,11 @@ using System.Reflection;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Windows.Forms;
 using Windows.Globalization;
+using System.Threading;
+using System.Runtime.CompilerServices;
+using Windows.ApplicationModel.Chat;
+using System.Diagnostics;
+using System.Security.Cryptography;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 public class AIChatSidebarViewModel : ViewModelBase
@@ -38,6 +43,7 @@ public class AIChatSidebarViewModel : ViewModelBase
     private bool _isOpenSelectAIModel;
     private bool _isProcessAIChat;
     private bool _isOutOfToken;
+    private bool _isLoadingConversation;
 
     private GoogleAnalyticService _googleAnalyticService;
 
@@ -187,6 +193,15 @@ public class AIChatSidebarViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    public bool IsLoadingConversation
+    {
+        get { return _isLoadingConversation; }
+        set
+        {
+            _isLoadingConversation = value;
+            OnPropertyChanged();
+        }
+    }
 
     private List<DispatcherTimer> StopDotTimer { get; set; }
     public ObservableCollection<AddToolsToggleButton> ToggleButtons { get; set; }
@@ -229,7 +244,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         InitializeToggleButtons();
 
         ChatHistoryViewModel = new ChatHistoryViewModel();
-        InitChatMessages();
+        // InitChatMessages();
 
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
         EventSubscribe();
@@ -250,27 +265,29 @@ public class AIChatSidebarViewModel : ViewModelBase
         };
     }
 
-    private void OnSelectConversation(object obj, EventArgs e)
-    {
-        if (_isProcessAIChat) return;
+    //private void OnSelectConversation(object obj, EventArgs e)
+    //{
+    //    if (_isProcessAIChat) return;
 
-        int idx = (int)obj;
-        if (idx != -1 && ConversationManager.Instance()._selectedIdx != idx)
-        {
-            ChatHistoryViewModel.DeselectConversation();
-            ChatHistoryViewModel.ConversationList[idx].IsSelected = true;
+    //    int idx = (int)obj;
+    //    if (idx != -1 && ConversationManager.Instance()._selectedIdx != idx)
+    //    {
+    //        ChatHistoryViewModel.DeselectConversation();
+    //        ChatHistoryViewModel.ConversationList[idx].IsSelected = true;
 
-            ConversationManager.Instance().UpdateConversation(ChatHistoryViewModel.ConversationList[idx]);
-            ConversationManager.Instance()._selectedIdx = idx;
-        }
- 
-        InitChatMessages();
-       
-        if (idx != -1)
-        {
-            IsShowChatHistory = false;
-        }
-    }
+    //        ConversationManager.Instance().UpdateConversation(ChatHistoryViewModel.ConversationList[idx]);
+    //        ConversationManager.Instance()._selectedIdx = idx;
+    //    }
+
+    //    if (idx != -1)
+    //    {
+    //        IsShowChatHistory = false;
+    //    }
+
+    //    InitChatMessages();
+
+
+    //}
 
     private async Task ResetAPIUsageDaily()
     {
@@ -442,12 +459,39 @@ public class AIChatSidebarViewModel : ViewModelBase
 
 
     // ChatMessage
-    private void InitChatMessages()
+    private async void OnSelectConversation(object obj, EventArgs e)
     {
-        AIChatMessages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
-        IsShowIntro = false;
-        if (AIChatMessages.Count == 0) IsShowIntro = true;
-        
+        if (_isProcessAIChat) return;
+
+        int idx = (int)obj;
+
+        if (idx != -1)
+        {
+            //IsShowChatHistory = false;
+            //IsLoadingConversation = true;
+            if (ConversationManager.Instance()._selectedIdx != idx)
+            {
+                ChatHistoryViewModel.DeselectConversation();
+                ConversationManager.Instance()._selectedIdx = idx;
+            }
+        }
+
+        await LoadChatMessagesAsync();
+    }
+
+    private async Task LoadChatMessagesAsync()
+    {
+        IsShowChatHistory = false;
+        IsLoadingConversation = true;
+        var messages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
+        if (ConversationManager.Instance()._selectedIdx != -1)
+        {
+            UpdateConversation(ConversationManager.Instance()._selectedIdx);
+        }
+
+        AIChatMessages = messages;
+        IsShowIntro = AIChatMessages.Count == 0;
+
         for (int i = 0; i < AIChatMessages.Count; i++)
         {
             string message = AIChatMessages[i].Message;
@@ -455,11 +499,69 @@ public class AIChatSidebarViewModel : ViewModelBase
             bool isUser = AIChatMessages[i].IsUser;
             AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser);
         }
+
+        //Thread assThread = new(What);
+        //assThread.Start();
+        //System.Windows.Application.Current.Dispatcher.Invoke(async () =>
+        //{
+        //    //IsLoadingConversation = false;
+        //    ////IsShowChatConversation = true;
+        //    //await Task.Delay(400);
+        //    AIChatMessages = messages;
+        //    IsShowIntro = AIChatMessages.Count == 0;
+
+        //    for (int i = 0; i < AIChatMessages.Count; i++)
+        //    {
+        //        string message = AIChatMessages[i].Message;
+        //        int messageIdx = AIChatMessages[i].Idx;
+        //        bool isUser = AIChatMessages[i].IsUser;
+        //        AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser);
+        //    }
+        //});
+
+
+        await Task.Delay(5000);
+        IsLoadingConversation = false;
+        IsShowChatConversation = true;
+    }
+
+    private void What()
+    {
+        IsShowChatHistory = false;
+        IsLoadingConversation = true;
+        if (ConversationManager.Instance()._selectedIdx != -1)
+        {
+            UpdateConversation(ConversationManager.Instance()._selectedIdx);
+        }
+        var messages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
+        AIChatMessages = messages;
+        IsShowIntro = AIChatMessages.Count == 0;
+
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        {
+            AIChatMessages = messages;
+            IsShowIntro = AIChatMessages.Count == 0;
+
+            for (int i = 0; i < AIChatMessages.Count; i++)
+            {
+                string message = AIChatMessages[i].Message;
+                int messageIdx = AIChatMessages[i].Idx;
+                bool isUser = AIChatMessages[i].IsUser;
+                AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser);
+            }
+        });
+    }
+
+    private void UpdateConversation(int idx)
+    {
+        ChatHistoryViewModel.DeselectConversation();
+        ChatHistoryViewModel.ConversationList[idx].IsSelected = true;
+        ConversationManager.Instance().UpdateConversation(ChatHistoryViewModel.ConversationList[idx]);  
     }
 
     private AIChatMessage CreateChatMessage(int idx, string message, bool isUser, bool isLoading = false)
     {
-        var chatMessage = new AIChatMessage
+        return new AIChatMessage
         {
             IsUser = isUser,
             IsServer = !isUser,
@@ -468,12 +570,10 @@ public class AIChatSidebarViewModel : ViewModelBase
             Idx = idx,
             CopyCommand = new RelayCommand(ExecuteCopyCommand, o => true),
             RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true),
-            DetailMessage = (isUser) 
-                                ? new ObservableCollection<CodeMessage> { new CodeMessage { TextContent = message, IsVisible = false } } 
-                                : RetrieveCodeSection(message)
+            DetailMessage = isUser
+                            ? new ObservableCollection<CodeMessage> { new CodeMessage { TextContent = message, IsVisible = false } }
+                            : RetrieveCodeSection(message)
         };
-
-        return chatMessage;
     }
 
     private async void ExecuteCopyCommand(object obj)
@@ -492,7 +592,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         if (_isProcessAIChat) return;
         ChatHistoryViewModel.DeselectConversation();
         ConversationManager.Instance()._selectedIdx = -1;
-        InitChatMessages();
+        await LoadChatMessagesAsync();
         IsShowIntro = true;
     }
 

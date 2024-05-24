@@ -486,7 +486,8 @@
                         </ScrollViewer>
                     </Border>
 
-                    <Border x:Name="ChatConversationBorder" Padding="20 20 0 20">
+                    <Border x:Name="ChatConversationBorder" Style="{StaticResource ChatConversationBorder}" 
+                            Padding="20 20 0 20">
                         <ScrollViewer x:Name="ChatConversationScrollViewer" Height="auto"
                                       Visibility="{Binding IsShowChatConversation, Converter={StaticResource VisibilityConverter}}">
                             <ItemsControl ItemsSource="{Binding AIChatMessages}">
@@ -495,7 +496,7 @@
                                         <WrapPanel Orientation="Vertical"/>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
-                                
+
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap1}"
@@ -554,7 +555,7 @@
                                                                                         HorizontalAlignment="Left" Width="406"
                                                                                         Background="Transparent" GotFocus="RichTextBox_GotFocus"
                                                                                         TextContent="{Binding TextContent, Mode=TwoWay}"/>
-                                                                
+
                                                                 <Border Grid.Row="1" CornerRadius="{StaticResource BorderRadiusMd}" VerticalAlignment="Center"
                                                                         Background="{StaticResource SolidColorBrushGray200}" MaxWidth="406"
                                                                         Visibility="{Binding IsVisible, Converter={StaticResource VisibilityConverter}}">
@@ -588,7 +589,7 @@
                                                                                 </Button>
                                                                             </Grid>
                                                                         </Border>
-                                                                        
+
                                                                         <avalonedit:TextEditor x:Name="textEditor" Style="{StaticResource AvalonEditStyle}" Tag="{Binding Idx}" 
                                                                                                 Loaded="CodeEditor_Loaded" MouseEnter="MouseEnter_CodeScrollViewer" 
                                                                                                 MouseLeave="MouseLeave_CodeScrollViewer" VerticalAlignment="Center"
@@ -661,7 +662,7 @@
                                                     </Popup>
                                                 </Grid>
                                             </StackPanel>
-                                            
+
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -1212,7 +1213,7 @@
                     </StackPanel>
                 </Border>
 
-                <Popup x:Name="ChatHistoryPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                <Popup x:Name="ChatHistoryPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" 
                        PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsShowChatHistory}" 
                        VerticalOffset="0" HorizontalOffset="50" MouseEnter="ChatHistoryPopup_MouseEnter" MouseLeave="ChatHistoryPopup_MouseLeave">
                     <local:ChatHistoryView/>
@@ -1270,6 +1271,42 @@
                               
             </Grid>
         </Border>
+
+        <Popup x:Name="IsLoadingConversationPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade" Width="200"
+               PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsLoadingConversation}">
+
+            <Image Source="/Assets/Images/logo-new/logo96x96.png" RenderOptions.BitmapScalingMode="HighQuality"
+                                   Width="25" Height="25">
+                <Image.RenderTransformOrigin>
+                    <Point X="0.5" Y="0.5"/>
+                </Image.RenderTransformOrigin>
+                <Image.RenderTransform>
+                    <RotateTransform />
+                </Image.RenderTransform>
+                <Image.Triggers>
+                    <EventTrigger RoutedEvent="Image.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                                    From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Image.Triggers>
+            </Image>
+
+        </Popup>
+
+        <!--<Popup x:Name="OverlayPopup" IsOpen="{Binding IsShowChatHistory}" PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" 
+               Placement="Center" StaysOpen="True" AllowsTransparency="True" Width="474">
+            <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}">
+                <Border.Effect>
+                    <StaticResource ResourceKey="BlurEffect"/>
+                </Border.Effect>
+            </Border>
+        </Popup>-->
 
         <!--<Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
                 Visibility="{Binding IsShowChatHistory, Converter={StaticResource VisibilityConverter}}">
