@@ -485,6 +485,7 @@ public class AIChatSidebarViewModel : ViewModelBase
 
     private async void ExecuteNewAIChatWindowCommand(object obj)
     {
+        if (_isProcessAIChat) return;
         ChatHistoryViewModel.DeselectConversation();
         ConversationManager.Instance()._selectedIdx = -1;
         InitChatMessages();
