@@ -243,11 +243,13 @@ public class AIChatSidebarViewModel : ViewModelBase
         ToggleAddToolsCommand.Execute(null);
         InitializeToggleButtons();
 
+        EventSubscribe();
+
         ChatHistoryViewModel = new ChatHistoryViewModel();
         // InitChatMessages();
 
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
-        EventSubscribe();
+        
     }
 
     private void EventSubscribe()
@@ -264,30 +266,6 @@ public class AIChatSidebarViewModel : ViewModelBase
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
         };
     }
-
-    //private void OnSelectConversation(object obj, EventArgs e)
-    //{
-    //    if (_isProcessAIChat) return;
-
-    //    int idx = (int)obj;
-    //    if (idx != -1 && ConversationManager.Instance()._selectedIdx != idx)
-    //    {
-    //        ChatHistoryViewModel.DeselectConversation();
-    //        ChatHistoryViewModel.ConversationList[idx].IsSelected = true;
-
-    //        ConversationManager.Instance().UpdateConversation(ChatHistoryViewModel.ConversationList[idx]);
-    //        ConversationManager.Instance()._selectedIdx = idx;
-    //    }
-
-    //    if (idx != -1)
-    //    {
-    //        IsShowChatHistory = false;
-    //    }
-
-    //    InitChatMessages();
-
-
-    //}
 
     private async Task ResetAPIUsageDaily()
     {
@@ -467,31 +445,33 @@ public class AIChatSidebarViewModel : ViewModelBase
 
         if (idx != -1)
         {
-            //IsShowChatHistory = false;
-            //IsLoadingConversation = true;
+            IsShowChatHistory = false;
             if (ConversationManager.Instance()._selectedIdx != idx)
             {
                 ChatHistoryViewModel.DeselectConversation();
                 ConversationManager.Instance()._selectedIdx = idx;
+                UpdateConversation(idx);
+
             }
+            else if (AIChatMessages is not null) { return; }
+            await LoadChatMessagesAsync();
         }
 
-        await LoadChatMessagesAsync();
+        else if (ConversationManager.Instance()._selectedIdx == -1)
+        {
+            IsShowIntro = true;
+        }
     }
 
     private async Task LoadChatMessagesAsync()
     {
-        IsShowChatHistory = false;
+        IsShowIntro = false;
         IsLoadingConversation = true;
+        await Task.Delay(500);
+
         var messages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
-        if (ConversationManager.Instance()._selectedIdx != -1)
-        {
-            UpdateConversation(ConversationManager.Instance()._selectedIdx);
-        }
-
+      
         AIChatMessages = messages;
-        IsShowIntro = AIChatMessages.Count == 0;
-
         for (int i = 0; i < AIChatMessages.Count; i++)
         {
             string message = AIChatMessages[i].Message;
@@ -500,58 +480,9 @@ public class AIChatSidebarViewModel : ViewModelBase
             AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser);
         }
 
-        //Thread assThread = new(What);
-        //assThread.Start();
-        //System.Windows.Application.Current.Dispatcher.Invoke(async () =>
-        //{
-        //    //IsLoadingConversation = false;
-        //    ////IsShowChatConversation = true;
-        //    //await Task.Delay(400);
-        //    AIChatMessages = messages;
-        //    IsShowIntro = AIChatMessages.Count == 0;
-
-        //    for (int i = 0; i < AIChatMessages.Count; i++)
-        //    {
-        //        string message = AIChatMessages[i].Message;
-        //        int messageIdx = AIChatMessages[i].Idx;
-        //        bool isUser = AIChatMessages[i].IsUser;
-        //        AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser);
-        //    }
-        //});
-
-
-        await Task.Delay(5000);
+        await Task.Delay(2500);
         IsLoadingConversation = false;
-        IsShowChatConversation = true;
     }
-
-    private void What()
-    {
-        IsShowChatHistory = false;
-        IsLoadingConversation = true;
-        if (ConversationManager.Instance()._selectedIdx != -1)
-        {
-            UpdateConversation(ConversationManager.Instance()._selectedIdx);
-        }
-        var messages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
-        AIChatMessages = messages;
-        IsShowIntro = AIChatMessages.Count == 0;
-
-        System.Windows.Application.Current.Dispatcher.Invoke(() =>
-        {
-            AIChatMessages = messages;
-            IsShowIntro = AIChatMessages.Count == 0;
-
-            for (int i = 0; i < AIChatMessages.Count; i++)
-            {
-                string message = AIChatMessages[i].Message;
-                int messageIdx = AIChatMessages[i].Idx;
-                bool isUser = AIChatMessages[i].IsUser;
-                AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser);
-            }
-        });
-    }
-
     private void UpdateConversation(int idx)
     {
         ChatHistoryViewModel.DeselectConversation();
@@ -589,10 +520,12 @@ public class AIChatSidebarViewModel : ViewModelBase
 
     private async void ExecuteNewAIChatWindowCommand(object obj)
     {
-        if (_isProcessAIChat) return;
+        if (_isProcessAIChat) { return; }
+
+        IsLoadingConversation = false;
         ChatHistoryViewModel.DeselectConversation();
         ConversationManager.Instance()._selectedIdx = -1;
-        await LoadChatMessagesAsync();
+        AIChatMessages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
         IsShowIntro = true;
     }
 
@@ -600,7 +533,7 @@ public class AIChatSidebarViewModel : ViewModelBase
     private async void ExecuteSendChatInputCommand(object obj)
     {
         // If server is processing request/empty input message then cancel execution
-        if (_isProcessAIChat) return;
+        if (_isProcessAIChat || IsLoadingConversation) return;
         if (string.IsNullOrEmpty(AIChatInputMessage)) return;
         
         // User runs out of token, stop
@@ -635,6 +568,7 @@ public class AIChatSidebarViewModel : ViewModelBase
 
         // Server returns result, update AIChatMessages and DB
         string? textResponse = await JarvisApi.Instance.ChatHandler(inputChatMessage, AIChatMessages);
+        textResponse = (string.IsNullOrEmpty(textResponse)) ? "**There is something wrong. Please try again later.**" : textResponse;
         responseMessage = CreateChatMessage(index + 1, textResponse, false);
         AIChatMessages.RemoveAt(index + 1);
         AIChatMessages.Insert(index + 1, responseMessage);
