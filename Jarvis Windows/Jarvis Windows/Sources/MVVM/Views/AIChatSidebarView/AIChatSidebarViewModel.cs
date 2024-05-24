@@ -323,30 +323,6 @@ public class AIChatSidebarViewModel : ViewModelBase
         };
     }
 
-    //private void OnSelectConversation(object obj, EventArgs e)
-    //{
-    //    if (_isProcessAIChat) return;
-
-    //    int idx = (int)obj;
-    //    if (idx != -1 && ConversationManager.Instance()._selectedIdx != idx)
-    //    {
-    //        ChatHistoryViewModel.DeselectConversation();
-    //        ChatHistoryViewModel.ConversationList[idx].IsSelected = true;
-
-    //        ConversationManager.Instance().UpdateConversation(ChatHistoryViewModel.ConversationList[idx]);
-    //        ConversationManager.Instance()._selectedIdx = idx;
-    //    }
-
-    //    if (idx != -1)
-    //    {
-    //        IsShowChatHistory = false;
-    //    }
-
-    //    InitChatMessages();
-
-
-    //}
-
     private async Task ResetAPIUsageDaily()
     {
         string dayTodayString = DateTime.Now.Day.ToString();
@@ -601,10 +577,12 @@ public class AIChatSidebarViewModel : ViewModelBase
 
     private async void ExecuteNewAIChatWindowCommand(object obj)
     {
-        if (_isProcessAIChat) return;
+        if (_isProcessAIChat) { return; }
+
+        IsLoadingConversation = false;
         ChatHistoryViewModel.DeselectConversation();
         ConversationManager.Instance()._selectedIdx = -1;
-        await LoadChatMessagesAsync();
+        AIChatMessages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
         IsShowIntro = true;
     }
 

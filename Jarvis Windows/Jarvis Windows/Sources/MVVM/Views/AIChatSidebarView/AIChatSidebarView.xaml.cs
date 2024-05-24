@@ -59,9 +59,9 @@ public partial class AIChatSidebarView : UserControl
         //OverlayPopup.Height = MainChatSidebarBorder.Height - 780;
         //OverlayPopup.VerticalOffset = -(MainChatSidebarBorder.Height / 2 - OverlayPopup.Height / 2);
 
-        //IsLoadingConversationPopup.Height = 500;
-        //IsLoadingConversationPopup.Width = 400;
-        //IsLoadingConversationPopup.VerticalOffset = -(50 + (MainChatSidebarBorder.Height / 2 - ChatScrollViewHeight / 2));
+        IsLoadingConversationPopup.Height = 500;
+        IsLoadingConversationPopup.Width = 400;
+        IsLoadingConversationPopup.VerticalOffset = -(50 + (MainChatSidebarBorder.Height / 2 - ChatScrollViewHeight / 2));
     }
 
     private void Global_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -349,25 +349,5 @@ public partial class AIChatSidebarView : UserControl
             var currentAutomation = AutomationElement.FromHandle(handle);
             NativeUser32API.SetForegroundWindow(handle);
         }
-    }
-}
-
-public static class Logging
-{
-    private static bool isLogging = true;
-    public static void Log(string message)
-    {
-        if (!isLogging) return;
-
-        string _logFilePath = "C:\\Users\\vupham\\Desktop\\logJarvis.txt";
-        try
-        {
-            using (StreamWriter _streamWriter = new StreamWriter(_logFilePath, true))
-            {
-                _streamWriter.WriteLine($"{DateTime.Now} - {message}");
-            }
-        }
-
-        catch { return; }
     }
 }

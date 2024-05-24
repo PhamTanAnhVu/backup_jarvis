@@ -1278,7 +1278,7 @@
 
         <Popup x:Name="IsLoadingConversationPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade" Width="200"
                PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsLoadingConversation}">
-
+            
             <Image Source="/Assets/Images/logo-new/logo96x96.png" RenderOptions.BitmapScalingMode="HighQuality"
                                    Width="25" Height="25">
                 <Image.RenderTransformOrigin>

@@ -207,7 +207,7 @@ public class ChatHistoryViewModel : ViewModelBase
         SaveEditTitleCommand = new RelayCommand(ExecuteSaveEditTitleCommand, o => true);
         FilterFavoriteChatCommand = new RelayCommand(ExecuteFilterFavoriteChatCommand, o => true);
 
-        AIChatSidebarEventTrigger.PublishSelectConversationChanged(-1, EventArgs.Empty);
+        AIChatSidebarEventTrigger.PublishSelectConversationChanged(ConversationManager.Instance()._selectedIdx, EventArgs.Empty);
     }
 
     private void InitConversationList()
@@ -219,8 +219,6 @@ public class ChatHistoryViewModel : ViewModelBase
         ConversationList = ConversationManager.Instance().GetAllConversations();
         for (int idx = 0; idx < ConversationList.Count; idx++)
         {
-            //ConversationList[idx].IsSelected = false;
-            //ConversationManager.Instance().UpdateConversation(ConversationList[idx]);
             InitConversation(idx);
         }
 
