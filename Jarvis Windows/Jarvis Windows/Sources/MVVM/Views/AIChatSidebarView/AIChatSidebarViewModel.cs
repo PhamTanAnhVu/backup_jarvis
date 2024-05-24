@@ -41,6 +41,7 @@ public class AIChatSidebarViewModel : ViewModelBase
     private bool _isOpenSelectAIModel;
     private bool _isProcessAIChat;
     private bool _isOutOfToken;
+    private bool _isLoadingConversation;
     private bool _isShowPromptLibrary;
     public string AddToolsButtonBorder;
     private string _selectedModelName;
@@ -211,6 +212,15 @@ public class AIChatSidebarViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    public bool IsLoadingConversation
+    {
+        get { return _isLoadingConversation; }
+        set
+        {
+            _isLoadingConversation = value;
+            OnPropertyChanged();
+        }
+    }
 
     public bool IsShowPromptLibrary
     {
@@ -285,7 +295,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         InitGenerativeModels();
 
         ChatHistoryViewModel = new ChatHistoryViewModel();
-        InitChatMessages();
+        // InitChatMessages();
 
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
         EventSubscribe();
@@ -313,27 +323,29 @@ public class AIChatSidebarViewModel : ViewModelBase
         };
     }
 
-    private void OnSelectConversation(object obj, EventArgs e)
-    {
-        if (_isProcessAIChat) return;
+    //private void OnSelectConversation(object obj, EventArgs e)
+    //{
+    //    if (_isProcessAIChat) return;
 
-        int idx = (int)obj;
-        if (idx != -1 && ConversationManager.Instance()._selectedIdx != idx)
-        {
-            ChatHistoryViewModel.DeselectConversation();
-            ChatHistoryViewModel.ConversationList[idx].IsSelected = true;
+    //    int idx = (int)obj;
+    //    if (idx != -1 && ConversationManager.Instance()._selectedIdx != idx)
+    //    {
+    //        ChatHistoryViewModel.DeselectConversation();
+    //        ChatHistoryViewModel.ConversationList[idx].IsSelected = true;
 
-            ConversationManager.Instance().UpdateConversation(ChatHistoryViewModel.ConversationList[idx]);
-            ConversationManager.Instance()._selectedIdx = idx;
-        }
- 
-        InitChatMessages();
-       
-        if (idx != -1)
-        {
-            IsShowChatHistory = false;
-        }
-    }
+    //        ConversationManager.Instance().UpdateConversation(ChatHistoryViewModel.ConversationList[idx]);
+    //        ConversationManager.Instance()._selectedIdx = idx;
+    //    }
+
+    //    if (idx != -1)
+    //    {
+    //        IsShowChatHistory = false;
+    //    }
+
+    //    InitChatMessages();
+
+
+    //}
 
     private async Task ResetAPIUsageDaily()
     {
@@ -557,7 +569,7 @@ public class AIChatSidebarViewModel : ViewModelBase
 
     private AIChatMessage CreateChatMessage(int idx, string message, bool isUser, int selectedModelIdx, bool isLoading = false)
     {
-        var chatMessage = new AIChatMessage
+        return new AIChatMessage
         {
             IsUser = isUser,
             IsServer = !isUser,
@@ -570,12 +582,10 @@ public class AIChatSidebarViewModel : ViewModelBase
             Idx = idx,
             CopyCommand = new RelayCommand(ExecuteCopyCommand, o => true),
             RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true),
-            DetailMessage = (isUser) 
-                                ? new ObservableCollection<CodeMessage> { new CodeMessage { TextContent = message, IsVisible = false } } 
-                                : RetrieveCodeSection(message)
+            DetailMessage = isUser
+                            ? new ObservableCollection<CodeMessage> { new CodeMessage { TextContent = message, IsVisible = false } }
+                            : RetrieveCodeSection(message)
         };
-
-        return chatMessage;
     }
 
     private async void ExecuteCopyCommand(object obj)
@@ -594,7 +604,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         if (_isProcessAIChat) return;
         ChatHistoryViewModel.DeselectConversation();
         ConversationManager.Instance()._selectedIdx = -1;
-        InitChatMessages();
+        await LoadChatMessagesAsync();
         IsShowIntro = true;
     }
 
