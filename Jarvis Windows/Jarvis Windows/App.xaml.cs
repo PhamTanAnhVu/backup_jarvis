@@ -69,8 +69,11 @@ namespace Jarvis_Windows
                     WindowLocalStorage.WriteLocalStorage("access_token", accessToken);
                     WindowLocalStorage.WriteLocalStorage("refresh_token", refreshToken);
                     AuthenticationService? authService = DependencyInjection.GetService<IAuthenticationService>() as AuthenticationService;
-                    authService.RefreshTokens();
-                    MainViewModel mainViewModel = DependencyInjection.GetService<MainViewModel>();
+                    authService?.RefreshTokens();
+
+                    //TODO: Move to main navigation view
+                    //MainViewModel mainViewModel = DependencyInjection.GetService<MainViewModel>();
+                    MainNavigationViewModel mainViewModel = (MainNavigationViewModel)mainNavigationView.DataContext;
                     Task<Account?> account = authService.GetMe();
                     if (account != null && account.Result != null && account.Result.Username != null)
                     {
