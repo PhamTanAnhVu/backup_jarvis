@@ -12,6 +12,7 @@ using System.IO;
 using Jarvis_Windows.Sources.MVVM.Models;
 using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 using System.Windows;
+using Windows.Media.Protection.PlayReady;
 
 namespace Jarvis_Windows.Sources.DataAccess.Network;
 
@@ -30,6 +31,9 @@ public sealed class JarvisApi
     public JarvisApi(IAuthenticationService authenticationService)
     {
         _client = new HttpClient();
+        /*var token = DependencyInjection.GetService<ITokenLocalService>().GetAccessToken();
+        _client.DefaultRequestHeaders.Add("x-jarvis-guid", _apiHeaderID);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);*/
         _apiUrl = DataConfiguration.ApiUrl;
 
         /*if(AuthenticationService.AuthenState == AUTHEN_STATE.AUTHENTICATED)
@@ -81,6 +85,7 @@ public sealed class JarvisApi
             if (AuthenticationService.AuthenState == AUTHEN_STATE.AUTHENTICATED)
             {
                 var token = DependencyInjection.GetService<ITokenLocalService>().GetAccessToken();
+                _client.DefaultRequestHeaders.Clear();
                 _client.DefaultRequestHeaders.Add("x-jarvis-guid", _apiHeaderID);
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 response = await _client.GetAsync(_apiUrl + _apiUserUsageEndpoint);
@@ -139,6 +144,7 @@ public sealed class JarvisApi
             if (AuthenticationService.AuthenState == AUTHEN_STATE.AUTHENTICATED)
             {
                 var token = DependencyInjection.GetService<ITokenLocalService>().GetAccessToken();
+                _client.DefaultRequestHeaders.Clear();
                 _client.DefaultRequestHeaders.Add("x-jarvis-guid", _apiHeaderID);
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 response = await _client.PostAsync(_apiUrl + endPoint, contentData);

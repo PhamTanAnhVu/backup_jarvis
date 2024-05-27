@@ -4,7 +4,7 @@
     <Style x:Key="PageAppearEffect"
            TargetType="{x:Type UserControl}">
 
-        <Setter Property="RenderTransform">
+        <!--<Setter Property="RenderTransform">
             <Setter.Value>
                 <TranslateTransform X="0"
                                     Y="0" />
@@ -37,7 +37,7 @@
                 </BeginStoryboard>
             </EventTrigger>
             
-        </Style.Triggers>
+        </Style.Triggers>-->
         
     </Style>
     
