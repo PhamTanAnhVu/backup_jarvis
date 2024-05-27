@@ -850,7 +850,7 @@
                                            IsOpen="{Binding ElementName=AIChatHistoryButton, Path=IsMouseOver, Mode=OneWay}">
                                         <Border Style="{StaticResource UnderMessageBorder}">
                                             <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                        Text="Chat history"/>
+                                                        Text="Coming soon - Chat history"/>
                                         </Border>
                                     </Popup>
                                 </Grid>
@@ -1271,19 +1271,19 @@
             </Grid>
         </Border>
 
-        <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
+        <!--<Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
                 Visibility="{Binding IsShowChatHistory, Converter={StaticResource VisibilityConverter}}">
             <Border.Effect>
                 <StaticResource ResourceKey="BlurEffect"/>
             </Border.Effect>
-        </Border>
+        </Border>-->
 
-        <Border x:Name="OverlayOutOfToken" Background="{StaticResource DarkenedBackground}" 
+        <!--<Border x:Name="OverlayOutOfToken" Background="{StaticResource DarkenedBackground}" 
                 Visibility="{Binding IsOutOfToken, Converter={StaticResource VisibilityConverter}}">
             <Border.Effect>
                 <StaticResource ResourceKey="BlurEffect"/>
             </Border.Effect>
-        </Border>
+        </Border>-->
     </Grid>
 
 </UserControl>
