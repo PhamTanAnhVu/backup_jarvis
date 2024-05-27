@@ -62,114 +62,116 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-                            <TextBlock x:Name="ClaudeInstantModelName" Style="{StaticResource MdTextblock400}"
-                                   Text="Claude-Instant"/>
-                        </StackPanel>
-                    </Button.Content>
-                </Button>
+                                <TextBlock x:Name="ClaudeInstantModelName" Style="{StaticResource MdTextblock400}"
+                   Text="Claude-Instant"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
 
-                <Popup Placement="Right" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
-                       PlacementTarget="{Binding ElementName=ClaudeInstantButton}" VerticalOffset="10" HorizontalOffset="10"
-                       IsOpen="{Binding ElementName=ClaudeInstantButton, Path=IsMouseOver, Mode=OneWay}">
-                    <Border Style="{StaticResource UnderMessageBorder}">
-                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                   Text="Coming soon"/>
-                    </Border>
-                </Popup>
-            </Grid>
+                    <Popup Placement="Right" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+       PlacementTarget="{Binding ElementName=ClaudeInstantButton}" VerticalOffset="10" HorizontalOffset="10"
+       IsOpen="{Binding ElementName=ClaudeInstantButton, Path=IsMouseOver, Mode=OneWay}">
+                        <Border Style="{StaticResource UnderMessageBorder}">
+                            <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                   Text="Coming soon"/>
+                        </Border>
+                    </Popup>
+                </Grid>
 
-            <Grid>
-                <Button x:Name="Claude3ModelButton" Style="{StaticResource ModelButton}"
-                        Command="{Binding SelectModelDisable}">
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
-                            <Viewbox x:Name="Claude3ModelSVGIcon" Width="18" Height="18">
-                                <Grid>
-                                    <Path Fill="#F0E8D6" Data="M18 9C18 4.02944 13.9706 0 9 0C4.02944 0 0 4.02944 0 9C0 13.9706 4.02944 18 9 18C13.9706 18 18 13.9706 18 9Z" />
-                                    <Path Fill="#D97757" Data="M5.26127 10.9219L7.55334 9.63574L7.59169 9.52365L7.55334 9.46169H7.44125L7.05776 9.43809L5.74801 9.4027L4.61229 9.35549L3.51198 9.2965L3.23469 9.2375L2.9751 8.89531L3.00165 8.72422L3.23469 8.56787L3.56803 8.59738L4.3055 8.64752L5.41171 8.72422L6.21409 8.77142L7.40289 8.89531H7.59169L7.61824 8.81862L7.55334 8.77142L7.50319 8.72422L6.35864 7.9484L5.11967 7.12832L4.4707 6.65634L4.11966 6.4174L3.94267 6.19321L3.86597 5.70352L4.18456 5.35248L4.61229 5.38198L4.72143 5.41148L5.15508 5.74482L6.08135 6.46164L7.2908 7.35252L7.4678 7.50001L7.53859 7.44987L7.54745 7.41446L7.4678 7.28172L6.80996 6.09291L6.1079 4.88345L5.7952 4.38197L5.7126 4.08108C5.68311 3.95718 5.66245 3.85394 5.66245 3.72709L6.0253 3.23446L6.22589 3.16956L6.70967 3.23446L6.91322 3.41145L7.2141 4.09877L7.70084 5.18139L8.45601 6.65339L8.67725 7.08998L8.79525 7.49411L8.8395 7.61801H8.9162V7.54721L8.97814 6.71829L9.09319 5.70057L9.20528 4.39082L9.24363 4.02208L9.42652 3.5796L9.78937 3.34066L10.0726 3.47634L10.3056 3.80969L10.2732 4.02503L10.1345 4.92475L9.86311 6.3348L9.68612 7.27876H9.78937L9.90736 7.16077L10.3852 6.52655L11.1876 5.52357L11.5416 5.12535L11.9546 4.68581L12.2201 4.47637H12.7216L13.0903 5.02504L12.9251 5.59142L12.4089 6.24631L11.9811 6.80089L11.3676 7.62685L10.9841 8.28763L11.0195 8.34073L11.1109 8.33188L12.4974 8.03689L13.2467 7.90119L14.1405 7.7478L14.5446 7.9366L14.5889 8.12834L14.4296 8.52067L13.4738 8.75667L12.3528 8.98086L10.6832 9.37615L10.6625 9.3909L10.6861 9.42039L11.4383 9.49119L11.7599 9.50889H12.5475L14.0136 9.61803L14.3971 9.87173L14.6273 10.1815L14.5889 10.4175L13.9988 10.7184L13.2024 10.5296L11.3439 10.0871L10.7068 9.92778H10.6183V9.98088L11.1493 10.5001L12.1228 11.3792L13.341 12.5119L13.403 12.7922L13.2467 13.0133L13.0815 12.9898L12.0106 12.1844L11.5976 11.8216L10.6625 11.034H10.6006V11.1166L10.8159 11.4323L11.9546 13.1432L12.0135 13.6683L11.931 13.8393L11.636 13.9426L11.3115 13.8836L10.6448 12.9484L9.95751 11.8953L9.40293 10.9514L9.33508 10.9897L9.00764 14.5149L8.85425 14.6949L8.50025 14.8305L8.20527 14.6063L8.04893 14.2435L8.20527 13.5267L8.39407 12.5916L8.54746 11.8482L8.6861 10.9248L8.7687 10.6181L8.76279 10.5974L8.69496 10.6063L7.99877 11.562L6.93977 12.9927L6.10199 13.8895L5.9014 13.9691L5.55331 13.7892L5.58576 13.4676L5.78045 13.1815L6.93977 11.7065L7.63889 10.7921L8.09022 10.2641L8.08728 10.1874H8.06073L4.98103 12.1874L4.43234 12.2582L4.19635 12.0369L4.22586 11.6741L4.33796 11.5561L5.26423 10.9189L5.26127 10.9219Z"/>
-                                    
-                                </Grid>
-                            </Viewbox>
+                <Grid>
+                    <Button x:Name="Claude3ModelButton" Style="{StaticResource ModelButton}"
+        Command="{Binding SelectModelDisable}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
+                                <Viewbox x:Name="Claude3ModelSVGIcon" Width="18" Height="18">
+                                    <Grid>
+                                        <Path Fill="#F0E8D6" Data="M18 9C18 4.02944 13.9706 0 9 0C4.02944 0 0 4.02944 0 9C0 13.9706 4.02944 18 9 18C13.9706 18 18 13.9706 18 9Z" />
+                                        <Path Fill="#D97757" Data="M5.26127 10.9219L7.55334 9.63574L7.59169 9.52365L7.55334 9.46169H7.44125L7.05776 9.43809L5.74801 9.4027L4.61229 9.35549L3.51198 9.2965L3.23469 9.2375L2.9751 8.89531L3.00165 8.72422L3.23469 8.56787L3.56803 8.59738L4.3055 8.64752L5.41171 8.72422L6.21409 8.77142L7.40289 8.89531H7.59169L7.61824 8.81862L7.55334 8.77142L7.50319 8.72422L6.35864 7.9484L5.11967 7.12832L4.4707 6.65634L4.11966 6.4174L3.94267 6.19321L3.86597 5.70352L4.18456 5.35248L4.61229 5.38198L4.72143 5.41148L5.15508 5.74482L6.08135 6.46164L7.2908 7.35252L7.4678 7.50001L7.53859 7.44987L7.54745 7.41446L7.4678 7.28172L6.80996 6.09291L6.1079 4.88345L5.7952 4.38197L5.7126 4.08108C5.68311 3.95718 5.66245 3.85394 5.66245 3.72709L6.0253 3.23446L6.22589 3.16956L6.70967 3.23446L6.91322 3.41145L7.2141 4.09877L7.70084 5.18139L8.45601 6.65339L8.67725 7.08998L8.79525 7.49411L8.8395 7.61801H8.9162V7.54721L8.97814 6.71829L9.09319 5.70057L9.20528 4.39082L9.24363 4.02208L9.42652 3.5796L9.78937 3.34066L10.0726 3.47634L10.3056 3.80969L10.2732 4.02503L10.1345 4.92475L9.86311 6.3348L9.68612 7.27876H9.78937L9.90736 7.16077L10.3852 6.52655L11.1876 5.52357L11.5416 5.12535L11.9546 4.68581L12.2201 4.47637H12.7216L13.0903 5.02504L12.9251 5.59142L12.4089 6.24631L11.9811 6.80089L11.3676 7.62685L10.9841 8.28763L11.0195 8.34073L11.1109 8.33188L12.4974 8.03689L13.2467 7.90119L14.1405 7.7478L14.5446 7.9366L14.5889 8.12834L14.4296 8.52067L13.4738 8.75667L12.3528 8.98086L10.6832 9.37615L10.6625 9.3909L10.6861 9.42039L11.4383 9.49119L11.7599 9.50889H12.5475L14.0136 9.61803L14.3971 9.87173L14.6273 10.1815L14.5889 10.4175L13.9988 10.7184L13.2024 10.5296L11.3439 10.0871L10.7068 9.92778H10.6183V9.98088L11.1493 10.5001L12.1228 11.3792L13.341 12.5119L13.403 12.7922L13.2467 13.0133L13.0815 12.9898L12.0106 12.1844L11.5976 11.8216L10.6625 11.034H10.6006V11.1166L10.8159 11.4323L11.9546 13.1432L12.0135 13.6683L11.931 13.8393L11.636 13.9426L11.3115 13.8836L10.6448 12.9484L9.95751 11.8953L9.40293 10.9514L9.33508 10.9897L9.00764 14.5149L8.85425 14.6949L8.50025 14.8305L8.20527 14.6063L8.04893 14.2435L8.20527 13.5267L8.39407 12.5916L8.54746 11.8482L8.6861 10.9248L8.7687 10.6181L8.76279 10.5974L8.69496 10.6063L7.99877 11.562L6.93977 12.9927L6.10199 13.8895L5.9014 13.9691L5.55331 13.7892L5.58576 13.4676L5.78045 13.1815L6.93977 11.7065L7.63889 10.7921L8.09022 10.2641L8.08728 10.1874H8.06073L4.98103 12.1874L4.43234 12.2582L4.19635 12.0369L4.22586 11.6741L4.33796 11.5561L5.26423 10.9189L5.26127 10.9219Z"/>
 
-                            <TextBlock x:Name="Claude3ModelName" Style="{StaticResource MdTextblock400}"
-                                       Text="Claude3 Sonnet"/>
-                        </StackPanel>
-                    </Button.Content>
-                </Button>
+                                    </Grid>
+                                </Viewbox>
 
-                <Popup Placement="Right" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
-                       PlacementTarget="{Binding ElementName=Claude3ModelButton}" VerticalOffset="10" HorizontalOffset="10"
-                       IsOpen="{Binding ElementName=Claude3ModelButton, Path=IsMouseOver, Mode=OneWay}">
-                    <Border Style="{StaticResource UnderMessageBorder}">
-                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                   Text="Coming soon"/>
-                    </Border>
-                </Popup>
-            </Grid>
+                                <TextBlock x:Name="Claude3ModelName" Style="{StaticResource MdTextblock400}"
+                       Text="Claude3 Sonnet"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
 
-            <Grid>
-                <Button x:Name="Claude3OpusModelButton" Style="{StaticResource ModelButton}"
-                        Command="{Binding SelectModelDisable}">
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
-                            <Viewbox x:Name="Claude3OpusModelSVGIcon" Width="18" Height="18">
-                                <Grid>
-                                    <Path Fill="#C36E51" Data="M18 9C18 4.02944 13.9706 0 9 0C4.02944 0 0 4.02944 0 9C0 13.9706 4.02944 18 9 18C13.9706 18 18 13.9706 18 9Z" />
-                                    <Path Fill="Black" Opacity="0.92" Data="M5.26127 10.9219L7.55334 9.63574L7.59169 9.52365L7.55334 9.46169H7.44125L7.05776 9.43809L5.74801 9.4027L4.61229 9.35549L3.51198 9.2965L3.23469 9.2375L2.9751 8.89531L3.00165 8.72422L3.23469 8.56787L3.56803 8.59738L4.3055 8.64752L5.41171 8.72422L6.21409 8.77142L7.40289 8.89531H7.59169L7.61824 8.81862L7.55334 8.77142L7.50319 8.72422L6.35864 7.9484L5.11967 7.12832L4.4707 6.65634L4.11966 6.4174L3.94267 6.19321L3.86597 5.70352L4.18456 5.35248L4.61229 5.38198L4.72143 5.41148L5.15508 5.74482L6.08135 6.46164L7.2908 7.35252L7.4678 7.50001L7.53859 7.44987L7.54745 7.41446L7.4678 7.28172L6.80996 6.09291L6.1079 4.88345L5.7952 4.38197L5.7126 4.08108C5.68311 3.95718 5.66245 3.85394 5.66245 3.72709L6.0253 3.23446L6.22589 3.16956L6.70967 3.23446L6.91322 3.41145L7.2141 4.09877L7.70084 5.18139L8.45601 6.65339L8.67725 7.08998L8.79525 7.49411L8.8395 7.61801H8.9162V7.54721L8.97814 6.71829L9.09319 5.70057L9.20528 4.39082L9.24363 4.02208L9.42652 3.5796L9.78937 3.34066L10.0726 3.47634L10.3056 3.80969L10.2732 4.02503L10.1345 4.92475L9.86311 6.3348L9.68612 7.27876H9.78937L9.90736 7.16077L10.3852 6.52655L11.1876 5.52357L11.5416 5.12535L11.9546 4.68581L12.2201 4.47637H12.7216L13.0903 5.02504L12.9251 5.59142L12.4089 6.24631L11.9811 6.80089L11.3676 7.62685L10.9841 8.28763L11.0195 8.34073L11.1109 8.33188L12.4974 8.03689L13.2467 7.90119L14.1405 7.7478L14.5446 7.9366L14.5889 8.12834L14.4296 8.52067L13.4738 8.75667L12.3528 8.98086L10.6832 9.37615L10.6625 9.3909L10.6861 9.42039L11.4383 9.49119L11.7599 9.50889H12.5475L14.0136 9.61803L14.3971 9.87173L14.6273 10.1815L14.5889 10.4175L13.9988 10.7184L13.2024 10.5296L11.3439 10.0871L10.7068 9.92778H10.6183V9.98088L11.1493 10.5001L12.1228 11.3792L13.341 12.5119L13.403 12.7922L13.2467 13.0133L13.0815 12.9898L12.0106 12.1844L11.5976 11.8216L10.6625 11.034H10.6006V11.1166L10.8159 11.4323L11.9546 13.1432L12.0135 13.6683L11.931 13.8393L11.636 13.9426L11.3115 13.8836L10.6448 12.9484L9.95751 11.8953L9.40293 10.9514L9.33508 10.9897L9.00764 14.5149L8.85425 14.6949L8.50025 14.8305L8.20527 14.6063L8.04893 14.2435L8.20527 13.5267L8.39407 12.5916L8.54746 11.8482L8.6861 10.9248L8.7687 10.6181L8.76279 10.5974L8.69496 10.6063L7.99877 11.562L6.93977 12.9927L6.10199 13.8895L5.9014 13.9691L5.55331 13.7892L5.58576 13.4676L5.78045 13.1815L6.93977 11.7065L7.63889 10.7921L8.09022 10.2641L8.08728 10.1874H8.06073L4.98103 12.1874L4.43234 12.2582L4.19635 12.0369L4.22586 11.6741L4.33796 11.5561L5.26423 10.9189L5.26127 10.9219Z"/>
+                    <Popup Placement="Right" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+       PlacementTarget="{Binding ElementName=Claude3ModelButton}" VerticalOffset="10" HorizontalOffset="10"
+       IsOpen="{Binding ElementName=Claude3ModelButton, Path=IsMouseOver, Mode=OneWay}">
+                        <Border Style="{StaticResource UnderMessageBorder}">
+                            <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                   Text="Coming soon"/>
+                        </Border>
+                    </Popup>
+                </Grid>
 
-                                </Grid>
-                            </Viewbox>
+                <Grid>
+                    <Button x:Name="Claude3OpusModelButton" Style="{StaticResource ModelButton}"
+        Command="{Binding SelectModelDisable}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
+                                <Viewbox x:Name="Claude3OpusModelSVGIcon" Width="18" Height="18">
+                                    <Grid>
+                                        <Path Fill="#C36E51" Data="M18 9C18 4.02944 13.9706 0 9 0C4.02944 0 0 4.02944 0 9C0 13.9706 4.02944 18 9 18C13.9706 18 18 13.9706 18 9Z" />
+                                        <Path Fill="Black" Opacity="0.92" Data="M5.26127 10.9219L7.55334 9.63574L7.59169 9.52365L7.55334 9.46169H7.44125L7.05776 9.43809L5.74801 9.4027L4.61229 9.35549L3.51198 9.2965L3.23469 9.2375L2.9751 8.89531L3.00165 8.72422L3.23469 8.56787L3.56803 8.59738L4.3055 8.64752L5.41171 8.72422L6.21409 8.77142L7.40289 8.89531H7.59169L7.61824 8.81862L7.55334 8.77142L7.50319 8.72422L6.35864 7.9484L5.11967 7.12832L4.4707 6.65634L4.11966 6.4174L3.94267 6.19321L3.86597 5.70352L4.18456 5.35248L4.61229 5.38198L4.72143 5.41148L5.15508 5.74482L6.08135 6.46164L7.2908 7.35252L7.4678 7.50001L7.53859 7.44987L7.54745 7.41446L7.4678 7.28172L6.80996 6.09291L6.1079 4.88345L5.7952 4.38197L5.7126 4.08108C5.68311 3.95718 5.66245 3.85394 5.66245 3.72709L6.0253 3.23446L6.22589 3.16956L6.70967 3.23446L6.91322 3.41145L7.2141 4.09877L7.70084 5.18139L8.45601 6.65339L8.67725 7.08998L8.79525 7.49411L8.8395 7.61801H8.9162V7.54721L8.97814 6.71829L9.09319 5.70057L9.20528 4.39082L9.24363 4.02208L9.42652 3.5796L9.78937 3.34066L10.0726 3.47634L10.3056 3.80969L10.2732 4.02503L10.1345 4.92475L9.86311 6.3348L9.68612 7.27876H9.78937L9.90736 7.16077L10.3852 6.52655L11.1876 5.52357L11.5416 5.12535L11.9546 4.68581L12.2201 4.47637H12.7216L13.0903 5.02504L12.9251 5.59142L12.4089 6.24631L11.9811 6.80089L11.3676 7.62685L10.9841 8.28763L11.0195 8.34073L11.1109 8.33188L12.4974 8.03689L13.2467 7.90119L14.1405 7.7478L14.5446 7.9366L14.5889 8.12834L14.4296 8.52067L13.4738 8.75667L12.3528 8.98086L10.6832 9.37615L10.6625 9.3909L10.6861 9.42039L11.4383 9.49119L11.7599 9.50889H12.5475L14.0136 9.61803L14.3971 9.87173L14.6273 10.1815L14.5889 10.4175L13.9988 10.7184L13.2024 10.5296L11.3439 10.0871L10.7068 9.92778H10.6183V9.98088L11.1493 10.5001L12.1228 11.3792L13.341 12.5119L13.403 12.7922L13.2467 13.0133L13.0815 12.9898L12.0106 12.1844L11.5976 11.8216L10.6625 11.034H10.6006V11.1166L10.8159 11.4323L11.9546 13.1432L12.0135 13.6683L11.931 13.8393L11.636 13.9426L11.3115 13.8836L10.6448 12.9484L9.95751 11.8953L9.40293 10.9514L9.33508 10.9897L9.00764 14.5149L8.85425 14.6949L8.50025 14.8305L8.20527 14.6063L8.04893 14.2435L8.20527 13.5267L8.39407 12.5916L8.54746 11.8482L8.6861 10.9248L8.7687 10.6181L8.76279 10.5974L8.69496 10.6063L7.99877 11.562L6.93977 12.9927L6.10199 13.8895L5.9014 13.9691L5.55331 13.7892L5.58576 13.4676L5.78045 13.1815L6.93977 11.7065L7.63889 10.7921L8.09022 10.2641L8.08728 10.1874H8.06073L4.98103 12.1874L4.43234 12.2582L4.19635 12.0369L4.22586 11.6741L4.33796 11.5561L5.26423 10.9189L5.26127 10.9219Z"/>
 
-                            <TextBlock x:Name="Claude3OpusModelName" Style="{StaticResource MdTextblock400}"
-                                       Text="Claude3 Opus"/>
-                        </StackPanel>
-                    </Button.Content>
-                </Button>
+                                    </Grid>
+                                </Viewbox>
 
-                <Popup Placement="Right" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
-                       PlacementTarget="{Binding ElementName=Claude3OpusModelButton}" VerticalOffset="10" HorizontalOffset="10"
-                       IsOpen="{Binding ElementName=Claude3OpusModelButton, Path=IsMouseOver, Mode=OneWay}">
-                    <Border Style="{StaticResource UnderMessageBorder}">
-                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                   Text="Coming soon"/>
-                    </Border>
-                </Popup>
-            </Grid>
+                                <TextBlock x:Name="Claude3OpusModelName" Style="{StaticResource MdTextblock400}"
+                       Text="Claude3 Opus"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
 
-            <Grid>
-                <Button x:Name="GeminiModelButton" Style="{StaticResource ModelButton}"
-                        Command="{Binding SelectModelDisable}">
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
-                            <Viewbox x:Name="GeminiModelSVGIcon" Width="18" Height="18">
-                                <Grid>
-                                    <Path Fill="#F0F1F5" Data="M18 9C18 4.02944 13.9706 0 9 0C4.02944 0 0 4.02944 0 9C0 13.9706 4.02944 18 9 18C13.9706 18 18 13.9706 18 9Z" />
-                                    <Path Data="M9 16.3125C9 15.3009 8.80502 14.3503 8.415 13.4606C8.0372 12.571 7.51922 11.797 6.86109 11.1389C6.20297 10.4808 5.42906 9.9628 4.53937 9.585C3.64969 9.19499 2.69907 9 1.6875 9C2.69907 9 3.64969 8.81108 4.53937 8.43328C5.42906 8.04327 6.20297 7.51922 6.86109 6.86109C7.51922 6.20297 8.0372 5.42906 8.415 4.53937C8.80502 3.64969 9 2.69907 9 1.6875C9 2.69907 9.18892 3.64969 9.56672 4.53937C9.95673 5.42906 10.4808 6.20297 11.1389 6.86109C11.797 7.51922 12.571 8.04327 13.4606 8.43328C14.3503 8.81108 15.3009 9 16.3125 9C15.3009 9 14.3503 9.19499 13.4606 9.585C12.571 9.9628 11.797 10.4808 11.1389 11.1389C10.4808 11.797 9.95673 12.571 9.56672 13.4606C9.18892 14.3503 9 15.3009 9 16.3125Z">
-                                        <Path.Fill>
-                                            <RadialGradientBrush GradientOrigin="0.872 0.094" Center="0.872 0.094" RadiusX="1" RadiusY="1">
-                                                <GradientStop Offset="0.325" Color="#FFDDB7" />
-                                                <GradientStop Offset="0.706" Color="#076EFF" />
-                                            </RadialGradientBrush>
-                                        </Path.Fill>
-                                    </Path>
-                                </Grid>
-                            </Viewbox>
+                    <Popup Placement="Right" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+       PlacementTarget="{Binding ElementName=Claude3OpusModelButton}" VerticalOffset="10" HorizontalOffset="10"
+       IsOpen="{Binding ElementName=Claude3OpusModelButton, Path=IsMouseOver, Mode=OneWay}">
+                        <Border Style="{StaticResource UnderMessageBorder}">
+                            <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                   Text="Coming soon"/>
+                        </Border>
+                    </Popup>
+                </Grid>
 
-                            <TextBlock x:Name="GeminiModelName" Style="{StaticResource MdTextblock400}"
-                                        Text="Gemini Pro"/>
-                        </StackPanel>
-                    </Button.Content>
-                </Button>
+                <Grid>
+                    <Button x:Name="GeminiModelButton" Style="{StaticResource ModelButton}"
+        Command="{Binding SelectModelDisable}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
+                                <Viewbox x:Name="GeminiModelSVGIcon" Width="18" Height="18">
+                                    <Grid>
+                                        <Path Fill="#F0F1F5" Data="M18 9C18 4.02944 13.9706 0 9 0C4.02944 0 0 4.02944 0 9C0 13.9706 4.02944 18 9 18C13.9706 18 18 13.9706 18 9Z" />
+                                        <Path Data="M9 16.3125C9 15.3009 8.80502 14.3503 8.415 13.4606C8.0372 12.571 7.51922 11.797 6.86109 11.1389C6.20297 10.4808 5.42906 9.9628 4.53937 9.585C3.64969 9.19499 2.69907 9 1.6875 9C2.69907 9 3.64969 8.81108 4.53937 8.43328C5.42906 8.04327 6.20297 7.51922 6.86109 6.86109C7.51922 6.20297 8.0372 5.42906 8.415 4.53937C8.80502 3.64969 9 2.69907 9 1.6875C9 2.69907 9.18892 3.64969 9.56672 4.53937C9.95673 5.42906 10.4808 6.20297 11.1389 6.86109C11.797 7.51922 12.571 8.04327 13.4606 8.43328C14.3503 8.81108 15.3009 9 16.3125 9C15.3009 9 14.3503 9.19499 13.4606 9.585C12.571 9.9628 11.797 10.4808 11.1389 11.1389C10.4808 11.797 9.95673 12.571 9.56672 13.4606C9.18892 14.3503 9 15.3009 9 16.3125Z">
+                                            <Path.Fill>
+                                                <RadialGradientBrush GradientOrigin="0.872 0.094" Center="0.872 0.094" RadiusX="1" RadiusY="1">
+                                                    <GradientStop Offset="0.325" Color="#FFDDB7" />
+                                                    <GradientStop Offset="0.706" Color="#076EFF" />
+                                                </RadialGradientBrush>
+                                            </Path.Fill>
+                                        </Path>
+                                    </Grid>
+                                </Viewbox>
 
-                <Popup Placement="Right" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
-                       PlacementTarget="{Binding ElementName=GeminiModelButton}" VerticalOffset="10" HorizontalOffset="10"
-                       IsOpen="{Binding ElementName=GeminiModelButton, Path=IsMouseOver, Mode=OneWay}">
-                    <Border Style="{StaticResource UnderMessageBorder}">
-                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                       Text="Coming soon"/>
-                    </Border>
-                </Popup>
-            </Grid>
-        </StackPanel>
+                                <TextBlock x:Name="GeminiModelName" Style="{StaticResource MdTextblock400}"
+                        Text="Gemini Pro"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                    <Popup Placement="Right" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+       PlacementTarget="{Binding ElementName=GeminiModelButton}" VerticalOffset="10" HorizontalOffset="10"
+       IsOpen="{Binding ElementName=GeminiModelButton, Path=IsMouseOver, Mode=OneWay}">
+                        <Border Style="{StaticResource UnderMessageBorder}">
+                            <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+       Text="Coming soon"/>
+                        </Border>
+                    </Popup>
+                </Grid>
+            </StackPanel>
+        </Border>
     </Border>
+
 </UserControl>
