@@ -884,7 +884,7 @@
                             <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap0.5}">
                                 <Grid x:Name="AIChatInputGrid">
                                     <TextBlock x:Name="AIChatPreText" Style="{StaticResource AIChatPreText}"
-                                                   Text="Ask me anything, press ‘/’ for prompts..."/>
+                                                   Text="Ask me anything..."/>
                                     <TextBox x:Name="AIChatInputTextBox" Style="{StaticResource AIChatInputTextBox}" SizeChanged="InputTextBox_SizeChanged"
                                                  Text="{Binding AIChatInputMessage, UpdateSourceTrigger=PropertyChanged}"
                                                  AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
