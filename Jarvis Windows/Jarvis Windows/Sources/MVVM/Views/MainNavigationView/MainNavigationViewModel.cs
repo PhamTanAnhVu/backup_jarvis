@@ -391,7 +391,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             {
                 if (Account.Role != "anonymous")
                 {
-                    EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
+                    //EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
                     return;
                 }
 

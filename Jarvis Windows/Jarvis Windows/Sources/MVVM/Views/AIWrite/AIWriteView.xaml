@@ -27,13 +27,13 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Background="Transparent" VerticalAlignment="Top">
-                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"
-               FontSize="20" FontWeight="Bold">
-                AI Write
-                </TextBlock>
+                <!--<TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            FontSize="20" FontWeight="Bold">
+                    AI Write
+                </TextBlock>-->
             </Grid>
 
-            <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
+            <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -43,7 +43,7 @@
                 <TextBox Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource LgTextBox600}" Foreground="{StaticResource TailwindPrimary6}"
              Text="Coming Soon" Margin="0 0 0 4"/>
                 <emoji:TextBlock Grid.Row="1" HorizontalAlignment="Center" Style="{StaticResource SmTextblock400}" Foreground="{StaticResource SolidColorBrushSlate500}"
-       Text="Please take a cup of coffee and wait for us ☕" Margin="0 0 0 24" />
+       Text="Please take a cup of coffee and wait for us ☕" TextAlignment="Center" Margin="0 0 0 24" />
                 <Button Grid.Row="2" Style="{StaticResource JoinWaitingButton}">
                     <Button.Content>
                         <TextBlock Style="{StaticResource SmTextblock500}" Foreground="White"

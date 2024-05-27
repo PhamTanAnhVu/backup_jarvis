@@ -59,6 +59,9 @@ public partial class AIChatSidebarView : UserControl
             AIChatSidebarEventTrigger.PublishMouseOverInfoPopup(true, EventArgs.Empty);
         }
 
+        
+        SelectAIModelPopup.SetCurrentValue(Popup.IsOpenProperty, false);
+
         if (MainChatSidebarBorder is null) return;
         if (PresentationSource.FromVisual(MainChatSidebarBorder) == null) return;
 
@@ -105,7 +108,6 @@ public partial class AIChatSidebarView : UserControl
     {
         _isMouseOverHistoryPopup = false;
     }
-
     private void Item_Loaded(object sender, RoutedEventArgs e)
     {
         var itemControl = (ItemsControl)sender;    

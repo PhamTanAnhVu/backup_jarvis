@@ -179,9 +179,9 @@
 
                             <!--Item Search-->
                             <Button Name="btnNavigateSearch" Width="auto" Height="54"
-                        Command="{Binding NavigateCommand}"
-                        CommandParameter="{Binding ElementName=btnNavigateSearch}"
-                        Style="{StaticResource NavigateButton}">
+                                    Command="{Binding NavigateCommand}"
+                                    CommandParameter="{Binding ElementName=btnNavigateSearch}"
+                                    Style="{StaticResource NavigateButton}">
                                 <Button.Content>
                                     <Grid Width="auto" Height="54" VerticalAlignment="Center">
                                         <Grid.ColumnDefinitions>
@@ -370,53 +370,85 @@
                         <StackPanel Grid.Row="2" VerticalAlignment="Bottom" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}"
                                     Width="auto">
                             <!--Item More Info-->
-                            <Button x:Name="btnNavigateDownloadApp" Width="32" Height="32"
+                            <Grid>
+                                <Button x:Name="btnNavigateDownloadApp" Width="32" Height="32"
                                     Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://jarvis.cx/#download"
                                     Style="{StaticResource NavigationExtraButton}">
-                                <Button.Content>
-                                    <Viewbox Width="18" Height="18">
-                                        <Grid>
-                                            <Path Fill="#475569" Data="M9,1.125C9,0.50368 9.50368,0 10.125,0L16.875,0C17.4963,0 18,0.50368 18,1.125V16.875C18,17.4963 17.4963,18 16.875,18H10.125C9.50368,18 9,17.4963 9,16.875V1.125ZM10.125,16.3125C10.125,16.6232 10.3768,16.875 10.6875,16.875C10.9982,16.875 11.25,16.6232 11.25,16.3125C11.25,16.0018 10.9982,15.75 10.6875,15.75C10.3768,15.75 10.125,16.0018 10.125,16.3125ZM12.375,16.3125C12.375,16.6232 12.6268,16.875 12.9375,16.875C13.2482,16.875 13.5,16.6232 13.5,16.3125C13.5,16.0018 13.2482,15.75 12.9375,15.75C12.6268,15.75 12.375,16.0018 12.375,16.3125ZM10.6875,1.125C10.3768,1.125 10.125,1.37684 10.125,1.6875C10.125,1.99816 10.3768,2.25 10.6875,2.25H16.3125C16.6232,2.25 16.875,1.99816 16.875,1.6875C16.875,1.37684 16.6232,1.125 16.3125,1.125H10.6875ZM10.125,3.9375C10.125,4.24816 10.3768,4.5 10.6875,4.5H16.3125C16.6232,4.5 16.875,4.24816 16.875,3.9375C16.875,3.62684 16.6232,3.375 16.3125,3.375H10.6875C10.3768,3.375 10.125,3.62684 10.125,3.9375Z" />
-                                            <Path Fill="#475569" Data="M1.6875,2.25C0.75552,2.25 0,3.00552 0,3.9375L0,11.8125C0,12.7445 0.75552,13.5 1.6875,13.5H6.75V15.75H6.1875C5.87684,15.75 5.625,16.0018 5.625,16.3125C5.625,16.6232 5.87684,16.875 6.1875,16.875H7.875V12.375H1.6875C1.37684,12.375 1.125,12.1232 1.125,11.8125V3.9375C1.125,3.62684 1.37684,3.375 1.6875,3.375H7.875V2.25H1.6875Z" />
-                                        </Grid>
-                                    </Viewbox>
-                                </Button.Content>
-                            </Button>
-                            
-                            <Button x:Name="btnNavigateMoreInfo" Width="32" Height="32"
+                                    <Button.Content>
+                                        <Viewbox Width="18" Height="18">
+                                            <Grid>
+                                                <Path Fill="#475569" Data="M9,1.125C9,0.50368 9.50368,0 10.125,0L16.875,0C17.4963,0 18,0.50368 18,1.125V16.875C18,17.4963 17.4963,18 16.875,18H10.125C9.50368,18 9,17.4963 9,16.875V1.125ZM10.125,16.3125C10.125,16.6232 10.3768,16.875 10.6875,16.875C10.9982,16.875 11.25,16.6232 11.25,16.3125C11.25,16.0018 10.9982,15.75 10.6875,15.75C10.3768,15.75 10.125,16.0018 10.125,16.3125ZM12.375,16.3125C12.375,16.6232 12.6268,16.875 12.9375,16.875C13.2482,16.875 13.5,16.6232 13.5,16.3125C13.5,16.0018 13.2482,15.75 12.9375,15.75C12.6268,15.75 12.375,16.0018 12.375,16.3125ZM10.6875,1.125C10.3768,1.125 10.125,1.37684 10.125,1.6875C10.125,1.99816 10.3768,2.25 10.6875,2.25H16.3125C16.6232,2.25 16.875,1.99816 16.875,1.6875C16.875,1.37684 16.6232,1.125 16.3125,1.125H10.6875ZM10.125,3.9375C10.125,4.24816 10.3768,4.5 10.6875,4.5H16.3125C16.6232,4.5 16.875,4.24816 16.875,3.9375C16.875,3.62684 16.6232,3.375 16.3125,3.375H10.6875C10.3768,3.375 10.125,3.62684 10.125,3.9375Z" />
+                                                <Path Fill="#475569" Data="M1.6875,2.25C0.75552,2.25 0,3.00552 0,3.9375L0,11.8125C0,12.7445 0.75552,13.5 1.6875,13.5H6.75V15.75H6.1875C5.87684,15.75 5.625,16.0018 5.625,16.3125C5.625,16.6232 5.87684,16.875 6.1875,16.875H7.875V12.375H1.6875C1.37684,12.375 1.125,12.1232 1.125,11.8125V3.9375C1.125,3.62684 1.37684,3.375 1.6875,3.375H7.875V2.25H1.6875Z" />
+                                            </Grid>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+
+                                <Popup Placement="Left" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                       PlacementTarget="{Binding ElementName=btnNavigateDownloadApp}" VerticalOffset="5" HorizontalOffset="-7"
+                                       IsOpen="{Binding ElementName=btnNavigateDownloadApp, Path=IsMouseOver, Mode=OneWay}">
+                                    <Border Style="{StaticResource UnderNavigationBorder}">
+                                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                   Text="Download Desktop/Mobile App"/>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+
+                            <Grid>
+                                <Button x:Name="btnNavigateMoreInfo" Width="32" Height="32"
                                     Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://jarvis.cx/help/"
                                     Style="{StaticResource NavigationExtraButton}">
-                                <Button.Content>
-                                    <Viewbox Width="18" Height="18">
-                                        <Grid>
-                                            <Path Fill="#475569" Data="M9,16.875C4.65076,16.875 1.125,13.3492 1.125,9C1.125,4.65076 4.65076,1.125 9,1.125C13.3492,1.125 16.875,4.65076 16.875,9C16.875,13.3492 13.3492,16.875 9,16.875ZM9,18C13.9706,18 18,13.9706 18,9C18,4.02944 13.9706,0 9,0C4.02944,0 0,4.02944 0,9C0,13.9706 4.02944,18 9,18Z" />
-                                            <Path Fill="#475569" Data="M5.912,6.50942C5.90346,6.66266 6.02989,6.7868 6.18338,6.7868H7.11092C7.26625,6.7868 7.38976,6.66015 7.41063,6.50622C7.5107,5.76808 8.01731,5.23004 8.92037,5.23004C9.69161,5.23004 10.3986,5.61566 10.3986,6.54401C10.3986,7.25812 9.97726,7.58661 9.31313,8.08649C8.55618,8.63635 7.95632,9.27905 7.99917,10.3217L8.00251,10.5656C8.00462,10.7194 8.1299,10.843 8.28373,10.843H9.19613C9.35146,10.843 9.47738,10.717 9.47738,10.5617V10.4431C9.47738,9.63611 9.78445,9.40045 10.6128,8.77203C11.2984,8.25073 12.0125,7.6723 12.0125,6.45831C12.0125,4.75873 10.5771,3.9375 9.00607,3.9375C7.5806,3.9375 6.01834,4.60194 5.912,6.50942ZM7.66354,12.9924C7.66354,13.5923 8.14199,14.035 8.79897,14.035C9.48452,14.035 9.95583,13.5923 9.95583,12.9924C9.95583,12.3712 9.48452,11.9355 8.79897,11.9355C8.14199,11.9355 7.66354,12.3712 7.66354,12.9924Z" />
-                                            
-                                        </Grid>
-                                    </Viewbox>
-                                </Button.Content>
-                            </Button>
+                                    <Button.Content>
+                                        <Viewbox Width="18" Height="18">
+                                            <Grid>
+                                                <Path Fill="#475569" Data="M9,16.875C4.65076,16.875 1.125,13.3492 1.125,9C1.125,4.65076 4.65076,1.125 9,1.125C13.3492,1.125 16.875,4.65076 16.875,9C16.875,13.3492 13.3492,16.875 9,16.875ZM9,18C13.9706,18 18,13.9706 18,9C18,4.02944 13.9706,0 9,0C4.02944,0 0,4.02944 0,9C0,13.9706 4.02944,18 9,18Z" />
+                                                <Path Fill="#475569" Data="M5.912,6.50942C5.90346,6.66266 6.02989,6.7868 6.18338,6.7868H7.11092C7.26625,6.7868 7.38976,6.66015 7.41063,6.50622C7.5107,5.76808 8.01731,5.23004 8.92037,5.23004C9.69161,5.23004 10.3986,5.61566 10.3986,6.54401C10.3986,7.25812 9.97726,7.58661 9.31313,8.08649C8.55618,8.63635 7.95632,9.27905 7.99917,10.3217L8.00251,10.5656C8.00462,10.7194 8.1299,10.843 8.28373,10.843H9.19613C9.35146,10.843 9.47738,10.717 9.47738,10.5617V10.4431C9.47738,9.63611 9.78445,9.40045 10.6128,8.77203C11.2984,8.25073 12.0125,7.6723 12.0125,6.45831C12.0125,4.75873 10.5771,3.9375 9.00607,3.9375C7.5806,3.9375 6.01834,4.60194 5.912,6.50942ZM7.66354,12.9924C7.66354,13.5923 8.14199,14.035 8.79897,14.035C9.48452,14.035 9.95583,13.5923 9.95583,12.9924C9.95583,12.3712 9.48452,11.9355 8.79897,11.9355C8.14199,11.9355 7.66354,12.3712 7.66354,12.9924Z" />
+
+                                            </Grid>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+
+                                <Popup Placement="Left" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                       PlacementTarget="{Binding ElementName=btnNavigateMoreInfo}" VerticalOffset="5" HorizontalOffset="-7"
+                                       IsOpen="{Binding ElementName=btnNavigateMoreInfo, Path=IsMouseOver, Mode=OneWay}">
+                                    <Border Style="{StaticResource UnderNavigationBorder}">
+                                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                   Text="Help Center"/>
+                                    </Border>
+                                </Popup>
+                            </Grid>
 
                             <!--Item Settings-->
-                            <Button x:Name="btnNavigateSettings" Width="32" Height="32"
-                                    Command="{Binding NavigateCommand}"
+                            <Grid>
+                                <Button x:Name="btnNavigateSettings" Width="32" Height="32"
+                                    Command="{Binding NavigatesCommand}"
                                     CommandParameter="{Binding ElementName=btnNavigateSettings}"
                                     Style="{StaticResource NavigationExtraButton}">
-                                <Button.Content>
-                                    <Viewbox Width="20" Height="20">
-                                        <Grid>
-                                            <Path Fill="#475569" Data="M2.50001,5.72539L10,1.43972L17.5,5.72539L17.5,14.2747L10,18.5603L2.50001,14.2746L2.50001,5.72539ZM1.25001,14.2746C1.25001,14.7232 1.49037,15.1374 1.87984,15.3599L9.37987,19.6456C9.76415,19.8652 10.2359,19.8652 10.6202,19.6456L18.1202,15.36C18.5097,15.1374 18.75,14.7233 18.75,14.2747L18.75,5.72539C18.75,5.27682 18.5097,4.86264 18.1202,4.64009L10.6202,0.354416C10.2359,0.134825 9.76415,0.134825 9.37987,0.354414L1.87984,4.64009C1.49037,4.86264 1.25001,5.27682 1.25001,5.72539L1.25001,14.2746Z" />
-                                            <Path Fill="#475569" Data="M7.4163,11.4399C8.27924,12.9346 10.1905,13.4467 11.6851,12.5837C13.1798,11.7208 13.6919,9.80955 12.829,8.31489C11.966,6.82023 10.0548,6.30812 8.56013,7.17106C7.06546,8.03401 6.55335,9.94522 7.4163,11.4399ZM12.3101,13.6663C10.2176,14.8744 7.54189,14.1574 6.33377,12.0649C5.12564,9.97236 5.8426,7.29665 7.93513,6.08853C10.0277,4.88041 12.7034,5.59736 13.9115,7.68989C15.1196,9.78242 14.4027,12.4581 12.3101,13.6663Z" />
-                                        </Grid>
-                                    </Viewbox>
-                                </Button.Content>
-                            </Button>
+                                    <Button.Content>
+                                        <Viewbox Width="20" Height="20">
+                                            <Grid>
+                                                <Path Fill="#475569" Data="M2.50001,5.72539L10,1.43972L17.5,5.72539L17.5,14.2747L10,18.5603L2.50001,14.2746L2.50001,5.72539ZM1.25001,14.2746C1.25001,14.7232 1.49037,15.1374 1.87984,15.3599L9.37987,19.6456C9.76415,19.8652 10.2359,19.8652 10.6202,19.6456L18.1202,15.36C18.5097,15.1374 18.75,14.7233 18.75,14.2747L18.75,5.72539C18.75,5.27682 18.5097,4.86264 18.1202,4.64009L10.6202,0.354416C10.2359,0.134825 9.76415,0.134825 9.37987,0.354414L1.87984,4.64009C1.49037,4.86264 1.25001,5.27682 1.25001,5.72539L1.25001,14.2746Z" />
+                                                <Path Fill="#475569" Data="M7.4163,11.4399C8.27924,12.9346 10.1905,13.4467 11.6851,12.5837C13.1798,11.7208 13.6919,9.80955 12.829,8.31489C11.966,6.82023 10.0548,6.30812 8.56013,7.17106C7.06546,8.03401 6.55335,9.94522 7.4163,11.4399ZM12.3101,13.6663C10.2176,14.8744 7.54189,14.1574 6.33377,12.0649C5.12564,9.97236 5.8426,7.29665 7.93513,6.08853C10.0277,4.88041 12.7034,5.59736 13.9115,7.68989C15.1196,9.78242 14.4027,12.4581 12.3101,13.6663Z" />
+                                            </Grid>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+
+                                <Popup Placement="Left" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                       PlacementTarget="{Binding ElementName=btnNavigateSettings}" VerticalOffset="5" HorizontalOffset="-7"
+                                       IsOpen="{Binding ElementName=btnNavigateSettings, Path=IsMouseOver, Mode=OneWay}">
+                                    <Border Style="{StaticResource UnderNavigationBorder}">
+                                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                   Text="Coming soon - Settings"/>
+                                    </Border>
+                                </Popup>
+                            </Grid>
 
                             <!--Item Profile-->
-                            <Button x:Name="btnNavigateProfile" Width="40" Height="40" Margin="0 12 0 28"
-                                    Command="{Binding NavigateCommand}"
-                                    CommandParameter="{Binding ElementName=btnNavigateProfile}"
-                                    Background="Transparent" BorderBrush="Transparent" BorderThickness="0">
+                            <Button x:Name="btnNavigateProfile"
+                                    Command="{Binding NavigatesCommand}" CommandParameter="{Binding ElementName=btnNavigateProfile}"
+                                    Style="{StaticResource ProfileButton}">
                                 <Button.Content>
                                     <Border CornerRadius="18" Width="36" Height="36">
                                         <Border.Background>

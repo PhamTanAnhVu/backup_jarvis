@@ -28,7 +28,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" x:Name="DisplayGrid">
                     <Border x:Name="ExtraBorder" Padding="{StaticResource Padding5}">
@@ -670,7 +670,7 @@
                     </Border>
                 </Grid>
 
-                <Border Grid.Row="1" x:Name="InputBorder" Padding="14 10">
+                <Border Grid.Row="1" x:Name="InputBorder" Padding="14 10" VerticalAlignment="Bottom">
                     <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap3}">
                         <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap3}">
                             <Grid x:Name="SelectAIModelButtonGrid">
@@ -708,7 +708,7 @@
                                     </Border>
                                 </Popup>-->
                                 
-                                <Popup Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                <Popup x:Name="SelectAIModelPopup" Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
                                        PlacementTarget="{Binding ElementName=SelectAIModelButton}" VerticalOffset="0" HorizontalOffset="0"
                                        IsOpen="{Binding IsOpenSelectAIModel}">
 
@@ -924,7 +924,7 @@
                                                        IsOpen="{Binding ElementName=PromptButton, Path=IsMouseOver, Mode=OneWay}">
                                                     <Border Style="{StaticResource UnderMessageBorder}">
                                                         <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                                   Text="Prompt library - Coming soon"/>
+                                                                   Text="Coming soon - Prompt Library - Press '/'"/>
                                                     </Border>
                                                 </Popup>
                                             </Grid>
@@ -945,7 +945,7 @@
                                                        IsOpen="{Binding ElementName=EmailButton, Path=IsMouseOver, Mode=OneWay}">
                                                     <Border Style="{StaticResource UnderMessageBorder}">
                                                         <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                                    Text="Choose model - Coming soon"/>
+                                                                    Text="Coming soon - Mention Bot - Press '@'"/>
                                                     </Border>
                                                 </Popup>
                                             </Grid>
@@ -968,7 +968,7 @@
                                                        IsOpen="{Binding ElementName=VoiceButton, Path=IsMouseOver, Mode=OneWay}">
                                                     <Border Style="{StaticResource UnderMessageBorder}">
                                                         <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                                    Text="Voice Input - Coming soon"/>
+                                                                    Text="Coming soon - Voice Input"/>
                                                     </Border>
                                                 </Popup>
                                             </Grid>
@@ -999,7 +999,7 @@
                                                        IsOpen="{Binding ElementName=AIChatInputAddToolsButton, Path=IsMouseOver, Mode=OneWay}">
                                                     <Border Style="{StaticResource UnderMessageBorder}">
                                                         <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                                   Text="Add Tools - Coming soon"/>
+                                                                   Text="Coming soon"/>
                                                     </Border>
                                                 </Popup>
                                             </Grid>
@@ -1062,7 +1062,7 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Grid x:Name="UpgradeButtonGrid">
+                                <Grid x:Name="UpgradeButtonGrid" Width="Auto">
                                     <Button x:Name="UpgradeButton" Style="{StaticResource UpgradeButton}"
                                             Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://admin.jarvis.cx/pricing/overview">
                                         <Button.Content>
@@ -1134,14 +1134,14 @@
                                            IsOpen="{Binding ElementName=GiftButton, Path=IsMouseOver, Mode=OneWay}">
                                         <Border Style="{StaticResource UnderMessageBorder}">
                                             <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                       Text="Your gift - Coming soon"/>
+                                                       Text="Invite to get more Tokens"/>
                                         </Border>
                                     </Popup>
                                 </Grid>
 
                                 <Grid x:Name="HeartButtonGrid">
                                     <Button x:Name="HeartButton" Style="{StaticResource AIChatInputButton}"
-                                        Width="Auto" Height="Auto">
+                                            Width="Auto" Height="Auto" Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://chromewebstore.google.com/detail/jarvis-ai-chat-gpt-bing-c/kbhaffhbhcfmogkkbfanilniagcefnhi?utm_source=extension">
                                         <Button.Content>
                                             <Viewbox x:Name="HeartIconSVG" Width="14" Height="14">
                                                 <Grid>
@@ -1157,12 +1157,12 @@
                                            IsOpen="{Binding ElementName=HeartButton, Path=IsMouseOver, Mode=OneWay}">
                                         <Border Style="{StaticResource UnderMessageBorder}">
                                             <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                       Text="Favorite - Coming soon"/>
+                                                       Text="Give us a 5-star"/>
                                         </Border>
                                     </Popup>
                                 </Grid>
 
-                                <Grid x:Name="TwitterButtonGrid">
+                                <!--<Grid x:Name="TwitterButtonGrid">
                                     <Button x:Name="TwitterButton" Style="{StaticResource AIChatInputButton}"
                                             Width="Auto" Height="Auto">
                                         <Button.Content>
@@ -1183,7 +1183,7 @@
                                                        Text="X Jarvis - Coming soon"/>
                                         </Border>
                                     </Popup>
-                                </Grid>
+                                </Grid>-->
 
                                 <Grid x:Name="MailButtonGrid">
                                     <Button x:Name="MailButton" Style="{StaticResource AIChatInputButton}"
@@ -1199,11 +1199,11 @@
                                     </Button>
 
                                     <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
-                                           PlacementTarget="{Binding ElementName=MailButton}" VerticalOffset="-30" HorizontalOffset="-45"
+                                           PlacementTarget="{Binding ElementName=MailButton}" VerticalOffset="-30" HorizontalOffset="-5"
                                            IsOpen="{Binding ElementName=MailButton, Path=IsMouseOver, Mode=OneWay}">
                                         <Border Style="{StaticResource UnderMessageBorder}">
                                             <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                       Text="Feedback - Coming soon"/>
+                                                       Text="Feedback"/>
                                         </Border>
                                     </Popup>
                                 </Grid>

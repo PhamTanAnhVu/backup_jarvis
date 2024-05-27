@@ -207,8 +207,12 @@ public class AIChatSidebarViewModel : ViewModelBase
 
     public AIChatSidebarViewModel()
     {
-        Task.Run(async () => await ResetAPIUsageDaily()).Wait();
-        
+        try
+        {
+            Task.Run(async () => await ResetAPIUsageDaily()).Wait();
+        }
+        catch { }
+
         OpenJarvisWebsiteCommand = new RelayCommand(ExecuteOpenJarvisWebsiteCommand, o => true);
         ToggleAddToolsCommand = new RelayCommand(ExecuteToggleAddToolsCommand, o => true);
         SendChatInputCommand = new RelayCommand(ExecuteSendChatInputCommand, o => true);

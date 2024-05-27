@@ -40,10 +40,10 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
 
         private void Setting_Click(object? sender, EventArgs e)
         {
-            PopupDictionaryService.Instance().IsShowMainNavigation = true;
-            EventAggregator.PublishPropertyMessageChanged(
-                InitPropertyMessage("IsShowMainNavigation-Settings", true), null
-            );
+            //PopupDictionaryService.Instance().IsShowMainNavigation = true;
+            //EventAggregator.PublishPropertyMessageChanged(
+            //    InitPropertyMessage("IsShowMainNavigation-Settings", true), null
+            //);
         }
 
         private void QuitMenuItem_Click(object? sender, EventArgs e)
