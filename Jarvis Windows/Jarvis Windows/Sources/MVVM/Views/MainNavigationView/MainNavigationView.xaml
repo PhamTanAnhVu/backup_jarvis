@@ -446,15 +446,15 @@
                             </Grid>
 
                             <!--Item Profile-->
-                            <Button x:Name="btnNavigateProfile"
-                                    Command="{Binding NavigatesCommand}" CommandParameter="{Binding ElementName=btnNavigateProfile}"
+                            <Button x:Name="btnNavigateProfile" Command="{Binding LoginCommand}"
                                     Style="{StaticResource ProfileButton}">
                                 <Button.Content>
-                                    <Border CornerRadius="18" Width="36" Height="36">
-                                        <Border.Background>
-                                            <ImageBrush Stretch="Fill" ImageSource="/Assets/Images/default-avatar.png"/>
-                                        </Border.Background>
-                                    </Border>
+                                    <Grid Width="26" Height="26" Visibility="{Binding IsLogin, Converter={StaticResource VisibilityConverter}}">
+                                        <Ellipse StrokeThickness="0" Fill="{StaticResource TailwindPrimary6}"/>
+                                        <TextBlock Style="{StaticResource MdTextblock600}" Text="{Binding UsernameFirstLetter}" 
+                                                   HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"
+                                                   Foreground="White"/>
+                                    </Grid>
                                 </Button.Content>
                             </Button>
                         </StackPanel>

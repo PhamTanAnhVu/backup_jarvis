@@ -319,6 +319,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
             Username = Account.Username;
             if (IsShowUsernameFirstLetter) UsernameFirstLetter = Username[0].ToString();
+            if (string.IsNullOrEmpty(UsernameFirstLetter)) UsernameFirstLetter = "A";
         }
 
         private void OnPropertyMessageChanged(object sender, EventArgs e)
