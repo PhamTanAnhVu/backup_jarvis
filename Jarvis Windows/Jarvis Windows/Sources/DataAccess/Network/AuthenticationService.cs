@@ -116,7 +116,7 @@ namespace Jarvis_Windows.Sources.DataAccess.Network
 
         public async Task<Account?> GetMe()
         {
-            //HttpClient.DefaultRequestHeaders.Clear();
+            HttpClient.DefaultRequestHeaders.Clear();
             HttpClient.DefaultRequestHeaders.Add(API_HEADER, UUID);
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
             var response = HttpClient.GetAsync(ApiUr + GET_M_ENDPOINT).Result;
@@ -232,6 +232,7 @@ namespace Jarvis_Windows.Sources.DataAccess.Network
 
         public async Task<string?> Refresh()
         {
+            HttpClient.DefaultRequestHeaders.Clear();
             HttpClient.DefaultRequestHeaders.Add(API_HEADER, UUID);
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", RefreshToken);
             var response = HttpClient.GetAsync(ApiUr + REFRESH_ENDPOINT).Result;

@@ -75,10 +75,10 @@ public sealed class JarvisApi
 
     public async Task<string> APIUsageHandler()
     {
-        if (WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining") == "0")
+        /*if (WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining") == "0")
         {
             return "";
-        }
+        }*/
         try
         {
             HttpResponseMessage response;

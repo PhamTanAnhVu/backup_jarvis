@@ -9,6 +9,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="AIBubbleButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="{StaticResource TailwindPrimary0.5}"/>
         <Setter Property="Foreground" Value="{StaticResource TailwindPrimary6}"/>
         <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -51,6 +52,7 @@
     </Style>
 
     <Style x:Key="SettingAIBubbleButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="#FFF"/>
         <Setter Property="Foreground" Value="{StaticResource SolidColorBrushSlate700}"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -259,6 +261,7 @@
     </Style>
 
     <Style x:Key="SelectAIModelButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="{StaticResource SolidColorBrushSlate100}"/>
         <Setter Property="Foreground" Value="{StaticResource TailwindPrimary9.5}"/>
         <Setter Property="Width" Value="162"/>
@@ -282,6 +285,7 @@
     </Style>
 
     <Style x:Key="ShortcutAIButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{StaticResource TailwindPrimary9.5}"/>
         <Setter Property="Width" Value="30"/>
@@ -353,6 +357,7 @@
     </Style>
 
     <Style x:Key="AIChatInputButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Width" Value="28"/>
@@ -414,8 +419,9 @@
         <Setter Property="Height" Value="22"/>
         <Setter Property="Padding" Value="6 3"/>
     </Style>
-	
-	<Style x:Key="UpgradeButton" TargetType="Button">
+
+    <Style x:Key="UpgradeButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Width" Value="Auto"/>

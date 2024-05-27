@@ -17,6 +17,7 @@
     </Style>
 
     <Style x:Key="JarvisPrimaryButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Foreground" Value="{StaticResource SolidColorBrushStone200}" />
         <Setter Property="Background" Value="{StaticResource SolidColorBrushStone200}" />
         <Setter Property="BorderBrush" Value="{x:Null}" />
@@ -57,6 +58,7 @@
     </Style>
 
     <Style x:Key="ExtendAIBubbleButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{StaticResource SolidColorBrushSlate700}"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -162,6 +164,7 @@
     </Style>
     
     <Style x:Key="MenuTopButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush MappingMode="RelativeToBoundingBox" 
@@ -228,6 +231,7 @@
     </Style>
 
     <Style x:Key="JarvisOperationButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="#FFFFFF"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="1.5"/>
@@ -527,6 +531,7 @@
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Foreground" Value="#082041"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -565,6 +570,7 @@
 
 
     <Style x:Key="PopupMenuButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontFamily" Value="sans-serif"/>
@@ -588,6 +594,7 @@
     </Style>
 
     <Style x:Key="PopupMenuButtonPin" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -757,6 +764,7 @@
     </Style>
 
     <Style x:Key="NavigateButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{x:Null}" />
         <Setter Property="Template">
@@ -789,6 +797,7 @@
     </Style>
 
     <Style x:Key="NavigationExtraButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{x:Null}" />
         <Setter Property="Template">
@@ -821,6 +830,7 @@
     </Style>
 
     <Style x:Key="ProfileButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Width" Value="26"/>
