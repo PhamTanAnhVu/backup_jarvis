@@ -476,23 +476,17 @@ public class AIChatSidebarViewModel : ViewModelBase
         }
     }
 
-    private async Task LoadBatch()
+    private async Task LoadBatch(int start, int end, int initialDelay)
     {
+        await Task.Delay(initialDelay);
         int batchSize = 5;
-        for (int i = AIChatMessages.Count; i >= 0; i -= batchSize)
+        for (int i = end; i >= start; i -= batchSize)
         {
             int L = (i - batchSize < 0) ? 0 : i - batchSize;
             int R = i;
             await RenderBatchOfMessages(L, R);
-            await Task.Delay(500);
+            await Task.Delay(400);
         }   
-    }
-
-    private void UpdateConversation(int idx)
-    {
-        ChatHistoryViewModel.DeselectConversation();
-        ChatHistoryViewModel.ConversationList[idx].IsSelected = true;
-        ConversationManager.Instance().UpdateConversation(ChatHistoryViewModel.ConversationList[idx]);
     }
 
     private async Task LoadChatMessagesAsync()
@@ -506,9 +500,26 @@ public class AIChatSidebarViewModel : ViewModelBase
         );
 
         AIChatMessages = messages;
-        LoadBatch();
-        await Task.Delay(1500);
+
+        int messageCount = AIChatMessages.Count;
+        int halfSize = messageCount / 2;
+
+        // Faster but lag, double the time
+        //var tasks = new[]
+        //{
+        //    LoadBatch(halfSize, messageCount, 0),
+        //    LoadBatch(0, halfSize, 00),
+        //};
+        //await Task.WhenAll(tasks);
+
+        // Slower but smoother (still lag)
+        await LoadBatch(halfSize, messageCount, 0);
+        await LoadBatch(0, halfSize, 0);
+        //int delayTime = 1500 + 1000 * ((messageCount - 1) / 50);
+        await Task.Delay(1000);
         IsLoadingConversation = false;
+        
+
     }
 
     /*======================== For testing ========================*/
@@ -540,6 +551,7 @@ public class AIChatSidebarViewModel : ViewModelBase
 
     private AIChatMessage CreateChatMessage(int idx, string message, bool isUser, bool isLoading = false)
     {
+        //Logging.Log($"{idx}");
         return new AIChatMessage
         {
             IsUser = isUser,
@@ -554,6 +566,12 @@ public class AIChatSidebarViewModel : ViewModelBase
         };
     }
 
+    private void UpdateConversation(int idx)
+    {
+        ChatHistoryViewModel.DeselectConversation();
+        ChatHistoryViewModel.ConversationList[idx].IsSelected = true;
+        ConversationManager.Instance().UpdateConversation(ChatHistoryViewModel.ConversationList[idx]);
+    }
     private async void ExecuteCopyCommand(object obj)
     {
         int idx = (int)obj;
@@ -575,8 +593,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         AIChatMessages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
         IsShowIntro = true;
     }
-
-    
+  
     private async void ExecuteSendChatInputCommand(object obj)
     {
         // If server is processing request/empty input message then cancel execution
@@ -595,8 +612,6 @@ public class AIChatSidebarViewModel : ViewModelBase
         
         _isProcessAIChat = true;
         IsShowIntro = false;
-
-        
 
         // obj null = add new message to the end, else = update
         int index = (obj is null) ? AIChatMessages.Count : (int)obj;
@@ -694,5 +709,25 @@ public class AIChatSidebarViewModel : ViewModelBase
         }
 
         return sections;
+    }
+}
+
+public static class Logging
+{
+    private static bool isLogging = true;
+    public static void Log(string message)
+    {
+        if (!isLogging) return;
+
+        string _logFilePath = "C:\\Users\\vupham\\Desktop\\logJarvis.txt";
+        try
+        {
+            using (StreamWriter _streamWriter = new StreamWriter(_logFilePath, true))
+            {
+                _streamWriter.WriteLine($"{DateTime.Now} - {message}");
+            }
+        }
+
+        catch { return; }
     }
 }

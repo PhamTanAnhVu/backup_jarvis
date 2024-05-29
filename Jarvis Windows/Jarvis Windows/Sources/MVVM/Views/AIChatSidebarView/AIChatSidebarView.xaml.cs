@@ -289,6 +289,7 @@ public partial class AIChatSidebarView : UserControl
     private void GlobalMouseHook_MouseWheelExt(object sender, MouseEventExtArgs e)
     {
         if (!_isMouseOverCodeScrollViewer) return;
+        //ChatConversationScrollViewer.ScrollToTop();
         ChatConversationScrollViewer.ScrollToVerticalOffset(ChatConversationScrollViewer.VerticalOffset - e.Delta);
     }
 
