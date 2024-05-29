@@ -1215,7 +1215,7 @@
 
                 <Popup x:Name="ChatHistoryPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" 
                        PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsShowChatHistory}" 
-                       VerticalOffset="0" HorizontalOffset="50" MouseEnter="ChatHistoryPopup_MouseEnter" MouseLeave="ChatHistoryPopup_MouseLeave">
+                       VerticalOffset="0" HorizontalOffset="0" MouseEnter="ChatHistoryPopup_MouseEnter" MouseLeave="ChatHistoryPopup_MouseLeave">
                     <local:ChatHistoryView/>
                 </Popup>
                 
@@ -1308,19 +1308,19 @@
             </Border>
         </Popup>-->
 
-        <!--<Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
+        <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
                 Visibility="{Binding IsShowChatHistory, Converter={StaticResource VisibilityConverter}}">
             <Border.Effect>
                 <StaticResource ResourceKey="BlurEffect"/>
             </Border.Effect>
-        </Border>-->
+        </Border>
 
-        <!--<Border x:Name="OverlayOutOfToken" Background="{StaticResource DarkenedBackground}" 
+        <Border x:Name="OverlayOutOfToken" Background="{StaticResource DarkenedBackground}" 
                 Visibility="{Binding IsOutOfToken, Converter={StaticResource VisibilityConverter}}">
             <Border.Effect>
                 <StaticResource ResourceKey="BlurEffect"/>
             </Border.Effect>
-        </Border>-->
+        </Border>
     </Grid>
 
 </UserControl>

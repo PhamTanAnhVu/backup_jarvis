@@ -236,7 +236,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         OpenSelectAIModelCommand = new RelayCommand(o => { IsOpenSelectAIModel = !IsOpenSelectAIModel; }, o => true);
         CloseOutOfTokenPopupCommand = new RelayCommand(o => { IsOutOfToken = false; }, o => true);
         SelectModel = new RelayCommand(o => { IsOpenSelectAIModel = false; }, o => true);
-        ShowChatHistory = new RelayCommand(o => { /*IsShowChatHistory = !IsShowChatHistory; ChatHistoryViewModel.UpdateLastUpdatedTime();*/ }, o => true);
+        ShowChatHistory = new RelayCommand(o => { IsShowChatHistory = !IsShowChatHistory; ChatHistoryViewModel.UpdateLastUpdatedTime(); }, o => true);
         JarvisUpdatedBorderVisibility = false; 
         
         AddToolsButtonVisibility = true;
@@ -469,8 +469,10 @@ public class AIChatSidebarViewModel : ViewModelBase
         IsLoadingConversation = true;
         await Task.Delay(500);
 
-        var messages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
-      
+        var messages = await Task.Run(() =>
+            ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx)
+        );
+
         AIChatMessages = messages;
         for (int i = 0; i < AIChatMessages.Count; i++)
         {
@@ -483,6 +485,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         await Task.Delay(2500);
         IsLoadingConversation = false;
     }
+
     private void UpdateConversation(int idx)
     {
         ChatHistoryViewModel.DeselectConversation();
