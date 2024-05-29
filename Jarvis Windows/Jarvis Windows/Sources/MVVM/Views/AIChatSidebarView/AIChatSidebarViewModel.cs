@@ -561,6 +561,12 @@ public class AIChatSidebarViewModel : ViewModelBase
         };
     }
 
+    private void UpdateConversation(int idx)
+    {
+        ChatHistoryViewModel.DeselectConversation();
+        ChatHistoryViewModel.ConversationList[idx].IsSelected = true;
+        ConversationManager.Instance().UpdateConversation(ChatHistoryViewModel.ConversationList[idx]);
+    }
     private async void ExecuteCopyCommand(object obj)
     {
         int idx = (int)obj;
@@ -582,8 +588,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         AIChatMessages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
         IsShowIntro = true;
     }
-
-    
+  
     private async void ExecuteSendChatInputCommand(object obj)
     {
         bool isUpdated = (obj is not null);
@@ -701,5 +706,25 @@ public class AIChatSidebarViewModel : ViewModelBase
         }
 
         return sections;
+    }
+}
+
+public static class Logging
+{
+    private static bool isLogging = true;
+    public static void Log(string message)
+    {
+        if (!isLogging) return;
+
+        string _logFilePath = "C:\\Users\\vupham\\Desktop\\logJarvis.txt";
+        try
+        {
+            using (StreamWriter _streamWriter = new StreamWriter(_logFilePath, true))
+            {
+                _streamWriter.WriteLine($"{DateTime.Now} - {message}");
+            }
+        }
+
+        catch { return; }
     }
 }

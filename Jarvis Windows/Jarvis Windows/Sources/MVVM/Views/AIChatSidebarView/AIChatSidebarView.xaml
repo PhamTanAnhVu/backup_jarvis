@@ -849,7 +849,7 @@
                                            IsOpen="{Binding ElementName=AIChatHistoryButton, Path=IsMouseOver, Mode=OneWay}">
                                         <Border Style="{StaticResource UnderMessageBorder}">
                                             <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                        Text="Coming soon - Chat history"/>
+                                                        Text="Chat history"/>
                                         </Border>
                                     </Popup>
                                 </Grid>
@@ -1277,7 +1277,7 @@
             </Grid>
         </Border>
 
-        <Popup x:Name="IsLoadingConversationPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade" Width="200"
+        <Popup x:Name="IsLoadingConversationPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" Width="200"
                PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsLoadingConversation}">
             
             <Image Source="/Assets/Images/logo-new/logo96x96.png" RenderOptions.BitmapScalingMode="HighQuality"
@@ -1293,14 +1293,21 @@
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation
-                                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
-                                                    From="0" To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                                    Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
+                                    From="0" To="360" Duration="0:0:0.4" RepeatBehavior="Forever" />
                                 <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.5" />
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
                 </Image.Triggers>
             </Image>
+
+            <!--<li:LoadingIndicator HorizontalAlignment="Center" Foreground="{StaticResource TailwindPrimary5}"
+            SpeedRatio="1" IsActive="True" Mode="Ring" FontSize="50">
+                <li:LoadingIndicator.RenderTransform>
+                    <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
+                </li:LoadingIndicator.RenderTransform>
+            </li:LoadingIndicator>-->
 
         </Popup>
 
