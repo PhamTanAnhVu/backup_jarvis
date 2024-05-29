@@ -437,13 +437,13 @@ public class AIChatSidebarViewModel : ViewModelBase
     // ChatMessage
     private async void OnSelectConversation(object obj, EventArgs e)
     {
+        IsShowChatHistory = false;
         if (_isProcessAIChat || IsLoadingConversation) return;
 
         int idx = (int)obj;
 
         if (idx != -1)
         {
-            IsShowChatHistory = false;
             if (ConversationManager.Instance()._selectedIdx != idx)
             {
                 ChatHistoryViewModel.DeselectConversation();
@@ -504,7 +504,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         int messageCount = AIChatMessages.Count;
         int halfSize = messageCount / 2;
 
-        // Faster but lag, double the time
+        // Faster but lagger, half the time
         //var tasks = new[]
         //{
         //    LoadBatch(halfSize, messageCount, 0),
@@ -512,11 +512,11 @@ public class AIChatSidebarViewModel : ViewModelBase
         //};
         //await Task.WhenAll(tasks);
 
-        // Slower but smoother (still lag)
+        // Slower but smoother (a bit lag)
         await LoadBatch(halfSize, messageCount, 0);
         await LoadBatch(0, halfSize, 0);
         //int delayTime = 1500 + 1000 * ((messageCount - 1) / 50);
-        await Task.Delay(1000);
+        //await Task.Delay(1000);
         IsLoadingConversation = false;
         
 
@@ -709,25 +709,5 @@ public class AIChatSidebarViewModel : ViewModelBase
         }
 
         return sections;
-    }
-}
-
-public static class Logging
-{
-    private static bool isLogging = true;
-    public static void Log(string message)
-    {
-        if (!isLogging) return;
-
-        string _logFilePath = "C:\\Users\\vupham\\Desktop\\logJarvis.txt";
-        try
-        {
-            using (StreamWriter _streamWriter = new StreamWriter(_logFilePath, true))
-            {
-                _streamWriter.WriteLine($"{DateTime.Now} - {message}");
-            }
-        }
-
-        catch { return; }
     }
 }
