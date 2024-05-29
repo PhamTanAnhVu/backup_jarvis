@@ -437,13 +437,17 @@ public class AIChatSidebarViewModel : ViewModelBase
     // ChatMessage
     private async void OnSelectConversation(object obj, EventArgs e)
     {
-        IsShowChatHistory = false;
-        if (_isProcessAIChat || IsLoadingConversation) return;
+        if (_isProcessAIChat || IsLoadingConversation)
+        {
+            IsShowChatHistory = false;
+            return;
+        }
 
         int idx = (int)obj;
 
         if (idx != -1)
         {
+            IsShowChatHistory = false;
             if (ConversationManager.Instance()._selectedIdx != idx)
             {
                 ChatHistoryViewModel.DeselectConversation();
@@ -469,6 +473,7 @@ public class AIChatSidebarViewModel : ViewModelBase
     {
         for (int i = L; i < R; i++)
         {
+            if (i >= AIChatMessages.Count) return;
             string message = AIChatMessages[i].Message;
             int messageIdx = AIChatMessages[i].Idx;
             bool isUser = AIChatMessages[i].IsUser;
@@ -541,9 +546,9 @@ public class AIChatSidebarViewModel : ViewModelBase
             AIChatMessage lastUser = AIChatMessages[n - 1];
             AIChatMessage lastServer = AIChatMessages[n];
             AIChatMessages.Add(lastUser);
-            ConversationManager.Instance().UpdateChatMessage(lastUser, false, curConversation);
+            ConversationManager.Instance().UpdateChatMessage(lastUser, false);
             AIChatMessages.Add(lastServer);
-            ConversationManager.Instance().UpdateChatMessage(lastServer, false, curConversation);
+            ConversationManager.Instance().UpdateChatMessage(lastServer, false);
         }
     }
 
@@ -621,7 +626,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         var sendMessage = CreateChatMessage(index, AIChatInputMessage, true);
         AIChatMessages.Insert(index, sendMessage);
         if (!isUpdated) { AIChatSidebarEventTrigger.PublishScrollChatToBottom(true, EventArgs.Empty); }
-        await ConversationManager.Instance().UpdateChatMessage(sendMessage, isUpdated, curConversation);
+        await ConversationManager.Instance().UpdateChatMessage(sendMessage, isUpdated);
 
         // Clear InputMessage after sending, save it to tmp
         string inputChatMessage = AIChatInputMessage;
@@ -639,7 +644,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         AIChatMessages.Insert(index + 1, responseMessage);
         
 
-        await ConversationManager.Instance().UpdateChatMessage(responseMessage, isUpdated, curConversation);
+        await ConversationManager.Instance().UpdateChatMessage(responseMessage, isUpdated);
 
         // Server finish processing, update APIUsage
         _isProcessAIChat = false;
