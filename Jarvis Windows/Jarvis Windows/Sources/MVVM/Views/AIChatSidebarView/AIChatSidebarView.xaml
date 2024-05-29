@@ -534,8 +534,7 @@
                                             </StackPanel>
 
                                             <Grid x:Name="CodeSectionGrid">
-                                                <ItemsControl Margin="24 0 0 0" ItemsSource="{Binding DetailMessage}" Tag="{Binding Idx}"
-                                                              Loaded="Item_Loaded">
+                                                <ItemsControl Margin="24 0 0 0" ItemsSource="{Binding DetailMessage}">
                                                     <ItemsControl.ItemsPanel>
                                                         <ItemsPanelTemplate>
                                                             <WrapPanel Orientation="Horizontal"/>
@@ -590,11 +589,13 @@
                                                                             </Grid>
                                                                         </Border>
 
-                                                                        <avalonedit:TextEditor x:Name="textEditor" Style="{StaticResource AvalonEditStyle}" Tag="{Binding Idx}" 
-                                                                                                Loaded="CodeEditor_Loaded" MouseEnter="MouseEnter_CodeScrollViewer" 
-                                                                                                MouseLeave="MouseLeave_CodeScrollViewer" VerticalAlignment="Center"
-                                                                                                GotFocus="TextEditor_GotFocus" LostFocus="TextEditor_LostFocus"
-                                                                                                Margin="16 8 16 8">
+                                                                        <avalonedit:TextEditor x:Name="textEditor" Style="{StaticResource AvalonEditStyle}" 
+                                                                                               MouseEnter="MouseEnter_CodeScrollViewer" 
+                                                                                               MouseLeave="MouseLeave_CodeScrollViewer" VerticalAlignment="Center"
+                                                                                               GotFocus="TextEditor_GotFocus" LostFocus="TextEditor_LostFocus"
+                                                                                               local:TextEditorBindingBehavior.BoundText="{Binding CodeContent, Mode=TwoWay}"
+                                                                                               local:TextEditorBindingBehavior.BoundLanguage="{Binding Language}"
+                                                                                               Margin="16 8 16 8">
                                                                         </avalonedit:TextEditor>
                                                                     </StackPanel>
                                                                 </Border>

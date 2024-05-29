@@ -62,6 +62,11 @@ public partial class AIChatSidebarView : UserControl
         IsLoadingConversationPopup.Height = 500;
         IsLoadingConversationPopup.Width = 400;
         IsLoadingConversationPopup.VerticalOffset = -(50 + (MainChatSidebarBorder.Height / 2 - ChatScrollViewHeight / 2));
+
+        AIChatSidebarEventTrigger.ScrollChatToBottom += (sender, e) =>
+        {
+            ChatConversationScrollViewer.ScrollToBottom();
+        };
     }
 
     private void Global_MouseClick(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -71,6 +76,10 @@ public partial class AIChatSidebarView : UserControl
             AIChatSidebarEventTrigger.PublishMouseOverInfoPopup(true, EventArgs.Empty);
         }
 
+        if (!_isMouseOverOutOfTokenPopup)
+        {
+            OutOfTokenPopup.SetCurrentValue(Popup.IsOpenProperty, false);
+        }
         
         SelectAIModelPopup.SetCurrentValue(Popup.IsOpenProperty, false);
 
@@ -86,8 +95,6 @@ public partial class AIChatSidebarView : UserControl
         {
             ChatHistoryPopup.SetCurrentValue(Popup.IsOpenProperty, false);
         }
-
-        
     }
 
     private void InfoPopup_MouseEnter(object sender, MouseEventArgs e)
@@ -117,41 +124,41 @@ public partial class AIChatSidebarView : UserControl
     {
         _isMouseOverHistoryPopup = false;
     }
-    private void Item_Loaded(object sender, RoutedEventArgs e)
-    {
-        var itemControl = (ItemsControl)sender;    
-        _itemIdx = (int)itemControl.Tag;
+    //private void Item_Loaded(object sender, RoutedEventArgs e)
+    //{
+    //    var itemControl = (ItemsControl)sender;    
+    //    _itemIdx = (int)itemControl.Tag;
         
-    }
-    private void CodeEditor_Loaded(object sender, RoutedEventArgs e)
-    {
-        _textEditor = sender as TextEditor;
-        _idx = (int)_textEditor.Tag;
+    //}
+    //private void CodeEditor_Loaded(object sender, RoutedEventArgs e)
+    //{
+    //    _textEditor = sender as TextEditor;
+    //    _idx = (int)_textEditor.Tag;
 
-        if (_textEditor != null)
-        {
-            var viewModel = DataContext as AIChatSidebarViewModel;
-            if (viewModel != null)
-            {
-                if (_itemIdx == viewModel.AIChatMessages.Count - 1)
-                {
-                    ChatConversationScrollViewer.ScrollToBottom();
-                }
+    //    if (_textEditor != null)
+    //    {
+    //        var viewModel = DataContext as AIChatSidebarViewModel;
+    //        if (viewModel != null)
+    //        {
+    //            if (_itemIdx == viewModel.AIChatMessages.Count - 1)
+    //            {
+    //                ChatConversationScrollViewer.ScrollToBottom();
+    //            }
 
-                while (_idx >= viewModel.AIChatMessages[_itemIdx].DetailMessage.Count)
-                    _idx--;
-                string codeContent = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].CodeContent;
-                string language = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].Language;
-                if (string.IsNullOrEmpty(codeContent))
-                {
-                    return;
-                }
+    //            while (_idx >= viewModel.AIChatMessages[_itemIdx].DetailMessage.Count)
+    //                _idx--;
+    //            string codeContent = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].CodeContent;
+    //            string language = viewModel.AIChatMessages[_itemIdx].DetailMessage[_idx].Language;
+    //            if (string.IsNullOrEmpty(codeContent))
+    //            {
+    //                return;
+    //            }
 
-                _textEditor.Text = codeContent;
-                _textEditor.SetCurrentValue(TextEditor.SyntaxHighlightingProperty, HighlightingManager.Instance.GetDefinition(language));
-            }
-        }
-    }
+    //            _textEditor.Text = codeContent;
+    //            _textEditor.SetCurrentValue(TextEditor.SyntaxHighlightingProperty, HighlightingManager.Instance.GetDefinition(language));
+    //        }
+    //    }
+    //}
 
     private void Execute_CopyCode(object sender, RoutedEventArgs e)
     {
