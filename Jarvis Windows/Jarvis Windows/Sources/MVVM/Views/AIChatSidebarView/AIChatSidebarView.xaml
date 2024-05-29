@@ -1312,7 +1312,7 @@
             </Border>
         </Popup>-->
 
-        <!--<Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
+        <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
                 Visibility="{Binding IsShowChatHistory, Converter={StaticResource VisibilityConverter}}">
             <Border.Effect>
                 <StaticResource ResourceKey="BlurEffect"/>
@@ -1321,13 +1321,6 @@
 
         <Border x:Name="OverlayOutOfToken" Background="{StaticResource DarkenedBackground}" 
                 Visibility="{Binding IsOutOfToken, Converter={StaticResource VisibilityConverter}}">
-            <Border.Effect>
-                <StaticResource ResourceKey="BlurEffect"/>
-            </Border.Effect>
-        </Border>
-
-        <Border x:Name="OverlayPrompt" Background="{StaticResource DarkenedBackground}" 
-        Visibility="{Binding IsShowPromptLibrary, Converter={StaticResource VisibilityConverter}}">
             <Border.Effect>
                 <StaticResource ResourceKey="BlurEffect"/>
             </Border.Effect>
