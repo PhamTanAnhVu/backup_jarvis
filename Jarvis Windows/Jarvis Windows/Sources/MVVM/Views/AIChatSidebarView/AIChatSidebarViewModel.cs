@@ -534,6 +534,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         
         for (int i = 0; i < AIChatMessages.Count; i++)
         {
+            if (i >= AIChatMessages.Count) return;
             string message = AIChatMessages[i].Message;
             int messageIdx = AIChatMessages[i].Idx;
             bool isUser = AIChatMessages[i].IsUser;
@@ -632,7 +633,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         AIChatMessages.Insert(index + 1, responseMessage);
         
 
-        await ConversationManager.Instance().UpdateChatMessage(responseMessage, isUpdated, curConversation);
+        await ConversationManager.Instance().UpdateChatMessage(responseMessage, isUpdated);
 
         _isProcessAIChat = false;
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";

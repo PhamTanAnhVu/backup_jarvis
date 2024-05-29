@@ -137,18 +137,18 @@ public class ConversationManager
     }
 
 
-    public async Task UpdateChatMessage(AIChatMessage message, bool isUpdate, int curConversationIdx)
+    public async Task UpdateChatMessage(AIChatMessage message, bool isUpdate)
     {
-        if (curConversationIdx == -1)
+        if (_selectedIdx == -1)
         {
-            _selectedIdx = curConversationIdx = ConversationCount;
+            _selectedIdx = ConversationCount;
             if (message.IsUser)
                 AddConversation(new ConversationModel { Idx = _selectedIdx });
         }
 
         if (isUpdate)
         {
-            var tableName = $"Messages_{curConversationIdx}";
+            var tableName = $"Messages_{_selectedIdx}";
             var updateQuery = $@"
                 UPDATE {tableName}
                 SET IsServer = ?,
@@ -161,10 +161,10 @@ public class ConversationManager
         }
         else
         {
-            AddChatMessage(curConversationIdx, message);
+            AddChatMessage(_selectedIdx, message);
         }
 
-        await UpdateConversationLastMessage(curConversationIdx, message.Message, message.IsServer);
+        await UpdateConversationLastMessage(_selectedIdx, message.Message, message.IsServer);
     }
 
     public void AddChatMessage(int conversationIdx, AIChatMessage message)
