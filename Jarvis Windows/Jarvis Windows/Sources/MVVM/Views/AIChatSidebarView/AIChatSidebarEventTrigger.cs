@@ -12,6 +12,7 @@ public static class AIChatSidebarEventTrigger
     public static event EventHandler<EventArgs>? MouseOverHistoryPopup;
     public static event EventHandler<EventArgs>? ChatIdxChanged;
     public static event EventHandler<EventArgs>? SelectConversationChanged;
+    public static event EventHandler<EventArgs>? ScrollChatToBottom;
 
     public static void PublishMouseOverInfoPopup(object sender, EventArgs e)
     {
@@ -30,6 +31,11 @@ public static class AIChatSidebarEventTrigger
     public static void PublishSelectConversationChanged(object sender, EventArgs e)
     {
         SelectConversationChanged?.Invoke(sender, e);
+    }
+
+    public static void PublishScrollChatToBottom(object sender, EventArgs e)
+    {
+        ScrollChatToBottom?.Invoke(sender, e);
     }
 
 

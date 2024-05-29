@@ -295,8 +295,6 @@ public class AIChatSidebarViewModel : ViewModelBase
         InitGenerativeModels();
 
         ChatHistoryViewModel = new ChatHistoryViewModel();
-        // InitChatMessages();
-
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
         EventSubscribe();
 
@@ -558,8 +556,7 @@ public class AIChatSidebarViewModel : ViewModelBase
             Idx = idx,
             CopyCommand = new RelayCommand(ExecuteCopyCommand, o => true),
             RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true),
-            DetailMessage = isUser
-                            ? new ObservableCollection<CodeMessage> { new CodeMessage { TextContent = message, IsVisible = false } }
+            DetailMessage = isUser ? new ObservableCollection<CodeMessage> { new CodeMessage { TextContent = message, IsVisible = false } }
                             : RetrieveCodeSection(message)
         };
     }
@@ -628,11 +625,13 @@ public class AIChatSidebarViewModel : ViewModelBase
         responseMessage = CreateChatMessage(index + 1, textResponse, false, selectedModelIdx);
         AIChatMessages.RemoveAt(index + 1);
         AIChatMessages.Insert(index + 1, responseMessage);
-        await ConversationManager.Instance().UpdateChatMessage(responseMessage, isUpdated);
+        
+
+        await ConversationManager.Instance().UpdateChatMessage(responseMessage, isUpdated, curConversation);
 
         _isProcessAIChat = false;
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
-        
+        if (!isUpdated) { AIChatSidebarEventTrigger.PublishScrollChatToBottom(true, EventArgs.Empty); }
         ChatHistoryViewModel.InitConversation(ConversationManager.Instance()._selectedIdx);
     }
 
