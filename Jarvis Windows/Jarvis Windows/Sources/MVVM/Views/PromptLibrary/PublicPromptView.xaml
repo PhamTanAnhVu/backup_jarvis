@@ -9,9 +9,9 @@
     <Border CornerRadius="0 0 12 12" Background="White">
         <StackPanel Orientation="Vertical">
             <TextBlock Text="Public Prompt View" 
-                       HorizontalAlignment="Center" 
-                       VerticalAlignment="Top" 
-                       Margin="0,10,0,0" FontSize="20"/>
+           HorizontalAlignment="Center" 
+           VerticalAlignment="Top" 
+           Margin="0,10,0,0" FontSize="20"/>
 
             <StackPanel Orientation="Horizontal">
                 <TextBox x:Name="textBoxSearch" Text="Search" Width="400">
