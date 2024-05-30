@@ -323,8 +323,6 @@ public partial class AIChatSidebarView : UserControl
         {
             AIChatInputTextBox.ScrollToVerticalOffset(AIChatInputTextBox.VerticalOffset + caretRect.Top);
         }
-
-        
     }
 
     private void InputTextBox_SizeChanged(object sender, SizeChangedEventArgs e)

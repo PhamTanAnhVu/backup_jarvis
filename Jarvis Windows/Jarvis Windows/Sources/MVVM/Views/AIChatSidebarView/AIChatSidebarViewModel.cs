@@ -295,6 +295,7 @@ public class AIChatSidebarViewModel : ViewModelBase
         InitGenerativeModels();
 
         ChatHistoryViewModel = new ChatHistoryViewModel();
+        PromptLibraryViewModel = new PromptLibraryViewModel();
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
         EventSubscribe();
 

@@ -1,0 +1,178 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView.PromptDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView"
+             xmlns:style="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Styles"
+             mc:Ignorable="d" 
+             Height="auto" Width="400">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/AIChatStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/ScrollBarStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Border x:Name="PromptDetailBorder" Style="{StaticResource PromptDetailBorder}">
+            <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}">
+                <Grid x:Name="PromptDetailHeaderGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="240"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" VerticalAlignment="Center"
+                             Text="Winston, the best therapist with 1000 years of experience"/>
+
+                    <Grid Grid.Column="2">
+                        <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap1}">
+                            <Grid x:Name="ReportGrid">
+                                <Button x:Name="ReportButton" Style="{StaticResource PromptHeaderButton}"
+                                        Command="{Binding PromptLibraryViewModel.OpenReportCommand}">
+                                    <Button.Content>
+                                        <Viewbox Width="16" Height="16">
+                                            <Grid>
+                                                <Path Fill="#00213B" Data="M6.95059,0.434678 C7.53017,-0.144894 8.46984,-0.144892 9.04941,0.434679 L15.5653,6.95059 C16.1449,7.53017 16.1449,8.46984 15.5653,9.04941 L9.04941,15.5653 C8.46983,16.1449 7.53016,16.1449 6.95059,15.5653 L0.434678,9.04941 C-0.144894,8.46983 -0.144892,7.53016 0.434679,6.95059 L6.95059,0.434678 Z M8.3498,1.13428 C8.15661,0.941093 7.84339,0.941093 7.6502,1.13428 L1.13428,7.6502 C0.941093,7.84339 0.941093,8.15661 1.13428,8.3498 L7.6502,14.8657 C7.84339,15.0589 8.15661,15.0589 8.3498,14.8657 L14.8657,8.3498 C15.0589,8.15661 15.0589,7.84339 14.8657,7.6502 L8.3498,1.13428 Z"/>
+                                                <Path Fill="#00213B" Data="M7.00154,11 C7.00154,10.4477 7.44926,10 8.00154,10 C8.55383,10 9.00154,10.4477 9.00154,11 C9.00154,11.5523 8.55383,12 8.00154,12 C7.44926,12 7.00154,11.5523 7.00154,11 Z"/>
+                                                <Path Fill="#00213B" Data="M7.0995,4.99504 C7.04623,4.46228 7.46459,4 8,4 C8.53541,4 8.95377,4.46228 8.9005,4.99504 L8.54975,8.50248 C8.52151,8.78492 8.28384,9 8,9 C7.71616,9 7.47849,8.78492 7.45025,8.50248 L7.0995,4.99504 Z"/>
+                                            </Grid>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+
+                                <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                       PlacementTarget="{Binding ElementName=ReportButton}" VerticalOffset="-30" HorizontalOffset="0"
+                                       IsOpen="{Binding ElementName=ReportButton, Path=IsMouseOver, Mode=OneWay}">
+                                    <Border Style="{StaticResource UnderMessageBorder}">
+                                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                   Text="Report"/>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                            
+                            <Grid x:Name="FavoriteGrid">
+                                <Button x:Name="FavoriteButton" Style="{StaticResource PromptHeaderButton}"
+                                        Command="{Binding PromptLibraryViewModel.MarkFavoriteCommand}">
+                                    <Button.Content>
+                                        <Viewbox Width="16" Height="16">
+                                            <Grid>
+                                                <Path Fill="#00213B" Data="M2.86603,14.8508 C2.78823,15.2942 3.2258,15.6413 3.61224,15.4427 L8.00146,13.1868 L12.3907,15.4427 C12.7771,15.6413 13.2147,15.2942 13.1369,14.8508 L12.3072,10.1213 L15.8295,6.76462 C16.1587,6.45092 15.9883,5.87737 15.5473,5.81472 L10.6488,5.11885 L8.4647,0.792305 C8.26795,0.402565 7.73498,0.402565 7.53823,0.792305 L5.35411,5.11885 L0.455637,5.81472 C0.0146475,5.87737 -0.155753,6.45092 0.173428,6.76462 L3.69576,10.1213 L2.86603,14.8508 Z M7.77063,12.0826 L4.08488,13.977 L4.77914,10.0197 C4.81187,9.83316 4.75033,9.64214 4.61639,9.5145 L1.70955,6.7444 L5.76186,6.16873 C5.92938,6.14494 6.07565,6.03795 6.15467,5.88141 L8.00146,2.22308 L9.84826,5.88141 C9.92728,6.03795 10.0736,6.14494 10.2411,6.16873 L14.2934,6.7444 L11.3865,9.5145 C11.2526,9.64214 11.1911,9.83316 11.2238,10.0197 L11.918,13.977 L8.23229,12.0826 C8.0867,12.0078 7.91623,12.0078 7.77063,12.0826 Z"/>
+                                            </Grid>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+
+                                <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                       PlacementTarget="{Binding ElementName=FavoriteButton}" VerticalOffset="-30" HorizontalOffset="0"
+                                       IsOpen="{Binding ElementName=FavoriteButton, Path=IsMouseOver, Mode=OneWay}">
+                                    <Border Style="{StaticResource UnderMessageBorder}">
+                                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                   Text="Favorite"/>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+
+                            <Grid x:Name="ClosePromptDetailGrid">
+                                <Button x:Name="ClosePromptDetailButton" Style="{StaticResource PromptHeaderButton}"
+                                        Command="{Binding PromptLibraryViewModel.ClosePromptDetailCommand}">
+                                    <Button.Content>
+                                        <Viewbox Width="16" Height="16">
+                                            <Grid>
+                                                <Path Fill="#00213B" Data="M2.14645,2.85355 C1.95118,2.65829 1.95118,2.34171 2.14645,2.14645 C2.34171,1.95118 2.65829,1.95118 2.85355,2.14645 L8,7.29289 L13.1464,2.14645 C13.3417,1.95118 13.6583,1.95118 13.8536,2.14645 C14.0488,2.34171 14.0488,2.65829 13.8536,2.85355 L8.70711,8 L13.8536,13.1464 C14.0488,13.3417 14.0488,13.6583 13.8536,13.8536 C13.6583,14.0488 13.3417,14.0488 13.1464,13.8536 L8,8.70711 L2.85355,13.8536 C2.65829,14.0488 2.34171,14.0488 2.14645,13.8536 C1.95119,13.6583 1.95119,13.3417 2.14645,13.1464 L7.29289,8 L2.14645,2.85355 Z"/>
+                                            </Grid>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+
+                                <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                       PlacementTarget="{Binding ElementName=ClosePromptDetailButton}" VerticalOffset="-30" HorizontalOffset="0"
+                                       IsOpen="{Binding ElementName=ClosePromptDetailButton, Path=IsMouseOver, Mode=OneWay}">
+                                    <Border Style="{StaticResource UnderMessageBorder}">
+                                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                   Text="Close"/>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+
+                <StackPanel x:Name="PromptDetailMainPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}">
+                    <StackPanel x:Name="DescriptionPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                        <TextBox Style="{StaticResource SmTextBox400}"
+                                 Text="Other - Jarvis Team"/>
+
+                        <TextBox Style="{StaticResource XsTextBox400}" Margin="0 0 4 0"
+                                 Text="As the best therapist ever, Winston could ask open-ended questions and offer advice, helping you identify what might be bothering me."/>
+                    </StackPanel>
+                    
+                    <StackPanel x:Name="ContentDetailPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                        <Grid x:Name="ContentDetailHeaderGrid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" Style="{StaticResource SmTextBox600}" Text="Prompt"/>
+
+                            <Button Grid.Column="1" x:Name="CopyPromptButton" Style="{StaticResource PromptHeaderButton}"
+                                        Command="{Binding PromptLibraryViewModel.CopyPromptCommand}" HorizontalAlignment="Right">
+                                <Button.Content>
+                                    <Viewbox Width="12" Height="12">
+                                        <Grid>
+                                            <Path Fill="#64748B" Data="M3,1.5C3,0.671573 3.67157,0 4.5,0H10.5C11.3284,0 12,0.671573 12,1.5V7.5C12,8.32843 11.3284,9 10.5,9H4.5C3.67157,9 3,8.32843 3,7.5V1.5ZM4.5,0.75C4.08579,0.75 3.75,1.08579 3.75,1.5V7.5C3.75,7.91421 4.08579,8.25 4.5,8.25H10.5C10.9142,8.25 11.25,7.91421 11.25,7.5V1.5C11.25,1.08579 10.9142,0.75 10.5,0.75H4.5ZM1.5,3.75C1.08579,3.75 0.75,4.08579 0.75,4.5V10.5C0.75,10.9142 1.08579,11.25 1.5,11.25H7.5C7.91421,11.25 8.25,10.9142 8.25,10.5V9.75H9V10.5C9,11.3284 8.32843,12 7.5,12H1.5C0.671573,12 0,11.3284 0,10.5V4.5C0,3.67157 0.671573,3 1.5,3H2.25V3.75H1.5Z"/>
+                                        </Grid>
+                                    </Viewbox>
+
+                                </Button.Content>
+                            </Button>
+
+                            <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                       PlacementTarget="{Binding ElementName=CopyPromptButton}" VerticalOffset="-30" HorizontalOffset="0"
+                                       IsOpen="{Binding ElementName=CopyPromptButton, Path=IsMouseOver, Mode=OneWay}">
+                                <Border Style="{StaticResource UnderMessageBorder}">
+                                    <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                   Text="Copy"/>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <Border x:Name="ContentDetailBorder" Style="{StaticResource ContentDetailBorder}">
+                            <TextBox x:Name="ContentDetailTextBox" Style="{StaticResource SmTextBox400}" 
+                                     VerticalScrollBarVisibility="Visible" PreviewMouseWheel="ContentDetailTextBox_PreviewMouseWheel"
+                                     Text="You are a Tips Generator who is good at all fields. You will give the perfect tips and adviceYou are a Tips Generator who is good at all fields. You will give the perfect tips and adviceYou are a Tips Generator who is good at all fields. You will give the perfect tips and adviceYou are a Tips Generator who is good at all fields. You will give the perfect tips and adviceYou are a Tips Generator who is good at all fields. You will give the perfect tips and advice based on my description.&#x0a;These recommendations are very specific, professional and actionable. Your advice will enhance my knowledge and take my career to the next level.&#x0a;My description is : [Description]"/>
+
+                        </Border>
+                    </StackPanel>
+
+                    <Button x:Name="UsePromptButton" Style="{StaticResource UsePromptButton}" Margin="0 8 0 0" HorizontalAlignment="Right"
+                            Command="{Binding PromptLibraryViewModel.UsePromptCommand}">
+                        <Button.Content>
+                            <TextBlock Style="{StaticResource SmTextblock600}" Foreground="White"
+                                       Text="Use this prompt"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Popup x:Name="ReportPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" 
+               PlacementTarget="{Binding ElementName=PromptDetailBorder}" IsOpen="{Binding PromptLibraryViewModel.IsShowReportPopup}" 
+               VerticalOffset="8" HorizontalOffset="0" MouseEnter="ReportPopup_MouseEnter" MouseLeave="ReportPopup_MouseLeave">
+            <local:ReportPopupView/>
+        </Popup>
+
+        <Border x:Name="Overlay" Style="{StaticResource PromptDetailBorder}" BorderThickness="0" Background="{StaticResource DarkenedBackground}"
+                Visibility="{Binding PromptLibraryViewModel.IsShowReportPopup, Converter={StaticResource VisibilityConverter}}">
+            <Border.Effect>
+                <StaticResource ResourceKey="BlurEffect"/>
+            </Border.Effect>
+        </Border>
+    </Grid>
+</UserControl>

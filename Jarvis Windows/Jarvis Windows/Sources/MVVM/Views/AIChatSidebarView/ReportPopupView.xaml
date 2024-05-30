@@ -1,0 +1,171 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView.ReportPopupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:style="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Styles"
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView"
+             mc:Ignorable="d" 
+             Height="auto" Width="Auto">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/AIChatStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/ScrollBarStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Border x:Name="ReportBorder" Style="{StaticResource ReportBorder}" Height="Auto" PreviewMouseDown="ReportBorder_PreviewMouseDown">
+            <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}">
+                <Grid x:Name="ReportHeaderGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" Text="Report" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" x:Name="CloseReportPopupButton" Style="{StaticResource PromptHeaderButton}" HorizontalAlignment="Right"
+                            Command="{Binding PromptLibraryViewModel.CloseReportPopupCommand}">
+                        <Button.Content>
+                            <Viewbox Width="16" Height="16">
+                                <Grid>
+                                    <Path Fill="#00213B" Data="M2.14645,2.85355 C1.95118,2.65829 1.95118,2.34171 2.14645,2.14645 C2.34171,1.95118 2.65829,1.95118 2.85355,2.14645 L8,7.29289 L13.1464,2.14645 C13.3417,1.95118 13.6583,1.95118 13.8536,2.14645 C14.0488,2.34171 14.0488,2.65829 13.8536,2.85355 L8.70711,8 L13.8536,13.1464 C14.0488,13.3417 14.0488,13.6583 13.8536,13.8536 C13.6583,14.0488 13.3417,14.0488 13.1464,13.8536 L8,8.70711 L2.85355,13.8536 C2.65829,14.0488 2.34171,14.0488 2.14645,13.8536 C1.95119,13.6583 1.95119,13.3417 2.14645,13.1464 L7.29289,8 L2.14645,2.85355 Z"/>
+                                </Grid>
+                            </Viewbox>
+                        </Button.Content>
+                        
+                    </Button>
+                </Grid>
+
+                <TextBox x:Name="NotResponsibleTextBox" Style="{StaticResource XsTextBox400}" 
+                         Foreground="{StaticResource SolidColorBrushSlate500}" VerticalAlignment="Center"
+                         Text="We are not responsible for the output of AI models, but&#x0a;we will take your report about the prompt and evaluate it"/>
+
+                <StackPanel x:Name="SelectReportPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                    <TextBox Style="{StaticResource SmTextBox600}" Text="What would you like to report?" VerticalAlignment="Center"/>
+
+                    <Button x:Name="SelectReportButton" Style="{StaticResource SelectReportButton}"
+                            Command="{Binding PromptLibraryViewModel.SelectReportCommand}"
+                            MouseEnter="SelectReportButton_MouseEnter" MouseLeave="SelectReportButton_MouseLeave">
+                        <Button.Content>
+                            <Grid Width="304">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Style="{StaticResource SmTextblock400}" 
+                                           Text="{Binding PromptLibraryViewModel.ReportName}" VerticalAlignment="Center"/>
+
+                                <Viewbox x:Name="ToggleSVGIcon" Grid.Column="1" Width="16" Height="16"
+                                         HorizontalAlignment="Right" VerticalAlignment="Top" >
+                                    <Grid>
+                                        <Path Fill="#334155" Data="M1.64645,4.64645 C1.84171,4.45118 2.15829,4.45118 2.35355,4.64645 L8,10.2929 L13.6464,4.64645 C13.8417,4.45118 14.1583,4.45118 14.3536,4.64645 C14.5488,4.84171 14.5488,5.15829 14.3536,5.35355 L8.35355,11.3536 C8.15829,11.5488 7.84171,11.5488 7.64645,11.3536 L1.64645,5.35355 C1.45118,5.15829 1.45118,4.84171 1.64645,4.64645 Z"/>
+                                    </Grid>
+                                </Viewbox>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+
+                    
+                </StackPanel>
+
+                <StackPanel x:Name="EmailPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                    <TextBox Style="{StaticResource SmTextBox600}" Text="Your emal" VerticalAlignment="Center"/>
+
+                    <Border x:Name="EmailBorder" Style="{StaticResource ContentDetailBorder}" Width="328" Height="40">
+                        <TextBox Style="{StaticResource SmTextBox400}" Text="hello@jarvis.cx" IsReadOnly="False" VerticalAlignment="Center"/>
+                    </Border>
+                </StackPanel>
+                
+                <StackPanel x:Name="FeedbackPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                    <TextBox Style="{StaticResource SmTextBox600}" Text="Feedback" VerticalAlignment="Center"/>
+
+                    <Border x:Name="FeedbackBorder" Style="{StaticResource ContentDetailBorder}" Width="328" Height="100">
+                        <Grid x:Name="FeedbackInputGrid">
+                            <TextBlock x:Name="FeedbackInputPreText" Style="{StaticResource FeedbackPreText}"
+                                       Text="Please describe the issue you are having with&#x0a;this prompt"/>
+
+                            <TextBox x:Name="FeedbackInputTextBox" Style="{StaticResource SmTextBox400}" IsReadOnly="False"
+                                     Text="{Binding PromptLibraryViewModel.FeedbackInputMessage, UpdateSourceTrigger=PropertyChanged}"
+                                     VerticalScrollBarVisibility="Visible"
+                                     PreviewMouseWheel="FeedbackInputTextBox_PreviewMouseWheel"
+                                     TextChanged="FeedbackInputTextBox_TextChanged">
+                            </TextBox>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="ReportButtonPanel" Margin="0 16 0 0" Orientation="Horizontal" HorizontalAlignment="Right" 
+                            style:MarginSetter.Margin="{StaticResource ColumnGap3}">
+                    <Button x:Name="CancelSendReportButton" Style="{StaticResource EditTitleButton}"
+                            Command="{Binding PromptLibraryViewModel.CloseReportPopupCommand}">
+                        <Button.Content>
+                            <TextBlock Style="{StaticResource SmTextblock600}" VerticalAlignment="Center"
+                                       Text="Cancel" Foreground="{StaticResource TailwindPrimary8}"/>
+                        </Button.Content>
+                    </Button>
+                    <Button x:Name="SendReportButton" Style="{StaticResource EditTitleButton}" Width="113"
+                            BorderThickness="0" Command="{Binding PromptLibraryViewModel.SendReportCommand}">
+                        <Button.Background>
+                            <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <RotateTransform CenterY="0.5" CenterX="0.5" Angle="273"/>
+                                        <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                        <TranslateTransform Y="0.5"/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                                <LinearGradientBrush.GradientStops>
+                                    <GradientStop Offset="0" Color="#0078D4"/>
+                                    <GradientStop Offset="0.9081" Color="#9692FF"/>
+                                </LinearGradientBrush.GradientStops>
+                            </LinearGradientBrush>
+
+                        </Button.Background>
+                        <Button.Content>
+                            <TextBlock Style="{StaticResource SmTextblock600}" VerticalAlignment="Center"
+                                       Text="Send report" Foreground="#FFF"/>
+                        </Button.Content>
+                    </Button>
+
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Popup x:Name="SelectReportPopup" IsOpen="{Binding PromptLibraryViewModel.IsShowSelectReportPopup}"
+               PlacementTarget="{Binding ElementName=SelectReportButton}" Placement="Bottom" 
+               StaysOpen="True" AllowsTransparency="True">
+            <Border x:Name="ReportButtonBorder" Background="#FFF" Padding="{StaticResource Padding2}" CornerRadius="{StaticResource BorderRadius2Xl}"
+                    Width="330">
+                <Border CornerRadius="{StaticResource BorderRadius2Xl}" Background="#FFF" Padding="{StaticResource Padding2}">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Direction ="0" RenderingBias ="Quality" ShadowDepth ="0" Color ="#f2f2f2"/>
+                    </Border.Effect>
+                    <ItemsControl ItemsSource="{Binding PromptLibraryViewModel.ReportButtons}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button x:Name="ReportButton" Style="{StaticResource ReportButton}"
+                                    Command="{Binding SelectReportCommand}" CommandParameter="{Binding Idx}">
+                                    <Button.Content>
+                                        <TextBlock VerticalAlignment="Center" Style="{StaticResource SmTextblock500}" Text="{Binding ReportName}"/>
+                                    </Button.Content>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+            </Border>
+        </Popup>
+    </Grid>
+</UserControl>
