@@ -97,7 +97,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.PromptLibrary
                     DeleteCommand = new RelayCommand(o => { MessageBox.Show("Show prompt delete warning", "Delete Prompt"); }, o => true)
                 },
                 new MyPromptItem()
-                {
+            {
                     Index = 7,
                     Title = "Brainstorm 7",
                     DetailCommand = new RelayCommand(o => { MessageBox.Show("Show prompt detail", "Prompt Detail"); }, o => true),
