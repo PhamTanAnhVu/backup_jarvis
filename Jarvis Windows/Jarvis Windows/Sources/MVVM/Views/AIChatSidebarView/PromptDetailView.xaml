@@ -162,11 +162,19 @@
             </StackPanel>
         </Border>
 
-        <Popup x:Name="ReportPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" 
+        <!--<Popup x:Name="ReportPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" 
                PlacementTarget="{Binding ElementName=PromptDetailBorder}" IsOpen="{Binding PromptLibraryViewModel.IsShowReportPopup}" 
                VerticalOffset="8" HorizontalOffset="0" MouseEnter="ReportPopup_MouseEnter" MouseLeave="ReportPopup_MouseLeave">
             <local:ReportPopupView/>
+        </Popup>-->
+        
+        <Popup x:Name="EditAddPromptPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" 
+               PlacementTarget="{Binding ElementName=PromptDetailBorder}" IsOpen="True" 
+               VerticalOffset="8" HorizontalOffset="0" MouseEnter="ReportPopup_MouseEnter" MouseLeave="ReportPopup_MouseLeave">
+            <local:EditAddPromptView/>
         </Popup>
+        
+        
 
         <Border x:Name="Overlay" Style="{StaticResource PromptDetailBorder}" BorderThickness="0" Background="{StaticResource DarkenedBackground}"
                 Visibility="{Binding PromptLibraryViewModel.IsShowReportPopup, Converter={StaticResource VisibilityConverter}}">

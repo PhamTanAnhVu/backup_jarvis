@@ -1,0 +1,234 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView.EditAddPromptView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView"
+             xmlns:style="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Styles"
+             mc:Ignorable="d" 
+             Height="auto" Width="400">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/AIChatStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/ScrollBarStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Border x:Name="EditPromptBorder" Style="{StaticResource PromptDetailBorder}" PreviewMouseDown="EditBorder_PreviewMouseDown">
+            <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}">
+                <Grid x:Name="EditPromptHeaderGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" VerticalAlignment="Center" Text="New Prompt"/>
+
+                    <Button Grid.Column="1" x:Name="CloseEditPromptButton" Style="{StaticResource PromptHeaderButton}" HorizontalAlignment="Right"
+                            Command="{Binding PromptLibraryViewModel.CloseEditPromptPopupCommand}">
+                        <Button.Content>
+                            <Viewbox Width="16" Height="16">
+                                <Grid>
+                                    <Path Fill="#00213B" Data="M2.14645,2.85355 C1.95118,2.65829 1.95118,2.34171 2.14645,2.14645 C2.34171,1.95118 2.65829,1.95118 2.85355,2.14645 L8,7.29289 L13.1464,2.14645 C13.3417,1.95118 13.6583,1.95118 13.8536,2.14645 C14.0488,2.34171 14.0488,2.65829 13.8536,2.85355 L8.70711,8 L13.8536,13.1464 C14.0488,13.3417 14.0488,13.6583 13.8536,13.8536 C13.6583,14.0488 13.3417,14.0488 13.1464,13.8536 L8,8.70711 L2.85355,13.8536 C2.65829,14.0488 2.34171,14.0488 2.14645,13.8536 C1.95119,13.6583 1.95119,13.3417 2.14645,13.1464 L7.29289,8 L2.14645,2.85355 Z"/>
+                                </Grid>
+                            </Viewbox>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap6}">
+                    <StackPanel x:Name="PrivatePromptPanel" Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
+                        <Border x:Name="RoundSelectPrivateBorder"  Style="{StaticResource RoundSelectBorder}">
+                            <Border Width="10" Height="10" Visibility="{Binding IsEditPrivatePrompt, Converter={StaticResource VisibilityConverter}}"
+                                    Background="{StaticResource PrimaryBrushColor6}" CornerRadius="{StaticResource BorderRadiusFull}"/>
+                        </Border>
+
+                        <TextBox Style="{StaticResource SmTextBox600}" Text="Private Prompt" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <StackPanel x:Name="PublicPromptPanel" Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
+                        <Border x:Name="RoundSelectPublicBorder"  Style="{StaticResource RoundSelectBorder}">
+                            <Border Width="10" Height="10" Visibility="{Binding IsEditPublicPrompt, Converter={StaticResource VisibilityConverter}}"
+                                    Background="{StaticResource PrimaryBrushColor6}" CornerRadius="{StaticResource BorderRadiusFull}"/>
+                        </Border>
+
+                        <TextBox Style="{StaticResource SmTextBox600}" Text="Public Prompt" VerticalAlignment="Center"/>
+
+                        <Grid>
+                            <Viewbox x:Name="PromptInfoSVGIcon" Width="12" Height="12">
+                                <Grid>
+                                    <Path Fill="#64748B" Data="M6,11.25C3.10051,11.25 0.75,8.8995 0.75,6C0.75,3.10051 3.10051,0.75 6,0.75C8.8995,0.75 11.25,3.10051 11.25,6C11.25,8.8995 8.8995,11.25 6,11.25ZM6,12C9.31371,12 12,9.31371 12,6C12,2.68629 9.31371,0 6,0C2.68629,0 0,2.68629 0,6C0,9.31371 2.68629,12 6,12Z"/>
+                                    <Path Fill="#64748B" Data="M6.69803,4.94092L4.97977,5.15625L4.91824,5.44189L5.25662,5.50342C5.47635,5.55615 5.52029,5.63525 5.47195,5.85498L4.91824,8.45654C4.77322,9.12891 4.99734,9.44531 5.52469,9.44531C5.93338,9.44531 6.40799,9.25635 6.62332,8.99707L6.68924,8.68506C6.53982,8.81689 6.3201,8.86963 6.17508,8.86963C5.96854,8.86963 5.89383,8.72461 5.94656,8.46973L6.69803,4.94092Z"/>
+                                    <Path Fill="#64748B" Data="M6.75,3.375C6.75,3.78921 6.41421,4.125 6,4.125C5.58579,4.125 5.25,3.78921 5.25,3.375C5.25,2.96079 5.58579,2.625 6,2.625C6.41421,2.625 6.75,2.96079 6.75,3.375Z"/>
+                                </Grid>
+                            </Viewbox>
+
+                            <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                   PlacementTarget="{Binding ElementName=PromptInfoSVGIcon}" VerticalOffset="-40" HorizontalOffset="0"
+                                   IsOpen="{Binding ElementName=PromptInfoSVGIcon, Path=IsMouseOver, Mode=OneWay}">
+                                <Border Style="{StaticResource UnderMessageBorder}">
+                                    <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                               Text="Share your prompt with others&#x0a;so that everyone can use the prompt&#x0a;or view its settings."/>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </StackPanel>
+                    
+                    
+                </StackPanel>
+
+                <StackPanel x:Name="PublicPromptLanguagePanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                    <TextBox Style="{StaticResource SmTextBox600}" Text="Prompt Language" VerticalAlignment="Center"/>
+
+                    <Button x:Name="PublicPromptSelectLanguageButton" Style="{StaticResource EditAddPromptSelectButton}"
+                            Command="{Binding PromptLibraryViewModel.SelectReportCommand}"
+                            MouseEnter="PublicPromptSelectButton_MouseEnter" MouseLeave="PublicPromptSelectButton_MouseLeave" Tag="Language">
+                        <Button.Content>
+                            <Grid Width="344">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Style="{StaticResource SmTextblock400}" 
+                                           Text="{Binding PromptLibraryViewModel.PublicPromptLanguage}" VerticalAlignment="Center"/>
+
+                                <Viewbox x:Name="LanguageToggleSVGIcon" Grid.Column="1" Width="16" Height="16"
+                                         HorizontalAlignment="Right" VerticalAlignment="Top" >
+                                    <Grid>
+                                        <Path Fill="#334155" Data="M1.64645,4.64645 C1.84171,4.45118 2.15829,4.45118 2.35355,4.64645 L8,10.2929 L13.6464,4.64645 C13.8417,4.45118 14.1583,4.45118 14.3536,4.64645 C14.5488,4.84171 14.5488,5.15829 14.3536,5.35355 L8.35355,11.3536 C8.15829,11.5488 7.84171,11.5488 7.64645,11.3536 L1.64645,5.35355 C1.45118,5.15829 1.45118,4.84171 1.64645,4.64645 Z"/>
+                                    </Grid>
+                                </Viewbox>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel x:Name="PromptNamePanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                    <TextBox Style="{StaticResource SmTextBox600}" Text="Name" VerticalAlignment="Center"/>
+
+                    <Border x:Name="PromptNameBorder" Style="{StaticResource ContentDetailBorder}" Width="368" Height="40">
+                        <Grid x:Name="PromptNameInputGrid">
+                            <TextBlock x:Name="FeedbackInputPreText" Style="{StaticResource PromptNamePreText}"
+                                        Text="Name of the prompt" VerticalAlignment="Center"/>
+
+                            <TextBox x:Name="PromptInputTextBox" Style="{StaticResource SmTextBox400}" IsReadOnly="False" VerticalAlignment="Center"
+                                     Text="{Binding PromptLibraryViewModel.PromptNameInputMessage, UpdateSourceTrigger=PropertyChanged}"
+                                     PreviewMouseDown="InputTextBox_PreviewMouseDown">
+                            </TextBox>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="PublicPromptCategoryPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                    <TextBox Style="{StaticResource SmTextBox600}" Text="Category" VerticalAlignment="Center"/>
+
+                    <Button x:Name="PublicPromptSelectCategoryButton" Style="{StaticResource EditAddPromptSelectButton}"
+                            Command="{Binding PromptLibraryViewModel.SelectCategoryCommand}"
+                            MouseEnter="PublicPromptSelectButton_MouseEnter" MouseLeave="PublicPromptSelectButton_MouseLeave" Tag="Category">
+                        <Button.Content>
+                            <Grid Width="344">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Style="{StaticResource SmTextblock400}" 
+                                           Text="{Binding PromptLibraryViewModel.PublicPromptCategory}" VerticalAlignment="Center"/>
+
+                                <Viewbox x:Name="CategoryToggleSVGIcon" Grid.Column="1" Width="16" Height="16"
+                                         HorizontalAlignment="Right" VerticalAlignment="Top" >
+                                    <Grid>
+                                        <Path Fill="#334155" Data="M1.64645,4.64645 C1.84171,4.45118 2.15829,4.45118 2.35355,4.64645 L8,10.2929 L13.6464,4.64645 C13.8417,4.45118 14.1583,4.45118 14.3536,4.64645 C14.5488,4.84171 14.5488,5.15829 14.3536,5.35355 L8.35355,11.3536 C8.15829,11.5488 7.84171,11.5488 7.64645,11.3536 L1.64645,5.35355 C1.45118,5.15829 1.45118,4.84171 1.64645,4.64645 Z"/>
+                                    </Grid>
+                                </Viewbox>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel x:Name="PromptDescriptionPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                    <TextBox Style="{StaticResource SmTextBox600}" Text="Description (Optional)" VerticalAlignment="Center"/>
+
+                    <Border x:Name="PromptDescriptionBorder" Style="{StaticResource ContentDetailBorder}" Width="368" Height="Auto" MinHeight="60">
+                        <Grid x:Name="PromptDescriptionInputGrid">
+                            <TextBlock x:Name="PromptDescriptionInputPreText" Style="{StaticResource PromptDescriptionPreText}"
+                                       Text="Describe your prompt so others can have a better understanding" VerticalAlignment="Center"/>
+
+                            <TextBox x:Name="PromptDescriptionInputTextBox" Style="{StaticResource SmTextBox400}" IsReadOnly="False"
+                                     Text="{Binding PromptLibraryViewModel.PromptDescriptionInputMessage, UpdateSourceTrigger=PropertyChanged}" MinHeight="40" MaxHeight="80"
+                                     VerticalScrollBarVisibility="Visible" PreviewMouseWheel="PromptInputTextBox_PreviewMouseWheel" Tag="PromptDescription"
+                                     TextChanged="PromptInputTextBox_TextChanged" PreviewMouseDown="InputTextBox_PreviewMouseDown">
+                            </TextBox>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+                
+                <StackPanel x:Name="PromptContentPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                    <TextBox Style="{StaticResource SmTextBox600}" Text="Prompt" VerticalAlignment="Center"/>
+
+                    <Border x:Name="PromptContentNoteBorder" CornerRadius="{StaticResource BorderRadiusLg}" Background="{StaticResource TailwindPrimary1}" Padding="10 8">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Style="{StaticResource XsTextBox400}" VerticalAlignment="Center" Text="Use square brackets [ ] to specify user input. "/>
+                            <TextBox Style="{StaticResource XsTextBox400}" VerticalAlignment="Center" Foreground="{StaticResource TailwindPrimary6}" Text="Learn More"
+                                     PreviewMouseDown="OpenJarvisWebsite"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <Border x:Name="PromptContentBorder" Style="{StaticResource ContentDetailBorder}" Width="368" Height="Auto" MinHeight="100">
+                        <Grid x:Name="PromptContentInputGrid">
+                            <TextBlock x:Name="PromptContentInputPreText" Style="{StaticResource PromptContentPreText}" VerticalAlignment="Top"
+                                       Text="e.g: Write an article about [TOPIC], make sure to include these keywords: [KEYWORDS]" />
+
+                            <TextBox x:Name="PromptContentInputTextBox" Style="{StaticResource SmTextBox400}" IsReadOnly="False" VerticalAlignment="Top"
+                                     Text="{Binding PromptLibraryViewModel.PromptContentInputMessage, UpdateSourceTrigger=PropertyChanged}" MinHeight="80" MaxHeight="180"
+                                     VerticalScrollBarVisibility="Visible" PreviewMouseWheel="PromptInputTextBox_PreviewMouseWheel" Tag="PromptContent"
+                                     TextChanged="PromptInputTextBox_TextChanged" PreviewMouseDown="InputTextBox_PreviewMouseDown">
+                            </TextBox>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel x:Name="ReportButtonPanel" Margin="0 8 0 0" Orientation="Horizontal" HorizontalAlignment="Right" 
+                            style:MarginSetter.Margin="{StaticResource ColumnGap3}">
+                    <Button x:Name="CancelEditPromptButton" Style="{StaticResource EditTitleButton}"
+                            Command="{Binding PromptLibraryViewModel.CloseEditPromptPopupCommand}">
+                        <Button.Content>
+                            <TextBlock Style="{StaticResource SmTextblock600}" VerticalAlignment="Center"
+                                       Text="Cancel" Foreground="{StaticResource TailwindPrimary8}"/>
+                        </Button.Content>
+                    </Button>
+                    
+                    <Button x:Name="SaveEditPromptButton" Style="{StaticResource EditTitleButton}"
+                            BorderThickness="0" Command="{Binding PromptLibraryViewModel.SaveEditPromptCommand}">
+                        <Button.Background>
+                            <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                                <LinearGradientBrush.RelativeTransform>
+                                    <TransformGroup>
+                                        <RotateTransform CenterY="0.5" CenterX="0.5" Angle="273"/>
+                                        <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                        <TranslateTransform Y="0.5"/>
+                                    </TransformGroup>
+                                </LinearGradientBrush.RelativeTransform>
+                                <LinearGradientBrush.GradientStops>
+                                    <GradientStop Offset="0" Color="#0078D4"/>
+                                    <GradientStop Offset="0.9081" Color="#9692FF"/>
+                                </LinearGradientBrush.GradientStops>
+                            </LinearGradientBrush>
+
+                        </Button.Background>
+                        <Button.Content>
+                            <TextBlock Style="{StaticResource SmTextblock600}" VerticalAlignment="Center"
+                                       Text="Save" Foreground="#FFF"/>
+                        </Button.Content>
+                    </Button>
+
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

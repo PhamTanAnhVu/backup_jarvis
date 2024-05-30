@@ -17,9 +17,19 @@ public class PromptLibraryViewModel : ViewModelBase
     private bool _isShowPromptDetailPopup;
     private bool _isShowReportPopup;
     private bool _isShowSelectReportPopup;
+    private bool _isShowEditPromptPopup;
     private bool _isEmptyFeedbackInput;
+    private bool _isEmptyPromptNameInput;
+    private bool _isEmptyPromptDescriptionInput;
+    private bool _isEmptyPromptContentInput;
     private string _feedbackInputMessage;
     private string _reportName;
+    private string _publicPromptLanguage;
+    private string _publicPromptCategory;
+    private string _promptNameInputMessage;
+    private string _promptDescriptionInputMessage;
+    private string _promptContentInputMessage;
+
     private ObservableCollection<ReportButtonModel> _reportButtons;
 
     public int SelectedPromptIdx
@@ -59,6 +69,15 @@ public class PromptLibraryViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    public bool IsShowEditPromptPopup
+    {
+        get { return _isShowEditPromptPopup; }
+        set
+        {
+            _isShowEditPromptPopup = value;
+            OnPropertyChanged();
+        }
+    }
 
     public bool IsEmptyFeedbackInput
     {
@@ -75,6 +94,53 @@ public class PromptLibraryViewModel : ViewModelBase
         }
     }
 
+    public bool IsEmptyPromptNameInput
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(PromptNameInputMessage)) _isEmptyPromptNameInput = true;
+            else _isEmptyPromptNameInput = false;
+            return _isEmptyPromptNameInput;
+        }
+        set
+        {
+            _isEmptyPromptNameInput = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsEmptyPromptDescriptionInput
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(PromptDescriptionInputMessage)) _isEmptyPromptDescriptionInput = true;
+            else _isEmptyPromptDescriptionInput = false;
+            return _isEmptyPromptDescriptionInput;
+        }
+        set
+        {
+            _isEmptyPromptDescriptionInput = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool IsEmptyPromptContentInput
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(PromptContentInputMessage)) _isEmptyPromptContentInput = true;
+            else _isEmptyPromptContentInput = false;
+            return _isEmptyPromptContentInput;
+        }
+        set
+        {
+            _isEmptyPromptContentInput = value;
+            OnPropertyChanged();
+        }
+    }
+
+
+
     public string FeedbackInputMessage
     {
         get { return _feedbackInputMessage; }
@@ -85,12 +151,65 @@ public class PromptLibraryViewModel : ViewModelBase
             OnPropertyChanged(nameof(IsEmptyFeedbackInput));
         }
     }
+    public string PromptNameInputMessage
+    {
+        get { return _promptNameInputMessage; }
+        set
+        {
+            _promptNameInputMessage = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsEmptyPromptNameInput));
+        }
+    }
+    public string PromptDescriptionInputMessage
+    {
+        get { return _promptDescriptionInputMessage; }
+        set
+        {
+            _promptDescriptionInputMessage = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsEmptyPromptDescriptionInput));
+        }
+    }
+
+    public string PromptContentInputMessage
+    {
+        get { return _promptContentInputMessage; }
+        set
+        {
+            _promptContentInputMessage = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsEmptyPromptContentInput));
+        }
+    }
+
+
     public string ReportName
     {
         get { return _reportName; }
         set
         {
             _reportName = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string PublicPromptLanguage
+    {
+        get { return _publicPromptLanguage; }
+        set
+        {
+            _publicPromptLanguage = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string PublicPromptCategory
+    {
+        get { return _publicPromptCategory; }
+        set
+        {
+            _publicPromptCategory = value;
             OnPropertyChanged();
         }
     }
@@ -102,6 +221,8 @@ public class PromptLibraryViewModel : ViewModelBase
     public RelayCommand SelectReportCommand { get; set; }
     public RelayCommand SendReportCommand { get; set; }
     public RelayCommand CopyPromptCommand { get; set; }
+    public RelayCommand CloseEditPromptPopupCommand { get; set; }
+    public RelayCommand SaveEditPromptCommand { get; set; }
 
     public ObservableCollection<ReportButtonModel> ReportButtons
     {
@@ -118,12 +239,15 @@ public class PromptLibraryViewModel : ViewModelBase
         ClosePromptDetailCommand = new RelayCommand(o => { IsShowPromptDetailPopup = false; }, o => true);
         OpenReportCommand = new RelayCommand(o => { IsShowReportPopup = true; }, o => true);
         CloseReportPopupCommand = new RelayCommand(o => { IsShowReportPopup = false; }, o => true);
+        CloseEditPromptPopupCommand = new RelayCommand(o => { IsShowEditPromptPopup = false; }, o => true);
+        SaveEditPromptCommand = new RelayCommand(ExecuteSaveEditPromptCommand, o => true);
         SelectReportCommand = new RelayCommand(o => { IsShowSelectReportPopup = !IsShowSelectReportPopup; }, o => true);
         SendReportCommand = new RelayCommand(ExecuteSendReportCommand, o => true);
         UsePromptCommand = new RelayCommand(ExecuteUsePromptCommand, o => true);
         CopyPromptCommand = new RelayCommand(ExecuteCopyPromptCommand, o => true);
 
         IsShowPromptDetailPopup = true;
+        IsShowEditPromptPopup = true;
         InitSelectReportList();
     }
 
@@ -146,6 +270,12 @@ public class PromptLibraryViewModel : ViewModelBase
         }
 
         ReportName = ReportButtons[0].ReportName;
+    }
+
+    private async void ExecuteSaveEditPromptCommand(object obj)
+    {
+        IsShowEditPromptPopup = false;
+
     }
 
     private async void ExecuteUsePromptCommand(object obj)
