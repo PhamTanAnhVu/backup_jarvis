@@ -26,10 +26,10 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" VerticalAlignment="Center" Text="New Prompt"/>
+                    <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" VerticalAlignment="Center" Text="{Binding PromptPopupViewModel.PromptHeader}"/>
 
                     <Button Grid.Column="1" x:Name="CloseEditPromptButton" Style="{StaticResource PromptHeaderButton}" HorizontalAlignment="Right"
-                            Command="{Binding PromptPopupViewModel.CloseEditPromptPopupCommand}">
+                            Command="{Binding PromptPopupViewModel.ClosePopupCommand}" CommandParameter="Edit">
                         <Button.Content>
                             <Viewbox Width="16" Height="16">
                                 <Grid>
@@ -42,23 +42,29 @@
 
                 <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap6}">
                     <StackPanel x:Name="PrivatePromptPanel" Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
-                        <Border x:Name="RoundSelectPrivateBorder"  Style="{StaticResource RoundSelectBorder}">
-                            <Border Width="10" Height="10" Visibility="{Binding IsEditPrivatePrompt, Converter={StaticResource VisibilityConverter}}"
-                                    Background="{StaticResource PrimaryBrushColor6}" CornerRadius="{StaticResource BorderRadiusFull}"/>
-                        </Border>
+                        <Button x:Name="PrivatePromptSelectButton" Style="{StaticResource RoundSelectButton}"
+                                Command="{Binding PromptPopupViewModel.SelectPromptTypeCommand}" CommandParameter="Private">
+                            <Button.Content>
+                                <Border Width="10" Height="10" Visibility="{Binding PromptPopupViewModel.IsPrivatePrompt, Converter={StaticResource VisibilityConverter}}"
+                                        Background="{StaticResource PrimaryBrushColor6}" CornerRadius="{StaticResource BorderRadiusFull}"/>
+                            </Button.Content>
+                        </Button>
 
                         <TextBox Style="{StaticResource SmTextBox600}" Text="Private Prompt" VerticalAlignment="Center"/>
                     </StackPanel>
                     
                     <StackPanel x:Name="PublicPromptPanel" Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
-                        <Border x:Name="RoundSelectPublicBorder"  Style="{StaticResource RoundSelectBorder}">
-                            <Border Width="10" Height="10" Visibility="{Binding IsEditPublicPrompt, Converter={StaticResource VisibilityConverter}}"
-                                    Background="{StaticResource PrimaryBrushColor6}" CornerRadius="{StaticResource BorderRadiusFull}"/>
-                        </Border>
+                        <Button x:Name="PublicPromptSelectButton" Style="{StaticResource RoundSelectButton}"
+                                Command="{Binding PromptPopupViewModel.SelectPromptTypeCommand}" CommandParameter="Public">
+                            <Button.Content>
+                                <Border Width="10" Height="10" Visibility="{Binding PromptPopupViewModel.IsPublicPrompt, Converter={StaticResource VisibilityConverter}}"
+                                        Background="{StaticResource PrimaryBrushColor6}" CornerRadius="{StaticResource BorderRadiusFull}"/>
+                            </Button.Content>
+                        </Button>
 
                         <TextBox Style="{StaticResource SmTextBox600}" Text="Public Prompt" VerticalAlignment="Center"/>
 
-                        <Grid>
+                        <Grid x:Name="MoreInfoGrid">
                             <Viewbox x:Name="PromptInfoSVGIcon" Width="12" Height="12">
                                 <Grid>
                                     <Path Fill="#64748B" Data="M6,11.25C3.10051,11.25 0.75,8.8995 0.75,6C0.75,3.10051 3.10051,0.75 6,0.75C8.8995,0.75 11.25,3.10051 11.25,6C11.25,8.8995 8.8995,11.25 6,11.25ZM6,12C9.31371,12 12,9.31371 12,6C12,2.68629 9.31371,0 6,0C2.68629,0 0,2.68629 0,6C0,9.31371 2.68629,12 6,12Z"/>
@@ -81,11 +87,12 @@
                     
                 </StackPanel>
 
-                <StackPanel x:Name="PublicPromptLanguagePanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                <StackPanel x:Name="PublicPromptLanguagePanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}"
+                            Visibility="{Binding PromptPopupViewModel.IsPublicPrompt, Converter={StaticResource VisibilityConverter}}">
                     <TextBox Style="{StaticResource SmTextBox600}" Text="Prompt Language" VerticalAlignment="Center"/>
 
                     <Button x:Name="PublicPromptSelectLanguageButton" Style="{StaticResource EditAddPromptSelectButton}"
-                            Command="{Binding PromptPopupViewModel.SelectReportCommand}"
+                            Command="{Binding PromptPopupViewModel.ShowSelectionPopupCommand}" CommandParameter="Language"
                             MouseEnter="PublicPromptSelectButton_MouseEnter" MouseLeave="PublicPromptSelectButton_MouseLeave" Tag="Language">
                         <Button.Content>
                             <Grid Width="344">
@@ -95,7 +102,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Style="{StaticResource SmTextblock400}" 
-                                           Text="{Binding PromptPopupViewModel.PublicPromptLanguage}" VerticalAlignment="Center"/>
+                                           Text="{Binding PromptPopupViewModel.LanguageName}" VerticalAlignment="Center"/>
 
                                 <Viewbox x:Name="LanguageToggleSVGIcon" Grid.Column="1" Width="16" Height="16"
                                          HorizontalAlignment="Right" VerticalAlignment="Top" >
@@ -125,11 +132,12 @@
                     </Border>
                 </StackPanel>
 
-                <StackPanel x:Name="PublicPromptCategoryPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                <StackPanel x:Name="PublicPromptCategoryPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}"
+                            Visibility="{Binding PromptPopupViewModel.IsPublicPrompt, Converter={StaticResource VisibilityConverter}}">
                     <TextBox Style="{StaticResource SmTextBox600}" Text="Category" VerticalAlignment="Center"/>
 
                     <Button x:Name="PublicPromptSelectCategoryButton" Style="{StaticResource EditAddPromptSelectButton}"
-                            Command="{Binding PromptPopupViewModel.SelectCategoryCommand}"
+                            Command="{Binding PromptPopupViewModel.ShowSelectionPopupCommand}" CommandParameter="Category"
                             MouseEnter="PublicPromptSelectButton_MouseEnter" MouseLeave="PublicPromptSelectButton_MouseLeave" Tag="Category">
                         <Button.Content>
                             <Grid Width="344">
@@ -139,7 +147,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Style="{StaticResource SmTextblock400}" 
-                                           Text="{Binding PromptPopupViewModel.PublicPromptCategory}" VerticalAlignment="Center"/>
+                                           Text="{Binding PromptPopupViewModel.CategoryName}" VerticalAlignment="Center"/>
 
                                 <Viewbox x:Name="CategoryToggleSVGIcon" Grid.Column="1" Width="16" Height="16"
                                          HorizontalAlignment="Right" VerticalAlignment="Top" >
@@ -152,7 +160,8 @@
                     </Button>
                 </StackPanel>
 
-                <StackPanel x:Name="PromptDescriptionPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                <StackPanel x:Name="PromptDescriptionPanel" Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}"
+                            Visibility="{Binding PromptPopupViewModel.IsPublicPrompt, Converter={StaticResource VisibilityConverter}}">
                     <TextBox Style="{StaticResource SmTextBox600}" Text="Description (Optional)" VerticalAlignment="Center"/>
 
                     <Border x:Name="PromptDescriptionBorder" Style="{StaticResource ContentDetailBorder}" Width="368" Height="Auto" MinHeight="60">
@@ -197,7 +206,7 @@
                 <StackPanel x:Name="ReportButtonPanel" Margin="0 8 0 0" Orientation="Horizontal" HorizontalAlignment="Right" 
                             style:MarginSetter.Margin="{StaticResource ColumnGap3}">
                     <Button x:Name="CancelEditPromptButton" Style="{StaticResource EditTitleButton}"
-                            Command="{Binding PromptPopupViewModel.CloseEditPromptPopupCommand}">
+                            Command="{Binding PromptPopupViewModel.ClosePopupCommand}" CommandParameter="Edit">
                         <Button.Content>
                             <TextBlock Style="{StaticResource SmTextblock600}" VerticalAlignment="Center"
                                        Text="Cancel" Foreground="{StaticResource TailwindPrimary8}"/>
@@ -231,5 +240,73 @@
                 </StackPanel>
             </StackPanel>
         </Border>
+
+        <Popup x:Name="LanguagePopup" IsOpen="{Binding PromptPopupViewModel.IsShowLanguagePopup}" StaysOpen="True" AllowsTransparency="True" Width="Auto"
+               PlacementTarget="{Binding ElementName=PublicPromptSelectLanguageButton}" Placement="Bottom" VerticalOffset="0" HorizontalOffset="-4">
+            <Border x:Name="LanguageButtonBorder" Background="#FFF" Width="372" 
+                    Padding="8 8 4 8" CornerRadius="{StaticResource BorderRadius2Xl}">
+                <Border CornerRadius="{StaticResource BorderRadius2Xl}" Background="#FFF" Padding="8 8 4 8" 
+                       Height="Auto" MaxHeight="200">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Direction ="0" RenderingBias="Quality" ShadowDepth ="0" Color ="#f2f2f2"/>
+                    </Border.Effect>
+                    <ScrollViewer VerticalScrollBarVisibility="Visible">
+                        <ItemsControl ItemsSource="{Binding PromptPopupViewModel.LanguageButtons}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button x:Name="LanguageButton" Style="{StaticResource PromptPopupButton}" Width="334"
+                                        Command="{Binding SelectCommand}" CommandParameter="{Binding Idx}">
+                                    <Button.Content>
+                                        <TextBlock VerticalAlignment="Center" Style="{StaticResource SmTextblock500}" Text="{Binding Name}"/>
+                                    </Button.Content>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </Border>
+        </Popup>
+
+        <Popup x:Name="CategoryPopup" IsOpen="{Binding PromptPopupViewModel.IsShowCategoryPopup}" StaysOpen="True" AllowsTransparency="True" Width="Auto"
+               PlacementTarget="{Binding ElementName=PublicPromptSelectCategoryButton}" Placement="Bottom" VerticalOffset="0" HorizontalOffset="-4">
+            <Border x:Name="CategoryButtonBorder" Background="#FFF" Width="372" 
+                    Padding="8 8 4 8" CornerRadius="{StaticResource BorderRadius2Xl}">
+                <Border CornerRadius="{StaticResource BorderRadius2Xl}" Background="#FFF" Padding="8 8 4 8" 
+                        Height="Auto" MaxHeight="200">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Direction ="0" RenderingBias="Quality" ShadowDepth ="0" Color ="#f2f2f2"/>
+                    </Border.Effect>
+                    <ScrollViewer VerticalScrollBarVisibility="Visible">
+                        <ItemsControl ItemsSource="{Binding PromptPopupViewModel.CategoryButtons}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button x:Name="LanguageButton" Style="{StaticResource PromptPopupButton}" Width="334"
+                                            Command="{Binding SelectCommand}" CommandParameter="{Binding Idx}">
+                                        <Button.Content>
+                                            <TextBlock VerticalAlignment="Center" Style="{StaticResource SmTextblock500}" Text="{Binding Name}"/>
+                                        </Button.Content>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </Border>
+        </Popup>
+        
+        
     </Grid>
 </UserControl>

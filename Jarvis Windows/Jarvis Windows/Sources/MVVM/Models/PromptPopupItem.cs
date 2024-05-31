@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Jarvis_Windows.Sources.MVVM.Models;
 
-public class ReportButtonModel : ViewModelBase
+public class PromptPopupItem : ViewModelBase
 {
     private string _background;
     public int Idx { get; set; }
-    public string ReportName { get; set; }
+    public string Name { get; set; }
     public string Background
     {
         get { return _background; }
@@ -22,5 +22,5 @@ public class ReportButtonModel : ViewModelBase
         }
     }
 
-    public RelayCommand SelectReportCommand { get; set; }
+    public RelayCommand SelectCommand { get; set; }
 }

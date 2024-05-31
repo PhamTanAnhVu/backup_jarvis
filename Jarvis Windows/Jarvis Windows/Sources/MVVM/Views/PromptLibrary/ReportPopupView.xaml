@@ -29,7 +29,7 @@
 
                     <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" Text="Report" VerticalAlignment="Center"/>
                     <Button Grid.Column="1" x:Name="CloseReportPopupButton" Style="{StaticResource PromptHeaderButton}" HorizontalAlignment="Right"
-                            Command="{Binding PromptPopupViewModel.CloseReportPopupCommand}">
+                            Command="{Binding PromptPopupViewModel.ClosePopupCommand}" CommandParameter="Report">
                         <Button.Content>
                             <Viewbox Width="16" Height="16">
                                 <Grid>
@@ -49,7 +49,7 @@
                     <TextBox Style="{StaticResource SmTextBox600}" Text="What would you like to report?" VerticalAlignment="Center"/>
 
                     <Button x:Name="SelectReportButton" Style="{StaticResource SelectReportButton}"
-                            Command="{Binding PromptPopupViewModel.SelectReportCommand}"
+                            Command="{Binding PromptPopupViewModel.ShowSelectionPopupCommand}" CommandParameter="Report"
                             MouseEnter="SelectReportButton_MouseEnter" MouseLeave="SelectReportButton_MouseLeave">
                         <Button.Content>
                             <Grid Width="304">
@@ -103,7 +103,7 @@
                 <StackPanel x:Name="ReportButtonPanel" Margin="0 16 0 0" Orientation="Horizontal" HorizontalAlignment="Right" 
                             style:MarginSetter.Margin="{StaticResource ColumnGap3}">
                     <Button x:Name="CancelSendReportButton" Style="{StaticResource EditTitleButton}"
-                            Command="{Binding PromptPopupViewModel.CloseReportPopupCommand}">
+                            Command="{Binding PromptPopupViewModel.ClosePopupCommand}" CommandParameter="Edit">
                         <Button.Content>
                             <TextBlock Style="{StaticResource SmTextblock600}" VerticalAlignment="Center"
                                        Text="Cancel" Foreground="{StaticResource TailwindPrimary8}"/>
@@ -155,7 +155,7 @@
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button x:Name="ReportButton" Style="{StaticResource ReportButton}"
+                                <Button x:Name="ReportButton" Style="{StaticResource PromptPopupButton}"
                                     Command="{Binding SelectReportCommand}" CommandParameter="{Binding Idx}">
                                     <Button.Content>
                                         <TextBlock VerticalAlignment="Center" Style="{StaticResource SmTextblock500}" Text="{Binding ReportName}"/>

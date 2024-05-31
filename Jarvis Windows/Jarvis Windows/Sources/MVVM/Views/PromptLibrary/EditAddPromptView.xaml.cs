@@ -69,8 +69,8 @@ public partial class EditAddPromptView : UserControl
 
     private void EditBorder_PreviewMouseDown(object sender, MouseEventArgs e)
     {
-        if (!_isMouseOverLanguageButton) { }
-        if (!_isMouseOverCategoryButton) { }
+        if (!_isMouseOverLanguageButton) { LanguagePopup.SetCurrentValue(System.Windows.Controls.Primitives.Popup.IsOpenProperty, false); }
+        if (!_isMouseOverCategoryButton) { CategoryPopup.SetCurrentValue(System.Windows.Controls.Primitives.Popup.IsOpenProperty, false); }
     }
     private void PublicPromptSelectButton_MouseEnter(object sender, MouseEventArgs e)
     {

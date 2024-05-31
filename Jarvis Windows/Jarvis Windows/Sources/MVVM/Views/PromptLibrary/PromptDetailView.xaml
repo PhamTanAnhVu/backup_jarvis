@@ -80,7 +80,7 @@
 
                             <Grid x:Name="ClosePromptDetailGrid">
                                 <Button x:Name="ClosePromptDetailButton" Style="{StaticResource PromptHeaderButton}"
-                                        Command="{Binding PromptPopupViewModel.ClosePromptDetailCommand}">
+                                        Command="{Binding PromptPopupViewModel.ClosePopupCommand}" CommandParameter="PromptDetail">
                                     <Button.Content>
                                         <Viewbox Width="16" Height="16">
                                             <Grid>
@@ -90,14 +90,14 @@
                                     </Button.Content>
                                 </Button>
 
-                                <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                <!--<Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
                                        PlacementTarget="{Binding ElementName=ClosePromptDetailButton}" VerticalOffset="-30" HorizontalOffset="0"
                                        IsOpen="{Binding ElementName=ClosePromptDetailButton, Path=IsMouseOver, Mode=OneWay}">
                                     <Border Style="{StaticResource UnderMessageBorder}">
                                         <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
                                                    Text="Close"/>
                                     </Border>
-                                </Popup>
+                                </Popup>-->
                             </Grid>
                         </StackPanel>
                     </Grid>
