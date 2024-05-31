@@ -1000,10 +1000,10 @@
         <Setter Property="Opacity" Value="0.7"/>
         <Setter Property="IsHitTestVisible" Value="False"/>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding PromptLibraryViewModel.IsEmptyFeedbackInput}" Value="True">
+            <DataTrigger Binding="{Binding PromptPopupViewModel.IsEmptyFeedbackInput}" Value="True">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding PromptLibraryViewModel.IsEmptyFeedbackInput}" Value="False">
+            <DataTrigger Binding="{Binding PromptPopupViewModel.IsEmptyFeedbackInput}" Value="False">
                 <Setter Property="Visibility" Value="Collapsed"/>
             </DataTrigger>
         </Style.Triggers>
@@ -1075,10 +1075,10 @@
         <Setter Property="Opacity" Value="0.7"/>
         <Setter Property="IsHitTestVisible" Value="False"/>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding PromptLibraryViewModel.IsEmptyPromptNameInput}" Value="True">
+            <DataTrigger Binding="{Binding PromptPopupViewModel.IsEmptyPromptNameInput}" Value="True">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding PromptLibraryViewModel.IsEmptyPromptNameInput}" Value="False">
+            <DataTrigger Binding="{Binding PromptPopupViewModel.IsEmptyPromptNameInput}" Value="False">
                 <Setter Property="Visibility" Value="Collapsed"/>
             </DataTrigger>
         </Style.Triggers>
@@ -1091,10 +1091,10 @@
         <Setter Property="Opacity" Value="0.7"/>
         <Setter Property="IsHitTestVisible" Value="False"/>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding PromptLibraryViewModel.IsEmptyPromptDescriptionInput}" Value="True">
+            <DataTrigger Binding="{Binding PromptPopupViewModel.IsEmptyPromptDescriptionInput}" Value="True">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding PromptLibraryViewModel.IsEmptyPromptDescriptionInput}" Value="False">
+            <DataTrigger Binding="{Binding PromptPopupViewModel.IsEmptyPromptDescriptionInput}" Value="False">
                 <Setter Property="Visibility" Value="Collapsed"/>
             </DataTrigger>
         </Style.Triggers>
@@ -1107,10 +1107,10 @@
         <Setter Property="Opacity" Value="0.7"/>
         <Setter Property="IsHitTestVisible" Value="False"/>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding PromptLibraryViewModel.IsEmptyPromptContentInput}" Value="True">
+            <DataTrigger Binding="{Binding PromptPopupViewModel.IsEmptyPromptContentInput}" Value="True">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding PromptLibraryViewModel.IsEmptyPromptContentInput}" Value="False">
+            <DataTrigger Binding="{Binding PromptPopupViewModel.IsEmptyPromptContentInput}" Value="False">
                 <Setter Property="Visibility" Value="Collapsed"/>
             </DataTrigger>
         </Style.Triggers>

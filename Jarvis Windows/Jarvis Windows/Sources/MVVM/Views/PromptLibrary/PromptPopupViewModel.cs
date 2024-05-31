@@ -9,10 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 
-namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
+namespace Jarvis_Windows.Sources.MVVM.Views.PromptLibrary;
 
-public class PromptLibraryViewModel : ViewModelBase
+public class PromptPopupViewModel : ViewModelBase
 {
+    #region Fields
     private int _selectedPromptIdx;
     private bool _isShowPromptDetailPopup;
     private bool _isShowReportPopup;
@@ -29,12 +30,13 @@ public class PromptLibraryViewModel : ViewModelBase
     private string _promptNameInputMessage;
     private string _promptDescriptionInputMessage;
     private string _promptContentInputMessage;
-
     private ObservableCollection<ReportButtonModel> _reportButtons;
+    #endregion
 
+    #region Properties
     public int SelectedPromptIdx
     {
-        get { return _selectedPromptIdx; }
+        get => _selectedPromptIdx;
         set
         {
             _selectedPromptIdx = value;
@@ -44,7 +46,7 @@ public class PromptLibraryViewModel : ViewModelBase
 
     public bool IsShowPromptDetailPopup
     {
-        get { return _isShowPromptDetailPopup; }
+        get => _isShowPromptDetailPopup;
         set
         {
             _isShowPromptDetailPopup = value;
@@ -53,7 +55,7 @@ public class PromptLibraryViewModel : ViewModelBase
     }
     public bool IsShowReportPopup
     {
-        get { return _isShowReportPopup; }
+        get => _isShowReportPopup;
         set
         {
             _isShowReportPopup = value;
@@ -62,7 +64,7 @@ public class PromptLibraryViewModel : ViewModelBase
     }
     public bool IsShowSelectReportPopup
     {
-        get { return _isShowSelectReportPopup; }
+        get => _isShowSelectReportPopup;
         set
         {
             _isShowSelectReportPopup = value;
@@ -71,7 +73,7 @@ public class PromptLibraryViewModel : ViewModelBase
     }
     public bool IsShowEditPromptPopup
     {
-        get { return _isShowEditPromptPopup; }
+        get => _isShowEditPromptPopup;
         set
         {
             _isShowEditPromptPopup = value;
@@ -139,11 +141,9 @@ public class PromptLibraryViewModel : ViewModelBase
         }
     }
 
-
-
     public string FeedbackInputMessage
     {
-        get { return _feedbackInputMessage; }
+        get => _feedbackInputMessage;
         set
         {
             _feedbackInputMessage = value;
@@ -153,7 +153,7 @@ public class PromptLibraryViewModel : ViewModelBase
     }
     public string PromptNameInputMessage
     {
-        get { return _promptNameInputMessage; }
+        get => _promptNameInputMessage;
         set
         {
             _promptNameInputMessage = value;
@@ -163,7 +163,7 @@ public class PromptLibraryViewModel : ViewModelBase
     }
     public string PromptDescriptionInputMessage
     {
-        get { return _promptDescriptionInputMessage; }
+        get => _promptDescriptionInputMessage;
         set
         {
             _promptDescriptionInputMessage = value;
@@ -174,7 +174,7 @@ public class PromptLibraryViewModel : ViewModelBase
 
     public string PromptContentInputMessage
     {
-        get { return _promptContentInputMessage; }
+        get => _promptContentInputMessage;
         set
         {
             _promptContentInputMessage = value;
@@ -186,7 +186,7 @@ public class PromptLibraryViewModel : ViewModelBase
 
     public string ReportName
     {
-        get { return _reportName; }
+        get => _reportName;
         set
         {
             _reportName = value;
@@ -196,7 +196,7 @@ public class PromptLibraryViewModel : ViewModelBase
 
     public string PublicPromptLanguage
     {
-        get { return _publicPromptLanguage; }
+        get => _publicPromptLanguage;
         set
         {
             _publicPromptLanguage = value;
@@ -206,7 +206,7 @@ public class PromptLibraryViewModel : ViewModelBase
 
     public string PublicPromptCategory
     {
-        get { return _publicPromptCategory; }
+        get => _publicPromptCategory;
         set
         {
             _publicPromptCategory = value;
@@ -214,6 +214,19 @@ public class PromptLibraryViewModel : ViewModelBase
         }
     }
 
+    public ObservableCollection<ReportButtonModel> ReportButtons
+    {
+        get => _reportButtons;
+        set
+        {
+            _reportButtons = value;
+            OnPropertyChanged();
+        }
+    }
+
+#endregion
+
+    #region Commands
     public RelayCommand UsePromptCommand { get; set; }
     public RelayCommand ClosePromptDetailCommand { get; set; }
     public RelayCommand OpenReportCommand { get; set; }
@@ -223,18 +236,9 @@ public class PromptLibraryViewModel : ViewModelBase
     public RelayCommand CopyPromptCommand { get; set; }
     public RelayCommand CloseEditPromptPopupCommand { get; set; }
     public RelayCommand SaveEditPromptCommand { get; set; }
+    #endregion
 
-    public ObservableCollection<ReportButtonModel> ReportButtons
-    {
-        get { return _reportButtons; }
-        set
-        {
-            _reportButtons = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public PromptLibraryViewModel()
+    public PromptPopupViewModel()
     {
         ClosePromptDetailCommand = new RelayCommand(o => { IsShowPromptDetailPopup = false; }, o => true);
         OpenReportCommand = new RelayCommand(o => { IsShowReportPopup = true; }, o => true);
@@ -246,7 +250,6 @@ public class PromptLibraryViewModel : ViewModelBase
         UsePromptCommand = new RelayCommand(ExecuteUsePromptCommand, o => true);
         CopyPromptCommand = new RelayCommand(ExecuteCopyPromptCommand, o => true);
 
-        IsShowPromptDetailPopup = true;
         IsShowEditPromptPopup = true;
         InitSelectReportList();
     }

@@ -1311,9 +1311,9 @@
 
         </Popup>
 
-        <Popup x:Name="PromptDetailPopup" IsOpen="{Binding PromptLibraryViewModel.IsShowPromptDetailPopup}" 
-               PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" Placement="Center" StaysOpen="True" AllowsTransparency="True" Width="474">
-            <local:PromptDetailView/>
+        <Popup x:Name="PromptLibraryPopup" IsOpen="True" 
+               PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" Placement="Center" StaysOpen="True" AllowsTransparency="True" Width="Auto">
+            <promptLibrary:PromptLibraryView/>
         </Popup>
 
         <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 

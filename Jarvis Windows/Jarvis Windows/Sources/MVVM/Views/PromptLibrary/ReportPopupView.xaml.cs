@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
+namespace Jarvis_Windows.Sources.MVVM.Views.PromptLibrary;
 
 public partial class ReportPopupView : UserControl
 {

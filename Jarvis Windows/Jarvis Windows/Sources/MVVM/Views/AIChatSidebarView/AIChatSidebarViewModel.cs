@@ -295,11 +295,11 @@ public class AIChatSidebarViewModel : ViewModelBase
         InitGenerativeModels();
 
         ChatHistoryViewModel = new ChatHistoryViewModel();
-        PromptLibraryViewModel = new PromptLibraryViewModel();
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
         EventSubscribe();
 
         _isShowPromptLibrary = false;
+        IsShowPromptLibrary = true;
     }
 
     private void ExecuteOpenPromptLibraryCommand(object obj)

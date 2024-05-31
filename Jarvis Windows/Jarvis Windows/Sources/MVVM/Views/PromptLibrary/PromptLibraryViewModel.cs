@@ -31,11 +31,15 @@ namespace Jarvis_Windows.Sources.MVVM.Views.PromptLibrary
         public RelayCommand NavigatePromptViewCommand { get; set; }
         #endregion
 
+        #region ViewModel
+        public PromptPopupViewModel PromptPopupViewModel { get; set; }
+        #endregion
         public PromptLibraryViewModel()
         {
             _promptPages.Add("PublicPrompt", new PublicPromptViewModel());
             _promptPages.Add("MyPrompt", new MyPromptViewModel());
             _currentPromptPage = _promptPages["MyPrompt"];
+            PromptPopupViewModel = new PromptPopupViewModel();
 
             NavigatePromptViewCommand = new RelayCommand(ExecuteNavigatePromptViewCommand, o => true);
         }

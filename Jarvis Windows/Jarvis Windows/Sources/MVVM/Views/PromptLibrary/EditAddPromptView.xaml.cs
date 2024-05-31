@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
+namespace Jarvis_Windows.Sources.MVVM.Views.PromptLibrary;
 public partial class EditAddPromptView : UserControl
 {
     private bool _isMouseOverLanguageButton;
@@ -39,6 +39,7 @@ public partial class EditAddPromptView : UserControl
         TextBox textBox = sender as TextBox;
         string tag = (string)textBox.Tag;
         if (tag == "PromptDescription") { PromptDescriptionInputTextBox.ScrollToVerticalOffset(PromptDescriptionInputTextBox.VerticalOffset - e.Delta); }
+        else if (tag == "PromptName") { PromptNameInputTextBox.ScrollToVerticalOffset(PromptNameInputTextBox.VerticalOffset - e.Delta); }
         else { PromptContentInputTextBox.ScrollToVerticalOffset(PromptContentInputTextBox.VerticalOffset - e.Delta); }
         
         e.Handled = true;
@@ -54,6 +55,11 @@ public partial class EditAddPromptView : UserControl
             if (caretRect != Rect.Empty) PromptDescriptionInputTextBox.ScrollToVerticalOffset(PromptDescriptionInputTextBox.VerticalOffset + caretRect.Top);
         }
 
+        else if (tag == "PromptName")
+        {
+            var caretRect = PromptNameInputTextBox.GetRectFromCharacterIndex(PromptNameInputTextBox.CaretIndex, true);
+            if (caretRect != Rect.Empty) PromptNameInputTextBox.ScrollToVerticalOffset(PromptNameInputTextBox.VerticalOffset + caretRect.Top);
+        }
         else
         {
             var caretRect = PromptContentInputTextBox.GetRectFromCharacterIndex(PromptContentInputTextBox.CaretIndex, true);

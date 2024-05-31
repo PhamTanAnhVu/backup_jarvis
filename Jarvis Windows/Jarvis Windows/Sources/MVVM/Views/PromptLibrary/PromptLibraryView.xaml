@@ -21,8 +21,9 @@
     <UserControl.DataContext>
         <local:PromptLibraryViewModel/>
     </UserControl.DataContext>
-    
-    <Border Background="{StaticResource TailwindPrimary0.5}" CornerRadius="12">
+
+    <Grid>
+        <Border Background="{StaticResource TailwindPrimary0.5}" CornerRadius="12" Visibility="Hidden">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -69,4 +70,7 @@
             </Grid>
         </Grid>
     </Border>
+
+        
+    </Grid>
 </UserControl>
