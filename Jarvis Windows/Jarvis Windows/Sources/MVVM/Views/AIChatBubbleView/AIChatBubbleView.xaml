@@ -14,6 +14,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/AIChatStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -31,7 +32,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" x:Name="ExtraButton" Visibility="Hidden" HorizontalAlignment="Right"
+        <Border x:Name="UpperExtraBubbleButonBorder" Grid.Row="0" HorizontalAlignment="Right" Margin="0 0 10 0"
                 CornerRadius="20" Background="White" Width="40" Height="Auto">
             <StackPanel Orientation="Vertical">
                 <Grid Margin="{StaticResource PaddingVertical1.5}">
@@ -127,53 +128,54 @@
             </StackPanel>
         </Border>
 
-        <Grid Grid.Row="2">
+        <Grid x:Name="BubbleButtonGrid" Grid.Row="2">
             <Button x:Name="BubbleButton" Style="{StaticResource AIBubbleButton}" MouseEnter="MouseEnter_BubbleButton"
                     Command="{Binding ShowMainNavigationCommand}" Opacity="0.5">
                 <Button.Content>
                     <Grid>
-                        <Image Source="/Assets/Icons/Vector.ico" RenderOptions.BitmapScalingMode="Linear"
-                            Width="24" Height="24" HorizontalAlignment="Left"/>
-                        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-                            Width="18" Height="18" Margin="3 2 0 0" HorizontalAlignment="Left">
-                            <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="18" Height="15">
-                                <Path Fill="White" Data="M12.175 3.97188H14.5783C15.2119 3.97188 15.5946 4.71524 15.2542 5.28132L9.7072 14.4927C9.37682 15.0417 8.62137 15.0417 8.28998 14.4927L8.17012 14.2933L7.06213 12.453L12.175 3.97289V3.97188Z"/>
-                                <Path Fill="White" Data="M7.26863 10.5545C6.95336 11.0773 6.23317 11.0773 5.9179 10.5545L0.452499 1.47806C0.0949212 0.883776 0.496818 0.104156 1.1606 0.104156H3.5045L8.52871 8.46643L7.26964 10.5555L7.26863 10.5545Z"/>
-                                <Path Fill="White" Data="M17.5447 1.4769L16.5475 3.13384H6.26235L5.22789 1.41244C4.88743 0.845347 5.2712 0.102997 5.90376 0.102997H16.8366C17.5014 0.102997 17.9033 0.882617 17.5447 1.4769Z"/>
-                            </Canvas>
-                        </Viewbox>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Image Source="/Assets/Icons/Vector.ico" RenderOptions.BitmapScalingMode="Linear"
+                                   Width="24" Height="24"/>
+                            <Viewbox Width="18" Height="18" Margin="0 3 0 0">
+                                <Grid>
+                                    <Path Fill="White" Data="M12.175 3.97188H14.5783C15.2119 3.97188 15.5946 4.71524 15.2542 5.28132L9.7072 14.4927C9.37682 15.0417 8.62137 15.0417 8.28998 14.4927L8.17012 14.2933L7.06213 12.453L12.175 3.97289V3.97188Z"/>
+                                    <Path Fill="White" Data="M7.26863 10.5545C6.95336 11.0773 6.23317 11.0773 5.9179 10.5545L0.452499 1.47806C0.0949212 0.883776 0.496818 0.104156 1.1606 0.104156H3.5045L8.52871 8.46643L7.26964 10.5555L7.26863 10.5545Z"/>
+                                    <Path Fill="White" Data="M17.5447 1.4769L16.5475 3.13384H6.26235L5.22789 1.41244C4.88743 0.845347 5.2712 0.102997 5.90376 0.102997H16.8366C17.5014 0.102997 17.9033 0.882617 17.5447 1.4769Z"/>
+                                </Grid>
+                            </Viewbox>
+                        </Grid>
 
-                        <TextBlock x:Name="BubbleButtonName" Margin="34 0 0 0" Visibility="Collapsed" VerticalAlignment="Center" LineHeight="1.5" FontFamily="Inter"
+                        <TextBlock Grid.Column="1" x:Name="BubbleButtonName" Margin="10 2 0 0" VerticalAlignment="Center"
                                    Text="Ctrl+J" Style="{StaticResource MdTextblock500}" Foreground="{StaticResource TailwindPrimary6}"/>
                     </Grid>
                 </Button.Content>
             </Button>
 
-            <Border x:Name="CloseBubbleBorder" Width="10" Height="10" Background="{StaticResource SolidColorBrushSlate500}" 
-                    CornerRadius="{StaticResource BorderRadiusLg}" Visibility="Collapsed">
-                <Button Style="{StaticResource CloseAIBubbleButton}"
-                        Command="{Binding CloseAIBubbleCommand}">
-                    <Button.Content>
-                        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="8" Height="8">
-                            <Canvas Width="8" Height="8">
-                                <Path Fill="White" Data="M0.646447 0.646447C0.841709 0.451184 1.15829 0.451184 1.35355 0.646447L4 3.29289L6.64645 0.646447C6.84171 0.451184 7.15829 0.451184 7.35355 0.646447C7.54882 0.841709 7.54882 1.15829 7.35355 1.35355L4.70711 4L7.35355 6.64645C7.54882 6.84171 7.54882 7.15829 7.35355 7.35355C7.15829 7.54882 6.84171 7.54882 6.64645 7.35355L4 4.70711L1.35355 7.35355C1.15829 7.54882 0.841709 7.54882 0.646447 7.35355C0.451184 7.15829 0.451184 6.84171 0.646447 6.64645L3.29289 4L0.646447 1.35355C0.451184 1.15829 0.451184 0.841709 0.646447 0.646447Z"/>
-                            </Canvas>
-                        </Viewbox>
-
-                    </Button.Content>
-                </Button>
-            </Border>
+            <Button x:Name="CloseBubbleButton" Style="{StaticResource CloseAIBubbleButton}"
+                    Command="{Binding CloseAIBubbleCommand}">
+                <Button.Content>
+                    <Viewbox Width="6" Height="6">
+                        <Grid>
+                            <Path Fill="White" Data="M0.646447 0.646447C0.841709 0.451184 1.15829 0.451184 1.35355 0.646447L4 3.29289L6.64645 0.646447C6.84171 0.451184 7.15829 0.451184 7.35355 0.646447C7.54882 0.841709 7.54882 1.15829 7.35355 1.35355L4.70711 4L7.35355 6.64645C7.54882 6.84171 7.54882 7.15829 7.35355 7.35355C7.15829 7.54882 6.84171 7.54882 6.64645 7.35355L4 4.70711L1.35355 7.35355C1.15829 7.54882 0.841709 7.54882 0.646447 7.35355C0.451184 7.15829 0.451184 6.84171 0.646447 6.64645L3.29289 4L0.646447 1.35355C0.451184 1.15829 0.451184 0.841709 0.646447 0.646447Z"/>
+                        </Grid>
+                    </Viewbox>
+                </Button.Content>
+            </Button>
         </Grid>
 
-        <Grid Grid.Row="4">
-            <Button x:Name="SettingButton" Visibility="Hidden"
+        <Grid x:Name="LowerExtraBubbleButonBorder" Grid.Row="4" Margin="0 0 16 0">
+            <Button x:Name="SettingButton"
                     Style="{StaticResource SettingAIBubbleButton}"
                     MouseEnter="MouseEnter_ExtraButton" MouseLeave="MouseLeave_ExtraButton" CommandParameter="4">
                 <Button.Content>
-                    <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="16" Height="16">
+                    <Grid Width="16" Height="16">
                         <Path Fill="{Binding AIBubbleButton[4].Color}" Data="M2 4.58032L8.00002 1.15179L14 4.58032L14 11.4198L8.00002 14.8483L2 11.4197L2 4.58032ZM1 11.4197C1 11.7786 1.19229 12.1099 1.50387 12.288L7.50389 15.7165C7.81132 15.8922 8.18872 15.8922 8.49615 15.7165L14.4961 12.288C14.8077 12.11 15 11.7786 15 11.4198L15 4.58032C15 4.22147 14.8077 3.89012 14.4962 3.71208L8.49615 0.283542C8.18872 0.107869 7.81132 0.107868 7.50389 0.283541L1.50387 3.71208C1.19229 3.89012 1 4.22146 1 4.58032L1 11.4197Z"/>
                         <Path Fill="{Binding AIBubbleButton[4].Color}" Data="M5.93303 9.15192C6.62339 10.3477 8.15236 10.7573 9.3481 10.067C10.5438 9.37663 10.9535 7.84765 10.2632 6.65192C9.5728 5.45619 8.04383 5.0465 6.8481 5.73686C5.65236 6.42721 5.24268 7.95619 5.93303 9.15192ZM9.8481 10.933C8.17407 11.8995 6.03351 11.3259 5.06701 9.65192C4.10051 7.9779 4.67407 5.83733 6.3481 4.87083C8.02212 3.90433 10.1627 4.4779 11.1292 6.15192C12.0957 7.82594 11.5221 9.96651 9.8481 10.933Z"/>
-                    </Canvas>
+                    </Grid>
                 </Button.Content>
             </Button>
         </Grid>

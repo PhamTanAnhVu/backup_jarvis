@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.PromptLibrary.PublicPromptView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.PromptLibrary"
+             mc:Ignorable="d" 
+             d:DesignHeight="522" d:DesignWidth="474">
+    <Border CornerRadius="0 0 12 12" Background="White">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Public Prompt View" 
+           HorizontalAlignment="Center" 
+           VerticalAlignment="Top" 
+           Margin="0,10,0,0" FontSize="20"/>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="textBoxSearch" Text="Search" Width="400">
+                </TextBox>
+
+                <Button Content="Fav" Command="{Binding FilterFavoriteCommand}"/>
+            </StackPanel>
+
+            <ScrollViewer Width="auto">
+                <ItemsControl ItemsSource="{Binding ListCategoriesItem}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Margin="10 0"
+                                    Content="{Binding Name}" 
+                                    Command="{Binding Command}" 
+                                    CommandParameter="{Binding Index}"/>
+                                                </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <ScrollViewer Height="auto">
+                <ItemsControl ItemsSource="{Binding PublicPromptItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Height="34" Width="474" Background="AliceBlue">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button Grid.Column="0" HorizontalAlignment="Left" Command="{Binding DetailCommand}" 
+                                    CommandParameter="{Binding Index}">
+                                        <Button.Content>
+                                            <TextBlock Text="{Binding Title}" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left" 
+                                       Margin="10,0,0,0"/>
+                                        </Button.Content>
+                                    </Button>
+
+                                    <StackPanel Orientation="Horizontal" 
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center">
+                                        <Button Content="Fav" 
+                                        Command="{Binding AddFavoriteCommand}"
+                                        CommandParameter="{Binding Index}"/>
+
+                                        <Button Content="Info" 
+                                        Command="{Binding ShowInfoCommand}"
+                                        CommandParameter="{Binding Index}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
+    </Border>
+</UserControl>

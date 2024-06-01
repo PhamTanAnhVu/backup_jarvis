@@ -10,7 +10,7 @@ namespace Jarvis_Background_Service
 {
     public partial class App : System.Windows.Application
     {
-        private readonly int TEN_SECONDS = 10000;
+        private readonly int TEN_SECONDS = 1000 * 60 * 30;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -77,6 +77,7 @@ namespace Jarvis_Background_Service
                         }
                         jarvisWindows.Start();
                     }
+                }
                 }
 
                 Thread.Sleep(TEN_SECONDS);

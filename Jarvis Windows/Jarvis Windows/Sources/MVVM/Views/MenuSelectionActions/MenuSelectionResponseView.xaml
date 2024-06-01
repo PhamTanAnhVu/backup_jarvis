@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions"
              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+             xmlns:style="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Styles"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:popupTextMenu="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.PopupTextMenuView"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"             
@@ -15,6 +16,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/AIChatStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/ScrollBarStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -23,269 +26,294 @@
         <local:MenuSelectionResponseViewModel/>
     </UserControl.DataContext>
 
-    <Border CornerRadius="15" Padding="8 8 8 8"
-            MouseEnter="MenuSelectionResponse_MouseEnter"
-            MouseLeave="MenuSelectionResponse_MouseLeave">
-        <Border.Background>
-            <LinearGradientBrush MappingMode="RelativeToBoundingBox" 
+    <Grid x:Name="MainSelectionResponseGrid">
+        <Border x:Name="MainSelectionResponseBorder" CornerRadius="{StaticResource BorderRadius2Xl}" Padding="{StaticResource Padding2}" 
+                MouseEnter="MenuSelectionResponse_MouseEnter" MouseLeave="MenuSelectionResponse_MouseLeave">
+            <Border.Background>
+                <LinearGradientBrush MappingMode="RelativeToBoundingBox" 
                             StartPoint="0,1" EndPoint="0,0">
-                <LinearGradientBrush.RelativeTransform>
-                    <TransformGroup>
-                        <RotateTransform CenterY="0.5" CenterX="0.5" Angle="86"/>
-                        <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="1.5" ScaleY="1.5"/>
-                        <TranslateTransform Y="0.5"/>
-                    </TransformGroup>
-                </LinearGradientBrush.RelativeTransform>
-                <LinearGradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#FFF" Offset="0.1222"/>
-                        <GradientStop Color="#E6EEFA" Offset="0.2964"/>
-                        <GradientStop Color="#E6EEFA" Offset="0.5804"/>
-                        <GradientStop Color="#D3E3F9" Offset="0.9623"/>
-                    </GradientStopCollection>
-                </LinearGradientBrush.GradientStops>
-            </LinearGradientBrush>
-        </Border.Background>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="46"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <RotateTransform CenterY="0.5" CenterX="0.5" Angle="86"/>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                            <TranslateTransform Y="0.5"/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStopCollection>
+                            <GradientStop Color="#FFF" Offset="0.1222"/>
+                            <GradientStop Color="#E6EEFA" Offset="0.2964"/>
+                            <GradientStop Color="#E6EEFA" Offset="0.5804"/>
+                            <GradientStop Color="#D3E3F9" Offset="0.9623"/>
+                        </GradientStopCollection>
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Border.Background>
 
-            <Grid Grid.Row="0">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="105"/>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="5"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-                    <Grid Grid.Row="0">
-                        <Border Background="Transparent" Padding="10 10 10 12">
-                            <Button Background="Transparent" Style="{StaticResource AskButton}"
-                                    BorderThickness="0" Width="130" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" 
-                                    Foreground="#232329" FontFamily="monica-ext-font_YIBBBFG, -apple-system, 'system-ui', 'Segoe UI'"
-                                    Command="{Binding ShowMenuSelectionPopupListCommand}" 
-                                    MouseEnter="MenuSelectionPopup_MouseEnter"
-                                    MouseLeave="MenuSelectionPopup_MouseLeave">
-                                <Button.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding SelectionResponseHeaderName}"/>
-                                        <Path Stroke="#232329" Width="12" Height="16" Stretch="Uniform" Margin="5 0 0 0"
-                                        Data="M26.666 10.667 16 21.333 5.333 10.667"/>
-                                    </StackPanel>
-                                </Button.Content>
-                            </Button>
-                        </Border>
-
-                        <!--<Popup Name="PopupTextMenu" IsOpen="{Binding IsShowSelectionPopupMenu}" 
-                                Placement="Bottom" VerticalOffset="-15" HorizontalOffset="+10"
-                                AllowsTransparency="True" PopupAnimation="Slide" ForceCursor="True" StaysOpen="False"
-                                Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
-                            <popupTextMenu:PopupTextMenuView/>
-                        </Popup>-->
-                    </Grid>
-
-                    <Grid Grid.Column="1" Visibility="{Binding IsActionTranslate, Converter={StaticResource VisibilityConverter}}">
-                        <Border Background="#FFFFFF" CornerRadius="16" Height="31" Padding="10 0 5 0">
-                            <ComboBox Width="85" FontFamily ="sans-serif" Style="{StaticResource JarvisComboBox}" 
-                                      Name="textMenuLanguageComboBox" ItemsSource="{Binding TranslateLanguages}" 
-                                      DisplayMemberPath="Value" SelectedIndex="{Binding LanguageSelectedIndex}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <i:InvokeCommandAction Command="{Binding TranslateCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </ComboBox>
-                        </Border>
-                    </Grid>
-
-                    <Grid Grid.Column="2">
-                        <Button Style="{StaticResource MenuTopButton}"
-                            Width="56.242" Height="30" Margin="10 0 0 0">
-                            <Button.Content>
-                                <emoji:TextBlock Text="{Binding RemainingAPIUsage}" 
-                                 FontFamily="sans-serif" FontSize="16" 
-                                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-                            </Button.Content>
-                        </Button>
-                    </Grid>
-
-                    <Grid Grid.Column="4" Background="Transparent">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="5"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Width="30" Height="30" HorizontalAlignment="Left"
-                                Style="{StaticResource JarvisNomalButton}"
-                                Command="{Binding MenuSelectionPinCommand}" CommandParameter="-1">
-                            <Button.Content>
-                                <Viewbox Width="16" Height="16" Margin="0 0 0 0">
-                                    <Canvas Width="16" Height="16">
-                                        <Path Width="16" Height="16" Stroke="{StaticResource PrimaryBrushColor4}" StrokeThickness="1" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
-                                                Fill="{Binding SelectionResponsePinColor}"/>
-                                    </Canvas>
-                                </Viewbox>
-                            </Button.Content>
-                        </Button>
-                        <Button Grid.Column="2" Width="30" Height="30"
-                                Style="{StaticResource JarvisNomalButton}"
-                                Command="{Binding HideMenuSelectionResponseCommand}">
-                            <Button.Content>
-                                <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}"
-                             Kind="Close" Width="18" Height="18"
-                             HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Button.Content>
-                        </Button>
-                    </Grid>
-                </Grid>
-            </Grid>
-
-            <Grid Grid.Row="1" Style="{StaticResource GridIsAPIUsageRemain}">
+            <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
                     <RowDefinition Height="46"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Width="382">
-                    <Border Background="#FFFFFF" CornerRadius="12 12 0 0" Padding="12" Visibility="{Binding IsSpinningJarvisIcon,Converter={StaticResource VisibilityConverter}}">
-                        <Image x:Name="img" Source="../../../../Assets/Images/jarvis_logo_large.png" Width="20" Height="20" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="Fant"
-                    Visibility="{Binding IsSpinningJarvisIcon,Converter={StaticResource VisibilityConverter}}" HorizontalAlignment="Left">
+                <Grid Grid.Row="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="140"/>
+                            <ColumnDefinition Width="105"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
 
-                            <Image.RenderTransformOrigin>
-                                <Point X="0.5" Y="0.5"/>
-                            </Image.RenderTransformOrigin>
+                        <Grid Grid.Row="0">
+                            <Border Background="Transparent" Padding="10 10 10 12">
+                                <Button Background="Transparent" Style="{StaticResource AskButton}"
+                                        BorderThickness="0" Width="130" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" 
+                                        Foreground="#232329" FontFamily="monica-ext-font_YIBBBFG, -apple-system, 'system-ui', 'Segoe UI'"
+                                        Command="{Binding ShowMenuSelectionPopupListCommand}" 
+                                        MouseEnter="MenuSelectionPopup_MouseEnter"
+                                        MouseLeave="MenuSelectionPopup_MouseLeave">
+                                    <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding SelectionResponseHeaderName}"/>
+                                            <Path Stroke="#232329" Width="12" Height="16" Stretch="Uniform" Margin="5 0 0 0"
+                                            Data="M26.666 10.667 16 21.333 5.333 10.667"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                            </Border>
 
-                            <Image.Style>
-                                <Style TargetType="Image">
+                            <!--<Popup Name="PopupTextMenu" IsOpen="{Binding IsShowSelectionPopupMenu}" 
+                                    Placement="Bottom" VerticalOffset="-15" HorizontalOffset="+10"
+                                    AllowsTransparency="True" PopupAnimation="Slide" ForceCursor="True" StaysOpen="False"
+                                    Width="Auto" Height="Auto" Margin="99,0,99,57" Grid.RowSpan="3">
+                                <popupTextMenu:PopupTextMenuView/>
+                            </Popup>-->
+                        </Grid>
+
+                        <Grid Grid.Column="1" Visibility="{Binding IsActionTranslate, Converter={StaticResource VisibilityConverter}}">
+                            <Border Background="#FFFFFF" CornerRadius="16" Height="31" Padding="10 0 5 0">
+                                <ComboBox Width="85" FontFamily ="sans-serif" Style="{StaticResource JarvisComboBox}" 
+                                          Name="textMenuLanguageComboBox" ItemsSource="{Binding TranslateLanguages}" 
+                                          DisplayMemberPath="Value" SelectedIndex="{Binding LanguageSelectedIndex}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding TranslateCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
+                            </Border>
+                        </Grid>
+
+                        <Grid Grid.Column="2">
+                            <Button Style="{StaticResource MenuTopButton}"
+                                Width="56.242" Height="30" Margin="10 0 0 0">
+                                <Button.Content>
+                                    <emoji:TextBlock Text="{Binding RemainingAPIUsage}" 
+                                     FontFamily="sans-serif" FontSize="16" 
+                                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+
+                        <Grid Grid.Column="4" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Width="30" Height="30" HorizontalAlignment="Left"
+                                    Style="{StaticResource JarvisNomalButton}"
+                                    Command="{Binding MenuSelectionPinCommand}" CommandParameter="-1">
+                                <Button.Content>
+                                    <Viewbox Width="16" Height="16" Margin="0 0 0 0">
+                                        <Canvas Width="16" Height="16">
+                                            <Path Width="16" Height="16" Stroke="{StaticResource PrimaryBrushColor4}" StrokeThickness="1" Data="M4.653 1.64a.625.625 0 0 1 .511-.265h5.672a.625.625 0 0 1 .588.835l-.523 1.464a.126.126 0 0 0-.007.043v2.21c0 .03.01.058.03.081l1.189 1.406c1.03 1.219.164 3.086-1.432 3.086H8.625V14a.625.625 0 1 1-1.25 0v-3.5H5.319c-1.596 0-2.462-1.867-1.431-3.086l1.189-1.406a.125.125 0 0 0 .03-.08V3.716a.125.125 0 0 0-.008-.043L4.576 2.21a.625.625 0 0 1 .077-.57Z"
+                                                    Fill="{Binding SelectionResponsePinColor}"/>
+                                        </Canvas>
+                                    </Viewbox>
+                                </Button.Content>
+                            </Button>
+                            <Button Grid.Column="2" Width="30" Height="30"
+                                    Style="{StaticResource JarvisNomalButton}"
+                                    Command="{Binding HideMenuSelectionResponseCommand}">
+                                <Button.Content>
+                                    <materialDesign:PackIcon Foreground="{StaticResource PrimaryBrushColor4}"
+                                 Kind="Close" Width="18" Height="18"
+                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="46"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Width="382">
+                        <Border Background="#FFFFFF" CornerRadius="12 12 0 0" Padding="{StaticResource Padding3}" Visibility="{Binding IsSpinningJarvisIcon,Converter={StaticResource VisibilityConverter}}">
+                            <Image x:Name="img" Source="../../../../Assets/Images/jarvis_logo_large.png" Width="20" Height="20" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="Fant"
+                                   Visibility="{Binding IsSpinningJarvisIcon,Converter={StaticResource VisibilityConverter}}" HorizontalAlignment="Left">
+
+                                <Image.RenderTransformOrigin>
+                                    <Point X="0.5" Y="0.5"/>
+                                </Image.RenderTransformOrigin>
+
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="True">
+                                                <Setter Property="RenderTransform">
+                                                    <Setter.Value>
+                                                        <RotateTransform Angle="360"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard Storyboard="{StaticResource SpinAnimation}" />
+                                                </DataTrigger.EnterActions>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="False">
+
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Border>
+
+                        <Border Background="#FFFFFF" MinHeight="24" MaxHeight="300" CornerRadius="12 12 0 0" Padding="12 10 0 12">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <TextBox FontSize="14" Foreground="#24292F" FontFamily="sans-serif"
+                                         TextWrapping="Wrap" Margin="0 0 5 0" Text="{Binding SelectionTextResponse}"
+                                         x:Name="MenuSelectionResponseInputTextBox"
+                                         PreviewMouseDown="MenuSelectionResponseInputTextBox_PreviewMouseDown"
+                                         Style="{StaticResource TextBoxStyle}"/>
+                            </ScrollViewer>
+
+                            <Border.Style>
+                                <Style TargetType="Border">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="True">
-                                            <Setter Property="RenderTransform">
-                                                <Setter.Value>
-                                                    <RotateTransform Angle="360"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                            <DataTrigger.EnterActions>
-                                                <BeginStoryboard Storyboard="{StaticResource SpinAnimation}" />
-                                            </DataTrigger.EnterActions>
+                                            <Setter Property="Visibility" Value="Collapsed"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="False">
-
+                                            <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </Image.Style>
-                        </Image>
-                    </Border>
-
-                    <Border Background="#FFFFFF" MinHeight="24" MaxHeight="300" CornerRadius="12 12 0 0" Padding="12 10 0 12">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
-                            <TextBox FontSize="14" Foreground="#24292F" FontFamily="sans-serif"
-                                 TextWrapping="Wrap" Margin="0 0 5 0" Text="{Binding SelectionTextResponse}"
-                                 x:Name="TextMenuAPI_Result_Text"
-                                 PreviewMouseDown="MenuSelectionResponseView_TextBox_PreviewMouseDown"
-                                 Style="{StaticResource TextBoxStyle}"/>
-                        </ScrollViewer>
-
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="True">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsSpinningJarvisIcon}" Value="False">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                    </Border>
-                </Grid>
-
-                <Grid Grid.Row="1" Width="382" Margin=" 0 3 0 0">
-                    <Border Background="#FFFFFF" CornerRadius="0 0 12 12" Padding="10 12 12 12">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="24"/>
-                                <ColumnDefinition Width="24"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-
-                            <Button Grid.Column="0" Name="Copy" Margin="0 0 4 0" Background="Transparent" BorderThickness="0" 
-                                Style="{StaticResource TextMenuAPIButton}" Command="{Binding CopyToClipboardCommand}">
-                                <Button.Content>
-                                    <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="16" Height="16">
-                                        <Path Data="M6.125 2C5.089 2 4.25 2.84 4.25 3.875v.375h-.375C2.839 4.25 2 5.09 2 6.125v6C2 13.161 2.84 14 3.875 14h6c1.036 0 1.875-.84 1.875-1.875v-.375h.375c1.036 0 1.875-.84 1.875-1.875v-6C14 2.839 13.16 2 12.125 2h-6Zm5.625 8.5h.375c.345 0 .625-.28.625-.625v-6a.625.625 0 0 0-.625-.625h-6a.625.625 0 0 0-.625.625v.375h4.375c1.036 0 1.875.84 1.875 1.875V10.5Zm-8.5-4.375c0-.345.28-.625.625-.625h6c.345 0 .625.28.625.625v6c0 .345-.28.625-.625.625h-6a.625.625 0 0 1-.625-.625v-6Z" Fill="Black"/>
-                                    </Canvas>
-                                </Button.Content>
-                            </Button>
-
-                            <Button Grid.Column="1" Name="Regenerate" Margin="0 0 4 0" Background="Transparent" BorderThickness="0" 
-                                Style="{StaticResource TextMenuAPIButton}" Command="{Binding RedoMenuSelectionCommand}">
-                                <Button.Content>
-                                    <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="15" Height="15">
-                                        <Path Data="M13.688 2.313a.625.625 0 0 0-.626.624v1.5h-1.5a.625.625 0 1 0 0 1.25h2.126c.345 0 .624-.28.624-.625V2.938a.625.625 0 0 0-.624-.624Z" Fill="Black"/>
-                                        <Path Data="M13.738 4.686a6.625 6.625 0 1 0 .807 4.348.625.625 0 0 0-1.235-.193A5.377 5.377 0 0 1 2.625 8a5.375 5.375 0 0 1 10.031-2.688.625.625 0 1 0 1.082-.626Z" Fill="Black"/>
-                                    </Canvas>
-                                </Button.Content>
-                            </Button>
-
-                            <Grid Grid.Column="2" HorizontalAlignment="Right">
-                                <Image 
-                                Source="../../../../Assets/Images/jarvis_logo.png" 
-                                Margin="0 0 8 0"
-                                Width="14" Height="14"
-                                HorizontalAlignment="Left"/>
-
-                                <TextBlock Margin="20 0 0 0" VerticalAlignment="Center"
-                                    FontSize="10" FontFamily="sans-serif" FontWeight="Bold"
-                                    Foreground="#1450A3" Text="Powered by Jarvis"/>
-
-                            </Grid>
-                        </Grid>
-                    </Border>
-                </Grid>
-            </Grid>
-
-            <Grid Grid.Row="2" Style="{StaticResource GridIsNoAPIUsageRemain}">
-                <Border Background="White" CornerRadius="20" Width="290" Height="203" Padding="20">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="58"/>
-                            <RowDefinition Height="60"/>
-                            <RowDefinition Height="44"/>
-                        </Grid.RowDefinitions>
-
-                        <Grid Grid.Row="0">
-                            <emoji:TextBlock Text="🧯" FontFamily="sans-serif" FontSize="30" Height="36" 
-                                        HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                        </Grid>
-
-                        <Grid Grid.Row="1">
-                            <TextBlock Text="You have exhausted all of your DAILY tokens. Let get more tokens to fireeee!" 
-                                    Width="273" Height="40" FontFamily="sans-serif" FontSize="14" TextWrapping="Wrap" 
-                                    TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                        </Grid>
-
-                        <Grid Grid.Row="2">
-                            <Button Command="{Binding UpgradePlanCommand}"
-                                FontFamily="sans-serif" FontSize="14"
-                                HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Width="244.74" Height="44" Style="{StaticResource UpgradePlanButton}">
-                                <Button.Content>
-                                    <emoji:TextBlock Text="🔥Upgrade your plan now" FontFamily="sans-serif" FontSize="14"
-                                                Foreground="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                                </Button.Content>
-                            </Button>
-                        </Grid>
+                            </Border.Style>
+                        </Border>
                     </Grid>
-                </Border>
+
+                    <Grid Grid.Row="1" Width="382" Margin=" 0 3 0 0">
+                        <Border Background="#FFFFFF" CornerRadius="0 0 12 12" Padding="10 12 12 12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid>
+                                    <Button x:Name="CopyButton" Grid.Column="0" Margin="0 0 4 0" Background="Transparent" BorderThickness="0" Width="Auto" Height="Auto" Padding="2"
+                                            Style="{StaticResource UnderChatMessageButton}" Command="{Binding CopyToClipboardCommand}"
+                                            Click="Execute_Copy">
+                                        <Button.Content>
+                                            <Viewbox Width="14" Height="14">
+                                                <Grid>
+                                                    <Path x:Name="CopySVGIcon" Data="M6.125 2C5.089 2 4.25 2.84 4.25 3.875v.375h-.375C2.839 4.25 2 5.09 2 6.125v6C2 13.161 2.84 14 3.875 14h6c1.036 0 1.875-.84 1.875-1.875v-.375h.375c1.036 0 1.875-.84 1.875-1.875v-6C14 2.839 13.16 2 12.125 2h-6Zm5.625 8.5h.375c.345 0 .625-.28.625-.625v-6a.625.625 0 0 0-.625-.625h-6a.625.625 0 0 0-.625.625v.375h4.375c1.036 0 1.875.84 1.875 1.875V10.5Zm-8.5-4.375c0-.345.28-.625.625-.625h6c.345 0 .625.28.625.625v6c0 .345-.28.625-.625.625h-6a.625.625 0 0 1-.625-.625v-6Z" Fill="Black"/>
+                                                </Grid>
+                                            </Viewbox>
+                                        </Button.Content>
+                                    </Button>
+
+                                    <Popup x:Name="CopyPopup" Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                           PlacementTarget="{Binding ElementName=CopyButton}" VerticalOffset="-5" HorizontalOffset="5"
+                                           IsOpen="{Binding ElementName=CopyButton, Path=IsMouseOver, Mode=OneWay}">
+                                        <Border Style="{StaticResource UnderMessageBorder}">
+                                            <TextBlock x:Name="CopyPopupText" Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                        Text="Copy"/>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
+
+                                <Grid Grid.Column="1">
+                                    <Button x:Name="RedoButton" Background="Transparent" BorderThickness="0" Width="Auto" Height="Auto"
+                                            Style="{StaticResource UnderChatMessageButton}" Command="{Binding RedoMenuSelectionCommand}">
+                                        <Button.Content>
+                                            <Viewbox Width="14" Height="14">
+                                                <Grid>
+                                                    <Path Data="M13.688 2.313a.625.625 0 0 0-.626.624v1.5h-1.5a.625.625 0 1 0 0 1.25h2.126c.345 0 .624-.28.624-.625V2.938a.625.625 0 0 0-.624-.624Z" Fill="Black"/>
+                                                    <Path Data="M13.738 4.686a6.625 6.625 0 1 0 .807 4.348.625.625 0 0 0-1.235-.193A5.377 5.377 0 0 1 2.625 8a5.375 5.375 0 0 1 10.031-2.688.625.625 0 1 0 1.082-.626Z" Fill="Black"/>
+                                                </Grid>
+                                            </Viewbox>
+                                        </Button.Content>
+                                    </Button>
+
+                                    <Popup x:Name="RedoPopup" Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                           PlacementTarget="{Binding ElementName=RedoButton}" VerticalOffset="-5" HorizontalOffset="5"
+                                           IsOpen="{Binding ElementName=RedoButton, Path=IsMouseOver, Mode=OneWay}">
+                                        <Border Style="{StaticResource UnderMessageBorder}">
+                                            <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                       Text="Redo"/>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
+
+                                <Grid Grid.Column="2" HorizontalAlignment="Right">
+                                    <Image 
+                                    Source="../../../../Assets/Images/jarvis_logo.png" 
+                                    Margin="0 0 8 0"
+                                    Width="14" Height="14"
+                                    HorizontalAlignment="Left"/>
+
+                                    <TextBlock Margin="20 0 0 0" VerticalAlignment="Center"
+                                        FontSize="10" FontFamily="sans-serif" FontWeight="Bold"
+                                        Foreground="#1450A3" Text="Powered by Jarvis"/>
+
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Row="1" Visibility="{Binding IsOutOfToken, Converter={StaticResource VisibilityConverter}}">
+                    <Border Width="Auto" Height="Auto" Padding="{StaticResource Padding3}" Background="White" CornerRadius="{StaticResource BorderRadius2Xl}">
+                        <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}">
+
+                            <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" Text="Insufficient Tokens"/>
+
+                            <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap1}">
+                                <Border Width="360" Height="110" CornerRadius="{StaticResource BorderRadiusXl}">
+                                    <Border.Background>
+                                        <ImageBrush Stretch="UniformToFill" ImageSource="\Assets\Images\out_of_tokens.png"/>
+                                    </Border.Background>
+                                </Border>
+
+                                <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" Text="Upgrade plans for more tokens"/>
+                                <TextBox Style="{StaticResource SmTextBox400}" 
+                                         Text="Your current daily tokens are insufficient. Please upgrade your plan for more."/>
+                            </StackPanel>
+
+                            <Button x:Name="UpgradePlanButton" Style="{StaticResource UpgradePlanButton}" Width="360" Height="36"
+                                    Command="{Binding UpgradePlanCommand}" CommandParameter="https://admin.jarvis.cx/pricing">
+                                <Button.Content>
+                                    <TextBlock Style="{StaticResource MdTextblock600}" Foreground="White"
+                                               Text="Get more tokens"/>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
             </Grid>
-        </Grid>
-    </Border>
+        </Border>
+
+
+    </Grid>
 </UserControl>

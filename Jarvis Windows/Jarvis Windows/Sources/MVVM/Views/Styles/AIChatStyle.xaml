@@ -8,6 +8,78 @@
         <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/TextStyle.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
+    <Style x:Key="AIBubbleButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="{StaticResource TailwindPrimary0.5}"/>
+        <Setter Property="Foreground" Value="{StaticResource TailwindPrimary6}"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="Padding" Value="10 8 8 10"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        Padding="{TemplateBinding Padding}"
+                        Height="{TemplateBinding Height}"
+                        CornerRadius="20 0 0 20">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CloseAIBubbleButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource SolidColorBrushSlate500}"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Margin" Value="0 -30 0 0"/>
+        <Setter Property="Width" Value="10"/>
+        <Setter Property="Height" Value="10"/>
+        <Setter Property="Foreground" Value="#FFF"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                            CornerRadius="{StaticResource BorderRadiusLg}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SettingAIBubbleButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="#FFF"/>
+        <Setter Property="Foreground" Value="{StaticResource SolidColorBrushSlate700}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Width" Value="28"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="Padding" Value="{StaticResource Padding1.5}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="20">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource TailwindPrimary1}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="AddToolsButton" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource SolidColorBrushSlate100}"/>
         <Setter Property="Foreground" Value="{StaticResource TailwindPrimary9.5}"/>
@@ -189,9 +261,10 @@
     </Style>
 
     <Style x:Key="SelectAIModelButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="{StaticResource SolidColorBrushSlate100}"/>
         <Setter Property="Foreground" Value="{StaticResource TailwindPrimary9.5}"/>
-        <Setter Property="Width" Value="162"/>
+        <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="34"/>
         <Setter Property="Padding" Value="6 8"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -212,6 +285,7 @@
     </Style>
 
     <Style x:Key="ShortcutAIButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{StaticResource TailwindPrimary9.5}"/>
         <Setter Property="Width" Value="30"/>
@@ -283,6 +357,7 @@
     </Style>
 
     <Style x:Key="AIChatInputButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Width" Value="28"/>
@@ -312,7 +387,7 @@
     <Style x:Key="AIChatInputAddToolsButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Width" Value="77"/>
+        <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="18"/>
         <Setter Property="Padding" Value="6 2"/>
         <Setter Property="Template">
@@ -344,12 +419,14 @@
         <Setter Property="Height" Value="22"/>
         <Setter Property="Padding" Value="6 3"/>
     </Style>
-	
-	<Style x:Key="UpgradeButton" TargetType="Button">
+
+    <Style x:Key="UpgradeButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="Auto"/>
+        <Setter Property="Padding" Value="2 1"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -579,7 +656,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Width" Value="394" />
-        <Setter Property="HorizontalScrollBarVisibility" Value="Visible" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
         <Setter Property="IsReadOnly" Value="True" />
     </Style>
@@ -613,7 +690,7 @@
         <Setter Property="Background" Value="#1C2024"/>
         <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="Auto"/>
-        <Setter Property="Padding" Value="6 4"/>
+        <Setter Property="Padding" Value="8 4"/>
         <Setter Property="CornerRadius" Value="{StaticResource BorderRadiusMd}"/>
     </Style>
 
@@ -661,15 +738,17 @@
 
     <Style x:Key="SelectModelBorder" TargetType="Border">
         <Setter Property="Background" Value="#FFF"/>
-        <Setter Property="Width" Value="196"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="Auto"/>
         <Setter Property="Padding" Value="{StaticResource Padding2}"/>
         <Setter Property="CornerRadius" Value="{StaticResource BorderRadius2Xl}"/>
+  
     </Style>
 
     <Style x:Key="ModelButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Width" Value="180"/>
+        <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="40"/>
         <Setter Property="Padding" Value="12 10"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -695,8 +774,8 @@
     </Style>
 
     <Style x:Key="SelectedModelButton" TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource TailwindPrimary1}"/>
-        <Setter Property="Width" Value="180"/>
+        <Setter Property="Background" Value="{Binding Background}"/>
+        <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="40"/>
         <Setter Property="Padding" Value="12 10"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -711,10 +790,91 @@
                             CornerRadius="{StaticResource BorderRadius2Xl}">
                         <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Offset="0" Color="#CFD1D4"/>
+                                        <GradientStop Offset="1" Color="#E6EEFA"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
+    <Style x:Key="OutOfTokenBorder" TargetType="Border">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="CornerRadius" Value="{StaticResource BorderRadius2Xl}"/>
+        <Setter Property="Width" Value="328"/>
+        <Setter Property="Height" Value="Auto"/>
+        <Setter Property="Padding" Value="{StaticResource Padding4}"/>
+    </Style>
+
+    <Style x:Key="UpgradePlanButton" TargetType="Button">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <RotateTransform CenterY="0.5" CenterX="0.5" Angle="273"/>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                            <TranslateTransform Y="0.5"/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Offset="0" Color="#0078D4"/>
+                        <GradientStop Offset="0.9081" Color="#9692FF"/>
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Width" Value="296"/>
+        <Setter Property="Height" Value="36"/>
+        <Setter Property="Padding" Value="16 0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Height="{TemplateBinding Height}"
+                        Width="{TemplateBinding Width}"
+                        CornerRadius="{StaticResource BorderRadiusXl}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <!--<ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource SolidColorBrushSlate200}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CopyMessageButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Width" Value="Auto"/>
+        <Setter Property="Height" Value="Auto"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Height="{TemplateBinding Height}"
+                        Width="{TemplateBinding Width}"
+                        CornerRadius="{StaticResource BorderRadius}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>

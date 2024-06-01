@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -39,7 +40,8 @@ public class CustomRichTextBox : RichTextBox
         string text = TextContent;
         int lastPos = 0;
 
-        var matches = Regex.Matches(text, "(```[^```]+```|`[^`]+`)");
+        // Regex to match `...`, ```...```, **...**, #..., and Step <number>: ...
+        var matches = Regex.Matches(text, @"(```[^```]+```|`[^`]+`|\*\*[^*]+\*\*|^#.*|^Step\s+\d+:\s+.*(\n*\s*)?)", RegexOptions.Multiline);
         foreach (Match match in matches)
         {
             if (match.Index > lastPos)
@@ -47,38 +49,48 @@ public class CustomRichTextBox : RichTextBox
                 paragraph.Inlines.Add(new Run(text.Substring(lastPos, match.Index - lastPos)));
             }
 
-            var innerText = match.Value.Trim('`');
-            if (innerText.StartsWith("\n"))
+            string matchValue = match.Value;
+            if (matchValue.StartsWith("`") || matchValue.StartsWith("`"))
             {
-                innerText = innerText.Substring(1); // Remove leading newline
+                var innerText = matchValue.Trim('`');
+                innerText = innerText.Trim('\n');
+
+                innerText = string.Join("\n", innerText.Split('\n').Select(line => line.Trim())).Trim();
+                var specialText = new TextBlock(new Run(innerText))
+                {
+                    Foreground = Brushes.Black,
+                    VerticalAlignment = VerticalAlignment.Center,
+                };
+
+                var borderSpecialText = new Border
+                {
+                    Background = new BrushConverter().ConvertFromString("#E5E7EB") as Brush,
+                    CornerRadius = new CornerRadius(4),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Padding = new Thickness(4, 0, 4, 0),
+                    Margin = new Thickness(0, 0, 0, -4),
+                    Child = specialText
+                };
+
+                paragraph.Inlines.Add(new InlineUIContainer(borderSpecialText));
             }
-            if (innerText.EndsWith("\n"))
+            else if (matchValue.StartsWith("**"))
             {
-                innerText = innerText.Substring(0, innerText.Length - 1); // Remove trailing newline
+                var boldText = matchValue.Trim('*');
+                paragraph.Inlines.Add(new Bold(new Run(boldText)));
+            }
+            else if (matchValue.StartsWith("#") || Regex.IsMatch(matchValue, @"^Step\s+\d+:\s+.*"))
+            {
+                var innerText = matchValue.Trim('#').Trim(' ');
+                paragraph.Inlines.Add(new Bold(new Run(innerText)));
             }
 
-            var specialText = new TextBlock(new Run(innerText))
-            {
-                Foreground = Brushes.Black,
-                TextAlignment = TextAlignment.Center,
-            };
-
-            var borderSpecialText = new Border
-            {
-                Background = new BrushConverter().ConvertFromString("#E5E7EB") as Brush,
-                CornerRadius = new CornerRadius(4),
-                Padding = new Thickness(4, 0, 4, 0),
-                Margin = new Thickness(0, 1, 0, -4),
-                Child = specialText
-            };
-
-            paragraph.Inlines.Add(new InlineUIContainer(borderSpecialText));
             lastPos = match.Index + match.Length;
         }
 
         if (lastPos < text.Length)
         {
-            paragraph.Inlines.Add(new Run(text.Substring(lastPos)));
+            paragraph.Inlines.Add(new Run(text.Substring(lastPos).Trim(' ')));
         }
 
         this.Document.Blocks.Add(paragraph);

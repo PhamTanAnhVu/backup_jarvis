@@ -17,6 +17,10 @@ using Jarvis_Windows.Sources.Utils.Services;
 using Jarvis_Windows.Sources.MVVM.Models;
 using System.Collections.ObjectModel;
 using Point = System.Drawing.Point;
+using Jarvis_Windows.Sources.DataAccess.Network;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using Jarvis_Windows.Sources.DataAccess;
+using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 {
@@ -36,6 +40,13 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         public ObservableCollection<MainNavigationBarColor> _navBarColors;
         private double _sidebarChatWidth;
         private double _sidebarChatHeight;
+        private IAuthenticationService _authenticationService;
+        private Account? _account;
+        private string _username;
+        private bool _isShowUsernameFirstLetter;
+        private string _usernameFirstLetter;
+        private string _remainingAPIUsage;
+        private string _authUrl;
 
         #endregion
 
@@ -158,12 +169,68 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             }
         }
 
+        public IAuthenticationService AuthenService
+        {
+            get => _authenticationService;
+            set => _authenticationService = value;
+        }
+
+        public Account Account
+        {
+            get => _account;
+            set
+            {
+                _account = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Username
+        {
+            get { return _username; }
+            set
+            {
+                _username = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsShowUsernameFirstLetter
+        {
+            get => _isShowUsernameFirstLetter;
+            set
+            {
+                _isShowUsernameFirstLetter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string UsernameFirstLetter
+        {
+            get { return _usernameFirstLetter; }
+            set
+            {
+                _usernameFirstLetter = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string RemainingAPIUsage
+        {
+            get { return _remainingAPIUsage; }
+            set
+            {
+                _remainingAPIUsage = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         #region Commands
         public RelayCommand NavigateCommand { get; set; }
         public RelayCommand CloseMainNavigationCommand { get; set; }
         public RelayCommand OpenJarvisWebsiteCommand { get; set; }
+        public RelayCommand LoginCommand { get; set; }
         #endregion
 
         public MainNavigationViewModel()
@@ -172,10 +239,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             _sidebarChatHeight = SystemParameters.WorkArea.Height;
             _navBarColors = new ObservableCollection<MainNavigationBarColor>();
             _navButtonColors = new ObservableCollection<MainNavigationFillColor>();
+            _authenticationService = DependencyInjection.GetService<IAuthenticationService>();
 
             NavigateCommand = new RelayCommand(OnNavigate, o => true);
             CloseMainNavigationCommand = new RelayCommand(ExecuteCloseMainNavigationCommand, o => true);
             OpenJarvisWebsiteCommand = new RelayCommand(ExecuteOpenJarvisWebsiteCommand, o => true);
+            LoginCommand = new RelayCommand(ExecuteLoginCommand, o => true);
 
             _viewModels.Add("Chat", new AIChatSidebarViewModel());
             _viewModels.Add("Read", new AIReadViewModel()); 
@@ -189,10 +258,11 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
             _currentViewModel = _viewModels["Chat"];
             _sidebarVisibility = Visibility.Visible;
-            _makeSidebarTopmost = false;
-            
-            IsShowAIChatBubble = true;
-            IsShowMainNavigation = false;
+            _makeSidebarTopmost = true;
+            _authUrl = DataConfiguration.AuthUrl;
+
+            IsShowAIChatBubble = false;
+            IsShowMainNavigation = true;
 
 
             AIChatBubblePosition = new Point();
@@ -228,11 +298,38 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
             NavButtonColors[0].C1 = NavBarColors[0].C1 = "#0078D4";
             NavButtonColors[0].C2 = NavBarColors[0].C2 = "#9692FF";
+
+            Account = new Account();
+            Account.Username = WindowLocalStorage.ReadLocalStorage("Username");
+            Account.Email = WindowLocalStorage.ReadLocalStorage("Email");
+            Account.Role = WindowLocalStorage.ReadLocalStorage("Role");
+
+            if (AuthenticationService.AuthenState == AUTHEN_STATE.NOT_AUTHENTICATED
+                && Account != null)
+            {
+                AuthenService.SignOut();
+                Account.Username = "Login";
+                Account.Role = "anonymous";
+                Account.Email = "example@gmail.com";
+                IsShowUsernameFirstLetter = false;
+            }
+            else
+            {
+                IsShowUsernameFirstLetter = true;
+            }
+
+            Username = Account.Username;
+            if (IsShowUsernameFirstLetter) UsernameFirstLetter = Username[0].ToString();
+            if (string.IsNullOrEmpty(UsernameFirstLetter)) UsernameFirstLetter = "A";
         }
 
         private void OnPropertyMessageChanged(object sender, EventArgs e)
         {
             PropertyMessage message = (PropertyMessage)sender;
+            string[] content = message.PropertyName.Split("-");
+
+            message.PropertyName = content[0];
+            string page = (content.Length > 1) ? content[1] : "";
             bool value = (bool)message.Value;
             if (message == null) return;
 
@@ -243,7 +340,11 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                     break;
                 case "IsShowMainNavigation":
                     IsShowMainNavigation = value;
-                    IsShowAIChatBubble = false;
+                    IsShowAIChatBubble = !IsShowMainNavigation;
+                    if (!string.IsNullOrEmpty(page))
+                    {
+                        NavigateCommand.Execute(page);
+                    }
                     break;
             }
         }
@@ -251,15 +352,21 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         private void OnNavigate(object obj)
         {
             System.Windows.Controls.Button? pressedButton = obj as System.Windows.Controls.Button;
-            if(pressedButton != null)
+            if (pressedButton != null)
             {
                 string token = "btnNavigate";
                 string targetViewModel = pressedButton.Name.ToString().Substring(token.Length);
 
-                if(_viewModels.ContainsKey(targetViewModel))
+                if (_viewModels.ContainsKey(targetViewModel))
                     CurrentViewModel = _viewModels[targetViewModel];
 
-              ChangeNavColor(targetViewModel);
+                ChangeNavColor(targetViewModel);
+            }
+            else if (obj is string)
+            {
+                string targetViewModel = (string)obj;
+                if (_viewModels.ContainsKey(targetViewModel))
+                    CurrentViewModel = _viewModels[targetViewModel];
             }
         }
 
@@ -278,6 +385,28 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 
             OnPropertyChanged(nameof(NavButtonColors));
             OnPropertyChanged(nameof(NavBarColors));
+        }
+
+        public async void ExecuteLoginCommand(object obj)
+        {
+            try
+            {
+                if (Account.Role != "anonymous")
+                {
+                    //EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
+                    return;
+                }
+
+                string websiteUrl = _authUrl;
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = websiteUrl,
+                    UseShellExecute = true
+                });
+
+            }
+            catch (Exception)
+            { }
         }
 
         private async void ExecuteOpenJarvisWebsiteCommand(object obj)
@@ -303,7 +432,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.J)
             {
-                EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", true), new EventArgs());
+                EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", !IsShowMainNavigation), new EventArgs());
                 e.Handled = true;
             }
         }

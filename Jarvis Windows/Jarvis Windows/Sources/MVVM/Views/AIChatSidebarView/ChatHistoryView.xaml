@@ -7,7 +7,7 @@
              xmlns:li="http://github.com/zeluisping/loadingIndicators/xaml/controls"
              mc:Ignorable="d" 
              xmlns:style="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Styles"
-             Height="934" Width="474"
+             Height="auto" Width="474"
              Style="{StaticResource PageAppearEffect}">
 
     <UserControl.Resources>
@@ -60,7 +60,7 @@
                                     </TextBox>
                                     <TextBlock x:Name="AIChatHistory_SearchBar_PreText" Style="{StaticResource AIChatHistorySearchPreText}"
                                                Text="Search" VerticalAlignment="Center"/>
-                                </Grid>
+                                </Grid> 
                             </StackPanel>
                         </Border>
 
@@ -184,14 +184,19 @@
 
                     <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}" VerticalAlignment="Center" Margin="0 200"
                                 Visibility="{Binding ChatHistoryViewModel.IsEmptyChatHistory, Converter={StaticResource VisibilityConverter}}">
-                        <Image Source="C:\Users\vupham\Desktop\Cacdume\jarvis-windows\Jarvis Windows\Jarvis Windows\Assets\Images\NotFound.png"
+                        <Image Source="\Assets\Images\NotFound.png"
                                    Width="186.5" Height="196"/>
                         <TextBox Style="{StaticResource MdTextBox600}" VerticalAlignment="Center" HorizontalAlignment="Center"
                                      Text="No conversation found"/>
                     </StackPanel>
                 </StackPanel>
 
-                
+                <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
+                        Visibility="{Binding ChatHistoryViewModel.IsShowPopup, Converter={StaticResource VisibilityConverter}}">
+                    <Border.Effect>
+                        <StaticResource ResourceKey="BlurEffect"/>
+                    </Border.Effect>
+                </Border>
             </Grid>
         </Border>
 
@@ -313,12 +318,7 @@
             </Border>
         </Popup>
 
-        <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
-            Visibility="{Binding ChatHistoryViewModel.IsShowPopup, Converter={StaticResource VisibilityConverter}}">
-            <Border.Effect>
-                <StaticResource ResourceKey="BlurEffect"/>
-            </Border.Effect>
-        </Border>
+        
     </Grid>
 
 </UserControl>

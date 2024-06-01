@@ -6,6 +6,7 @@
         xmlns:style="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Styles"
         xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
         xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView"
+        xmlns:promptLibrary="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.PromptLibrary"
         xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
         xmlns:li="http://github.com/zeluisping/loadingIndicators/xaml/controls"   
         xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
@@ -27,13 +28,13 @@
         <Border x:Name="MainChatSidebarBorder" Background="White" CornerRadius="{StaticResource BorderRadiusXl}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="7*"/>
-                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" x:Name="DisplayGrid">
                     <Border x:Name="ExtraBorder" Padding="{StaticResource Padding5}">
-                        <ScrollViewer Padding="{StaticResource PaddingVertical4}" 
-                                      Height="auto" VerticalScrollBarVisibility="Hidden"
+                        <ScrollViewer x:Name="ExtraScrollViewer" Padding="{StaticResource PaddingVertical4}" 
+                                      VerticalScrollBarVisibility="Hidden"
                                       Visibility="{Binding IsShowIntro, Converter={StaticResource VisibilityConverter}}">
                             <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap5}">
                                 <Border Padding="{StaticResource PaddingHorizontal4}">
@@ -52,7 +53,7 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Border>
+                                <Border Visibility="Hidden">
                                     <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap3}">
                                         <Grid Height="Auto">
                                             <Button x:Name="AddToolsButton" Style="{StaticResource AddToolsButton}"
@@ -65,7 +66,7 @@
                                                             <ColumnDefinition/>
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Grid.Column="0" Style="{StaticResource SmTextblock500}"                 
-                                                                    Text="Add more tools to your Jarvis"/>
+                                                                    Text="Coming Soon - Add more tools to your Jarvis"/>
 
                                                         <Viewbox Grid.Column="1" HorizontalAlignment="Right" Width="14" Height="14">
                                                             <Canvas Width="14" Height="14">
@@ -77,7 +78,7 @@
                                             </Button>
 
                                             <Border Style="{StaticResource ExpandAddToolsBorder}" 
-                                                Visibility="{Binding AddToolsButtonVisibility, Converter={StaticResource VisibilityConverter}}">
+                                                    Visibility="{Binding AddToolsButtonVisibility, Converter={StaticResource VisibilityConverter}}">
                                                 <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap3}">
                                                     <TextBox Style="{StaticResource XsTextBox400}" 
                                                          Text="Jarvis will automatically use enabled skills.
@@ -105,7 +106,6 @@
 
                                                                             <Grid Grid.Column="0">
                                                                                 <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap3}">
-
                                                                                     <Viewbox Width="{Binding SvgData.Width}" Height="{Binding SvgData.Height}">
                                                                                         <Grid>
                                                                                             <Path Fill="{Binding SvgData.FillColor}" Data="{Binding SvgData.Data[0]}"/>
@@ -120,11 +120,10 @@
                                                                                         </Grid>
                                                                                     </Viewbox>
 
-
                                                                                     <TextBox Style="{StaticResource SmTextBox500}"
-                                                                                         Text="{Binding Header}" VerticalAlignment="Center"/>
+                                                                                             Text="{Binding Header}" VerticalAlignment="Center"/>
 
-                                                                                    <Grid>
+                                                                                    <Grid x:Name="InfoButtonGrid">
                                                                                         <Button x:Name="InfoButton" Style="{StaticResource InfoButton}"
                                                                                             Command="{Binding InfoPopupCommand}" CommandParameter="{Binding Idx}"
                                                                                             MouseEnter="InfoPopup_MouseEnter" MouseLeave="InfoPopup_MouseLeave">
@@ -144,8 +143,7 @@
                                                                                             <Border Style="{StaticResource InfoPopupBorder}">
                                                                                                 <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
                                                                                                     <TextBox x:Name="AboutText" Style="{StaticResource SmTextBox700}" 
-                                                                                                         Text="About this skill - Coming Soon"
-                                                                                                         TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                                                                                         Text="Coming Soon" TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                                                                                     <TextBox x:Name="DescriptionText" Style="{StaticResource SmTextBox400}" 
                                                                                                          Text="{Binding InfoPopupDescription}"
                                                                                                          HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -156,7 +154,7 @@
                                                                                                     <Button x:Name="InfoPopupButton" Style="{StaticResource InfoPopupButton}">
                                                                                                         <Button.Content>
                                                                                                             <TextBlock Style="{StaticResource SmTextblock600}"
-                                                                                                                    Text="{Binding InfoPopupButtonName}" Foreground="{StaticResource TailwindPrimary6}"/>
+                                                                                                                    Text="Coming Soon" Foreground="{StaticResource TailwindPrimary6}"/>
                                                                                                         </Button.Content>
                                                                                                     </Button>
                                                                                                 </StackPanel>
@@ -166,14 +164,14 @@
                                                                                 </StackPanel>
                                                                             </Grid>
 
-                                                                            <Grid Grid.Column="1" HorizontalAlignment="Right">
-                                                                                <Border CornerRadius="8" HorizontalAlignment="Left"
-                                                                                    Height="{Binding ToggleButtonHeight}" Width="{Binding ToggleButtonWidth}" 
-                                                                                    Background="{Binding ToggleBackground}">
+                                                                            <Grid x:Name="ToggleButtonGrid" Grid.Column="1" HorizontalAlignment="Right">
+                                                                                <Border x:Name="ToggleButtonBorder" CornerRadius="8" HorizontalAlignment="Left"
+                                                                                        Height="{Binding ToggleButtonHeight}" Width="{Binding ToggleButtonWidth}" 
+                                                                                        Background="{Binding ToggleBackground}">
 
                                                                                     <ToggleButton Background="Transparent" Width="{Binding ToggleButtonWidth}" 
                                                                                               Style="{StaticResource NoMouseOverStyle}"
-                                                                                              Command="{Binding ToggleCommand}" CommandParameter="{Binding Idx}">
+                                                                                              CommandParameter="{Binding Idx}">
 
                                                                                         <Grid Width="{Binding ToggleButtonWidth}" Height="{Binding ToggleButtonWidth}"
                                                                                           VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -184,6 +182,15 @@
                                                                                         </Grid>
                                                                                     </ToggleButton>
                                                                                 </Border>
+
+                                                                                <Popup Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                                                                       PlacementTarget="{Binding ElementName=ToggleButtonBorder}" VerticalOffset="-5" HorizontalOffset="-35"
+                                                                                       IsOpen="{Binding ElementName=ToggleButtonBorder, Path=IsMouseOver, Mode=OneWay}">
+                                                                                    <Border Style="{StaticResource UnderMessageBorder}">
+                                                                                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                                                                   Text="Coming Soon"/>
+                                                                                    </Border>
+                                                                                </Popup>
                                                                             </Grid>
                                                                         </Grid>
                                                                     </Border>
@@ -226,7 +233,7 @@
                                                                                     <TextBox Style="{StaticResource SmTextBox500}"
                                                                                             Text="{Binding Header}" VerticalAlignment="Center"/>
 
-                                                                                    <Grid>
+                                                                                    <Grid x:Name="InfoButtonGrid">
                                                                                         <Button x:Name="InfoButton" Style="{StaticResource InfoButton}"
                                                                                                 Command="{Binding InfoPopupCommand}" CommandParameter="{Binding Idx}"
                                                                                                 MouseEnter="InfoPopup_MouseEnter" MouseLeave="InfoPopup_MouseLeave">
@@ -247,7 +254,7 @@
                                                                                             <Border Style="{StaticResource InfoPopupBorder}">
                                                                                                 <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
                                                                                                     <TextBox x:Name="AboutText" Style="{StaticResource SmTextBox700}" 
-                                                                                                         Text="About this skill - Coming Soon"
+                                                                                                         Text="Coming Soon"
                                                                                                          TextAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                                                                                     <TextBox x:Name="DescriptionText" Style="{StaticResource SmTextBox400}" 
                                                                                                          Text="{Binding InfoPopupDescription}"
@@ -259,7 +266,7 @@
                                                                                                     <Button x:Name="InfoPopupButton" Style="{StaticResource InfoPopupButton}">
                                                                                                         <Button.Content>
                                                                                                             <TextBlock Style="{StaticResource SmTextblock600}"
-                                                                                                                    Text="{Binding InfoPopupButtonName}" Foreground="{StaticResource TailwindPrimary6}"/>
+                                                                                                                    Text="Coming Soon" Foreground="{StaticResource TailwindPrimary6}"/>
                                                                                                         </Button.Content>
                                                                                                     </Button>
                                                                                                 </StackPanel>
@@ -269,14 +276,14 @@
                                                                                 </StackPanel>
                                                                             </Grid>
 
-                                                                            <Grid Grid.Column="1" HorizontalAlignment="Right">
-                                                                                <Border CornerRadius="8" HorizontalAlignment="Left"
-                                                                                    Height="{Binding ToggleButtonHeight}" Width="{Binding ToggleButtonWidth}" 
-                                                                                    Background="{Binding ToggleBackground}">
+                                                                            <Grid x:Name="ToggleButtonGrid" Grid.Column="1" HorizontalAlignment="Right">
+                                                                                <Border x:Name="ToggleButtonBorder" CornerRadius="8" HorizontalAlignment="Left"
+                                                                                        Height="{Binding ToggleButtonHeight}" Width="{Binding ToggleButtonWidth}" 
+                                                                                        Background="{Binding ToggleBackground}">
 
                                                                                     <ToggleButton Background="Transparent" Width="{Binding ToggleButtonWidth}" 
                                                                                               Style="{StaticResource NoMouseOverStyle}"
-                                                                                              Command="{Binding ToggleCommand}" CommandParameter="{Binding Idx}">
+                                                                                              CommandParameter="{Binding Idx}">
 
                                                                                         <Grid Width="{Binding ToggleButtonWidth}" Height="{Binding ToggleButtonWidth}"
                                                                                           VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -287,6 +294,15 @@
                                                                                         </Grid>
                                                                                     </ToggleButton>
                                                                                 </Border>
+
+                                                                                <Popup Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                                                                       PlacementTarget="{Binding ElementName=ToggleButtonBorder}" VerticalOffset="-5" HorizontalOffset="-35"
+                                                                                       IsOpen="{Binding ElementName=ToggleButtonBorder, Path=IsMouseOver, Mode=OneWay}">
+                                                                                    <Border Style="{StaticResource UnderMessageBorder}">
+                                                                                        <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
+                                                                                                   Text="Coming Soon"/>
+                                                                                    </Border>
+                                                                                </Popup>
                                                                             </Grid>
                                                                         </Grid>
                                                                     </Border>
@@ -312,7 +328,7 @@
 
                                                     <Border Grid.Column="0" Width="44" Height="44" CornerRadius="{StaticResource BorderRadiusXl}" 
                                                             Background="White">
-                                                        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="16" Height="16">
+                                                        <Viewbox Width="16" Height="16">
                                                             <Grid>
                                                                 <Path Fill="#004578" Data="M17.6132 15.5158C18.7994 13.901 19.5 11.9073 19.5 9.75C19.5 4.36522 15.1348 0 9.75 0C4.36522 0 0 4.36522 0 9.75C0 15.1348 4.36522 19.5 9.75 19.5C11.9079 19.5 13.902 18.799 15.5171 17.6123L15.5158 17.6132C15.5601 17.6732 15.6093 17.7307 15.6636 17.785L21.4393 23.5607C22.0251 24.1465 22.9749 24.1465 23.5607 23.5607C24.1465 22.9749 24.1465 22.0251 23.5607 21.4393L17.785 15.6636C17.7307 15.6093 17.6732 15.5601 17.6132 15.5158ZM18 9.75C18 14.3063 14.3063 18 9.75 18C5.19365 18 1.5 14.3063 1.5 9.75C1.5 5.19365 5.19365 1.5 9.75 1.5C14.3063 1.5 18 5.19365 18 9.75Z"/>
                                                             </Grid>
@@ -322,9 +338,9 @@
                                                     <Grid Grid.Column="2">
                                                         <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap1}">
                                                             <TextBlock Style="{StaticResource MdTextblock600}"                 
-                                                                   Text="AI Search"/>
+                                                                        Text="AI Search"/>
                                                             <TextBlock Style="{StaticResource SmTextblock400}"                 
-                                                                       Text="Smarter and save your time"/>
+                                                                       Text="Coming Soon - Smarter and save your time"/>
                                                         </StackPanel>
                                                     </Grid>
                                                 </Grid>
@@ -370,7 +386,7 @@
                                                                Text="Upload" TextAlignment="Center"/>
 
                                                         <TextBlock Grid.Row="4" HorizontalAlignment="Center" Style="{StaticResource XsTextblock400}"
-                                                               Text="Click/Drag and &#x0a;drop here to chat" TextAlignment="Center"/>
+                                                               Text="Coming Soon - Click/Drag and &#x0a;drop here to chat" TextAlignment="Center"/>
                                                     </Grid>
                                                 </Button.Content>
                                             </Button>
@@ -381,6 +397,8 @@
                                                     <Grid.RowDefinitions>
                                                         <RowDefinition Height="Auto"/>
                                                         <RowDefinition Height="16"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="6"/>
                                                         <RowDefinition Height="Auto"/>
                                                     </Grid.RowDefinitions>
 
@@ -393,6 +411,9 @@
 
                                                     <TextBlock Grid.Row="2" Style="{StaticResource MdTextblock600}"
                                                            Text="Screenshot and Ask AI" TextAlignment="Center"/>
+
+                                                    <TextBlock Grid.Row="4" HorizontalAlignment="Center" Style="{StaticResource XsTextblock400}"
+                                                               Text="Coming Soon" TextAlignment="Center"/>
                                                 </Grid>
 
                                             </Button>
@@ -467,7 +488,7 @@
                     </Border>
 
                     <Border x:Name="ChatConversationBorder" Padding="20 20 0 20">
-                        <ScrollViewer x:Name="MainScrollViewer" Height="auto"
+                        <ScrollViewer x:Name="ChatConversationScrollViewer" Height="auto"
                                       Visibility="{Binding IsShowChatConversation, Converter={StaticResource VisibilityConverter}}">
                             <ItemsControl ItemsSource="{Binding AIChatMessages}">
                                 <ItemsControl.ItemsPanel>
@@ -483,7 +504,7 @@
                                             <StackPanel Orientation="Horizontal" x:Name="UserLogo" style:MarginSetter.Margin="{StaticResource ColumnGap2}"
                                                         Visibility="{Binding IsUser, Converter={StaticResource VisibilityConverter}}">
                                                 <Grid>
-                                                    <Image Source="C:\Users\vupham\Desktop\jarvis-windows\Jarvis Windows\Jarvis Windows\Assets\Icons\Vector.ico"
+                                                    <Image Source="\Assets\Icons\Vector.ico"
                                                            Width="20" Height="20"/>
                                                     <Viewbox Width="14" Height="14" Margin="0 2 0 0">
                                                         <Grid>
@@ -500,16 +521,10 @@
 
                                             <StackPanel Orientation="Horizontal" x:Name="ServerLogo" style:MarginSetter.Margin="{StaticResource ColumnGap2}"
                                                         Visibility="{Binding IsServer, Converter={StaticResource VisibilityConverter}}">
-                                                <Viewbox Width="20" Height="20">
-                                                    <Grid>
-                                                        <Path Fill="#19C37D" Data="M9 18C13.9706 18 18 13.9706 18 9C18 4.02944 13.9706 0 9 0C4.02944 0 0 4.02944 0 9C0 13.9706 4.02944 18 9 18Z"/>
-                                                        <Path Fill="White" Data="M14.777 7.77535C15.0832 6.85609 14.9778 5.84907 14.488 5.01292C13.7514 3.73042 12.2706 3.0706 10.8244 3.3811C10.1811 2.65632 9.25672 2.24416 8.28768 2.25006C6.80943 2.24669 5.49782 3.19844 5.04304 4.60497C4.0934 4.79945 3.27369 5.39387 2.79403 6.23635C2.05194 7.51548 2.22112 9.12789 3.21253 10.2248C2.90625 11.144 3.01171 12.151 3.50151 12.9872C4.2381 14.2697 5.71888 14.9295 7.16507 14.619C7.80801 15.3438 8.73276 15.756 9.70181 15.7497C11.1809 15.7535 12.4929 14.8008 12.9477 13.393C13.8974 13.1986 14.717 12.6042 15.1967 11.7616C15.938 10.4825 15.7679 8.87223 14.777 7.77535ZM9.70265 14.8675C9.11076 14.8683 8.53743 14.6612 8.08307 14.282C8.10375 14.271 8.1396 14.2512 8.16281 14.2368L10.851 12.6843C10.9885 12.6063 11.0729 12.4598 11.0721 12.3016V8.51195L12.2082 9.16796C12.2204 9.17386 12.2284 9.18568 12.2301 9.19918V12.3375C12.2284 13.7331 11.0982 14.8645 9.70265 14.8675ZM4.26722 12.5459C3.97063 12.0338 3.8639 11.4335 3.96557 10.8508C3.9854 10.8626 4.02041 10.8841 4.04531 10.8985L6.7335 12.451C6.86976 12.5307 7.03851 12.5307 7.17519 12.451L10.457 10.5559V11.868C10.4578 11.8815 10.4515 11.8945 10.4409 11.9029L7.72363 13.472C6.51328 14.1689 4.96711 13.7546 4.26722 12.5459ZM3.55972 6.67806C3.85504 6.16506 4.32121 5.77272 4.8764 5.56895C4.8764 5.59216 4.87513 5.63307 4.87513 5.66176V8.76718C4.87429 8.92496 4.95866 9.07135 5.09578 9.1494L8.37754 11.044L7.24143 11.7001C7.23004 11.7076 7.21569 11.7089 7.20304 11.7035L4.48532 10.1332C3.2775 9.43374 2.86363 7.888 3.55972 6.67806ZM12.8942 8.85029L9.61237 6.95523L10.7485 6.29963C10.7599 6.29204 10.7742 6.29078 10.7869 6.29626L13.5046 7.86521C14.7146 8.56426 15.1292 10.1121 14.4302 11.3221C14.1345 11.8342 13.6688 12.2266 13.1139 12.4308V9.23251C13.1153 9.07473 13.0309 8.92876 12.8942 8.85029ZM14.0248 7.14845C14.0049 7.13622 13.9699 7.11513 13.9451 7.10078L11.2569 5.54828C11.1206 5.46854 10.9518 5.46854 10.8151 5.54828L7.53337 7.44333V6.13131C7.53253 6.11781 7.53885 6.10473 7.5494 6.09629L10.2667 4.5286C11.477 3.83041 13.0245 4.24595 13.7223 5.45673C14.0172 5.96804 14.1248 6.56669 14.0248 7.14845ZM6.91575 9.4869L5.77922 8.83088C5.76698 8.82498 5.75897 8.81317 5.75728 8.79967V5.66134C5.75812 4.26409 6.89169 3.13178 8.28894 3.13262C8.88 3.13262 9.45206 3.34019 9.90641 3.71819C9.88575 3.72916 9.85031 3.74898 9.82668 3.76332L7.1385 5.31582C7.00097 5.39388 6.91659 5.53984 6.91743 5.69804L6.91575 9.4869ZM7.53294 8.1563L8.99475 7.31214L10.4565 8.15589V9.8438L8.99475 10.6876L7.53294 9.8438V8.1563Z"/>
-
-                                                    </Grid>
-                                                </Viewbox>
+                                                <Image Width="20" Height="20" Source="{Binding SelectedModelImageSource}"/>
 
                                                 <TextBlock Style="{StaticResource MdTextblock600}"
-                                                           Text="GPT-3.5 Turbo"/>
+                                                           Text="{Binding SelectedModelName}"/>
                                             </StackPanel>
 
                                             <Grid x:Name="CodeSectionGrid">
@@ -535,16 +550,47 @@
                                                                                         Background="Transparent" GotFocus="RichTextBox_GotFocus"
                                                                                         TextContent="{Binding TextContent, Mode=TwoWay}"/>
                                                                 
-                                                                <Border Grid.Row="1" CornerRadius="{StaticResource BorderRadiusMd}"
-                                                                        Padding="8 8 0 8" Background="{StaticResource SolidColorBrushGray200}" MaxWidth="408"
+                                                                <Border Grid.Row="1" CornerRadius="{StaticResource BorderRadiusMd}" VerticalAlignment="Center"
+                                                                        Background="{StaticResource SolidColorBrushGray200}" MaxWidth="406"
                                                                         Visibility="{Binding IsVisible, Converter={StaticResource VisibilityConverter}}">
 
-                                                                    <avalonedit:TextEditor x:Name="textEditor" Style="{StaticResource AvalonEditStyle}" Tag="{Binding Idx}"
-                                                                                            Loaded="CodeEditor_Loaded" MouseEnter="MouseEnter_CodeScrollViewer" 
-                                                                                            MouseLeave="MouseLeave_CodeScrollViewer" VerticalAlignment="Center"
-                                                                                            GotFocus="TextEditor_GotFocus" 
-                                                                                            LostFocus="TextEditor_LostFocus">
-                                                                    </avalonedit:TextEditor>
+                                                                    <StackPanel Orientation="Vertical">
+                                                                        <Border CornerRadius="{StaticResource BorderRadiusTopMd}" Padding="16 6" Width="406"
+                                                                                Background="{StaticResource SolidColorBrushGray300}">
+                                                                            <Grid>
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="Auto"/>
+                                                                                    <ColumnDefinition/>
+                                                                                </Grid.ColumnDefinitions>
+
+                                                                                <TextBox Grid.Column="0" Style="{StaticResource XsTextBox400}" 
+                                                                                         Text="{Binding Language}" VerticalAlignment="Center"/>
+
+                                                                                <Button Grid.Column="1" HorizontalAlignment="Right" 
+                                                                                        Style="{StaticResource CopyMessageButton}"
+                                                                                        Click="Execute_CopyCode">
+                                                                                    <Button.Content>
+                                                                                        <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap1}">
+                                                                                            <Viewbox Width="12" Height="12" VerticalAlignment="Top">
+                                                                                                <Grid>
+                                                                                                    <Path Fill="#64748B" Data="M4,2.5 C4,1.67157 4.67157,1 5.5,1 L11.5,1 C12.3284,1 13,1.67157 13,2.5 L13,8.5 C13,9.32843 12.3284,10 11.5,10 L5.5,10 C4.67157,10 4,9.32843 4,8.5 L4,2.5 Z M5.5,1.75 C5.08579,1.75 4.75,2.08579 4.75,2.5 L4.75,8.5 C4.75,8.91421 5.08579,9.25 5.5,9.25 L11.5,9.25 C11.9142,9.25 12.25,8.91421 12.25,8.5 L12.25,2.5 C12.25,2.08579 11.9142,1.75 11.5,1.75 L5.5,1.75 Z M2.5,4.75 C2.08579,4.75 1.75,5.08579 1.75,5.5 L1.75,11.5 C1.75,11.9142 2.08579,12.25 2.5,12.25 L8.5,12.25 C8.91421,12.25 9.25,11.9142 9.25,11.5 L10,10.75 L10,11.5 C10,12.3284 9.32843,13 8.5,13 L2.5,13 C1.67157,13 1,12.3284 1,11.5 L1,5.5 C1,4.67157 1.67157,4 2.5,4 L3.25,4.75 L2.5,4.75 Z"/>
+                                                                                                </Grid>
+                                                                                            </Viewbox>
+
+                                                                                            <TextBlock Style="{StaticResource XsTextblock400}" Text="Copy code"/>
+                                                                                        </StackPanel>
+                                                                                    </Button.Content>
+                                                                                </Button>
+                                                                            </Grid>
+                                                                        </Border>
+                                                                        
+                                                                        <avalonedit:TextEditor x:Name="textEditor" Style="{StaticResource AvalonEditStyle}" Tag="{Binding Idx}" 
+                                                                                                Loaded="CodeEditor_Loaded" MouseEnter="MouseEnter_CodeScrollViewer" 
+                                                                                                MouseLeave="MouseLeave_CodeScrollViewer" VerticalAlignment="Center"
+                                                                                                GotFocus="TextEditor_GotFocus" LostFocus="TextEditor_LostFocus"
+                                                                                                Margin="16 8 16 8">
+                                                                        </avalonedit:TextEditor>
+                                                                    </StackPanel>
                                                                 </Border>
                                                             </Grid>
                                                         </DataTemplate>
@@ -565,9 +611,9 @@
                                                 <Grid x:Name="CopyButtonGrid">
                                                     <Button x:Name="CopyButton" Style="{StaticResource UnderChatMessageButton}"
                                                             Command="{Binding CopyCommand}" CommandParameter="{Binding Idx}"
-                                                            VerticalAlignment="Center">
+                                                            VerticalAlignment="Center" Click="Execute_CopyCode">
                                                         <Button.Content>
-                                                            <Viewbox Width="14" Height="14" VerticalAlignment="Bottom">
+                                                            <Viewbox Width="14" Height="14" VerticalAlignment="Top">
                                                                 <Grid>
                                                                     <Path Fill="#64748B" Data="M4,2.5 C4,1.67157 4.67157,1 5.5,1 L11.5,1 C12.3284,1 13,1.67157 13,2.5 L13,8.5 C13,9.32843 12.3284,10 11.5,10 L5.5,10 C4.67157,10 4,9.32843 4,8.5 L4,2.5 Z M5.5,1.75 C5.08579,1.75 4.75,2.08579 4.75,2.5 L4.75,8.5 C4.75,8.91421 5.08579,9.25 5.5,9.25 L11.5,9.25 C11.9142,9.25 12.25,8.91421 12.25,8.5 L12.25,2.5 C12.25,2.08579 11.9142,1.75 11.5,1.75 L5.5,1.75 Z M2.5,4.75 C2.08579,4.75 1.75,5.08579 1.75,5.5 L1.75,11.5 C1.75,11.9142 2.08579,12.25 2.5,12.25 L8.5,12.25 C8.91421,12.25 9.25,11.9142 9.25,11.5 L10,10.75 L10,11.5 C10,12.3284 9.32843,13 8.5,13 L2.5,13 C1.67157,13 1,12.3284 1,11.5 L1,5.5 C1,4.67157 1.67157,4 2.5,4 L3.25,4.75 L2.5,4.75 Z"/>
                                                                 </Grid>
@@ -619,7 +665,7 @@
                     </Border>
                 </Grid>
 
-                <Border Grid.Row="1" x:Name="InputBorder" Padding="14 10">
+                <Border Grid.Row="1" x:Name="InputBorder" Padding="14 10" VerticalAlignment="Bottom">
                     <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap3}">
                         <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap3}">
                             <Grid x:Name="SelectAIModelButtonGrid">
@@ -627,15 +673,9 @@
                                         Command="{Binding OpenSelectAIModelCommand}">
                                     <Button.Content>
                                         <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
-                                            <Viewbox Width="18" Height="18">
-                                                <Canvas Width="18" Height="18">
-                                                    <Path Fill="#19C37D" Data="M9 18C13.9706 18 18 13.9706 18 9C18 4.02944 13.9706 0 9 0C4.02944 0 0 4.02944 0 9C0 13.9706 4.02944 18 9 18Z"/>
-                                                    <Path Fill="White" Data="M14.777 7.77535C15.0832 6.85609 14.9778 5.84907 14.488 5.01292C13.7514 3.73042 12.2706 3.0706 10.8244 3.3811C10.1811 2.65632 9.25672 2.24416 8.28768 2.25006C6.80943 2.24669 5.49782 3.19844 5.04304 4.60497C4.0934 4.79945 3.27369 5.39387 2.79403 6.23635C2.05194 7.51548 2.22112 9.12789 3.21253 10.2248C2.90625 11.144 3.01171 12.151 3.50151 12.9872C4.2381 14.2697 5.71888 14.9295 7.16507 14.619C7.80801 15.3438 8.73276 15.756 9.70181 15.7497C11.1809 15.7535 12.4929 14.8008 12.9477 13.393C13.8974 13.1986 14.717 12.6042 15.1967 11.7616C15.938 10.4825 15.7679 8.87223 14.777 7.77535ZM9.70265 14.8675C9.11076 14.8683 8.53743 14.6612 8.08307 14.282C8.10375 14.271 8.1396 14.2512 8.16281 14.2368L10.851 12.6843C10.9885 12.6063 11.0729 12.4598 11.0721 12.3016V8.51195L12.2082 9.16796C12.2204 9.17386 12.2284 9.18568 12.2301 9.19918V12.3375C12.2284 13.7331 11.0982 14.8645 9.70265 14.8675ZM4.26722 12.5459C3.97063 12.0338 3.8639 11.4335 3.96557 10.8508C3.9854 10.8626 4.02041 10.8841 4.04531 10.8985L6.7335 12.451C6.86976 12.5307 7.03851 12.5307 7.17519 12.451L10.457 10.5559V11.868C10.4578 11.8815 10.4515 11.8945 10.4409 11.9029L7.72363 13.472C6.51328 14.1689 4.96711 13.7546 4.26722 12.5459ZM3.55972 6.67806C3.85504 6.16506 4.32121 5.77272 4.8764 5.56895C4.8764 5.59216 4.87513 5.63307 4.87513 5.66176V8.76718C4.87429 8.92496 4.95866 9.07135 5.09578 9.1494L8.37754 11.044L7.24143 11.7001C7.23004 11.7076 7.21569 11.7089 7.20304 11.7035L4.48532 10.1332C3.2775 9.43374 2.86363 7.888 3.55972 6.67806ZM12.8942 8.85029L9.61237 6.95523L10.7485 6.29963C10.7599 6.29204 10.7742 6.29078 10.7869 6.29626L13.5046 7.86521C14.7146 8.56426 15.1292 10.1121 14.4302 11.3221C14.1345 11.8342 13.6688 12.2266 13.1139 12.4308V9.23251C13.1153 9.07473 13.0309 8.92876 12.8942 8.85029ZM14.0248 7.14845C14.0049 7.13622 13.9699 7.11513 13.9451 7.10078L11.2569 5.54828C11.1206 5.46854 10.9518 5.46854 10.8151 5.54828L7.53337 7.44333V6.13131C7.53253 6.11781 7.53885 6.10473 7.5494 6.09629L10.2667 4.5286C11.477 3.83041 13.0245 4.24595 13.7223 5.45673C14.0172 5.96804 14.1248 6.56669 14.0248 7.14845ZM6.91575 9.4869L5.77922 8.83088C5.76698 8.82498 5.75897 8.81317 5.75728 8.79967V5.66134C5.75812 4.26409 6.89169 3.13178 8.28894 3.13262C8.88 3.13262 9.45206 3.34019 9.90641 3.71819C9.88575 3.72916 9.85031 3.74898 9.82668 3.76332L7.1385 5.31582C7.00097 5.39388 6.91659 5.53984 6.91743 5.69804L6.91575 9.4869ZM7.53294 8.1563L8.99475 7.31214L10.4565 8.15589V9.8438L8.99475 10.6876L7.53294 9.8438V8.1563Z"/>
+                                            <Image Source="{Binding SelectedModelImageSource}"/>
 
-                                                </Canvas>
-                                            </Viewbox>
-
-                                            <TextBlock Style="{StaticResource SmTextblock500}" Text="GPT-3.5 Turbo"/>
+                                            <TextBlock Style="{StaticResource SmTextblock500}" Text="{Binding SelectedModelName}"/>
 
                                             <Viewbox Width="14" Height="14">
                                                 <Canvas Width="14" Height="14">
@@ -657,8 +697,8 @@
                                     </Border>
                                 </Popup>-->
                                 
-                                <Popup Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
-                                       PlacementTarget="{Binding ElementName=SelectAIModelButton}" VerticalOffset="0" HorizontalOffset="0"
+                                <Popup x:Name="SelectAIModelPopup" Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                                       PlacementTarget="{Binding ElementName=SelectAIModelButton}" VerticalOffset="0" HorizontalOffset="-9"
                                        IsOpen="{Binding IsOpenSelectAIModel}">
 
                                     <local:SelectionModelView/>
@@ -833,12 +873,12 @@
                             <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap0.5}">
                                 <Grid x:Name="AIChatInputGrid">
                                     <TextBlock x:Name="AIChatPreText" Style="{StaticResource AIChatPreText}"
-                                                   Text="Ask me anything, press ‘/’ for prompts..." Grid.Row="0"/>
-                                    <TextBox x:Name="AIChatInputTextBox" Style="{StaticResource AIChatInputTextBox}"
+                                                   Text="Ask me anything..."/>
+                                    <TextBox x:Name="AIChatInputTextBox" Style="{StaticResource AIChatInputTextBox}" SizeChanged="InputTextBox_SizeChanged"
                                                  Text="{Binding AIChatInputMessage, UpdateSourceTrigger=PropertyChanged}"
                                                  AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
                                                  PreviewMouseWheel="AIChatInputTextBox_PreviewMouseWheel"
-                                                 TextChanged="AIChatInputTextBox_TextChanged" >
+                                                 TextChanged="AIChatInputTextBox_TextChanged">
                                         <TextBox.InputBindings>
                                             <KeyBinding Command="{Binding SendChatInputCommand}" Key="Return"/>
                                         </TextBox.InputBindings>
@@ -854,7 +894,8 @@
                                     <Grid Grid.Column="0">
                                         <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap0.5}">
                                             <Grid x:Name="PromptButtonGrid">
-                                                <Button x:Name="PromptButton" Style="{StaticResource AIChatInputButton}">
+                                                <Button x:Name="PromptButton" Style="{StaticResource AIChatInputButton}" 
+                                                        Command="{Binding OpenPromptLibraryCommand}">
                                                     <Button.Content>
                                                         <Viewbox x:Name="PromptIconSVG">
                                                             <Grid>
@@ -873,7 +914,7 @@
                                                        IsOpen="{Binding ElementName=PromptButton, Path=IsMouseOver, Mode=OneWay}">
                                                     <Border Style="{StaticResource UnderMessageBorder}">
                                                         <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                                   Text="Prompt library - Coming soon"/>
+                                                                   Text="Coming soon - Prompt Library - Press '/'"/>
                                                     </Border>
                                                 </Popup>
                                             </Grid>
@@ -894,7 +935,7 @@
                                                        IsOpen="{Binding ElementName=EmailButton, Path=IsMouseOver, Mode=OneWay}">
                                                     <Border Style="{StaticResource UnderMessageBorder}">
                                                         <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                                    Text="Choose model - Coming soon"/>
+                                                                    Text="Coming soon - Mention Bot - Press '@'"/>
                                                     </Border>
                                                 </Popup>
                                             </Grid>
@@ -917,7 +958,7 @@
                                                        IsOpen="{Binding ElementName=VoiceButton, Path=IsMouseOver, Mode=OneWay}">
                                                     <Border Style="{StaticResource UnderMessageBorder}">
                                                         <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                                    Text="Voice Input - Coming soon"/>
+                                                                    Text="Coming soon - Voice Input"/>
                                                     </Border>
                                                 </Popup>
                                             </Grid>
@@ -948,7 +989,7 @@
                                                        IsOpen="{Binding ElementName=AIChatInputAddToolsButton, Path=IsMouseOver, Mode=OneWay}">
                                                     <Border Style="{StaticResource UnderMessageBorder}">
                                                         <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                                   Text="Add Tools - Coming soon"/>
+                                                                   Text="Coming soon"/>
                                                     </Border>
                                                 </Popup>
                                             </Grid>
@@ -994,7 +1035,7 @@
                                                 HorizontalAlignment="Left">
                                    
                                         <Viewbox x:Name="FireIconSVG" Width="9" Height="12">
-                                            <Canvas Width="9" Height="12">
+                                            <Grid>
                                                 <Path Data="M4.125 11.5C6.40317 11.5 8.25 10.125 8.25 7.71875C8.25 6.6875 7.90625 4.96875 6.53125 3.59375C6.70312 4.625 5.67188 4.96875 5.67188 4.96875C6.1875 3.25 4.8125 0.84375 2.75 0.5C2.99554 1.875 3.09375 3.25 1.375 4.625C0.515625 5.3125 0 6.50114 0 7.71875C0 10.125 1.84683 11.5 4.125 11.5ZM4.125 10.8125C2.98591 10.8125 2.0625 10.125 2.0625 8.92188C2.0625 8.40625 2.23438 7.54688 2.92188 6.85938C2.83594 7.375 3.4375 7.71875 3.4375 7.71875C3.17969 6.85938 3.78125 5.48438 4.8125 5.3125C4.68973 6 4.64062 6.6875 5.5 7.375C5.92969 7.71875 6.1875 8.31307 6.1875 8.92188C6.1875 10.125 5.26409 10.8125 4.125 10.8125Z">
                                                     <Path.Fill>
                                                         <LinearGradientBrush StartPoint="8.30806,9.97089" EndPoint="-0.347142,9.64225">
@@ -1003,7 +1044,7 @@
                                                         </LinearGradientBrush>
                                                     </Path.Fill>
                                                 </Path> 
-                                            </Canvas>
+                                            </Grid>
                                         </Viewbox>
 
                                         <TextBlock Style="{StaticResource XsTextblock600}" VerticalAlignment="Center"
@@ -1011,7 +1052,7 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Grid x:Name="UpgradeButtonGrid">
+                                <Grid x:Name="UpgradeButtonGrid" Width="Auto">
                                     <Button x:Name="UpgradeButton" Style="{StaticResource UpgradeButton}"
                                             Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://admin.jarvis.cx/pricing/overview">
                                         <Button.Content>
@@ -1021,10 +1062,10 @@
                                                        Text="Upgrade" Foreground="{StaticResource TailwindPrimary6}"/>
 
                                                 <Viewbox x:Name="RocketIconSVG" Width="12" Height="12">
-                                                    <Canvas Width="12" Height="12">
+                                                    <Grid>
                                                         <Path Fill="#0078D4" Data="M8.61724 7.05185C10.2028 5.27 10.8709 3.83169 11.1202 2.77705C11.2644 2.16711 11.2673 1.69064 11.2295 1.35748C11.2107 1.19128 11.1818 1.06177 11.1561 0.970104C11.1432 0.924297 11.1311 0.888 11.1214 0.861348C11.1154 0.844729 11.109 0.82816 11.1019 0.811955C11.0521 0.699365 10.987 0.650228 10.8601 0.608922C10.8332 0.600185 10.7965 0.589266 10.7502 0.577739C10.6575 0.554676 10.5264 0.529226 10.3584 0.513933C10.0218 0.483288 9.54078 0.493742 8.92853 0.642894C7.87228 0.900208 6.44075 1.5663 4.69248 3.12061L3.04238 3.28428L3.03821 3.28472C2.64201 3.3288 2.27258 3.50663 1.9907 3.78894L0.352846 5.42929C0.24598 5.53631 0.219492 5.69982 0.28708 5.8352C0.354668 5.97058 0.501166 6.04746 0.650778 6.02606L1.9544 5.83954C2.14683 5.81201 2.36158 5.84901 2.61079 5.93039C2.77054 5.98256 2.91149 6.04016 3.06086 6.1012C3.10621 6.11973 3.15277 6.13876 3.20043 6.15787C3.33572 6.71932 3.65506 7.24459 4.077 7.66718C4.49887 8.08968 5.02321 8.40946 5.58368 8.545C5.60275 8.59262 5.62155 8.63872 5.64004 8.68405C5.7012 8.83399 5.75892 8.97549 5.81109 9.13562C5.8924 9.38517 5.92936 9.60025 5.90187 9.793L5.71563 11.0986C5.69426 11.2485 5.77103 11.3952 5.9062 11.4629C6.04138 11.5306 6.20463 11.504 6.3115 11.397L7.94935 9.75666C8.23124 9.47434 8.40879 9.10436 8.45281 8.70755L8.61724 7.05185ZM8.69268 4.50914C8.1442 5.05845 7.3661 5.16978 6.95474 4.75779C6.54338 4.34581 6.65454 3.56652 7.20302 3.01721C7.7515 2.46789 8.5296 2.35657 8.94096 2.76855C9.35232 3.18054 9.24116 3.95982 8.69268 4.50914Z"/>
                                                         <Path Fill="#0078D4" Data="M3.82872 7.91584C4.20091 8.28859 4.62415 8.61017 5.0686 8.8454C4.29972 9.53751 1.68029 10.2399 1.59424 10.1537C1.50739 10.0668 2.10083 7.27396 2.8584 6.59206C3.09631 7.0671 3.43374 7.52026 3.82872 7.91584Z"/>
-                                                    </Canvas>
+                                                    </Grid>
                                                 </Viewbox>
                                             </StackPanel>
                                         </Button.Content>
@@ -1045,9 +1086,9 @@
                                         HorizontalAlignment="Right">
                                 <Grid x:Name="GiftButtonGrid">
                                     <Button x:Name="GiftButton" Style="{StaticResource AIChatInputButton}"
-                                        Width="24" Height="24">
+                                            Width="Auto" Height="Auto">
                                         <Button.Content>
-                                            <Viewbox x:Name="GiftIconSVG">
+                                            <Viewbox x:Name="GiftIconSVG" Width="16" Height="16">
                                                 <Grid>
                                                     <Path Data="M3.3125 2.84375C3.3125 1.54933 4.36183 0.5 5.65625 0.5C6.95067 0.5 8 1.54933 8 2.84375C8 1.54933 9.04933 0.5 10.3438 0.5C11.6382 0.5 12.6875 1.54933 12.6875 2.84375L12.6875 2.84897C12.6875 2.91447 12.6876 3.10219 12.652 3.3125H14.5625C15.0803 3.3125 15.5 3.73223 15.5 4.25V5.1875C15.5 5.70527 15.0803 6.125 14.5625 6.125H1.4375C0.919734 6.125 0.5 5.70527 0.5 5.1875V4.25C0.5 3.73223 0.919733 3.3125 1.4375 3.3125H3.34796C3.31238 3.10219 3.31247 2.91446 3.3125 2.84897L3.3125 2.84375ZM4.31374 3.3125H7.0625V2.84375C7.0625 2.0671 6.4329 1.4375 5.65625 1.4375C4.8796 1.4375 4.25 2.0671 4.25 2.84375C4.25 2.9232 4.25182 3.10016 4.29208 3.24776C4.29924 3.27401 4.30666 3.2955 4.31374 3.3125ZM8.9375 3.3125H11.6863C11.6933 3.2955 11.7008 3.27401 11.7079 3.24776C11.7482 3.10016 11.75 2.9232 11.75 2.84375C11.75 2.0671 11.1204 1.4375 10.3438 1.4375C9.5671 1.4375 8.9375 2.0671 8.9375 2.84375V3.3125Z">
                                                         <Path.Fill>
@@ -1083,16 +1124,16 @@
                                            IsOpen="{Binding ElementName=GiftButton, Path=IsMouseOver, Mode=OneWay}">
                                         <Border Style="{StaticResource UnderMessageBorder}">
                                             <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                       Text="Your gift - Coming soon"/>
+                                                       Text="Invite to get more Tokens"/>
                                         </Border>
                                     </Popup>
                                 </Grid>
 
                                 <Grid x:Name="HeartButtonGrid">
                                     <Button x:Name="HeartButton" Style="{StaticResource AIChatInputButton}"
-                                        Width="24" Height="24">
+                                            Width="Auto" Height="Auto" Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://chromewebstore.google.com/detail/jarvis-ai-chat-gpt-bing-c/kbhaffhbhcfmogkkbfanilniagcefnhi?utm_source=extension">
                                         <Button.Content>
-                                            <Viewbox x:Name="HeartIconSVG">
+                                            <Viewbox x:Name="HeartIconSVG" Width="14" Height="14">
                                                 <Grid>
                                                     <Path Data="M7 2.40454L6.37284 1.75992C4.89904 0.245058 2.19988 0.767983 1.22531 2.67124C0.766967 3.56635 0.663906 4.85841 1.5 6.50788C2.30525 8.09649 3.97921 9.99815 7 12.0703C10.0208 9.99815 11.6947 8.09649 12.5 6.50788C13.3361 4.85841 13.233 3.56635 12.7747 2.67124C11.8001 0.767983 9.10096 0.245058 7.62716 1.75992L7 2.40454ZM7 13.125C-6.41649 4.25986 2.86891 -2.66076 6.84628 1.0002C6.89845 1.04822 6.94971 1.09807 7 1.14975C7.05028 1.09807 7.10154 1.04823 7.15372 1.0002C11.1311 -2.66077 20.4165 4.25985 7 13.125Z" Fill="#94A3B8"/>
                                                 </Grid>
@@ -1106,16 +1147,16 @@
                                            IsOpen="{Binding ElementName=HeartButton, Path=IsMouseOver, Mode=OneWay}">
                                         <Border Style="{StaticResource UnderMessageBorder}">
                                             <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                       Text="Favorite - Coming soon"/>
+                                                       Text="Give us a 5-star"/>
                                         </Border>
                                     </Popup>
                                 </Grid>
 
-                                <Grid x:Name="TwitterButtonGrid">
+                                <!--<Grid x:Name="TwitterButtonGrid">
                                     <Button x:Name="TwitterButton" Style="{StaticResource AIChatInputButton}"
-                                        Width="24" Height="24">
+                                            Width="Auto" Height="Auto">
                                         <Button.Content>
-                                            <Viewbox x:Name="TwitterIconSVG">
+                                            <Viewbox x:Name="TwitterIconSVG" Width="14" Height="14">
                                                 <Grid>
                                                     <Path Data="M10.7383 1.10938H12.7317L8.37665 6.09979L13.5 12.8906H9.48846L6.34648 8.77202L2.75133 12.8906H0.75671L5.41485 7.55281L0.5 1.10938H4.61338L7.45346 4.87394L10.7383 1.10938ZM10.0386 11.6944H11.1432L4.01319 2.24279H2.82786L10.0386 11.6944Z" Fill="#94A3B8"/>
                                                 </Grid>
@@ -1132,13 +1173,13 @@
                                                        Text="X Jarvis - Coming soon"/>
                                         </Border>
                                     </Popup>
-                                </Grid>
+                                </Grid>-->
 
                                 <Grid x:Name="MailButtonGrid">
                                     <Button x:Name="MailButton" Style="{StaticResource AIChatInputButton}"
-                                        Width="24" Height="24">
+                                            Width="Auto" Height="Auto">
                                         <Button.Content>
-                                            <Viewbox x:Name="MailIconSVG">
+                                            <Viewbox x:Name="MailIconSVG" Width="18" Height="18">
                                                 <Grid>
                                                     <Path Data="M0.5 4.75C0.5 3.57639 1.45139 2.625 2.625 2.625H15.375C16.5486 2.625 17.5 3.57639 17.5 4.75V13.25C17.5 14.4236 16.5486 15.375 15.375 15.375H2.625C1.4514 15.375 0.5 14.4236 0.5 13.25V4.75ZM2.625 3.6875C2.0382 3.6875 1.5625 4.1632 1.5625 4.75V4.98046L9 9.44296L16.4375 4.98046V4.75C16.4375 4.1632 15.9618 3.6875 15.375 3.6875H2.625ZM16.4375 6.21954L11.4352 9.22094L16.4375 12.2993V6.21954ZM16.4016 13.5248L10.4087 9.83682L9 10.682L7.59131 9.83682L1.59837 13.5248C1.71948 13.9784 2.13322 14.3125 2.625 14.3125H15.375C15.8668 14.3125 16.2805 13.9784 16.4016 13.5248ZM1.5625 12.2993L6.56483 9.22094L1.5625 6.21954V12.2993Z" Fill="#94A3B8"/>
                                                 </Grid>
@@ -1148,11 +1189,11 @@
                                     </Button>
 
                                     <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
-                                           PlacementTarget="{Binding ElementName=MailButton}" VerticalOffset="-30" HorizontalOffset="-45"
+                                           PlacementTarget="{Binding ElementName=MailButton}" VerticalOffset="-30" HorizontalOffset="-5"
                                            IsOpen="{Binding ElementName=MailButton, Path=IsMouseOver, Mode=OneWay}">
                                         <Border Style="{StaticResource UnderMessageBorder}">
                                             <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                       Text="Feedback - Coming soon"/>
+                                                       Text="Feedback"/>
                                         </Border>
                                     </Popup>
                                 </Grid>
@@ -1161,20 +1202,91 @@
                     </StackPanel>
                 </Border>
 
-                <Popup Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                <Popup x:Name="ChatHistoryPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
                        PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsShowChatHistory}" 
-                       VerticalOffset="0" HorizontalOffset="50" MouseEnter="HistoryPopup_MouseEnter" MouseLeave="HistoryPopup_MouseLeave">
+                       VerticalOffset="0" HorizontalOffset="0" MouseEnter="ChatHistoryPopup_MouseEnter" MouseLeave="ChatHistoryPopup_MouseLeave">
                     <local:ChatHistoryView/>
                 </Popup>
+                
+                <Popup x:Name="OutOfTokenPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
+                       PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsOutOfToken}" 
+                       VerticalOffset="50" HorizontalOffset="0" MouseEnter="OutOfTokenPopup_MouseEnter" MouseLeave="OutOfTokenPopup_MouseLeave">
+                    <Border Style="{StaticResource OutOfTokenBorder}">
+                        <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap4}">
+                            <Grid x:Name="OutOfTokenHeaderGrid">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" Text="Insufficient Tokens"/>
+                                
+                                <Button Grid.Column="1" x:Name="CloseOutOfTokenPopupButton" HorizontalAlignment="Right"
+                                        Style="{StaticResource UnderChatMessageButton}"
+                                        Command="{Binding CloseOutOfTokenPopupCommand}">
+                                    <Button.Content>
+                                        <Viewbox Height="16" Width="16">
+                                            <Grid>
+                                                <Path Fill="#00213B" Data="M2.14645 2.85355C1.95118 2.65829 1.95118 2.34171 2.14645 2.14645C2.34171 1.95118 2.65829 1.95118 2.85355 2.14645L8 7.29289L13.1464 2.14645C13.3417 1.95118 13.6583 1.95118 13.8536 2.14645C14.0488 2.34171 14.0488 2.65829 13.8536 2.85355L8.70711 8L13.8536 13.1464C14.0488 13.3417 14.0488 13.6583 13.8536 13.8536C13.6583 14.0488 13.3417 14.0488 13.1464 13.8536L8 8.70711L2.85355 13.8536C2.65829 14.0488 2.34171 14.0488 2.14645 13.8536C1.95119 13.6583 1.95119 13.3417 2.14645 13.1464L7.29289 8L2.14645 2.85355Z" />
+                                            </Grid>
+                                        </Viewbox>
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+
+                            <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap2}">
+                                <Border Width="296" Height="210" CornerRadius="{StaticResource BorderRadiusXl}">
+                                    <Border.Background>
+                                        <ImageBrush Stretch="Fill" ImageSource="\Assets\Images\out_of_tokens.png"/>
+                                    </Border.Background>
+                                </Border>
+                                
+                                <TextBox Grid.Column="0" Style="{StaticResource MdTextBox600}" Text="Upgrade plans for more tokens"/>
+                                <TextBox Style="{StaticResource SmTextBox400}" 
+                                         Text="Your current daily tokens are insufficient.&#x0a;You can immediately gain an unlimited&#x0a;amount of tokens by upgrading your plan."/>
+
+                            </StackPanel>
+
+                            <Button x:Name="UpgradePlanButton" Style="{StaticResource UpgradePlanButton}" Margin="0 8 0 0"
+                                    Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://admin.jarvis.cx/pricing">
+                                <Button.Content>
+                                    <TextBlock Style="{StaticResource SmTextblock600}" Foreground="White"
+                                               Text="Get more tokens"/>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+
+                <Popup x:Name="promptLibraryPopup" Placement="Center" StaysOpen="False" 
+                       VerticalOffset="0" AllowsTransparency="True" PopupAnimation="Fade"
+                       IsOpen="{Binding IsShowPromptLibrary}">
+                    <promptLibrary:PromptLibraryView/>
+                </Popup>
+                              
             </Grid>
         </Border>
 
-        <!--<Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
+        <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 
                 Visibility="{Binding IsShowChatHistory, Converter={StaticResource VisibilityConverter}}">
             <Border.Effect>
                 <StaticResource ResourceKey="BlurEffect"/>
             </Border.Effect>
-        </Border>-->
+        </Border>
+
+        <Border x:Name="OverlayOutOfToken" Background="{StaticResource DarkenedBackground}" 
+                Visibility="{Binding IsOutOfToken, Converter={StaticResource VisibilityConverter}}">
+            <Border.Effect>
+                <StaticResource ResourceKey="BlurEffect"/>
+            </Border.Effect>
+        </Border>
+
+        <Border x:Name="OverlayPrompt" Background="{StaticResource DarkenedBackground}" 
+        Visibility="{Binding IsShowPromptLibrary, Converter={StaticResource VisibilityConverter}}">
+            <Border.Effect>
+                <StaticResource ResourceKey="BlurEffect"/>
+            </Border.Effect>
+        </Border>
     </Grid>
 
 </UserControl>

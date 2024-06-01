@@ -300,8 +300,8 @@ public class MainViewModel : ViewModelBase
     public RelayCommand HideAIChatSidebarCommand { get; set; }
 
 
-    private ObservableCollection<AIChatMessage> _aIChatMessages;
-    public ObservableCollection<AIChatMessage> AIChatMessages
+    private ObservableCollection<Models.AIChatMessage> _aIChatMessages;
+    public ObservableCollection<Models.AIChatMessage> AIChatMessages
     {
         get { return _aIChatMessages; }
         set
@@ -531,7 +531,7 @@ public class MainViewModel : ViewModelBase
         }
 
         // Reset APIUsage daily
-        Task.Run(async () => await ResetAPIUsageDaily()).Wait();
+        //Task.Run(async () => await ResetAPIUsageDaily()).Wait();
 
         Username = Account.Username;
         EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
@@ -664,11 +664,6 @@ public class MainViewModel : ViewModelBase
             //    PopupDictionaryService.IsShowMenuSelectionActions = false;
             //}
         }
-    }
-
-    private async Task ResetAPIUsageDaily()
-    {
-        await JarvisApi.Instance.APIUsageHandler();
     }
 
     private void UpdateButtonVisibility()

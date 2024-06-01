@@ -15,10 +15,17 @@ using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Media.Audio;
+using System.Reflection;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Windows.Forms;
+using Windows.Globalization;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 public class AIChatSidebarViewModel : ViewModelBase
 {
+    #region Fields
     private double _dotSpeed;
     private bool _isEmptyAIChatInput;
     private string _aIChatInputMessage;
@@ -32,10 +39,18 @@ public class AIChatSidebarViewModel : ViewModelBase
     private bool _isShowChatConversation;
     private bool _isOpenSelectAIModel;
     private bool _isProcessAIChat;
-
-    private GoogleAnalyticService _googleAnalyticService;
-
+    private bool _isOutOfToken;
+    private bool _isShowPromptLibrary;
     public string AddToolsButtonBorder;
+    private string _selectedModelName;
+    private string _selectedModelImageSource;
+
+    private ObservableCollection<AIChatMessage> _aIChatMessages;
+    private GoogleAnalyticService _googleAnalyticService;
+    private ObservableCollection<GenerativeModel> _generativeModels;
+    #endregion
+
+    #region Command
     public RelayCommand OpenJarvisWebsiteCommand { get; set; }
     public RelayCommand ToggleAddToolsCommand { get; set; }
     public RelayCommand SendChatInputCommand { get; set; }
@@ -43,16 +58,12 @@ public class AIChatSidebarViewModel : ViewModelBase
     public RelayCommand CloseJarvisUpdatedCommand { get; set; }
     public RelayCommand ShowChatHistory { get; set; }
     public RelayCommand OpenSelectAIModelCommand { get; set; }
+    public RelayCommand CloseOutOfTokenPopupCommand { get; set; }
     public RelayCommand SelectModel { get; set; }
-    public GoogleAnalyticService GoogleAnalyticService
-    {
-        get { return _googleAnalyticService; }
-        set
-        {
-            _googleAnalyticService = value;
-            OnPropertyChanged();
-        }
-    }
+    public RelayCommand OpenPromptLibraryCommand { get; set; }
+    #endregion
+
+    #region Properties
     public bool IsEmptyAIChatInput
     {
         get
@@ -95,8 +106,6 @@ public class AIChatSidebarViewModel : ViewModelBase
         }
     }
 
-
-
     public string RemainingAPIUsage
     {
         get { return _remainingAPIUsage; }
@@ -106,6 +115,25 @@ public class AIChatSidebarViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    public string SelectedModelName
+    {
+        get { return _selectedModelName; }
+        set
+        {
+            _selectedModelName = value;
+            OnPropertyChanged();
+        }
+    }
+    public string SelectedModelImageSource
+    {
+        get { return _selectedModelImageSource; }
+        set
+        {
+            _selectedModelImageSource = value;
+            OnPropertyChanged();
+        }
+    }
+
     public string SvgToggleIconData
     {
         get { return _svgToggleIconData; }
@@ -171,14 +199,35 @@ public class AIChatSidebarViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    public bool IsOutOfToken
+    {
+        get { return _isOutOfToken; }
+        set
+        {
+            _isOutOfToken = value;
+            OnPropertyChanged();
+        }
+    }
 
-    private List<DispatcherTimer> StopDotTimer { get; set; }
-    public ObservableCollection<AddToolsToggleButton> ToggleButtons { get; set; }
-    public ObservableCollection<AddToolsToggleButton> BasicToggleButtons { get; set; }
-    public ObservableCollection<AddToolsToggleButton> AdvancedToggleButtons { get; set; }
-    public ChatHistoryViewModel ChatHistoryViewModel { get; set; }
+    public bool IsShowPromptLibrary
+    {
+        get { return _isShowPromptLibrary; }
+        set
+        {
+            _isShowPromptLibrary = value;
+            OnPropertyChanged();
+        }
+    }
+    public GoogleAnalyticService GoogleAnalyticService
+    {
+        get { return _googleAnalyticService; }
+        set
+        {
+            _googleAnalyticService = value;
+            OnPropertyChanged();
+        }
+    }
 
-    private ObservableCollection<AIChatMessage> _aIChatMessages;
     public ObservableCollection<AIChatMessage> AIChatMessages
     {
         get { return _aIChatMessages; }
@@ -189,60 +238,107 @@ public class AIChatSidebarViewModel : ViewModelBase
         }
     }
 
+    public ObservableCollection<GenerativeModel> GenerativeModels
+    {
+        get { return _generativeModels; }
+        set
+        {
+            _generativeModels = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private List<DispatcherTimer> StopDotTimer { get; set; }
+    public ObservableCollection<AddToolsToggleButton> ToggleButtons { get; set; }
+    public ObservableCollection<AddToolsToggleButton> BasicToggleButtons { get; set; }
+    public ObservableCollection<AddToolsToggleButton> AdvancedToggleButtons { get; set; }
+    #endregion
+
+    public ChatHistoryViewModel ChatHistoryViewModel { get; set; }
+
     public AIChatSidebarViewModel()
     {
-        Task.Run(async () => await ResetAPIUsageDaily()).Wait();
-        
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
+        try
+        {
+            Task.Run(async () => await ResetAPIUsageDaily()).Wait();
+        }
+        catch { }
 
         OpenJarvisWebsiteCommand = new RelayCommand(ExecuteOpenJarvisWebsiteCommand, o => true);
         ToggleAddToolsCommand = new RelayCommand(ExecuteToggleAddToolsCommand, o => true);
         SendChatInputCommand = new RelayCommand(ExecuteSendChatInputCommand, o => true);
         CloseJarvisUpdatedCommand = new RelayCommand(ExecuteCloseJarvisUpdatedCommand, o => true);
-        NewAIChatWindowCommand = new RelayCommand(o => { AIChatMessages.Clear(); IsShowIntro = true; }, o => true);
+        NewAIChatWindowCommand = new RelayCommand(ExecuteNewAIChatWindowCommand, o => true);
         OpenSelectAIModelCommand = new RelayCommand(o => { IsOpenSelectAIModel = !IsOpenSelectAIModel; }, o => true);
+        CloseOutOfTokenPopupCommand = new RelayCommand(o => { IsOutOfToken = false; }, o => true);
         SelectModel = new RelayCommand(o => { IsOpenSelectAIModel = false; }, o => true);
-        // ShowChatHistory = new RelayCommand(o => { IsShowChatHistory = !IsShowChatHistory; }, o => true);
-        JarvisUpdatedBorderVisibility = true; 
+        //ShowChatHistory = new RelayCommand(o => { IsShowChatHistory = !IsShowChatHistory; ChatHistoryViewModel.UpdateLastUpdatedTime(); }, o => true);
+        //OpenPromptLibraryCommand = new RelayCommand(ExecuteOpenPromptLibraryCommand, o => true);
+        JarvisUpdatedBorderVisibility = false; 
         
         AddToolsButtonVisibility = true;
         ToggleAddToolsCommand.Execute(null);
         InitializeToggleButtons();
-
-        IsShowIntro = true;
-        InitChatMessage();
+        InitGenerativeModels();
 
         ChatHistoryViewModel = new ChatHistoryViewModel();
-        AIChatSidebarEventTrigger.MouseOverHistoryPopup += (sender, e) =>
-        {
-            if (ChatHistoryViewModel.IsTitleEditable)
-            {
-                ChatHistoryViewModel.IsTitleEditable = false;
-            }
-            else if (ChatHistoryViewModel.IsOpenDeletePopup)
-            {
-                ChatHistoryViewModel.IsOpenDeletePopup = false;
-            }
-            else
-            {
-                IsShowChatHistory = false;
-            }
-        };
+        InitChatMessages();
+
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
+        EventSubscribe();
+
+        _isShowPromptLibrary = false;
+    }
+
+    private void ExecuteOpenPromptLibraryCommand(object obj)
+    {
+        IsShowPromptLibrary = !IsShowPromptLibrary;
+    }
+
+    private void EventSubscribe()
+    {
+        AIChatSidebarEventTrigger.SelectConversationChanged += OnSelectConversation;
+
         AIChatSidebarEventTrigger.MouseOverInfoPopup += (sender, e) =>
         {
             ExecuteInfoPopupCommand(-1);
         };
 
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
         EventAggregator.ApiUsageChanged += (sender, e) =>
         {
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
         };
     }
 
+    private void OnSelectConversation(object obj, EventArgs e)
+    {
+        if (_isProcessAIChat) return;
+
+        int idx = (int)obj;
+        if (idx != -1 && ConversationManager.Instance()._selectedIdx != idx)
+        {
+            ChatHistoryViewModel.DeselectConversation();
+            ChatHistoryViewModel.ConversationList[idx].IsSelected = true;
+
+            ConversationManager.Instance().UpdateConversation(ChatHistoryViewModel.ConversationList[idx]);
+            ConversationManager.Instance()._selectedIdx = idx;
+        }
+ 
+        InitChatMessages();
+       
+        if (idx != -1)
+        {
+            IsShowChatHistory = false;
+        }
+    }
+
     private async Task ResetAPIUsageDaily()
     {
-        await JarvisApi.Instance.APIUsageHandler();
+        string dayTodayString = DateTime.Now.Day.ToString();
+        if (dayTodayString != WindowLocalStorage.ReadLocalStorage("RecentDate"))
+        {
+            await JarvisApi.Instance.APIUsageHandler();
+        }
     }
 
     // Extra bullshit
@@ -272,6 +368,60 @@ public class AIChatSidebarViewModel : ViewModelBase
 
         if (idx == -1) return;
         ToggleButtons[idx].IsOpenInfoPopup = !ToggleButtons[idx].IsOpenInfoPopup;
+    }
+
+    private void InitGenerativeModels()
+    {
+        string[] names = ["GPT-3.5 Turbo", "GPT-4o", "GPT-4 Turbo", "Gemini 1.0 Pro", "Gemini 1.5 Pro", "Gemini 1.5 Flash", "Claude 3 Haiku", "Claude 3 Sonnet", "Claude 3 Opus"];
+        string[] fileNames = ["gpt35", "gpt4o", "gpt4", "gemini1", "gemini15", "gemini15", "claude3haiku", "claude3sonnet", "claude3opus"];
+        string[] descriptions = [
+            "Very fast, great for most everyday tasks\nCost",
+            "OpenAI's latest model, best for complex\ntask while maintaining quality.\nCost",
+            "Most capable model, best for complex\ntasks requiring advanced reasoning.\nCost",
+            "Google's most balanced model, perfectly\nblending capability with efficiency.\nCost",
+            "Google's next generation model, best for\ncomplex tasks requiring advanced\nreasoning.\nCost",
+            "Google's latest model, optimized for\nnarrowed or high-frequency tasks where\nthe speed of the model's response time\nmatters the most.\nCost",
+            "Coming soon - Anthropic's most compact \nmodel, designed for near-instant \nresponsiveness and seamless AI \nexperiences that mimic human \ninteractions.\nCost",
+            "Coming soon - Anthropic's most balanced \nmodelbetween intelligence and speed,\nideal for a wide range of tasks\nCost",
+            "Coming soon - Anthropic's most powerful \nmodel, delivering state-of-the-art\nperformance on highly complex tasks and\ndemonstrating fluency and human-like\nunderstanding.\nCost",
+
+        ];
+
+        string[] tokens = ["1", "5", "10", "1", "1", "1", "1", "1", "1"];
+
+        GenerativeModels = new ObservableCollection<GenerativeModel>();
+        for (int idx = 0; idx < names.Length; idx++)
+        {
+            GenerativeModels.Add(new GenerativeModel
+            {
+                Idx = idx,
+                Background = "Transparent",
+                Margin = (idx < names.Length - 1) ? "0 0 0 4" : "0",
+                Name = names[idx],
+                ImageSource = $"\\Assets\\Images\\{fileNames[idx]}.png",
+                PopupDescription = descriptions[idx],
+                Tokens = tokens[idx] != "1" ? $"{tokens[idx]} Tokens" : $"{tokens[idx]} Token",
+                SelectModelCommand = (idx < 7) ? new RelayCommand(ExecuteSelectModelCommand, o => true) : null,
+            });
+        }
+
+        GenerativeModels[0].Background = "#E0EFFE";
+        SelectedModelName = GenerativeModels[0].Name;
+        SelectedModelImageSource = GenerativeModels[0].ImageSource;
+        JarvisApi.Instance.SetTokensPerQuery(1);
+    }
+
+    private async void ExecuteSelectModelCommand(object obj)
+    {
+        int idx = (int)obj;
+        foreach (var model in GenerativeModels) { model.Background = "Transparent"; }
+        GenerativeModels[idx].Background = "#E0EFFE";
+        IsOpenSelectAIModel = false;
+        SelectedModelName = GenerativeModels[idx].Name;
+        SelectedModelImageSource = GenerativeModels[idx].ImageSource;
+
+        int tokens = int.Parse(GenerativeModels[idx].Tokens.Split(" ")[0]);
+        JarvisApi.Instance.SetTokensPerQuery(tokens);
     }
 
     private void InitializeToggleButtons()
@@ -341,26 +491,6 @@ public class AIChatSidebarViewModel : ViewModelBase
         int idx = (int)obj;
         ToggleButtons[idx].IsActive = !ToggleButtons[idx].IsActive;
         StopDotTimer[idx].Start();
-
-        if (idx == 1)
-        {
-
-        }
-        else if (idx == 2)
-        {
-
-        }
-
-        else if (idx == 3)
-        {
-
-        }
-        else if (idx == 4)
-        {
-
-        }
-        //SettingStatus[idx] = (ToggleButtons[idx].IsActive) ? '1' : '0';
-        //WindowLocalStorage.WriteLocalStorage("SettingStatus", SettingStatus.ToString());
     }
     private void Timer_Tick(object sender, EventArgs e, int idx)
     {
@@ -408,11 +538,123 @@ public class AIChatSidebarViewModel : ViewModelBase
         SvgToggleIconData = svgData[idx];
     }
 
-
     // ChatMessage
-    private void InitChatMessage()
+    private void InitChatMessages()
     {
-        AIChatMessages = new ObservableCollection<AIChatMessage>();
+        AIChatMessages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
+        IsShowIntro = false;
+        if (AIChatMessages.Count == 0) IsShowIntro = true;
+        
+        for (int i = 0; i < AIChatMessages.Count; i++)
+        {
+            string message = AIChatMessages[i].Message;
+            int messageIdx = AIChatMessages[i].Idx;
+            bool isUser = AIChatMessages[i].IsUser;
+            AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser, AIChatMessages[i].SelectedModelName, AIChatMessages[i].SelectedModelImageSource);
+        }
+    }
+
+    private AIChatMessage CreateChatMessage(int idx, string message, bool isUser, string selectedModelName, string selectedModelImageSource, bool isLoading = false)
+    {
+        var chatMessage = new AIChatMessage
+        {
+            IsUser = isUser,
+            IsServer = !isUser,
+            IsLoading = isLoading,
+            Message = message,
+            SelectedModelName = selectedModelName,
+            SelectedModelImageSource = selectedModelImageSource,
+            Idx = idx,
+            CopyCommand = new RelayCommand(ExecuteCopyCommand, o => true),
+            RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true),
+            DetailMessage = (isUser) 
+                                ? new ObservableCollection<CodeMessage> { new CodeMessage { TextContent = message, IsVisible = false } } 
+                                : RetrieveCodeSection(message)
+        };
+
+        return chatMessage;
+    }
+
+    private async void ExecuteCopyCommand(object obj)
+    {
+        int idx = (int)obj;
+        try 
+        {
+            System.Windows.Clipboard.Clear();
+            System.Windows.Clipboard.SetDataObject(AIChatMessages[idx].Message);
+        }
+        catch { return;}
+    }
+
+    private async void ExecuteNewAIChatWindowCommand(object obj)
+    {
+        if (_isProcessAIChat) return;
+        ChatHistoryViewModel.DeselectConversation();
+        ConversationManager.Instance()._selectedIdx = -1;
+        InitChatMessages();
+        IsShowIntro = true;
+    }
+
+    
+    private async void ExecuteSendChatInputCommand(object obj)
+    {
+        // If server is processing request/empty input message then cancel execution
+        if (_isProcessAIChat) return;
+        if (string.IsNullOrEmpty(AIChatInputMessage)) return;
+        
+        // User runs out of token, stop
+        if (int.Parse(RemainingAPIUsage) < JarvisApi.Instance.GetTokensPerQuery())
+        {
+            _isProcessAIChat = false;
+            IsOutOfToken = true;
+            return;
+        }
+        
+        _isProcessAIChat = true;
+        IsShowIntro = false; 
+
+        // obj null = add new message to the end, else = update
+        int index = (obj is null) ? AIChatMessages.Count : (int)obj;
+        bool isUpdated = (obj is not null);
+        string curSelectedModelName = SelectedModelName;
+        string curSelectedModelImageSource = SelectedModelImageSource;
+
+        // User send message, update AIChatMessages and DB
+        var sendMessage = CreateChatMessage(index, AIChatInputMessage, true, curSelectedModelName, curSelectedModelImageSource);
+        AIChatMessages.Insert(index, sendMessage);     
+        await ConversationManager.Instance().UpdateChatMessage(sendMessage, isUpdated);
+
+        // Clear InputMessage after sending, save it to tmp
+        string inputChatMessage = AIChatInputMessage;
+        AIChatInputMessage = "";
+
+        // Server is responding, showing loading icons
+        var responseMessage = CreateChatMessage(index + 1, "", false, curSelectedModelName, curSelectedModelImageSource, true);
+        AIChatMessages.Insert(index + 1, responseMessage);
+
+        // Server returns result, update AIChatMessages and DB
+        string? textResponse = await JarvisApi.Instance.ChatHandler(inputChatMessage, AIChatMessages);
+        responseMessage = CreateChatMessage(index + 1, textResponse, false, curSelectedModelName, curSelectedModelImageSource);
+        AIChatMessages.RemoveAt(index + 1);
+        AIChatMessages.Insert(index + 1, responseMessage);
+        await ConversationManager.Instance().UpdateChatMessage(responseMessage, isUpdated);
+
+        // Server finish processing, update APIUsage
+        _isProcessAIChat = false;
+        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
+        
+        ChatHistoryViewModel.InitConversation(ConversationManager.Instance()._selectedIdx);
+    }
+
+    private async void ExecuteRedoCommand(object obj)
+    {
+        if (_isProcessAIChat) return;
+        int idx = (int)obj;
+        AIChatInputMessage = AIChatMessages[idx - 1].Message;
+        idx -= 1;
+        AIChatMessages.RemoveAt(idx);
+        AIChatMessages.RemoveAt(idx);
+        SendChatInputCommand.Execute(idx);
     }
 
     private static ObservableCollection<CodeMessage> RetrieveCodeSection(string inputText)
@@ -426,14 +668,18 @@ public class AIChatSidebarViewModel : ViewModelBase
         {
             string Language = match.Groups["Language"].Value;
             if (Language == "csharp") { Language = "c#"; }
-            if (Language == "cpp") { Language = "c++"; }
+            if (Language == "cpp" || Language == "c") { Language = "c++"; }
+            if (Language == "javascript") { Language = "JavaScript"; }
+            if (Language == "html" || Language == "css" || Language == "xml" || Language == "php")
+            {
+                Language = Language.ToUpper();
+            }
 
             if (!string.IsNullOrEmpty(Language))
             {
                 Language = char.ToUpper(Language[0]) + Language.Substring(1);
             }
-            string content = match.Groups["content"].Value.Trim();
-
+            string content = match.Groups["content"].Value.Trim('\n');
             sections.Add(new CodeMessage { Language = Language, CodeContent = content, IsVisible = true });
         }
 
@@ -461,95 +707,5 @@ public class AIChatSidebarViewModel : ViewModelBase
         }
 
         return sections;
-    }
-
-    private async void ExecuteSendChatInputCommand(object obj)
-    {
-        if (_isProcessAIChat) return;
-
-        int index = (obj is null) ? AIChatMessages.Count : (int)obj;
-        _isProcessAIChat = true;
-
-        IsShowIntro = false;
-        AIChatMessages.Insert(
-            index,
-            new AIChatMessage 
-            {
-                IsUser = true,
-                IsLoading = false,
-                Message = AIChatInputMessage,
-                Idx = index,
-                DetailMessage = new ObservableCollection<CodeMessage>
-                {
-                    new CodeMessage
-                    {
-                        TextContent = AIChatInputMessage,
-                        IsVisible = false,
-                    },
-                },
-            }
-        );
-
-        //AIChatSidebarEventTrigger.PublishChatIdxChanged(index, EventArgs.Empty);
-        string tmpMessage = AIChatInputMessage;
-
-        AIChatMessages.Insert(
-            index + 1,
-            new AIChatMessage
-            {
-                IsServer = true,
-                IsLoading = true,
-                Message = "",
-                Idx = index + 1,
-                DetailMessage = new ObservableCollection<CodeMessage>
-                {
-                    new CodeMessage
-                    {
-                        TextContent = "",
-                        IsVisible = false,
-                    },
-                },
-            }
-        );
-
-
-        //AIChatSidebarEventTrigger.PublishChatIdxChanged(index + 1, EventArgs.Empty);
-        AIChatInputMessage = "";
-
-        int lastIndex = index + 1;
-        string outOfTokenMessage = "```java\nYou have reached your daily token limit. To continue using Jarvis,\nplease log in or upgrade your plan to get additional tokens.\n```";
-        string responseMessage = (RemainingAPIUsage != "0") ? await JarvisApi.Instance.ChatHandler(tmpMessage, AIChatMessages) : outOfTokenMessage;
-
-        AIChatMessages.RemoveAt(lastIndex);
-        AIChatMessages.Insert(
-            index + 1,
-            new AIChatMessage
-            {
-                IsServer = true,
-                CopyCommand = new RelayCommand(o => { Clipboard.SetText(responseMessage); }, o => true),
-                RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true),
-                IsLoading = false,
-                Message = responseMessage,
-                Idx = index + 1,
-                DetailMessage = RetrieveCodeSection(responseMessage),
-            }
-        );
-
-
-        //AIChatSidebarEventTrigger.PublishChatIdxChanged(index + 1, EventArgs.Empty);
-        _isProcessAIChat = false;
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
-    }
-
-
-    private async void ExecuteRedoCommand(object obj)
-    {
-        if (_isProcessAIChat) return;
-        int idx = (int)obj;
-        AIChatInputMessage = AIChatMessages[idx - 1].Message;
-        idx -= 1;
-        AIChatMessages.RemoveAt(idx);
-        AIChatMessages.RemoveAt(idx);
-        SendChatInputCommand.Execute(idx);
     }
 }

@@ -12,6 +12,7 @@ using System.IO;
 using Jarvis_Windows.Sources.MVVM.Models;
 using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 using System.Windows;
+using Windows.Media.Protection.PlayReady;
 
 namespace Jarvis_Windows.Sources.DataAccess.Network;
 
@@ -26,10 +27,14 @@ public sealed class JarvisApi
     private static HttpClient? _client;
     private static string? _apiUrl;
     private static string? _apiHeaderID;
+    public static int _tokensPerQuery;
 
     public JarvisApi(IAuthenticationService authenticationService)
     {
         _client = new HttpClient();
+        /*var token = DependencyInjection.GetService<ITokenLocalService>().GetAccessToken();
+        _client.DefaultRequestHeaders.Add("x-jarvis-guid", _apiHeaderID);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);*/
         _apiUrl = DataConfiguration.ApiUrl;
 
         /*if(AuthenticationService.AuthenState == AUTHEN_STATE.AUTHENTICATED)
@@ -71,16 +76,17 @@ public sealed class JarvisApi
 
     public async Task<string> APIUsageHandler()
     {
-        if (WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining") == "0")
+        /*if (WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining") == "0")
         {
             return "";
-        }
+        }*/
         try
         {
             HttpResponseMessage response;
             if (AuthenticationService.AuthenState == AUTHEN_STATE.AUTHENTICATED)
             {
                 var token = DependencyInjection.GetService<ITokenLocalService>().GetAccessToken();
+                _client.DefaultRequestHeaders.Clear();
                 _client.DefaultRequestHeaders.Add("x-jarvis-guid", _apiHeaderID);
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 response = await _client.GetAsync(_apiUrl + _apiUserUsageEndpoint);
@@ -100,10 +106,10 @@ public sealed class JarvisApi
                 int remainingUsage = responseObject.availableTokens;
                 int dailyUsage = responseObject.totalTokens;
                 string dateString = responseObject.date;
-                //if (DateTime.TryParseExact(dateString, "MM/dd/yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out DateTime dateTime))
-                //{
-                //    WindowLocalStorage.WriteLocalStorage("RecentDate", dateTime.Day.ToString());
-                //}
+                if (DateTime.TryParseExact(dateString, "MM/dd/yyyy HH:mm:ss", null, System.Globalization.DateTimeStyles.None, out DateTime dateTime))
+                {
+                    WindowLocalStorage.WriteLocalStorage("RecentDate", dateTime.Day.ToString());
+                }
 
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
                 WindowLocalStorage.WriteLocalStorage("DailyApiUsage", dailyUsage.ToString());
@@ -129,7 +135,7 @@ public sealed class JarvisApi
         }
     }
 
-    public async Task<string?> ApiHandler(string requestBody, string endPoint)
+    public async Task<string?> ApiHandler(string requestBody, string endPoint, bool isFromChat = false)
     {
         //return "";
         var contentData = new StringContent(requestBody, Encoding.UTF8, "application/json");
@@ -139,6 +145,7 @@ public sealed class JarvisApi
             if (AuthenticationService.AuthenState == AUTHEN_STATE.AUTHENTICATED)
             {
                 var token = DependencyInjection.GetService<ITokenLocalService>().GetAccessToken();
+                _client.DefaultRequestHeaders.Clear();
                 _client.DefaultRequestHeaders.Add("x-jarvis-guid", _apiHeaderID);
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 response = await _client.PostAsync(_apiUrl + endPoint, contentData);
@@ -157,7 +164,13 @@ public sealed class JarvisApi
                 string responseContent = response.Content.ReadAsStringAsync().Result;
                 dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
 
-                int remainingUsage = responseObject.remainingUsage;             
+                int remainingUsage = responseObject.remainingUsage;
+                int curFuckingTokenPerQuery = (isFromChat) ? _tokensPerQuery : 1;
+                
+                remainingUsage = int.Parse(WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")) - _tokensPerQuery;
+                
+                if (remainingUsage < 0) return "";
+
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
 
                 EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
@@ -238,7 +251,7 @@ public sealed class JarvisApi
     {
         List<Dictionary<string, string>> messages = new List<Dictionary<string, string>>();
 
-        for (int i = 1; i < ChatHistory.Count - 2; i++)
+        for (int i = 0; i < ChatHistory.Count - 2; i++)
         {
             string chatMessage = ChatHistory[i].Message;
             string role = (i % 2 == 0) ? "user" : "assistant";
@@ -263,7 +276,7 @@ public sealed class JarvisApi
             }
         });
 
-        return await ApiHandler(requestBody, _chatEndpoint);
+        return await ApiHandler(requestBody, _chatEndpoint, true);
     }
 
 
@@ -295,4 +308,13 @@ public sealed class JarvisApi
     }
 
     // ---------------------------------- Custom AI Actions ---------------------------------- //
+
+    public void SetTokensPerQuery(int tokens)
+    {
+        _tokensPerQuery = tokens;
+    }
+    public int GetTokensPerQuery()
+    {
+        return _tokensPerQuery;
+    }
 }

@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.PromptLibrary.MyPromptView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.PromptLibrary"
+             mc:Ignorable="d" 
+             Height="522" Width="474">
+    <Border CornerRadius="0 0 12 12" Background="White">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="My Prompt View" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Top" 
+                   Margin="0,10,0,0" FontSize="20"/>
+
+            <TextBox x:Name="textBoxSearch" Text="Search">
+            </TextBox>
+    
+            <ScrollViewer Height="430">
+                <ItemsControl ItemsSource="{Binding MyPromptItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Height="34" Width="474" Background="AliceBlue">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="9*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button Grid.Column="0" HorizontalAlignment="Left" Command="{Binding DetailCommand}" 
+                                            CommandParameter="{Binding Index}">
+                                        <Button.Content>
+                                            <TextBlock Text="{Binding Title}" 
+                                               VerticalAlignment="Center" 
+                                               HorizontalAlignment="Left" 
+                                               Margin="10,0,0,0"/>
+                                        </Button.Content>
+                                    </Button>
+
+                                    <StackPanel Orientation="Horizontal" 
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center">
+                                        <Button Content="Edit" 
+                                                Command="{Binding EditCommand}"
+                                                CommandParameter="{Binding Index}"/>
+
+                                        <Button Content="Dele" 
+                                                Command="{Binding DeleteCommand}"
+                                                CommandParameter="{Binding Index}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <StackPanel Margin="0 10" HorizontalAlignment="Center" Orientation="Horizontal">
+                <TextBlock Text="Find more prompt"/>
+
+                <Button Margin="5 0 0 0" Content="Public Prompt" ></Button>
+            </StackPanel>
+        </StackPanel>
+
+    </Border>
+</UserControl>

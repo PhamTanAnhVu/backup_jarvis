@@ -1,8 +1,10 @@
-﻿using Jarvis_Windows.Sources.MVVM.Models;
+﻿using Jarvis_Windows.Sources.DataAccess;
+using Jarvis_Windows.Sources.MVVM.Models;
 using Jarvis_Windows.Sources.Utils.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,9 +27,6 @@ public class ChatHistoryViewModel : ViewModelBase
     private bool _isShowPopup;
     private bool _isNotEmptyChatHistory;
     private bool _isEmptyChatHistory;
-
-    private string[] _favoriteColors;
-    private string[] _favoriteDatas;
     public RelayCommand AIChatHistorySearchSendCommand { get; set; }
     public RelayCommand FilterFavoriteChatCommand { get; set; }
     public RelayCommand CloseEditTitleCommand { get; set; }
@@ -141,7 +140,9 @@ public class ChatHistoryViewModel : ViewModelBase
         {
             if (value == "change")
             {
-                value = (_filterFavoriteColor == _favoriteColors[0]) ? _favoriteColors[1] : _favoriteColors[0];
+                string color0 = DataConfiguration.FilterConversationColor(0);
+                string color1 = DataConfiguration.FilterConversationColor(1);
+                value = (_filterFavoriteColor == color0) ? color1 : color0;
             }
 
             _filterFavoriteColor = value;
@@ -169,6 +170,7 @@ public class ChatHistoryViewModel : ViewModelBase
         set
         {
             _isNotEmptyChatHistory = value;
+            IsEmptyChatHistory = !IsNotEmptyChatHistory;
             OnPropertyChanged();
         }
     }
@@ -194,6 +196,7 @@ public class ChatHistoryViewModel : ViewModelBase
         }
     }
 
+
     public ChatHistoryViewModel()
     {
         InitConversationList();
@@ -203,109 +206,50 @@ public class ChatHistoryViewModel : ViewModelBase
         DeleteCommand = new RelayCommand(ExecuteDeleteCommand, o => true);
         SaveEditTitleCommand = new RelayCommand(ExecuteSaveEditTitleCommand, o => true);
         FilterFavoriteChatCommand = new RelayCommand(ExecuteFilterFavoriteChatCommand, o => true);
-
-        IsNotEmptyChatHistory = (ConversationList.Count != 0);
-        IsEmptyChatHistory = (ConversationList.Count == 0);
     }
 
     private void InitConversationList()
     {
-        _favoriteColors = ["#64748B", "#FACC15"];
-        _favoriteDatas =
-        [
-            "M2.14959 11.1381C2.09124 11.4707 2.41941 11.731 2.70924 11.582L6.00116 9.89008L9.29308 11.582C9.58291 11.731 9.91108 11.4707 9.85273 11.1381L9.23044 7.59095L11.8722 5.07347C12.1191 4.83819 11.9913 4.40802 11.6605 4.36104L7.98667 3.83914L6.34858 0.594229C6.20102 0.301924 5.8013 0.301924 5.65374 0.594229L4.01565 3.83914L0.341789 4.36104C0.0110467 4.40802 -0.116753 4.83819 0.130132 5.07347L2.77188 7.59095L2.14959 11.1381ZM5.82804 9.06196L3.06372 10.4827L3.58442 7.51478C3.60896 7.37487 3.56281 7.2316 3.46236 7.13588L1.28223 5.0583L4.32146 4.62655C4.44709 4.6087 4.5568 4.52846 4.61606 4.41106L6.00116 1.66731L7.38626 4.41106C7.44552 4.52846 7.55523 4.6087 7.68086 4.62655L10.7201 5.0583L8.53996 7.13588C8.43951 7.2316 8.39336 7.37487 8.4179 7.51478L8.93859 10.4827L6.17428 9.06196C6.06509 9.00584 5.93723 9.00584 5.82804 9.06196Z",
-            "M2.70924 11.582C2.41941 11.731 2.09124 11.4707 2.14959 11.1381L2.77188 7.59095L0.130132 5.07347C-0.116753 4.83819 0.0110467 4.40802 0.341789 4.36104L4.01565 3.83914L5.65374 0.594229C5.8013 0.301924 6.20102 0.301924 6.34858 0.594229L7.98667 3.83914L11.6605 4.36104C11.9913 4.40802 12.1191 4.83819 11.8722 5.07347L9.23044 7.59095L9.85273 11.1381C9.91108 11.4707 9.58291 11.731 9.29308 11.582L6.00116 9.89008L2.70924 11.582Z",
-        ];
+        ConversationManager.Instance()._selectedIdx = -1;
+        FilterFavoriteColor = DataConfiguration.FilterConversationColor(0);
+        IsHitTestVisible = true;
 
-        FilterFavoriteColor = _favoriteColors[0];
-        ConversationList = new ObservableCollection<ConversationModel>
-        {
-            new ConversationModel
-            {
-                Title = "1. New Chat",
-                LastMessage = "No thanks for you stupid fucking resume. Fortunately, you have actually uploaded or shared your resume document. Without the actual resume file, I am unable to review and provide feedback on its content, formatting, and structure.",
-
-                LastUpdatedTime = "5 hours ago",
-                IsSelected = true,
-                IsShowConversation = true,
-                FavoriteData = _favoriteDatas[0],
-                FavoriteColor = _favoriteColors[0],
-                SelectConversationCommand = new RelayCommand(ExecuteSelectConversationCommand, o => true),
-                EditTitleCommand = new RelayCommand(ExecuteEditTitleCommand, o => true),
-                MarkFavoriteCommand = new RelayCommand(ExecuteMarkFavoriteCommand, o => true),
-                OpenDeletePopupCommand = new RelayCommand(ExecuteOpenDeletePopupCommand, o => true),
-            },
-
-            new ConversationModel
-            {
-                Title = "2. T1 vs TL MSI 2024 - Bracket Stage",
-                LastMessage = "I am unable to review and provide feedback on its content, formatting In Hadoop, Java is commo",
-                LastUpdatedTime = "5 hours ago",
-                IsSelected = false,
-                IsShowConversation = true,
-                FavoriteData = _favoriteDatas[0],
-                FavoriteColor = _favoriteColors[0],
-                SelectConversationCommand = new RelayCommand(ExecuteSelectConversationCommand, o => true),
-                EditTitleCommand = new RelayCommand(ExecuteEditTitleCommand, o => true),
-                MarkFavoriteCommand = new RelayCommand(ExecuteMarkFavoriteCommand, o => true),
-                OpenDeletePopupCommand = new RelayCommand(ExecuteOpenDeletePopupCommand, o => true),
-            },
-
-            new ConversationModel
-            {
-                Title = "3. Gemini What are you doing bruh ?",
-                LastMessage = "Thank you for providing your resume for review. Unfortunately, you have not actually uploaded or shared your resume document with me. Without the actual resume file, I am unable to review and provide feedback on its content, formatting, and structure.",
-                LastUpdatedTime = "5 hours ago",
-                IsSelected = false,
-                IsShowConversation = true,
-                FavoriteData = _favoriteDatas[0],
-                FavoriteColor = _favoriteColors[0],
-                SelectConversationCommand = new RelayCommand(ExecuteSelectConversationCommand, o => true),
-                EditTitleCommand = new RelayCommand(ExecuteEditTitleCommand, o => true),
-                MarkFavoriteCommand = new RelayCommand(ExecuteMarkFavoriteCommand, o => true),
-                OpenDeletePopupCommand = new RelayCommand(ExecuteOpenDeletePopupCommand, o => true),
-            },
-
-            new ConversationModel
-            {
-                Title = "4. Manipulating Text Colors",
-                LastMessage = "Here is a simple Java code snippet for a Word Count program in Hadoop:",
-                LastUpdatedTime = "25/03/2024",
-                IsSelected = false,
-                IsShowConversation = true,
-                FavoriteData = _favoriteDatas[0],
-                FavoriteColor = _favoriteColors[0],
-                SelectConversationCommand = new RelayCommand(ExecuteSelectConversationCommand, o => true),
-                EditTitleCommand = new RelayCommand(ExecuteEditTitleCommand, o => true),
-                MarkFavoriteCommand = new RelayCommand(ExecuteMarkFavoriteCommand, o => true),
-                OpenDeletePopupCommand = new RelayCommand(ExecuteOpenDeletePopupCommand, o => true),
-            },
-
-            new ConversationModel
-            {
-                Title = "5. Java code for flask in python",
-                LastMessage = "This is a basic WordCount program in Hadoop using Java. You can save this code in a file named",
-                LastUpdatedTime = "7 days ago",
-                IsSelected = false,
-                IsShowConversation = true,
-                FavoriteData = _favoriteDatas[0],
-                FavoriteColor = _favoriteColors[0],
-                SelectConversationCommand = new RelayCommand(ExecuteSelectConversationCommand, o => true),
-                EditTitleCommand = new RelayCommand(ExecuteEditTitleCommand, o => true),
-                MarkFavoriteCommand = new RelayCommand(ExecuteMarkFavoriteCommand, o => true),
-                OpenDeletePopupCommand = new RelayCommand(ExecuteOpenDeletePopupCommand, o => true),
-            },
-
-
-        };
-
+        ConversationList = ConversationManager.Instance().GetAllConversations();
         for (int idx = 0; idx < ConversationList.Count; idx++)
         {
-            ConversationModel conversation = ConversationList[idx];
-            conversation.Idx = idx;
+            InitConversation(idx);
         }
 
-        IsHitTestVisible = true;
+        IsNotEmptyChatHistory = (ConversationList.Count != 0);
+    }
+
+    public void InitConversation(int conversationIdx)
+    {
+        var conversation = ConversationManager.Instance().GetConversation(conversationIdx);
+
+        if (conversation.SelectConversationCommand is null)
+        {
+            conversation.SelectConversationCommand = new RelayCommand(ExecuteSelectConversationCommand, o => true);
+            conversation.EditTitleCommand = new RelayCommand(ExecuteEditTitleCommand, o => true);
+            conversation.MarkFavoriteCommand = new RelayCommand(ExecuteMarkFavoriteCommand, o => true);
+            conversation.OpenDeletePopupCommand = new RelayCommand(ExecuteOpenDeletePopupCommand, o => true);
+        }
+
+        if (conversation.IsSelected)
+        {
+            ConversationManager.Instance()._selectedIdx = conversationIdx;
+        }
+
+        if (conversationIdx >= ConversationList.Count)
+        {
+            ConversationList.Add(conversation);
+        }
+        else
+        {
+            ConversationList[conversationIdx] = conversation;
+        }
+
+        IsNotEmptyChatHistory = (ConversationList.Count != 0);
     }
 
     private void FilterConversation()
@@ -314,7 +258,7 @@ public class ChatHistoryViewModel : ViewModelBase
         foreach (var conversation in ConversationList)
         {
             // Favorite conversations is turned on, this condition will exclude conversations which are not marked as favorite
-            if (FilterFavoriteColor == _favoriteColors[1] && conversation.FavoriteColor == _favoriteColors[0])
+            if (FilterFavoriteColor == DataConfiguration.FilterConversationColor(1) && conversation.FavoriteColor == DataConfiguration.FilterConversationColor(0))
             {
                 continue;
             }
@@ -333,13 +277,13 @@ public class ChatHistoryViewModel : ViewModelBase
 
         foreach (var conversation in ConversationList)
         {
-            if (FilterFavoriteColor == _favoriteColors[0])
+            if (FilterFavoriteColor == DataConfiguration.FilterConversationColor(0))
             {
                 conversation.IsShowConversation = true;
                 continue;
             }
 
-            if (conversation.FavoriteColor == _favoriteColors[0])
+            if (conversation.FavoriteColor == DataConfiguration.FilterConversationColor(0))
             {
                 conversation.IsShowConversation = false;
             }
@@ -350,11 +294,17 @@ public class ChatHistoryViewModel : ViewModelBase
         }
     }
 
+    public void DeselectConversation()
+    {
+        if (ConversationManager.Instance()._selectedIdx == -1) { return; }
+        ConversationList[ConversationManager.Instance()._selectedIdx].IsSelected = false;
+        ConversationManager.Instance().UpdateConversation(ConversationList[ConversationManager.Instance()._selectedIdx]);
+    }
+
     private async void ExecuteSelectConversationCommand(object obj)
     {
         int idx = (int)obj;
-        foreach (var conversation in ConversationList) { conversation.IsSelected = false; }
-        ConversationList[idx].IsSelected = true;
+        AIChatSidebarEventTrigger.PublishSelectConversationChanged(idx, EventArgs.Empty);
     }
     private async void ExecuteEditTitleCommand(object obj)
     {
@@ -370,8 +320,10 @@ public class ChatHistoryViewModel : ViewModelBase
         ConversationList[idx].IsMarkFavorite = !ConversationList[idx].IsMarkFavorite;
         int i = (ConversationList[idx].IsMarkFavorite) ? 1 : 0;
 
-        ConversationList[idx].FavoriteColor = _favoriteColors[i];
-        ConversationList[idx].FavoriteData = _favoriteDatas[i];
+        ConversationList[idx].FavoriteColor = DataConfiguration.FilterConversationColor(i);
+        ConversationList[idx].FavoriteData = DataConfiguration.FilterConversationData(i);
+        
+        ConversationManager.Instance().UpdateConversation(ConversationList[idx]);
         FilterFavoriteChatCommand.Execute("");
     }
 
@@ -394,8 +346,7 @@ public class ChatHistoryViewModel : ViewModelBase
 
     private async void ExecuteDeleteCommand(object obj)
     {
-        string type = (string)obj;
-        if (ConversationIdx == -1)
+        if (ConversationIdx == -1)  // Delete all except favorite conversations
         {
             int idx = 0;
             while (idx < ConversationList.Count)
@@ -403,18 +354,29 @@ public class ChatHistoryViewModel : ViewModelBase
                 if (!ConversationList[idx].IsMarkFavorite)
                 {
                     ConversationList.RemoveAt(idx);
+                    ConversationManager.Instance().DeleteConversation(idx);
+
+                    // Selected conversation is deleted -> set to -1
+                    if (ConversationManager.Instance()._selectedIdx == idx)
+                    {
+                        ConversationManager.Instance()._selectedIdx = -1;
+                    }
                 }
                 else
                 {
+                    // Update selected conversation idx
+                    if (ConversationManager.Instance()._selectedIdx == ConversationList[idx].Idx)
+                    {
+                        ConversationManager.Instance()._selectedIdx = idx;
+                    }
                     ConversationList[idx].Idx = idx;
                     idx++;
                 }
             }
 
             IsOpenDeletePopup = false;
-
             IsNotEmptyChatHistory = (ConversationList.Count != 0);
-            IsEmptyChatHistory = (ConversationList.Count == 0);
+            AIChatSidebarEventTrigger.PublishSelectConversationChanged(-1, EventArgs.Empty); // Get new conversation after deletion
             return;
         }
 
@@ -424,21 +386,65 @@ public class ChatHistoryViewModel : ViewModelBase
         }
 
         ConversationList.RemoveAt(ConversationIdx);
+        if (ConversationManager.Instance()._selectedIdx == ConversationIdx) // Selected conversation is deleted
+        {
+            ConversationManager.Instance()._selectedIdx = -1;
+        }
+        ConversationManager.Instance().DeleteConversation(ConversationIdx);
+       
+        
+        AIChatSidebarEventTrigger.PublishSelectConversationChanged(-1, EventArgs.Empty); // Get new conversation after deletion
+
         for (int i = ConversationIdx; i < ConversationList.Count; i++)
         {
             ConversationList[i].Idx = i;
         }
 
         IsOpenDeletePopup = false;
-
         IsNotEmptyChatHistory = (ConversationList.Count != 0);
-        IsEmptyChatHistory = (ConversationList.Count == 0);
     }
 
     private async void ExecuteSaveEditTitleCommand(object obj)
     {
         ConversationList[ConversationIdx].Title = Title;
+        ConversationManager.Instance().UpdateConversation(ConversationList[ConversationIdx]);
         IsTitleEditable = false;
+    }
+
+    public void UpdateLastUpdatedTime()
+    {
+        for (int idx = 0; idx < ConversationList.Count; idx++)
+        {
+            var conversation = ConversationManager.Instance().GetConversation(idx);
+            DateTime curDateTime = DateTime.Now;
+            TimeSpan timeDifference = curDateTime - conversation.LastUpdatedTimeDT;
+
+            if (timeDifference.TotalSeconds < 60)
+            {
+                conversation.LastUpdatedTime = "a few seconds ago";
+            }
+            else if (timeDifference.TotalMinutes < 60)
+            {
+                int minutes = (int)timeDifference.TotalMinutes;
+                conversation.LastUpdatedTime = minutes == 1 ? "a minute ago" : $"{minutes} minutes ago";
+            }
+            else if (timeDifference.TotalHours < 24)
+            {
+                int hours = (int)timeDifference.TotalHours;
+                conversation.LastUpdatedTime = hours == 1 ? "an hour ago" : $"{hours} hours ago";
+            }
+            else if (timeDifference.TotalDays <= 7)
+            {
+                int days = (int)timeDifference.TotalDays;
+                conversation.LastUpdatedTime = days == 1 ? "a day ago" : $"{days} days ago";
+            }
+            else
+            {
+                conversation.LastUpdatedTime = conversation.LastUpdatedTimeDT.ToString("MMMM dd, yyyy");
+            }
+
+            ConversationList[idx].LastUpdatedTime = conversation.LastUpdatedTime;
+        }
     }
 
 }

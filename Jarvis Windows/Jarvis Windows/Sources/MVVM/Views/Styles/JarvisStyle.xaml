@@ -17,6 +17,7 @@
     </Style>
 
     <Style x:Key="JarvisPrimaryButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Foreground" Value="{StaticResource SolidColorBrushStone200}" />
         <Setter Property="Background" Value="{StaticResource SolidColorBrushStone200}" />
         <Setter Property="BorderBrush" Value="{x:Null}" />
@@ -56,30 +57,8 @@
         </Setter>
     </Style>
 
-    <Style x:Key="AIBubbleButton" TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource TailwindPrimary0.5}"/>
-        <Setter Property="Foreground" Value="{StaticResource TailwindPrimary6}"/>
-        <Setter Property="HorizontalAlignment" Value="Right"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="BorderBrush" Value="White"/>
-        <Setter Property="Padding" Value="10 8 8 10"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="{TemplateBinding Background}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            Padding="{TemplateBinding Padding}"
-                            Height="{TemplateBinding Height}"
-                            CornerRadius="20 0 0 20">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style x:Key="ExtendAIBubbleButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{StaticResource SolidColorBrushSlate700}"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -102,54 +81,6 @@
         </Setter>
     </Style>
     
-    <Style x:Key="SettingAIBubbleButton" TargetType="Button">
-        <Setter Property="Background" Value="#FFF"/>
-        <Setter Property="Foreground" Value="{StaticResource SolidColorBrushSlate700}"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Width" Value="28"/>
-        <Setter Property="Height" Value="28"/>
-        <Setter Property="HorizontalAlignment" Value="Right"/>
-        <Setter Property="Padding" Value="{StaticResource Padding1.5}"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                Padding="{TemplateBinding Padding}"
-                                CornerRadius="20">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource TailwindPrimary1}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="CloseAIBubbleButton" TargetType="Button">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="#FFF"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="{TemplateBinding Background}"
-                            CornerRadius="{StaticResource BorderRadiusLg}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource SolidColorBrushSlate500}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style x:Key="MenuUndoRedoButton" TargetType="Button">
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background">
@@ -233,6 +164,7 @@
     </Style>
     
     <Style x:Key="MenuTopButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush MappingMode="RelativeToBoundingBox" 
@@ -299,6 +231,7 @@
     </Style>
 
     <Style x:Key="JarvisOperationButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="#FFFFFF"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="1.5"/>
@@ -481,6 +414,31 @@
         </Setter>
     </Style>-->
 
+    <Style x:Key="MenuInjectionInputTextBox" BasedOn="{StaticResource SmTextBox400}" TargetType="TextBox">
+        <Setter Property="Foreground" Value="{StaticResource TailwindPrimary9.5}"/>
+        <Setter Property="IsReadOnly" Value="False"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Width" Value="320"/>
+    </Style>
+
+    <Style x:Key="MenuInjectionInputTextBoxPreText" BasedOn="{StaticResource SmTextblock400}" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource SolidColorBrushSlate400}"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Width" Value="320"/>
+        <Setter Property="Opacity" Value="0.7"/>
+        <Setter Property="IsHitTestVisible" Value="False"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsTextEmpty}" Value="True">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsTextEmpty}" Value="False">
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="AskButtonBorder" TargetType="Border">
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsTextEmpty}" Value="True">
@@ -573,6 +531,7 @@
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Foreground" Value="#082041"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -611,6 +570,7 @@
 
 
     <Style x:Key="PopupMenuButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontFamily" Value="sans-serif"/>
@@ -634,6 +594,7 @@
     </Style>
 
     <Style x:Key="PopupMenuButtonPin" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -777,90 +738,6 @@
         </Setter>
     </Style>
 
-    <!--<Style x:Key="ScrollBarThumbVertical" TargetType="{x:Type Thumb}">
-        <Setter Property="OverridesDefaultStyle" Value="true"/>
-        <Setter Property="IsTabStop" Value="false"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Border x:Name="rectangle" Background="#f0f4fa" 
-                        SnapsToDevicePixels="True" Width="6" CornerRadius="4"/>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" TargetName="rectangle" Value="#f0f4fa"/>
-                        </Trigger>
-                        <Trigger Property="IsDragging" Value="true">
-                            <Setter Property="Background" TargetName="rectangle" Value="#f0f4fa"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="ScrollBarThumbHorizontal" TargetType="{x:Type Thumb}">
-        <Setter Property="Visibility" Value="Collapsed"/>
-    </Style>
-
-
-    <Style TargetType="{x:Type ScrollBar}">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ScrollBar}">
-                    <Grid x:Name="Bg" SnapsToDevicePixels="true">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            --><!-- Adjust the row definitions as needed --><!--
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        --><!-- Vertical ScrollBar --><!--
-                        <ScrollBar x:Name="PART_VerticalScrollBar" Grid.Row="0" Visibility="Collapsed"/>
-
-                        --><!-- Horizontal ScrollBar --><!--
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Row="1" CornerRadius="10"/>
-                        <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
-                            <Track.DecreaseRepeatButton>
-                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource RepeatButtonTransparent}" HorizontalAlignment="Left" Width="17"/>
-                            </Track.DecreaseRepeatButton>
-                            <Track.IncreaseRepeatButton>
-                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource RepeatButtonTransparent}"/>
-                            </Track.IncreaseRepeatButton>
-                            <Track.Thumb>
-                                <Thumb Style="{StaticResource ScrollBarThumbVertical}"/>
-                            </Track.Thumb>
-                        </Track>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>-->
-
-
-
-    <Style x:Key="GridIsAPIUsageRemain" TargetType="Grid">
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding IsAPIUsageRemain}" Value="True">
-                <Setter Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding IsAPIUsageRemain}" Value="False">
-                <Setter Property="Visibility" Value="Collapsed"/>
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="GridIsNoAPIUsageRemain" TargetType="Grid">
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding IsNoAPIUsageRemain, Mode=TwoWay}" Value="True">
-                <Setter Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding IsNoAPIUsageRemain, Mode=TwoWay}" Value="False">
-                <Setter Property="Visibility" Value="Collapsed"/>
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
     <Style x:Key="JarvisPrimaryWindowBorder" TargetType="Border">
         <Setter Property="Background">
             <Setter.Value>
@@ -887,6 +764,7 @@
     </Style>
 
     <Style x:Key="NavigateButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{x:Null}" />
         <Setter Property="Template">
@@ -900,7 +778,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{StaticResource PrimaryBrushColor0.5}"/>
+                            <Setter Property="Background" Value="{StaticResource TailwindPrimary0.5}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background">
@@ -919,6 +797,7 @@
     </Style>
 
     <Style x:Key="NavigationExtraButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{x:Null}" />
         <Setter Property="Template">
@@ -948,6 +827,37 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="ProfileButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Width" Value="26"/>
+        <Setter Property="Height" Value="26"/>
+        <Setter Property="Margin" Value="0 12 0 28"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" Background="{TemplateBinding Background}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Height="{TemplateBinding Height}"
+                        Width="{TemplateBinding Width}"
+                        CornerRadius="{StaticResource BorderRadiusMd}">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Border>
+            
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="UnderNavigationBorder" TargetType="Border">
+        <Setter Property="Background" Value="#1C2024"/>
+        <Setter Property="Width" Value="Auto"/>
+        <Setter Property="Height" Value="Auto"/>
+        <Setter Property="Padding" Value="8 4"/>
+        <Setter Property="CornerRadius" Value="{StaticResource BorderRadiusMd}"/>
     </Style>
 
 </ResourceDictionary>

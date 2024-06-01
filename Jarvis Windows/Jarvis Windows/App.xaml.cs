@@ -69,8 +69,11 @@ namespace Jarvis_Windows
                     WindowLocalStorage.WriteLocalStorage("access_token", accessToken);
                     WindowLocalStorage.WriteLocalStorage("refresh_token", refreshToken);
                     AuthenticationService? authService = DependencyInjection.GetService<IAuthenticationService>() as AuthenticationService;
-                    authService.RefreshTokens();
-                    MainViewModel mainViewModel = DependencyInjection.GetService<MainViewModel>();
+                    authService?.RefreshTokens();
+
+                    //TODO: Move to main navigation view
+                    //MainViewModel mainViewModel = DependencyInjection.GetService<MainViewModel>();
+                    MainNavigationViewModel mainViewModel = (MainNavigationViewModel)mainNavigationView.DataContext;
                     Task<Account?> account = authService.GetMe();
                     if (account != null && account.Result != null && account.Result.Username != null)
                     {
@@ -102,7 +105,7 @@ namespace Jarvis_Windows
 
         private void SingleInstanceWatcher()
         {
-            try
+            /*try
             {
                 this._eventWaitHandle = EventWaitHandle.OpenExisting(_uniqueEventName);
                 this._eventWaitHandle.Set();
@@ -145,24 +148,15 @@ namespace Jarvis_Windows
                                 }
                             }
                         }   
-
-                        /*if (Current.MainWindow != null)
-                        {
-                            var mw = Current.MainWindow;
-                            if (mw.WindowState == WindowState.Minimized || mw.Visibility != Visibility.Visible)
-                            {
-                                mw.Show();
-                            }
-                        }*/
                     }));
                 }
             })
-            .Start();
+            .Start();*/
         }
 
         protected void Activate(IActivatedEventArgs e)
         {
-            if (e.Kind == ActivationKind.Protocol)
+            /*if (e.Kind == ActivationKind.Protocol)
             {
                 ProtocolActivatedEventArgs protocolArgs = e as ProtocolActivatedEventArgs;
                 if (protocolArgs != null)
@@ -187,7 +181,7 @@ namespace Jarvis_Windows
                     }
                     DependencyInjection.GetService<MainView>().Show();
                 }
-            }
+            }*/
         }
 
         static void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)

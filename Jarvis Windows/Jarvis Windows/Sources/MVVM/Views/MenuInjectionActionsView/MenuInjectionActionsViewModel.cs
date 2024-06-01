@@ -32,7 +32,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
         private IAuthenticationService? _authenticationService;
         private int? _languageSelectedIndex;
         private bool? _isAPIUsageRemain;
-        private bool? _isNoAPIUsageRemain;
+        private bool? _isOutOfToken;
         private bool? _isActionTranslate;
         private int? _previousCommandIdx;
         private string _authUrl;
@@ -48,6 +48,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
         public RelayCommand RedoCommand { get; set; }
         public RelayCommand UpgradePlanCommand { get; set; }
         public RelayCommand? CopyToClipboardCommand { get; set; }
+        public RelayCommand? CloseOutOfTokenPopupCommand { get; set; }
 
         public string? RemainingAPIUsage
         {
@@ -150,23 +151,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
                 OnPropertyChanged();
             }
         }
-
-        public bool? IsAPIUsageRemain
+        public bool? IsOutOfToken
         {
-            get { return _isAPIUsageRemain; }
+            get { return _isOutOfToken; }
             set
             {
-                _isAPIUsageRemain = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool? IsNoAPIUsageRemain
-        {
-            get { return _isNoAPIUsageRemain; }
-            set
-            {
-                _isNoAPIUsageRemain = value;
+                _isOutOfToken = value;
                 OnPropertyChanged();
             }
         }
@@ -223,8 +213,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
             AuthenService = (AuthenticationService)DependencyInjection.GetService<IAuthenticationService>();
             _ = ResetAPIUsageDaily();
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-            IsAPIUsageRemain = (RemainingAPIUsage != "0 🔥") ? true : false;
-            IsNoAPIUsageRemain = !IsAPIUsageRemain;
+            IsOutOfToken = (RemainingAPIUsage == "0 🔥") ? true : false;
 
             //TEST AUTO RESET API USAGE
             //if (IsAPIUsageRemain == false)
@@ -244,6 +233,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
             UndoCommand = new RelayCommand(ExecuteUndoCommand, o => true);
             RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true);
             UpgradePlanCommand = new RelayCommand(ExecuteUpgradePlanCommand, o => true);
+            CloseOutOfTokenPopupCommand = new RelayCommand(o => { IsOutOfToken = false; }, o => true);
 
             string relativePath = Path.Combine("Appsettings", "Configs", "languages_supported.json");
             string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
@@ -268,6 +258,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
             EventAggregator.ApiUsageChanged += (sender, e) =>
             {
                 RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+                IsOutOfToken = (RemainingAPIUsage == "0 🔥") ? true : false;
             };
         }
 
@@ -283,7 +274,11 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
 
         private async Task ResetAPIUsageDaily()
         {
-            await JarvisApi.Instance.APIUsageHandler();
+            //string dayTodayString = DateTime.Now.Day.ToString();
+            //if (dayTodayString != WindowLocalStorage.ReadLocalStorage("RecentDate"))
+            //{
+            //    await JarvisApi.Instance.APIUsageHandler();
+            //}
         }
 
         private void UpdateButtonVisibility()
@@ -420,6 +415,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
 
         public async void ExecuteAICommand(object obj)
         {
+            if (RemainingAPIUsage == "0 🔥")
+            {
+                IsOutOfToken = true;
+                return;
+            }
+
             string _actionType = (string)obj;
             string _aiAction = "custom";
             try
@@ -464,10 +465,10 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
                 else
                     textFromAPI = await JarvisApi.Instance.AIHandler(textFromElement, _actionType);
 
-                bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-                RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-                IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
-                IsNoAPIUsageRemain = !IsAPIUsageRemain;
+                //bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
+                //RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+                //IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
+                //IsOutOfToken = !IsAPIUsageRemain;
 
 
                 if (textFromAPI == null)
@@ -518,8 +519,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
             {
                 bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
                 RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-                IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
-                IsNoAPIUsageRemain = !IsAPIUsageRemain;
+                IsOutOfToken = ((RemainingAPIUsage == "0 🔥") | previousRemaingAPIUSage) ? true : false;
             }
         }
     }

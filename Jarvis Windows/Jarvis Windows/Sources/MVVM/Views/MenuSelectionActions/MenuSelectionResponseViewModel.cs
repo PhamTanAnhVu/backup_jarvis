@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Windows;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuSelectionActions;
@@ -15,14 +16,14 @@ public class MenuSelectionResponseViewModel : ViewModelBase
 {
     private double _scrollBarHeight;
     private int _languageSelectedIndex;
-    private bool _isAPIUsageRemain;
-    private bool _isNoAPIUsageRemain;
+    private bool _isOutOfToken;
     private bool _isActionTranslate;
     private bool _isSpinningJarvisIcon;
     private string _remainingAPIUsage;
     private string _selectionTextResponse;
     private string _selectionResponseHeaderName;
     private string _selectionResponsePinColor;
+    private bool _isProcessing;
     private AIButton _buttonInfo;
     public RelayCommand TranslateCommand { get; set; }
     public RelayCommand MenuSelectionCommand { get; set; }
@@ -31,6 +32,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
     public RelayCommand ShowMenuSelectionPopupListCommand { get; set; }
     public RelayCommand HideMenuSelectionResponseCommand { get; set; }
     public RelayCommand CopyToClipboardCommand { get; set; }
+    public RelayCommand CloseOutOfTokenPopupCommand { get; set; }
     public List<Language> TranslateLanguages { get; set; }
     public int LanguageSelectedIndex
     {
@@ -111,22 +113,12 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         }
     }
 
-    public bool IsAPIUsageRemain
+    public bool IsOutOfToken
     {
-        get { return _isAPIUsageRemain; }
+        get { return _isOutOfToken; }
         set
         {
-            _isAPIUsageRemain = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool IsNoAPIUsageRemain
-    {
-        get { return _isNoAPIUsageRemain; }
-        set
-        {
-            _isNoAPIUsageRemain = value;
+            _isOutOfToken = value;
             OnPropertyChanged();
         }
     }
@@ -138,8 +130,9 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         HideMenuSelectionResponseCommand = new RelayCommand(ExecuteHideMenuSelectionResponseCommand, o => true);
 
         TranslateCommand = new RelayCommand(ExecuteTranslateCommand, o => true);
-        RedoMenuSelectionCommand = new RelayCommand(o => { MenuSelectionCommand.Execute(_buttonInfo); }, o => true);
-        CopyToClipboardCommand = new RelayCommand(o => { Clipboard.SetText(SelectionTextResponse); }, o => true);
+        RedoMenuSelectionCommand = new RelayCommand(o => { if (_isProcessing) { return; } MenuSelectionCommand.Execute(_buttonInfo); }, o => true);
+        CopyToClipboardCommand = new RelayCommand(ExecuteCopyToClipboardCommand, o => true);
+        CloseOutOfTokenPopupCommand = new RelayCommand(o => { IsOutOfToken = false; }, o => true);
 
         string relativePath = Path.Combine("Appsettings", "Configs", "languages_supported.json");
         string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
@@ -148,7 +141,6 @@ public class MenuSelectionResponseViewModel : ViewModelBase
 
         TranslateLanguages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
         LanguageSelectedIndex = 14;
-        UpdateAPIUsage();
 
         
         MenuSelectionSharedData.MenuSelectionCommandExecuted += (sender, e) =>
@@ -160,15 +152,8 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         EventAggregator.ApiUsageChanged += (sender, e) =>
         {
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+            IsOutOfToken = (RemainingAPIUsage == "0 🔥");
         };
-    }
-
-    private void UpdateAPIUsage()
-    {
-        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-        IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
-        IsNoAPIUsageRemain = !IsAPIUsageRemain;
     }
 
     private async void ExecuteHideMenuSelectionResponseCommand(object obj)
@@ -192,6 +177,17 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             );
 
         }
+    }
+
+    private async void ExecuteCopyToClipboardCommand(object obj)
+    {
+        if (_isProcessing) { return; }
+        try
+        {
+            Clipboard.Clear();
+            Clipboard.SetDataObject(SelectionTextResponse);
+        }
+        catch { return; }
     }
 
     public async void ExecuteMenuSelectionPinCommand(object obj)
@@ -235,6 +231,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         
         try
         {
+            _isProcessing = true;
             ScrollBarHeight = 88;
             SelectionTextResponse = "";
             IsSpinningJarvisIcon = true;
@@ -242,8 +239,21 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             SelectionResponseHeaderName = _buttonInfo.Content;
             PopupDictionaryService.Instance().IsShowMenuSelectionResponse = true;
 
+
+            if (RemainingAPIUsage == "0 🔥")
+            {
+                _isProcessing = false;
+                IsOutOfToken = true;
+                IsSpinningJarvisIcon = false;
+                return;
+            }
+
             var textFromElement = AccessibilityService.GetInstance().CurrentSelectedText;
-            if (textFromElement == "") return;
+            if (textFromElement == "")
+            {
+                _isProcessing = false;
+                return;
+            }
 
             if (_buttonInfo.CommandParameter == "Translate it")
             {
@@ -261,11 +271,10 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             else
                 SelectionTextResponse = await JarvisApi.Instance.AIHandler(textFromElement, _buttonInfo.CommandParameter);
         }
-        catch { }
+        catch { _isProcessing = false; }
         finally
         {
-            UpdateAPIUsage();
-            IsSpinningJarvisIcon = false;
+            IsSpinningJarvisIcon = _isProcessing = false;
             var eventParams = new Dictionary<string, object>
             {
                 { "ai_action", _aiAction },

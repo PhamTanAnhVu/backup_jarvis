@@ -12,6 +12,7 @@
                     xmlns:settings="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Settings"
                     xmlns:profile="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Profile"
                     xmlns:exhautedTokens="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.ExhaustedTokens"
+                    xmlns:promptLibrary="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.PromptLibrary"
                     xmlns:injectionAction="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.InjectionAction">
     <DataTemplate DataType="{x:Type mainView:MainViewModel}">
         <mainView:MainView/>
@@ -56,5 +57,13 @@
     <DataTemplate DataType="{x:Type exhautedTokens:ExhautedTokensViewModel}">
         <exhautedTokens:ExhaustedTokensView/>
     </DataTemplate>
-    
+
+    <DataTemplate DataType="{x:Type promptLibrary:MyPromptViewModel}">
+        <promptLibrary:MyPromptView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type promptLibrary:PublicPromptViewModel}">
+        <promptLibrary:PublicPromptView/>
+    </DataTemplate>
+
 </ResourceDictionary>

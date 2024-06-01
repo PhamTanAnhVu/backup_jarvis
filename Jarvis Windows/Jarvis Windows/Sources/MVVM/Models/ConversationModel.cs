@@ -1,6 +1,8 @@
 ﻿using Jarvis_Windows.Sources.Utils.Core;
+using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,11 +20,20 @@ public class ConversationModel : ViewModelBase
     private bool _isShowConversation;
     private bool _isMarkFavorite;
     private int _idx;
+    private ObservableCollection<AIChatMessage> _chatMessages;
+
+    [Ignore]
     public RelayCommand SelectConversationCommand { get; set; }
+    [Ignore]
     public RelayCommand EditTitleCommand { get; set; }
+    [Ignore]
     public RelayCommand MarkFavoriteCommand { get; set; }
+    [Ignore]
     public RelayCommand OpenDeletePopupCommand { get; set; }
+    [Ignore]
     public RelayCommand DeleteCommand { get; set; }
+
+    public DateTime LastUpdatedTimeDT { get; set; }
     public string Title
     {
         get { return _title; }
@@ -99,6 +110,7 @@ public class ConversationModel : ViewModelBase
         }
     }
 
+    [PrimaryKey]
     public int Idx
     {
         get { return _idx; }
@@ -109,5 +121,14 @@ public class ConversationModel : ViewModelBase
         }
     }
 
-
+    [Ignore]
+    public ObservableCollection<AIChatMessage> ChatMessages
+    {
+        get { return _chatMessages; }
+        set
+        {
+            _chatMessages = value;
+            OnPropertyChanged();
+        }
+    } 
 }

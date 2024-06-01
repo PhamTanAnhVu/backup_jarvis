@@ -162,7 +162,7 @@ public class AccessibilityService
         if (_supportedAppSerice != null)
         {
             if (!_supportedAppSerice.IsSupportedInjectionApp(appName) &&
-                !string.IsNullOrEmpty(appName) && appName != "MenuInjectionActionsView")
+                !string.IsNullOrEmpty(appName) && (appName != "MenuInjectionActionsView" || appName  == "MainNavigationView"))
             {
                 PopupDictionaryService.Instance().ShowJarvisAction(false);
                 PopupDictionaryService.Instance().ShowMenuOperations(false);
@@ -172,12 +172,13 @@ public class AccessibilityService
 
         AutomationElement rootElement = AutomationElement.FromHandle(NativeUser32API.GetForegroundWindow());
         if (rootElement.Current.AutomationId.Equals("MenuInjectionActionsView") ||
-            rootElement.Current.Name.Equals("MenuInjectionActionsView"))
+            rootElement.Current.Name.Equals("MenuInjectionActionsView") ||
+            rootElement.Current.Name.Equals("MainNavigationView"))
             return;
          
         if (newFocusElement != null && newFocusElement != _focusingElement)
         {
-            if (newFocusElement.Current.AutomationId.Equals("Jarvis_Custom_Action_TextBox") ||
+            if (newFocusElement.Current.AutomationId.Equals("MenuInjectionInputTextBox") ||
                 newFocusElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox"))
             {
                 PopupDictionaryService.Instance().ShowJarvisAction(false);

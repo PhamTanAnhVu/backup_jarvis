@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.PromptLibrary.PromptLibraryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.PromptLibrary"
+             xmlns:style="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Styles"
+             xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+             mc:Ignorable="d" 
+             Width="474" Height="auto">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/AIChatStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/ScrollBarStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <UserControl.DataContext>
+        <local:PromptLibraryViewModel/>
+    </UserControl.DataContext>
+    
+    <Border Background="{StaticResource TailwindPrimary0.5}" CornerRadius="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="8*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Height="58" Width="474">
+                <TextBlock Text="Prompt Library" VerticalAlignment="Center"/>
+                <StackPanel Width="60" HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button Width="26" Height="26">
+                        New
+                    </Button>
+
+                    <Button Margin="5 0 0 0" Width="26" Height="26">
+                        X
+                    </Button>
+                </StackPanel>
+                
+            </Grid>
+
+            <Grid Grid.Row="1" Height="58" Width="474">
+                <StackPanel Width="auto" Orientation="Horizontal">
+                    <Button x:Name="btnNavigateMyPrompt" Width="auto" Height="26" 
+                            Command="{Binding NavigatePromptViewCommand}"
+                            CommandParameter="{Binding ElementName=btnNavigateMyPrompt}">
+                        My Prompt
+                    </Button>
+
+                    <Button x:Name="btnNavigatePublicPrompt" Width="auto" Height="26" 
+                            Command="{Binding NavigatePromptViewCommand}"
+                            CommandParameter="{Binding ElementName=btnNavigatePublicPrompt}">
+                        Public Prompt
+                    </Button>
+                </StackPanel>
+
+            </Grid>
+
+            <Grid Grid.Row="3" Height="522" Width="474">
+                <UserControl>
+                    <ContentControl x:Name="currentPromptPage"
+                                    Content="{Binding CurrentPromptPage}" />
+                </UserControl>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>
