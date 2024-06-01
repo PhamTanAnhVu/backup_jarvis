@@ -35,8 +35,7 @@
 
     <!--<Grid Visibility="{Binding IsShowMainNavigation, Converter={StaticResource VisibilityConverter}}">-->
     <Border Background="{StaticResource TailwindPrimary1}" Padding="{StaticResource Padding2}"
-            Visibility="{Binding IsShowMainNavigation, Converter={StaticResource VisibilityConverter}}"
-            CornerRadius="12 0 0 12">
+            Visibility="{Binding IsShowMainNavigation, Converter={StaticResource VisibilityConverter}}">
         <Grid Background="Transparent" Height="auto" Width="auto">
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
