@@ -25,13 +25,13 @@
     </UserControl.Resources>
 
     <Grid x:Name="MainChatSidebarGrid">
-        <Border x:Name="MainChatSidebarBorder" Background="{StaticResource TailwindPrimary1}" CornerRadius="{StaticResource BorderRadiusXl}">
+        <Border x:Name="MainChatSidebarBorder" Background="White" CornerRadius="{StaticResource BorderRadiusXl}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" x:Name="DisplayGrid" Visibility="Hidden">
+                <Grid Grid.Row="0" x:Name="DisplayGrid">
                     <Border x:Name="ExtraBorder" Padding="{StaticResource Padding5}">
                         <ScrollViewer x:Name="ExtraScrollViewer" Padding="{StaticResource PaddingVertical4}" 
                                       VerticalScrollBarVisibility="Hidden"
@@ -1279,7 +1279,7 @@
 
         <Popup x:Name="IsLoadingConversationPopup" Placement="Center" StaysOpen="True" AllowsTransparency="True" Width="200"
                PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" IsOpen="{Binding IsLoadingConversation}">
-            
+
             <Image Source="/Assets/Images/logo-new/logo96x96.png" RenderOptions.BitmapScalingMode="HighQuality"
                                    Width="25" Height="25">
                 <Image.RenderTransformOrigin>
@@ -1309,11 +1309,6 @@
                 </li:LoadingIndicator.RenderTransform>
             </li:LoadingIndicator>-->
 
-        </Popup>
-
-        <Popup x:Name="PromptLibraryPopup" IsOpen="True" 
-               PlacementTarget="{Binding ElementName=MainChatSidebarBorder}" Placement="Center" StaysOpen="True" AllowsTransparency="True" Width="Auto">
-            <promptLibrary:PromptLibraryView/>
         </Popup>
 
         <Border x:Name="Overlay" Background="{StaticResource DarkenedBackground}" 

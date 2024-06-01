@@ -60,23 +60,10 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
                     comboBox.IsDropDownOpen = false;
                     if (_isInit)
                         EventAggregator.PublishLanguageSelectionChanged(this, EventArgs.Empty);
-                    
+
                     _isInit = true;
                 }
             }
-        }
-
-        private static string GetActiveWindowTitle()
-        {
-            const int nChars = 256;
-            StringBuilder Buff = new StringBuilder(nChars);
-            IntPtr handle = GetForegroundWindow();
-
-            if (GetWindowText(handle, Buff, nChars) > 0)
-            {
-                return Buff.ToString();
-            }
-            return String.Empty;
         }
 
         private void MenuInjectionInputTextBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)

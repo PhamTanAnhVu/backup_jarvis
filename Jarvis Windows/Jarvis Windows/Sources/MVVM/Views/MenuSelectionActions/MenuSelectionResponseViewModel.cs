@@ -53,7 +53,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         {
             _scrollBarHeight = value;
             OnPropertyChanged();
-            
+
         }
     }
 
@@ -66,7 +66,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
-    
+
     public string SelectionResponseHeaderName
     {
         get { return _selectionResponseHeaderName; }
@@ -142,7 +142,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         TranslateLanguages = JsonConvert.DeserializeObject<List<Language>>(jsonContent);
         LanguageSelectedIndex = 14;
 
-        
+
         MenuSelectionSharedData.MenuSelectionCommandExecuted += (sender, e) =>
         {
             MenuSelectionCommand.Execute(sender);
@@ -152,20 +152,6 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         EventAggregator.ApiUsageChanged += (sender, e) =>
         {
             RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-            IsOutOfToken = (RemainingAPIUsage == "0 🔥");
-        };
-    }
-
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-        EventAggregator.ApiUsageChanged += (sender, e) =>
-    {
-        _googleAnnalyticService = DependencyInjection.GetService<SendEventGA4>();
-    }
-
-    private void UpdateAPIUsage()
-    {
-        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
             IsOutOfToken = (RemainingAPIUsage == "0 🔥");
         };
     }
@@ -191,17 +177,6 @@ public class MenuSelectionResponseViewModel : ViewModelBase
             );
 
         }
-    }
-
-    private async void ExecuteCopyToClipboardCommand(object obj)
-    {
-        if (_isProcessing) { return; }
-        try
-        {
-            Clipboard.Clear();
-            Clipboard.SetDataObject(SelectionTextResponse);
-        }
-        catch { return; }
     }
 
     private async void ExecuteCopyToClipboardCommand(object obj)
@@ -253,7 +228,7 @@ public class MenuSelectionResponseViewModel : ViewModelBase
         string _aiAction = "custom";
         string _targetLanguage = TranslateLanguages[LanguageSelectedIndex].Value;
         _buttonInfo = (AIButton)obj;
-        
+
         try
         {
             _isProcessing = true;

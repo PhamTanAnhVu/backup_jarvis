@@ -24,8 +24,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Windows.ApplicationModel.Background;
 
-namespace Jarvis_Windows.Sources.MVVM.Views.AIRead;
-
 namespace Jarvis_Windows.Sources.MVVM.Views.AIRead
 {
     /// <summary>
@@ -38,5 +36,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.AIRead
             InitializeComponent();
         }
     }
+}
 
 

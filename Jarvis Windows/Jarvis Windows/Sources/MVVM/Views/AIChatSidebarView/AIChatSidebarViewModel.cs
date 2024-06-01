@@ -285,21 +285,21 @@ public class AIChatSidebarViewModel : ViewModelBase
         OpenSelectAIModelCommand = new RelayCommand(o => { IsOpenSelectAIModel = !IsOpenSelectAIModel; }, o => true);
         CloseOutOfTokenPopupCommand = new RelayCommand(o => { IsOutOfToken = false; }, o => true);
         SelectModel = new RelayCommand(o => { IsOpenSelectAIModel = false; }, o => true);
-        //ShowChatHistory = new RelayCommand(o => { IsShowChatHistory = !IsShowChatHistory; ChatHistoryViewModel.UpdateLastUpdatedTime(); }, o => true);
-        //OpenPromptLibraryCommand = new RelayCommand(ExecuteOpenPromptLibraryCommand, o => true);
+        ShowChatHistory = new RelayCommand(o => { IsShowChatHistory = !IsShowChatHistory; ChatHistoryViewModel.UpdateLastUpdatedTime(); }, o => true);
+        OpenPromptLibraryCommand = new RelayCommand(ExecuteOpenPromptLibraryCommand, o => true);
         JarvisUpdatedBorderVisibility = false; 
         
         AddToolsButtonVisibility = true;
         ToggleAddToolsCommand.Execute(null);
         InitializeToggleButtons();
         InitGenerativeModels();
+        EventSubscribe();
 
         ChatHistoryViewModel = new ChatHistoryViewModel();
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
-        EventSubscribe();
-
+        
         _isShowPromptLibrary = false;
-        IsShowPromptLibrary = true;
+        //IsShowPromptLibrary = true;
     }
 
     private void ExecuteOpenPromptLibraryCommand(object obj)
@@ -329,11 +329,6 @@ public class AIChatSidebarViewModel : ViewModelBase
         {
             await JarvisApi.Instance.APIUsageHandler();
         }
-    }
-
-    private async Task ResetAPIUsageDaily()
-    {
-        await JarvisApi.Instance.APIUsageHandler();
     }
 
     // Extra bullshit
@@ -527,19 +522,119 @@ public class AIChatSidebarViewModel : ViewModelBase
     }
 
     // ChatMessage
-    private void InitChatMessages()
+    private async void OnSelectConversation(object obj, EventArgs e)
     {
-        AIChatMessages = ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx);
-        IsShowIntro = false;
-        if (AIChatMessages.Count == 0) IsShowIntro = true;
-        
-        for (int i = 0; i < AIChatMessages.Count; i++)
+        if (_isProcessAIChat || IsLoadingConversation)
+        {
+            IsShowChatHistory = false;
+            return;
+        }
+
+        int idx = (int)obj;
+
+        if (idx != -1)
+        {
+            IsShowChatHistory = false;
+            if (ConversationManager.Instance()._selectedIdx != idx)
+            {
+                ChatHistoryViewModel.DeselectConversation();
+                ConversationManager.Instance()._selectedIdx = idx;
+                UpdateConversation(idx);
+
+            }
+            else if (AIChatMessages is not null) { return; }
+            await LoadChatMessagesAsync();
+
+            AIChatSidebarEventTrigger.PublishScrollChatToBottom(true, EventArgs.Empty);
+
+        }
+
+        else if (ConversationManager.Instance()._selectedIdx == -1)
+        {
+            IsShowIntro = true;
+            AIChatMessages = new ObservableCollection<AIChatMessage>();
+        }
+    }
+
+    private async Task RenderBatchOfMessages(int L, int R)
+    {
+        for (int i = L; i < R; i++)
         {
             if (i >= AIChatMessages.Count) return;
             string message = AIChatMessages[i].Message;
             int messageIdx = AIChatMessages[i].Idx;
             bool isUser = AIChatMessages[i].IsUser;
-            AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser, AIChatMessages[i].SelectedModelIdx);
+            AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser, AIChatMessages[i].SelectedModelName, AIChatMessages[i].SelectedModelImageSource, false);
+        }
+    }
+
+    private async Task LoadBatch(int start, int end, int initialDelay)
+    {
+        await Task.Delay(initialDelay);
+        int batchSize = 5;
+        for (int i = end; i >= start; i -= batchSize)
+        {
+            int L = (i - batchSize < 0) ? 0 : i - batchSize;
+            int R = i;
+            await RenderBatchOfMessages(L, R);
+            await Task.Delay(400);
+        }
+    }
+
+    private async Task LoadChatMessagesAsync()
+    {
+        IsShowIntro = false;
+        IsLoadingConversation = true;
+        await Task.Delay(500);
+
+        var messages = await Task.Run(() =>
+            ConversationManager.Instance().LoadChatMessages(ConversationManager.Instance()._selectedIdx)
+        );
+
+        AIChatMessages = messages;
+
+        int messageCount = AIChatMessages.Count;
+        int halfSize = messageCount / 2;
+
+        // Faster but lagger, half the time
+        //var tasks = new[]
+        //{
+        //    LoadBatch(halfSize, messageCount, 0),
+        //    LoadBatch(0, halfSize, 00),
+        //};
+        //await Task.WhenAll(tasks);
+
+        // Slower but smoother (a bit lag)
+        await LoadBatch(halfSize, messageCount, 0);
+        await LoadBatch(0, halfSize, 0);
+        //int delayTime = 1500 + 1000 * ((messageCount - 1) / 50);
+        //await Task.Delay(1000);
+        IsLoadingConversation = false;
+
+    }
+
+    /*======================== For testing ========================*/
+    private void DeleteMessages()
+    {
+        if (AIChatMessages is null) return;
+        for (int i = 0; i < 30; i++)
+        {
+            AIChatMessages.RemoveAt(AIChatMessages.Count - 1);
+        }
+    }
+
+    private void AddMoreMessages()
+    {
+        int curConversation = ConversationManager.Instance()._selectedIdx;
+        for (int i = 0; i < 50; i++)
+        {
+            int n = 1;
+            AIChatMessage lastUser = AIChatMessages[n - 1];
+            AIChatMessage lastServer = AIChatMessages[n];
+            AIChatMessages.Add(lastUser);
+            ConversationManager.Instance().UpdateChatMessage(lastUser, false);
+            AIChatMessages.Add(lastServer);
+            ConversationManager.Instance().UpdateChatMessage(lastServer, false);
         }
     }
 

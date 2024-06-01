@@ -14,6 +14,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 
 public class ChatHistoryViewModel : ViewModelBase
 {
+    #region Fields
     private double _opacity;
     private int _conversationIdx;
     private bool _isTitleEditable;
@@ -27,6 +28,10 @@ public class ChatHistoryViewModel : ViewModelBase
     private bool _isShowPopup;
     private bool _isNotEmptyChatHistory;
     private bool _isEmptyChatHistory;
+    private ObservableCollection<ConversationModel> _conversationList;
+    #endregion
+
+    #region Commands
     public RelayCommand AIChatHistorySearchSendCommand { get; set; }
     public RelayCommand FilterFavoriteChatCommand { get; set; }
     public RelayCommand CloseEditTitleCommand { get; set; }
@@ -34,8 +39,9 @@ public class ChatHistoryViewModel : ViewModelBase
     public RelayCommand CloseDeletePopupCommand { get; set; }
     public RelayCommand DeleteCommand { get; set; }
     public RelayCommand SaveEditTitleCommand { get; set; }
+    #endregion
 
-    private ObservableCollection<ConversationModel> _conversationList;
+    #region Properties
     public ObservableCollection<ConversationModel> ConversationList
     {
         get { return _conversationList; }
@@ -195,7 +201,7 @@ public class ChatHistoryViewModel : ViewModelBase
             OnPropertyChanged(nameof(IsEmptyAIChatHistorySearchInput));
         }
     }
-
+    #endregion
 
     public ChatHistoryViewModel()
     {

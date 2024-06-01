@@ -20,7 +20,6 @@ using Point = System.Drawing.Point;
 using Jarvis_Windows.Sources.DataAccess.Network;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using Jarvis_Windows.Sources.DataAccess;
-using Jarvis_Windows.Sources.MVVM.Views.AIRead;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 {
@@ -150,8 +149,8 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             }
         }
 
-        public double SidebarChatWidth 
-        { 
+        public double SidebarChatWidth
+        {
             get => _sidebarChatWidth;
             set
             {
@@ -160,8 +159,8 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             }
         }
         public double SidebarChatHeight
-        { 
-            get => _sidebarChatHeight; 
+        {
+            get => _sidebarChatHeight;
             set
             {
                 _sidebarChatHeight = value;
@@ -247,7 +246,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             LoginCommand = new RelayCommand(ExecuteLoginCommand, o => true);
 
             _viewModels.Add("Chat", new AIChatSidebarViewModel());
-            _viewModels.Add("Read", new AIReadViewModel()); 
+            _viewModels.Add("Read", new AIReadViewModel());
             _viewModels.Add("Search", new AISearchViewModel());
             _viewModels.Add("Write", new AIWriteViewModel());
             _viewModels.Add("Translate", new AITranslateViewModel());
@@ -344,7 +343,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                     if (!string.IsNullOrEmpty(page))
                     {
                         NavigateCommand.Execute(page);
-        }
+                    }
                     break;
             }
         }
@@ -367,35 +366,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                 string targetViewModel = (string)obj;
                 if (_viewModels.ContainsKey(targetViewModel))
                     CurrentViewModel = _viewModels[targetViewModel];
-
-                ChangeNavColor(targetViewModel);
             }
-        }
-
-        private void ChangeNavColor(string buttonName)
-        {
-            for (int idx = 0; idx < NavButtonColors.Count; idx++)
-            {
-                NavButtonColors[idx].C1 = NavButtonColors[idx].C2 = "#64748B";
-                NavBarColors[idx].C1 = NavBarColors[idx].C2 = "Transparent";
-                if (buttonName.ToLower().Contains(NavButtonColors[idx].Name))
-                {
-                    NavButtonColors[idx].C1 = NavBarColors[idx].C1 = "#0078D4";
-                    NavButtonColors[idx].C2 = NavBarColors[idx].C2 = "#9692FF";
-                }
-            }
-
-            OnPropertyChanged(nameof(NavButtonColors));
-            OnPropertyChanged(nameof(NavBarColors));
-        }
-
-        private void ExecuteCloseMainNavigationCommand(object obj)
-        {
-            IsShowMainNavigation = false;
-            IsShowAIChatBubble = true;
-            EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", false), new EventArgs());
-            SidebarVisibility = Visibility.Hidden;
-            MakeSidebarTopmost = false;
         }
 
         private void ChangeNavColor(string buttonName)
@@ -461,15 +432,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.J)
             {
                 EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", !IsShowMainNavigation), new EventArgs());
-                e.Handled = true;
-            }
-        }
-
-        private void KeyboardShortcutEvents(object? sender, System.Windows.Forms.KeyEventArgs e)
-        {
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.J)
-            {
-                EventAggregator.PublishPropertyMessageChanged(new PropertyMessage("IsShowMainNavigation", true), new EventArgs());
                 e.Handled = true;
             }
         }

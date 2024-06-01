@@ -18,77 +18,37 @@ using System.IO;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
 {
-public class MenuInjectionActionsViewModel : ViewModelBase
-{
+    public class MenuInjectionActionsViewModel : ViewModelBase
+    {
         private string? _remainingAPIUsage;
         private string? _mainWindowInputText;
-    private string _filterText;
+        private string _filterText;
         private bool? _isTextEmpty;
-    private bool isExpanded;
+        private bool isExpanded;
         private double? _scrollBarHeight;
         private ObservableCollection<AIButton> _fixedButtons;
         private ObservableCollection<AIButton> _dynamicButtons;
-    private static IAutomationElementValueService? _automationElementValueService;
+        private static IAutomationElementValueService? _automationElementValueService;
         private IAuthenticationService? _authenticationService;
         private int? _languageSelectedIndex;
         private bool? _isAPIUsageRemain;
         private bool? _isOutOfToken;
         private bool? _isActionTranslate;
         private int? _previousCommandIdx;
-    private string _authUrl;
+        private string _authUrl;
         private Visibility _exhaustedGridVisibility;
         private double _horizontalOffset;
         private double _verticalOffset;
         public List<Language>? Languages { get; set; }
-    public RelayCommand ShowMenuOperationsCommand { get; set; }
-    public RelayCommand HideMenuOperationsCommand { get; set; }
-    public RelayCommand AICommand { get; set; }
-    public RelayCommand ExpandCommand { get; set; }
-    public RelayCommand UndoCommand { get; set; }
-    public RelayCommand RedoCommand { get; set; }
-    public RelayCommand UpgradePlanCommand { get; set; }
+        public RelayCommand ShowMenuOperationsCommand { get; set; }
+        public RelayCommand HideMenuOperationsCommand { get; set; }
+        public RelayCommand AICommand { get; set; }
+        public RelayCommand ExpandCommand { get; set; }
+        public RelayCommand UndoCommand { get; set; }
+        public RelayCommand RedoCommand { get; set; }
+        public RelayCommand UpgradePlanCommand { get; set; }
         public RelayCommand? CopyToClipboardCommand { get; set; }
         public RelayCommand? CloseOutOfTokenPopupCommand { get; set; }
-
-        public string? RemainingAPIUsage
-    {
-        get => _navigationService;
-        set
-        {
-            _navigationService = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public PopupDictionaryService PopupDictionaryService
-    {
-        get { return _popupDictionaryService; }
-        set
-        {
-            _popupDictionaryService = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public UIElementDetector AccessibilityService
-    {
-        get { return _accessibilityService; }
-        set
-        {
-            _accessibilityService = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool IsSpinningJarvisIcon
-    {
-        get { return _isSpinningJarvisIcon; }
-        set
-        {
-            _isSpinningJarvisIcon = value;
-            OnPropertyChanged();
-        }
-    }
 
         public string? RemainingAPIUsage
         {
@@ -101,16 +61,6 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
 
         public ObservableCollection<AIButton> FixedButtons
-    {
-        get { return _sendEventGA4; }
-        set
-        {
-            _sendEventGA4 = value;
-            OnPropertyChanged();
-        }
-    }
-
-        public ObservableCollection<AIButton> FixedButtons
         {
             get { return _fixedButtons; }
             set
@@ -121,14 +71,14 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
 
         public ObservableCollection<AIButton> DynamicButtons
-    {
-        get { return _dynamicButtons; }
-        set
         {
-            _dynamicButtons = value;
-            OnPropertyChanged();
+            get { return _dynamicButtons; }
+            set
+            {
+                _dynamicButtons = value;
+                OnPropertyChanged();
+            }
         }
-    }
 
         public string FilterText
         {
@@ -143,159 +93,67 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
 
         public bool? IsTextEmpty
-    {
-        get
         {
-            if (string.IsNullOrWhiteSpace(FilterText)) _isTextEmpty = true;
-            else _isTextEmpty = false;
-            return _isTextEmpty;
+            get
+            {
+                if (string.IsNullOrWhiteSpace(FilterText)) _isTextEmpty = true;
+                else _isTextEmpty = false;
+                return _isTextEmpty;
+            }
+            set
+            {
+                _isTextEmpty = value;
+                OnPropertyChanged();
+            }
         }
-        set
-        {
-            _isTextEmpty = value;
-            OnPropertyChanged();
-        }
-    }
 
         public double? ScrollBarHeight
-    {
-        get { return _scrollBarHeight; }
-        set
         {
-            _scrollBarHeight = value;
-            OnPropertyChanged();
+            get { return _scrollBarHeight; }
+            set
+            {
+                _scrollBarHeight = value;
+                OnPropertyChanged();
+            }
         }
-    }
 
         public int? LanguageSelectedIndex
-    {
-        get { return _textMenuButtons; }
-        set
         {
-            _textMenuButtons = value;
-            OnPropertyChanged();
-        }
-    }
-    public int LanguageSelectedIndex
-    {
-        get { return _languageSelectedIndex; }
-        set
-        {
-            if (_languageSelectedIndex != value)
+            get { return _languageSelectedIndex; }
+            set
             {
-                _languageSelectedIndex = value;
-                OnPropertyChanged();
+                if (_languageSelectedIndex != value)
+                {
+                    _languageSelectedIndex = value;
+                    OnPropertyChanged();
+                }
             }
         }
-    }
 
         public double HorizontalOffset
-    {
-            get => _horizontalOffset;
-        set
         {
+            get => _horizontalOffset;
+            set
+            {
                 _horizontalOffset = value;
                 Debug.WriteLine("HorizontalOffset = " + HorizontalOffset);
-            OnPropertyChanged();
+                OnPropertyChanged();
+            }
         }
-    }
 
         public double VerticalOffset
-    {
-            get => _verticalOffset;
-        set
         {
+            get => _verticalOffset;
+            set
+            {
                 _verticalOffset = value;
                 Debug.WriteLine("VerticalOffset = " + VerticalOffset);
-            OnPropertyChanged();
+                OnPropertyChanged();
+            }
         }
-    }
         public bool? IsOutOfToken
-    {
+        {
             get { return _isOutOfToken; }
-        set
-        {
-                _isOutOfToken = value;
-            OnPropertyChanged();
-        }
-    }
-
-        public bool? IsActionTranslate
-    {
-        get { return _aIChatMessages; }
-        set
-        {
-            _aIChatMessages = value;
-            OnPropertyChanged();
-        }
-    }
-    public bool IsTextEmptyAIChat
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(AIChatMessageInput)) _isTextEmptyAIChat = true;
-            else _isTextEmptyAIChat = false;
-            return _isTextEmptyAIChat;
-        }
-        set
-        {
-            _isTextEmptyAIChat = value;
-            OnPropertyChanged();
-        }
-    }
-
-        public string AIChatMessageInput
-        {
-            get { return _aIChatMessageInput; }
-            set
-            {
-                _aIChatMessageInput = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(IsTextEmptyAIChat));
-            }
-        }
-
-        public string UsernameFirstLetter
-        {
-            get { return _usernameFirstLetter; }
-            set
-            {
-                _usernameFirstLetter = value;
-                OnPropertyChanged();
-            }
-        }
-        public string Username
-        {
-            get { return _username; }
-            set
-            {
-                _username = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool UsernameLogoVisibility
-        {
-            get { return _usernameLogoVisibility; }
-            set
-            {
-                _usernameLogoVisibility = value;
-                OnPropertyChanged();
-            }
-        }
-        public double ChatPanel_Height
-        {
-            get { return _chatPanel_Height; }
-            set
-            {
-                _chatPanel_Height = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool IsAPIUsageRemain
-        {
-            get { return _isAPIUsageRemain; }
             set
             {
                 _isOutOfToken = value;
@@ -314,45 +172,26 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
 
         public int? PreviousCommandIdx
-    {
-        get { return _previousCommandIdx; }
-        set
         {
-            _previousCommandIdx = value;
-            OnPropertyChanged();
+            get { return _previousCommandIdx; }
+            set
+            {
+                _previousCommandIdx = value;
+                OnPropertyChanged();
+            }
         }
-    }
 
         public static IAutomationElementValueService? AutomationElementValueService
-    {
-        get => _automationElementValueService;
-        set => _automationElementValueService = value;
-    }
-    public Account Account
-    {
-        get => _account;
-        set
         {
-            _account = value;
-            OnPropertyChanged();
+            get => _automationElementValueService;
+            set => _automationElementValueService = value;
         }
-    }
 
         public IAuthenticationService? AuthenService
-    {
-        get => _authenticationService;
-        set => _authenticationService = value;
-    }
-
-        public Visibility ExhaustedGridVisibility
-    {
-            get => _exhaustedGridVisibility;
-        set
         {
-                _exhaustedGridVisibility = value;
-            OnPropertyChanged();
+            get => _authenticationService;
+            set => _authenticationService = value;
         }
-    }
 
         public Visibility ExhaustedGridVisibility
         {
@@ -364,19 +203,19 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             }
         }
 
-    public MenuInjectionActionsViewModel()
-    {
+        public MenuInjectionActionsViewModel()
+        {
             _filterText = string.Empty;
             _fixedButtons = new ObservableCollection<AIButton>();
             _dynamicButtons = new ObservableCollection<AIButton>();
-        
+
             AutomationElementValueService = (AutomationElementValueService)DependencyInjection.GetService<IAutomationElementValueService>();
             AuthenService = (AuthenticationService)DependencyInjection.GetService<IAuthenticationService>();
             _ = ResetAPIUsageDaily();
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
             IsOutOfToken = (RemainingAPIUsage == "0 🔥") ? true : false;
 
-        //TEST AUTO RESET API USAGE
+            //TEST AUTO RESET API USAGE
             //if (IsAPIUsageRemain == false)
             //{
             //    WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
@@ -392,12 +231,7 @@ public class MenuInjectionActionsViewModel : ViewModelBase
 
             UndoCommand = new RelayCommand(ExecuteUndoCommand, o => true);
             RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true);
-
-            //TextMenuAICommand = new RelayCommand(ExecuteTextMenuAICommand, o => true);
-            //ShowTextMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
-            //HideTextMenuAPICommand = new RelayCommand(ExecuteHideTextMenuAPICommand, o => true);
-
-        UpgradePlanCommand = new RelayCommand(ExecuteUpgradePlanCommand, o => true);
+            UpgradePlanCommand = new RelayCommand(ExecuteUpgradePlanCommand, o => true);
             CloseOutOfTokenPopupCommand = new RelayCommand(o => { IsOutOfToken = false; }, o => true);
 
             string relativePath = Path.Combine("Appsettings", "Configs", "languages_supported.json");
@@ -419,33 +253,23 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             catch { }
 
             InitializeButtons();
-            InitializeButtonsTextMenu();
 
             EventAggregator.ApiUsageChanged += (sender, e) =>
-        {
+            {
                 RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
                 IsOutOfToken = (RemainingAPIUsage == "0 🔥") ? true : false;
-        };
-
-            //_globalMouseHook = Hook.GlobalEvents();
-            //_globalMouseHook.MouseDoubleClick += MouseDoubleClicked;
-            //_globalMouseHook.MouseDragFinished += MouseDragFinished;
-            //_globalMouseHook.MouseClick += MouseClicked;
-
-            EventAggregator.MouseOverAppUIChanged += (sender, e) => {
-                _isMouseOver_AppUI = (sender != null) ? (bool)sender : false;
             };
         }
 
         private void InitialCommands()
-    {
+        {
             ShowMenuOperationsCommand = new RelayCommand(ExecuteShowMenuOperationsCommand, o => true);
             HideMenuOperationsCommand = new RelayCommand(ExecuteHideMenuOperationsCommand, o => true);
             AICommand = new RelayCommand(ExecuteAICommand, o => true);
             ExpandCommand = new RelayCommand(ExecuteExpandCommand, o => true);
             UndoCommand = new RelayCommand(ExecuteUndoCommand, o => true);
             RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true);
-            }
+        }
 
         private async Task ResetAPIUsageDaily()
         {
@@ -454,12 +278,6 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             //{
             //    await JarvisApi.Instance.APIUsageHandler();
             //}
-        }
-    }
-
-        private async Task ResetAPIUsageDaily()
-        {
-            await JarvisApi.Instance.APIUsageHandler();
         }
 
         private void UpdateButtonVisibility()
@@ -531,73 +349,62 @@ public class MenuInjectionActionsViewModel : ViewModelBase
         }
 
         private void OnLanguageSelectionChanged(object? sender, EventArgs e)
-    {
-        EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
-    }
-
-        private void OnLanguageSelectionChanged(object sender, EventArgs e)
         {
             AICommand.Execute("Translate it");
         }
 
-    private void ExecuteHideMenuOperationsCommand(object obj)
-    {
+        private void ExecuteHideMenuOperationsCommand(object obj)
+        {
             PopupDictionaryService.Instance().IsShowMenuOperations = false;
             PopupDictionaryService.Instance().ShowJarvisAction(true);
         }
-    }
 
-    private void ExecuteQuitAppCommand(object obj)
-    {
-        Process.GetCurrentProcess().Kill();
-        Task.Run(async () =>
+        private void ExecuteQuitAppCommand(object obj)
         {
+            Process.GetCurrentProcess().Kill();
+            Task.Run(async () =>
+            {
                 await Task.Delay(0);
                 await GoogleAnalyticService.Instance().SendEvent("quit_app");
-        });
-    }
+            });
+        }
 
-    private void ExecuteUndoCommand(object obj)
-    {
+        private void ExecuteUndoCommand(object obj)
+        {
             AutomationElementValueService?.Undo(AccessibilityService.GetInstance().GetFocusingElement());
         }
-        catch { }
-        finally
+        private void ExecuteRedoCommand(object obj)
         {
-        }
-    }
-    private void ExecuteRedoCommand(object obj)
-    {
             AutomationElementValueService?.Redo(AccessibilityService.GetInstance().GetFocusingElement());
-    }
+        }
 
-    private async void ExecuteCheckUpdate()
-    {
+        private async void ExecuteCheckUpdate()
+        {
             await GoogleAnalyticService.Instance().CheckVersion();
-    }
-    private async void ExecuteGetUserGeoLocation()
-    {
+        }
+        private async void ExecuteGetUserGeoLocation()
+        {
             await GoogleAnalyticService.Instance().GetUserGeoLocation();
-    }
+        }
 
-    private async void ExecuteSendEventOpenMainWindow()
-    {
+        private async void ExecuteSendEventOpenMainWindow()
+        {
             await GoogleAnalyticService.Instance().SendEvent("open_main_window");
-    }
+        }
 
         public async void ExecuteShowMenuOperationsCommand(object? obj)
+        {
+            await Task.Run(async () =>
             {
-                await Task.Run(async () =>
-                {
                 await Task.Delay(0);
                 await GoogleAnalyticService.Instance().SendEvent("open_input_actions");
-                });
-            }
+            });
+        }
 
         private void ExecuteExpandCommand(object parameter)
-    {
-        isExpanded = !isExpanded;
-        DynamicButtons[1].Visibility = !isExpanded;
+        {
+            isExpanded = !isExpanded;
+            DynamicButtons[1].Visibility = !isExpanded;
 
             for (int i = 2; i < DynamicButtons.Count; i++)
                 DynamicButtons[i].Visibility = isExpanded;
@@ -605,37 +412,37 @@ public class MenuInjectionActionsViewModel : ViewModelBase
             UpdateButtonVisibility();
         }
 
-    public async void ExecuteAICommand(object obj)
-    {
+        public async void ExecuteAICommand(object obj)
+        {
             if (RemainingAPIUsage == "0 🔥")
             {
                 IsOutOfToken = true;
                 return;
             }
 
-        string _actionType = (string)obj;
-        string _aiAction = "custom";
-        try
-        {
-            bool _fromWindow = false;
-            HideMenuOperationsCommand.Execute(null);
+            string _actionType = (string)obj;
+            string _aiAction = "custom";
+            try
+            {
+                bool _fromWindow = false;
+                HideMenuOperationsCommand.Execute(null);
                 InjectionActionViewModel.StartSpinJarvisIconCommand?.Execute(null);
                 PopupDictionaryService.Instance().ShowJarvisAction(true);
 
-            var textFromElement = "";
-            var textFromAPI = "";
-            try
-            {
+                var textFromElement = "";
+                var textFromAPI = "";
+                try
+                {
                     textFromElement = (String.IsNullOrEmpty(AccessibilityService.GetInstance().CurrentSelectedText)) ?
                         AccessibilityService.GetInstance().GetTextFromFocusingEditElement() :
                         AccessibilityService.GetInstance().CurrentSelectedText;
                     Debug.WriteLine($"?????? TEXT FROM ELEMENT {textFromElement}");
-            }
-            catch
-            {
+                }
+                catch
+                {
                     //textFromElement = MainWindowInputText;
-                _fromWindow = true;
-            }
+                    _fromWindow = true;
+                }
 
                 if (_actionType == "Translate it")
                 {
@@ -663,24 +470,25 @@ public class MenuInjectionActionsViewModel : ViewModelBase
                 //IsOutOfToken = !IsAPIUsageRemain;
 
 
-            if (textFromAPI == null)
-            {
+                if (textFromAPI == null)
+                {
                     Debug.WriteLine($"?????? {ErrorConstant.translateError}");
-                return;
-            }
+                    return;
+                }
 
 
                 if (_fromWindow != true) { AccessibilityService.GetInstance().SetValueForFocusingEditElement(textFromAPI ?? ErrorConstant.translateError); }
-                else { 
+                else
+                {
                     //MainWindowInputText = textFromAPI;
                 }
                 AutomationElementValueService?.StoreAction(AccessibilityService.GetInstance().GetFocusingElement(), textFromElement);
-        }
-        catch { }
-        finally
-        {
+            }
+            catch { }
+            finally
+            {
                 InjectionActionViewModel.StopSpinJarvisIconCommand?.Execute(null);
-            var eventParams = new Dictionary<string, object>
+                var eventParams = new Dictionary<string, object>
             {
                 { "ai_action", _aiAction }
             };
@@ -691,284 +499,26 @@ public class MenuInjectionActionsViewModel : ViewModelBase
                     eventParams.Add("ai_action_custom", _actionType);
 
                 await GoogleAnalyticService.Instance().SendEvent("do_ai_action", eventParams);
-    }
-
-    private void RetrieveUserInfo()
-    {
-        Account.Username = WindowLocalStorage.ReadLocalStorage("Username");
-        Account.Email = WindowLocalStorage.ReadLocalStorage("Email");
-        Account.Role = WindowLocalStorage.ReadLocalStorage("Role");
-        Username = (Account.Role == "anonymous") ? "Login" : Account.Username;
-        UsernameFirstLetter = (Account.Role != "anonymous") ? Username[0].ToString() : "";
-        bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 ??");
-        RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} ??";
-        IsAPIUsageRemain = ((RemainingAPIUsage != "0 ??") | previousRemaingAPIUSage) ? true : false;
-        IsNoAPIUsageRemain = !IsAPIUsageRemain;
-    }
+            }
+        }
         public void ExecuteUpgradePlanCommand(object obj)
+        {
+            string websiteUrl = _authUrl;
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
             {
-                EventAggregator.PublishSettingVisibilityChanged(true, EventArgs.Empty);
-                return;
-            }
-
-                //await AuthenService.SignOut();
-                //await AuthenService.SignIn("aa@gmail.com", "vudet11Q");
-                //string token = WindowLocalStorage.ReadLocalStorage("access_token");
-                //Account = await AuthenService.GetMe();
-                //UsernameFirstLetter = Account.Username[0].ToString();
-                //Username = Account.Username;
-                //_ = await JarvisApi.Instance.APIUsageHandler();
-                //bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-                //RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-                //IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
-                //IsNoAPIUsageRemain = !IsAPIUsageRemain;
-                //EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
-
-                string websiteUrl = _authUrl;
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = websiteUrl,
-                    UseShellExecute = true
-                });
-
-            }
-            catch (Exception)
-            { }
-        }
-
-        private async void ExecuteLogoutCommand(object obj)
-        {
-            Account.Email = "";
-            Account.Role = "anonymous";
-            Account.Username = "Login";
-            UsernameFirstLetter = "";
-
-            await AuthenService.SignOut();
-            await JarvisApi.Instance.APIUsageHandler();
-
-            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-            IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
-            IsNoAPIUsageRemain = !IsAPIUsageRemain;
-
-
-            EventAggregator.PublishLoginStatusChanged("SettingWindow", EventArgs.Empty);
-        }
-
-        public async void ExecuteShowAIChatSidebarCommand(object obj)
-        {
-            PopupDictionaryService.Instance().ShowAIChatSidebar(true);
-            PopupDictionaryService.Instance().ShowAIChatBubble(false);
-            await SendEventGA4.SendEvent("open_sidebar_chat");
-        }
-
-        private async void ExecuteHideAIChatSidebarCommand(object obj)
-        {
-            PopupDictionaryService.Instance().ShowAIChatSidebar(false);
-            PopupDictionaryService.Instance().ShowAIChatBubble(true);
-            // AIChatMessagesClear();
-        }
-
-        void AIChatMessagesClear()
-        {
-            AIChatMessages.Clear();
-            AIChatMessages.Add(new AIChatMessage
-            {
-                // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
-                IsUser = false,
-                IsJarvis = true,
-                Message = "Hi, I am Jarvis, your powerful AI assistant. How can I help you?",
-                IsLoading = false,
-                IsBorderVisible = true
+                FileName = websiteUrl,
+                UseShellExecute = true
             });
-        }
-
-        private async void ExecuteAIChatSendCommand(object obj)
-        {
-            if (string.IsNullOrEmpty(AIChatMessageInput) || _isExecutingAIChatMessage || RemainingAPIUsage == "0 🔥") return;
-
-            _isExecutingAIChatMessage = true;
-            AIChatMessages.Add(new AIChatMessage
-            {
-                // ImageSource = "../../../../Assets/Images/pencil.png",
-                IsUser = true,
-                IsJarvis = false,
-                Message = AIChatMessageInput,
-                IsLoading = false,
-                IsBorderVisible = false
-            });
-
-            string tmpMessage = AIChatMessageInput;
-
-            AIChatMessages.Add(new AIChatMessage
-            {
-                // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
-                IsUser = false,
-                IsJarvis = true,
-                Message = "",
-                IsLoading = true,
-                IsBorderVisible = true
-            });
-
-
-            AIChatMessageInput = "";
-
-            int lastIndex = AIChatMessages.Count - 1;
-            string responseMessage = await JarvisApi.Instance.ChatHandler(tmpMessage, AIChatMessages);
-
-            AIChatMessages.RemoveAt(lastIndex);
-            AIChatMessages.Add(new AIChatMessage
-            {
-                // ImageSource = "../../../../Assets/Images/jarvis_logo.png",
-                IsUser = false,
-                IsJarvis = true,
-                Message = responseMessage,
-                IsLoading = false,
-                IsBorderVisible = true
-            });
-
-            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
-            IsAPIUsageRemain = ((RemainingAPIUsage != "0 🔥") | previousRemaingAPIUSage) ? true : false;
-            IsNoAPIUsageRemain = !IsAPIUsageRemain;
-            _isExecutingAIChatMessage = false;
-
-            await SendEventGA4.SendEvent("send_chat_message");
-        }
-
-        private async void MouseDoubleClicked(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            return;
-            IDataObject tmpClipboard = System.Windows.Clipboard.GetDataObject();
-            System.Windows.Clipboard.Clear();
-            await Task.Delay(50);
-
-            // Send Ctrl+C, which is "copy"
-            System.Windows.Forms.SendKeys.SendWait("^c");
-
-            await Task.Delay(50);
-
-            try
-            {
-                if (System.Windows.Clipboard.ContainsText())
-                {
-                    string text = System.Windows.Clipboard.GetText();
-                    AccessibilityService.GetInstance().CurrentSelectedText = text;
-                    if (PopupDictionaryService.Instance().IsShowPinTextMenuAPI && PopupDictionaryService.Instance().IsShowTextMenuAPI)
-                    {
-                        PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
-                        return;
-                    }
-                    PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
-                    await SendEventGA4.SendEvent("inject_selection_actions");
-                }
-                else
-                {
-                    System.Windows.Clipboard.SetDataObject(tmpClipboard);
-                }
-            }
-            catch { }
-        }
-
-        private async Task<IDataObject?> RetryGetClipboardObject()
-        {
-            IDataObject? tmpClipboard = null;
-            int retries = 10;
-            while (retries > 0)
-            {
-                try
-                {
-                    tmpClipboard = System.Windows.Clipboard.GetDataObject();
-                    break;
-                }
-                catch (System.Runtime.InteropServices.COMException)
-                {
-                    if (retries == 0)
-                    {
-                        // rethrow the exception if no retries are left
-                        throw;
-                    }
-                    // wait for some time and retry
-                    await Task.Delay(0);
-                    retries--;
-                }
-            }
-            return tmpClipboard;
-        }
-
-        static System.Windows.Point _lastMousePoint = new System.Windows.Point();
-        private async void MouseDragFinished(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            if (_isMouseOver_AppUI)
-            {
-                PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
-                return;
-            }
-
-            System.Windows.Point currentMousePoint = new System.Windows.Point(e.X, e.Y);
-            double distance = (currentMousePoint - _lastMousePoint).Length;
-            if (distance < 5)
-            {
-                _lastMousePoint = currentMousePoint;
-                return;
-            }
-            _lastMousePoint = currentMousePoint;
-
-            IDataObject? tmpClipboard = RetryGetClipboardObject().Result;
-            if (tmpClipboard == null) return;
-            System.Windows.Clipboard.Clear();
-
-            await Task.Delay(50);
-            System.Windows.Forms.SendKeys.SendWait("^c");
-
-            try
-            {
-                if (System.Windows.Clipboard.ContainsText())
-                {
-                    AccessibilityService.GetInstance().CurrentSelectedText = Clipboard.GetText();
-
-                    double screenHeight = SystemParameters.PrimaryScreenHeight;
-                    double screenWidth = SystemParameters.PrimaryScreenWidth;
-                    double xScale = screenWidth / 1920;
-                    double yScale = screenHeight / 1080;
-                    System.Drawing.Point lpPoint;
-                    NativeUser32API.GetCursorPos(out lpPoint);
-                    Point selectedTextPosition = new Point((int)(lpPoint.X * xScale), (int)(lpPoint.Y * yScale));
-                    PopupDictionaryService.Instance().TextMenuOperationsPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 10);
-                    Point newPosition = new Point(selectedTextPosition.X, selectedTextPosition.Y + 50);
-                    PopupDictionaryService.Instance().PopupTextMenuPosition = new Point(newPosition.X, newPosition.Y);
-                    if (!PopupDictionaryService.Instance().IsShowPinTextMenuAPI)
-                    {
-                        PopupDictionaryService.Instance().ShowSelectionResponseView(false);
-                        PopupDictionaryService.Instance().TextMenuAPIPosition = new Point(newPosition.X, newPosition.Y);
-                    }
-
-                    PopupDictionaryService.Instance().ShowMenuSelectionActions(true);
-                    await SendEventGA4.SendEvent("inject_selection_actions");
-                }
-                else
-                {
-                    System.Windows.Clipboard.SetDataObject(tmpClipboard);
-                }
-            }
-            catch
-            {
-                PopupDictionaryService.Instance().ShowMenuSelectionActions(false);
-                PopupDictionaryService.Instance().ShowSelectionResponseView(false);
-            }
         }
 
         protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             base.OnPropertyChanged(propertyName);
 
-        if (!string.IsNullOrEmpty(propertyName) && propertyName.Equals("TokenService"))
-        {
-            Account = AuthenService.GetMe().Result;
-            Username = Account.Username;
-            UsernameFirstLetter = Account.Username[0].ToString();
-            bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
-            RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
+            if (!string.IsNullOrEmpty(propertyName) && propertyName.Equals("TokenService"))
+            {
+                bool previousRemaingAPIUSage = (RemainingAPIUsage != "0 🔥");
+                RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
                 IsOutOfToken = ((RemainingAPIUsage == "0 🔥") | previousRemaingAPIUSage) ? true : false;
             }
         }

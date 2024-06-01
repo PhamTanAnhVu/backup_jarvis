@@ -23,8 +23,8 @@
     </UserControl.DataContext>
 
     <Grid>
-        <Border Background="{StaticResource TailwindPrimary0.5}" CornerRadius="12" Visibility="Hidden">
-        <Grid>
+        <Border x:Name="MainPromptLibraryBorder" Background="{StaticResource TailwindPrimary0.5}" CornerRadius="12" Visibility="Hidden">
+            <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -69,8 +69,12 @@
                 </UserControl>
             </Grid>
         </Grid>
-    </Border>
+        </Border>
 
-        
+        <Popup x:Name="editAddPromptPopup" Placement="Center" StaysOpen="False" PlacementTarget="{Binding ElementName=MainPromptLibraryBorder}"
+               VerticalOffset="0" AllowsTransparency="True" PopupAnimation="Fade"
+               IsOpen="{Binding PromptPopupViewModel.IsShowEditPromptPopup}">
+            <local:EditAddPromptView/>
+        </Popup>
     </Grid>
 </UserControl>
