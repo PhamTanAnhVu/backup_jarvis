@@ -15,8 +15,10 @@ public class AIChatMessage
     public bool IsServer { get; set; }
     public bool IsUser { get; set; }
     public string Message { get; set; }
+    public string SelectedModel { get; set; }
     public string SelectedModelName { get; set; }
     public string SelectedModelImageSource { get; set; }
+    public int SelectedModelIdx { get; set; }
     public ObservableCollection<CodeMessage> DetailMessage { get; set; }
     public RelayCommand CopyCommand { get; set; }
     public RelayCommand RedoCommand { get; set; }

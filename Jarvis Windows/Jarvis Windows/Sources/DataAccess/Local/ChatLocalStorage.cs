@@ -106,8 +106,7 @@ public class ConversationManager
                 IsServer INTEGER,
                 IsUser INTEGER,
                 Message TEXT,
-                SelectedModelName TEXT,
-                SelectedModelImageSource TEXT
+                SelectedModelIdx INTEGER
             )";
 
         _connection.Execute(createTableQuery);
@@ -154,11 +153,10 @@ public class ConversationManager
                 SET IsServer = ?,
                     IsUser = ?,
                     Message = ?,
-                    SelectedModelName = ?,
-                    SelectedModelImageSource = ?
+                    SelectedModelIdx = ?
                 WHERE Idx = ?";
 
-            _connection.Execute(updateQuery, message.IsServer, message.IsUser, message.Message, message.SelectedModelName, message.SelectedModelImageSource, message.Idx);
+            _connection.Execute(updateQuery, message.IsServer, message.IsUser, message.Message, message.SelectedModelIdx, message.Idx);
         }
         else
         {
@@ -172,10 +170,10 @@ public class ConversationManager
     {
         var tableName = $"Messages_{conversationIdx}";
         var insertQuery = $@"
-            INSERT INTO {tableName} (IsServer, IsUser, Message, SelectedModelName, SelectedModelImageSource)
-            VALUES (?, ?, ?, ?, ?)";
+            INSERT INTO {tableName} (IsServer, IsUser, Message, SelectedModelIdx)
+            VALUES (?, ?, ?, ?)";
 
-        _connection.Execute(insertQuery, message.IsServer, message.IsUser, message.Message, message.SelectedModelName, message.SelectedModelImageSource);
+        _connection.Execute(insertQuery, message.IsServer, message.IsUser, message.Message, message.SelectedModelIdx);
         ReArrangeChatMessageIdx(conversationIdx);
     }
 

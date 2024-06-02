@@ -1,0 +1,65 @@
+[
+  {
+    "Name": "GPT-3.5 Turbo",
+    "FileName": "gpt35",
+    "ModelName": "gpt-3.5-turbo",
+    "Description": "Very fast, great for most everyday tasks\nCost",
+    "Tokens": "1"
+  },
+  {
+    "Name": "GPT-4o",
+    "FileName": "gpt4o",
+    "ModelName": "gpt-4o",
+    "Description": "OpenAI's latest model, best for complex\ntask while maintaining quality.\nCost",
+    "Tokens": "5"
+  },
+  {
+    "Name": "GPT-4 Turbo",
+    "FileName": "gpt4",
+    "ModelName": "gpt-4-turbo",
+    "Description": "Most capable model, best for complex\ntasks requiring advanced reasoning.\nCost",
+    "Tokens": "10"
+  },
+  {
+    "Name": "Gemini 1.0 Pro",
+    "FileName": "gemini1",
+    "ModelName": "gemini-1.0-pro-latest",
+    "Description": "Google's most balanced model, perfectly\nblending capability with efficiency.\nCost",
+    "Tokens": "1"
+  },
+  {
+    "Name": "Gemini 1.5 Pro",
+    "FileName": "gemini15",
+    "ModelName": "gemini-1.5-pro-latest",
+    "Description": "Google's next generation model, best for\ncomplex tasks requiring advanced\nreasoning.\nCost",
+    "Tokens": "1"
+  },
+  {
+    "Name": "Gemini 1.5 Flash",
+    "FileName": "gemini15",
+    "ModelName": "gemini-1.5-flash-latest",
+    "Description": "Google's latest model, optimized for\nnarrowed or high-frequency tasks where\nthe speed of the model's response time\nmatters the most.\nCost",
+    "Tokens": "1"
+  },
+  {
+    "Name": "Claude 3 Haiku",
+    "FileName": "claude3haiku",
+    "ModelName": "claude-3-haiku",
+    "Description": "Coming soon - Anthropic's most compact \nmodel, designed for near-instant \nresponsiveness and seamless AI \nexperiences that mimic human \ninteractions.\nCost",
+    "Tokens": "1"
+  },
+  {
+    "Name": "Claude 3 Sonnet",
+    "FileName": "claude3sonnet",
+    "ModelName": "claude-3-sonnet",
+    "Description": "Coming soon - Anthropic's most balanced \nmodelbetween intelligence and speed,\nideal for a wide range of tasks\nCost",
+    "Tokens": "1"
+  },
+  {
+    "Name": "Claude 3 Opus",
+    "FileName": "claude3opus",
+    "ModelName": "claude-3-opus",
+    "Description": "Coming soon - Anthropic's most powerful \nmodel, delivering state-of-the-art\nperformance on highly complex tasks and\ndemonstrating fluency and human-like\nunderstanding.\nCost",
+    "Tokens": "1"
+  }
+]

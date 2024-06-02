@@ -13,9 +13,11 @@ public class GenerativeModel : ViewModelBase
     public int Idx { get; set; }
     public string Margin { get; set; }
     public string ImageSource { get; set; }
+    public string Model { get; set; }
     public string Name { get; set; }
     public string PopupDescription { get; set; }
-    public string Tokens { get; set; }
+    public string TokenString { get; set; }
+    public int Tokens { get; set; }
     public string Background
     {
         get => _background;

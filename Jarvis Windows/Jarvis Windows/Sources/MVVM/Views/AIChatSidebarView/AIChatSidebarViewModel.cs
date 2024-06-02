@@ -21,6 +21,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Windows.Forms;
 using Windows.Globalization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
+using System.Text.Json;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 public class AIChatSidebarViewModel : ViewModelBase
@@ -133,6 +134,8 @@ public class AIChatSidebarViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+
+    public int SelectedModelIdx { get; set; }
 
     public string SvgToggleIconData
     {
@@ -372,43 +375,36 @@ public class AIChatSidebarViewModel : ViewModelBase
 
     private void InitGenerativeModels()
     {
-        string[] names = ["GPT-3.5 Turbo", "GPT-4o", "GPT-4 Turbo", "Gemini 1.0 Pro", "Gemini 1.5 Pro", "Gemini 1.5 Flash", "Claude 3 Haiku", "Claude 3 Sonnet", "Claude 3 Opus"];
-        string[] fileNames = ["gpt35", "gpt4o", "gpt4", "gemini1", "gemini15", "gemini15", "claude3haiku", "claude3sonnet", "claude3opus"];
-        string[] descriptions = [
-            "Very fast, great for most everyday tasks\nCost",
-            "OpenAI's latest model, best for complex\ntask while maintaining quality.\nCost",
-            "Most capable model, best for complex\ntasks requiring advanced reasoning.\nCost",
-            "Google's most balanced model, perfectly\nblending capability with efficiency.\nCost",
-            "Google's next generation model, best for\ncomplex tasks requiring advanced\nreasoning.\nCost",
-            "Google's latest model, optimized for\nnarrowed or high-frequency tasks where\nthe speed of the model's response time\nmatters the most.\nCost",
-            "Coming soon - Anthropic's most compact \nmodel, designed for near-instant \nresponsiveness and seamless AI \nexperiences that mimic human \ninteractions.\nCost",
-            "Coming soon - Anthropic's most balanced \nmodelbetween intelligence and speed,\nideal for a wide range of tasks\nCost",
-            "Coming soon - Anthropic's most powerful \nmodel, delivering state-of-the-art\nperformance on highly complex tasks and\ndemonstrating fluency and human-like\nunderstanding.\nCost",
+        string relativePath = Path.Combine("Appsettings", "Configs", $"generative_model_list.json");
+        string fullPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath));
+        string jsonContent = File.ReadAllText(fullPath);
 
-        ];
-
-        string[] tokens = ["1", "5", "10", "1", "1", "1", "1", "1", "1"];
+        List<ModelInfo> modelInfo = JsonSerializer.Deserialize<List<ModelInfo>>(jsonContent);
 
         GenerativeModels = new ObservableCollection<GenerativeModel>();
-        for (int idx = 0; idx < names.Length; idx++)
+        for (int idx = 0; idx < modelInfo.Count; idx++)
         {
+            var model = modelInfo[idx];
             GenerativeModels.Add(new GenerativeModel
             {
                 Idx = idx,
                 Background = "Transparent",
-                Margin = (idx < names.Length - 1) ? "0 0 0 4" : "0",
-                Name = names[idx],
-                ImageSource = $"\\Assets\\Images\\{fileNames[idx]}.png",
-                PopupDescription = descriptions[idx],
-                Tokens = tokens[idx] != "1" ? $"{tokens[idx]} Tokens" : $"{tokens[idx]} Token",
+                Margin = (idx < modelInfo.Count - 1) ? "0 0 0 4" : "0",
+                Name = model.Name,
+                Model = model.ModelName,
+                ImageSource = $"\\Assets\\Images\\{model.FileName}.png",
+                PopupDescription = model.Description,
+                Tokens = int.Parse(model.Tokens),
+                TokenString = model.Tokens != "1" ? $"{model.Tokens} Tokens" : $"{model.Tokens} Token",
                 SelectModelCommand = (idx < 6) ? new RelayCommand(ExecuteSelectModelCommand, o => true) : null,
             });
         }
 
-        GenerativeModels[0].Background = "#E0EFFE";
-        SelectedModelName = GenerativeModels[0].Name;
-        SelectedModelImageSource = GenerativeModels[0].ImageSource;
-        JarvisApi.Instance.SetTokensPerQuery(1);
+        int selectedModelIdx = int.Parse(WindowLocalStorage.ReadLocalStorage("SelectedModelIdx"));
+        GenerativeModels[selectedModelIdx].Background = "#E0EFFE";
+        SelectedModelIdx = selectedModelIdx;
+        SelectedModelName = GenerativeModels[selectedModelIdx].Name;
+        SelectedModelImageSource = GenerativeModels[selectedModelIdx].ImageSource;
     }
 
     private async void ExecuteSelectModelCommand(object obj)
@@ -417,11 +413,11 @@ public class AIChatSidebarViewModel : ViewModelBase
         foreach (var model in GenerativeModels) { model.Background = "Transparent"; }
         GenerativeModels[idx].Background = "#E0EFFE";
         IsOpenSelectAIModel = false;
+        SelectedModelIdx = idx;
         SelectedModelName = GenerativeModels[idx].Name;
         SelectedModelImageSource = GenerativeModels[idx].ImageSource;
 
-        int tokens = int.Parse(GenerativeModels[idx].Tokens.Split(" ")[0]);
-        JarvisApi.Instance.SetTokensPerQuery(tokens);
+        WindowLocalStorage.WriteLocalStorage("SelectedModelIdx", idx.ToString());
     }
 
     private void InitializeToggleButtons()
@@ -550,11 +546,11 @@ public class AIChatSidebarViewModel : ViewModelBase
             string message = AIChatMessages[i].Message;
             int messageIdx = AIChatMessages[i].Idx;
             bool isUser = AIChatMessages[i].IsUser;
-            AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser, AIChatMessages[i].SelectedModelName, AIChatMessages[i].SelectedModelImageSource);
+            AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser, AIChatMessages[i].SelectedModelIdx);
         }
     }
 
-    private AIChatMessage CreateChatMessage(int idx, string message, bool isUser, string selectedModelName, string selectedModelImageSource, bool isLoading = false)
+    private AIChatMessage CreateChatMessage(int idx, string message, bool isUser, int selectedModelIdx, bool isLoading = false)
     {
         var chatMessage = new AIChatMessage
         {
@@ -562,8 +558,10 @@ public class AIChatSidebarViewModel : ViewModelBase
             IsServer = !isUser,
             IsLoading = isLoading,
             Message = message,
-            SelectedModelName = selectedModelName,
-            SelectedModelImageSource = selectedModelImageSource,
+            SelectedModelIdx = selectedModelIdx,
+            SelectedModelName = GenerativeModels[selectedModelIdx].Name,
+            SelectedModel = GenerativeModels[selectedModelIdx].Model,
+            SelectedModelImageSource = GenerativeModels[selectedModelIdx].ImageSource,
             Idx = idx,
             CopyCommand = new RelayCommand(ExecuteCopyCommand, o => true),
             RedoCommand = new RelayCommand(ExecuteRedoCommand, o => true),
@@ -598,12 +596,14 @@ public class AIChatSidebarViewModel : ViewModelBase
     
     private async void ExecuteSendChatInputCommand(object obj)
     {
-        // If server is processing request/empty input message then cancel execution
+        bool isUpdated = (obj is not null);
+        int index = (obj is null) ? AIChatMessages.Count : (int)obj;
+        int selectedModelIdx = (!isUpdated) ? SelectedModelIdx : AIChatMessages[index].SelectedModelIdx;
+
         if (_isProcessAIChat) return;
         if (string.IsNullOrEmpty(AIChatInputMessage)) return;
-        
-        // User runs out of token, stop
-        if (int.Parse(RemainingAPIUsage) < JarvisApi.Instance.GetTokensPerQuery())
+
+        if (int.Parse(RemainingAPIUsage) < GenerativeModels[SelectedModelIdx].Tokens && !isUpdated)
         {
             _isProcessAIChat = false;
             IsOutOfToken = true;
@@ -611,35 +611,32 @@ public class AIChatSidebarViewModel : ViewModelBase
         }
         
         _isProcessAIChat = true;
-        IsShowIntro = false; 
+        IsShowIntro = false;
 
-        // obj null = add new message to the end, else = update
-        int index = (obj is null) ? AIChatMessages.Count : (int)obj;
-        bool isUpdated = (obj is not null);
-        string curSelectedModelName = SelectedModelName;
-        string curSelectedModelImageSource = SelectedModelImageSource;
+        
+        if (isUpdated)
+        {
+            AIChatMessages.RemoveAt(index);
+            AIChatMessages.RemoveAt(index);
+        }
 
-        // User send message, update AIChatMessages and DB
-        var sendMessage = CreateChatMessage(index, AIChatInputMessage, true, curSelectedModelName, curSelectedModelImageSource);
+        var sendMessage = CreateChatMessage(index, AIChatInputMessage, true, selectedModelIdx);
         AIChatMessages.Insert(index, sendMessage);     
         await ConversationManager.Instance().UpdateChatMessage(sendMessage, isUpdated);
 
-        // Clear InputMessage after sending, save it to tmp
         string inputChatMessage = AIChatInputMessage;
         AIChatInputMessage = "";
 
-        // Server is responding, showing loading icons
-        var responseMessage = CreateChatMessage(index + 1, "", false, curSelectedModelName, curSelectedModelImageSource, true);
+        var responseMessage = CreateChatMessage(index + 1, "", false, selectedModelIdx, true);
         AIChatMessages.Insert(index + 1, responseMessage);
 
-        // Server returns result, update AIChatMessages and DB
-        string? textResponse = await JarvisApi.Instance.ChatHandler(inputChatMessage, AIChatMessages);
-        responseMessage = CreateChatMessage(index + 1, textResponse, false, curSelectedModelName, curSelectedModelImageSource);
+        string? textResponse = await JarvisApi.Instance.ChatHandler(inputChatMessage, AIChatMessages, index);
+        textResponse = (string.IsNullOrEmpty(textResponse)) ? "**There is something wrong. Please try again later.**" : textResponse;
+        responseMessage = CreateChatMessage(index + 1, textResponse, false, selectedModelIdx);
         AIChatMessages.RemoveAt(index + 1);
         AIChatMessages.Insert(index + 1, responseMessage);
         await ConversationManager.Instance().UpdateChatMessage(responseMessage, isUpdated);
 
-        // Server finish processing, update APIUsage
         _isProcessAIChat = false;
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
         
@@ -650,10 +647,15 @@ public class AIChatSidebarViewModel : ViewModelBase
     {
         if (_isProcessAIChat) return;
         int idx = (int)obj;
+        int selectedModelIdx = AIChatMessages[idx].SelectedModelIdx;
+        if (int.Parse(RemainingAPIUsage) < GenerativeModels[selectedModelIdx].Tokens)
+        {
+            IsOutOfToken = true;
+            return;
+        }
+
         AIChatInputMessage = AIChatMessages[idx - 1].Message;
         idx -= 1;
-        AIChatMessages.RemoveAt(idx);
-        AIChatMessages.RemoveAt(idx);
         SendChatInputCommand.Execute(idx);
     }
 

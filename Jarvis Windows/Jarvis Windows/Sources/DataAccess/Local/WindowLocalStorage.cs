@@ -69,7 +69,8 @@ public static class WindowLocalStorage
         { "IsAuthenticated", "false" },
         { "RecentDate", "" },
         { "UserCountry", "" },
-        { "SettingStatus", "1111" }
+        { "SettingStatus", "1111" },
+        { "SelectedModelIdx", "0" }
     };
 
     public static void InitValue(string key)

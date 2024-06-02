@@ -27,7 +27,6 @@ public sealed class JarvisApi
     private static HttpClient? _client;
     private static string? _apiUrl;
     private static string? _apiHeaderID;
-    public static int _tokensPerQuery;
 
     public JarvisApi(IAuthenticationService authenticationService)
     {
@@ -165,11 +164,6 @@ public sealed class JarvisApi
                 dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
 
                 int remainingUsage = responseObject.remainingUsage;
-                int curTokenPerQuery = (isFromChat) ? _tokensPerQuery : 1;
-                
-                remainingUsage = int.Parse(WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")) - curTokenPerQuery;
-                
-                if (remainingUsage < 0) return "";
 
                 WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", remainingUsage.ToString());
 
@@ -247,18 +241,21 @@ public sealed class JarvisApi
         return await ApiHandler(requestBody, _actionEndpoint);
     }
 
-    public async Task<string?> ChatHandler(string content, ObservableCollection<AIChatMessage> ChatHistory)
+    public async Task<string?> ChatHandler(string content, ObservableCollection<AIChatMessage> ChatHistory, int n)
     {
         List<Dictionary<string, string>> messages = new List<Dictionary<string, string>>();
+        if (n != ChatHistory.Count) n += 1;
 
-        for (int i = 0; i < ChatHistory.Count - 2; i++)
+        for (int i = 0; i < n - 2; i++)
         {
             string chatMessage = ChatHistory[i].Message;
             string role = (i % 2 == 0) ? "user" : "assistant";
+            string model = ChatHistory[i].SelectedModel;
             var messageDict = new Dictionary<string, string>
             {
                 { "role", role },
-                { "content", chatMessage }
+                { "content", chatMessage },
+                { "model", model },
             };
 
             messages.Add(messageDict);
@@ -273,7 +270,8 @@ public sealed class JarvisApi
                 {
                     messages = messages
                 }
-            }
+            },
+            model = ChatHistory[n - 1].SelectedModel
         });
 
         return await ApiHandler(requestBody, _chatEndpoint, true);
@@ -308,13 +306,4 @@ public sealed class JarvisApi
     }
 
     // ---------------------------------- Custom AI Actions ---------------------------------- //
-
-    public void SetTokensPerQuery(int tokens)
-    {
-        _tokensPerQuery = tokens;
-    }
-    public int GetTokensPerQuery()
-    {
-        return _tokensPerQuery;
-    }
 }

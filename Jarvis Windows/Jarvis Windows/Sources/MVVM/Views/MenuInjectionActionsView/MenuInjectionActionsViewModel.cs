@@ -218,7 +218,6 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MenuInjectionActionsView
             //TEST AUTO RESET API USAGE
             //if (IsAPIUsageRemain == false)
             //{
-            //    WindowLocalStorage.WriteLocalStorage("ApiHeaderID", Guid.NewGuid().ToString());
             //    WindowLocalStorage.WriteLocalStorage("ApiUsageRemaining", "10");
             //    RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")} 🔥";
             //    IsAPIUsageRemain = true;

@@ -53,7 +53,7 @@
                                 <Border Style="{StaticResource UnderMessageBorder}">
                                     <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White">
                                         <Run Text="{Binding PopupDescription}" />
-                                        <Run Text="{Binding Tokens}" FontWeight="Bold"/>
+                                        <Run Text="{Binding TokenString}" FontWeight="Bold"/>
                                     </TextBlock>
                                 </Border>
                             </Popup>
