@@ -37,35 +37,16 @@ public partial class AIChatBubbleView : UserControl
         Point extraButtonPosition = UpperExtraBubbleButonBorder.PointToScreen(new Point(0, 0));
         Point settingButtonPosition = SettingButton.PointToScreen(new Point(0, 0));
 
-        double margin = 10;
-        double marginTop = 10, marginBottom = 10 + BubbleButton.ActualHeight;
+        double scale = (extraButtonPosition.X > 3000) ? 2 : 1;
+
+        double marginTop = extraButtonPosition.Y;
+        double marginBottom = settingButtonPosition.Y + (SettingButton.ActualHeight) * scale;
         
         if (_isShowExtraButtons)
         {
-            if (mousePosition.Y >= bubbleButtonPosition.Y - margin - marginTop && 
-                mousePosition.Y <= bubbleButtonPosition.Y + margin + marginBottom)
+            if (mousePosition.Y >= marginTop && mousePosition.Y <= marginBottom)
             {
                 if (mousePosition.X >= bubbleButtonPosition.X)
-                {
-                    return;
-                }
-            }
-
-            if (mousePosition.Y >= extraButtonPosition.Y - margin &&
-                mousePosition.Y <= extraButtonPosition.Y + margin + UpperExtraBubbleButonBorder.ActualHeight)
-            {
-                if (mousePosition.X >= extraButtonPosition.X - margin &&
-                    mousePosition.X <= extraButtonPosition.X + margin + UpperExtraBubbleButonBorder.Width)
-                {
-                    return;
-                }
-            }
-
-            else if (mousePosition.Y >= settingButtonPosition.Y - margin && 
-                    mousePosition.Y <= settingButtonPosition.Y + margin + SettingButton.ActualHeight)
-            {
-                if (mousePosition.X >= settingButtonPosition.X - margin && 
-                    mousePosition.X <= settingButtonPosition.X + margin + SettingButton.ActualWidth)
                 {
                     return;
                 }
