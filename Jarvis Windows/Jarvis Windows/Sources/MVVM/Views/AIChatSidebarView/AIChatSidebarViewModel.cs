@@ -401,7 +401,7 @@ public class AIChatSidebarViewModel : ViewModelBase
                 ImageSource = $"\\Assets\\Images\\{fileNames[idx]}.png",
                 PopupDescription = descriptions[idx],
                 Tokens = tokens[idx] != "1" ? $"{tokens[idx]} Tokens" : $"{tokens[idx]} Token",
-                SelectModelCommand = (idx < 7) ? new RelayCommand(ExecuteSelectModelCommand, o => true) : null,
+                SelectModelCommand = (idx < 6) ? new RelayCommand(ExecuteSelectModelCommand, o => true) : null,
             });
         }
 

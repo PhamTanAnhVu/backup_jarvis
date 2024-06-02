@@ -667,8 +667,16 @@
 
                 <Border Grid.Row="1" x:Name="InputBorder" Padding="14 10" VerticalAlignment="Bottom">
                     <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap3}">
-                        <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap3}">
-                            <Grid x:Name="SelectAIModelButtonGrid">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Grid Grid.Column="0" x:Name="SelectAIModelButtonGrid">
                                 <Button x:Name="SelectAIModelButton" Style="{StaticResource SelectAIModelButton}"
                                         Command="{Binding OpenSelectAIModelCommand}">
                                     <Button.Content>
@@ -707,7 +715,7 @@
                                 
                             </Grid>
 
-                            <StackPanel Width="158" Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap1.5}">
+                            <StackPanel Grid.Column="2" Width="158" Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap1.5}">
                                 <Grid x:Name="SummarizeButtonGrid">
                                     <Button x:Name="SummarizeButton" Style="{StaticResource ShortcutAIButton}">
                                         <Button.Content>
@@ -796,7 +804,7 @@
                                 </Grid>
                             </StackPanel>
 
-                            <StackPanel Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap1.5}">
+                            <StackPanel Grid.Column="4" HorizontalAlignment="Right" Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap1.5}">
                                 <Grid x:Name="AIChatSettingButtonGrid">
                                     <Button x:Name="AIChatSettingButton" Style="{StaticResource ShortcutAIButton}">
                                         <Button.Content>
@@ -867,7 +875,7 @@
                                     </Popup>
                                 </Grid>
                             </StackPanel>
-                        </StackPanel>
+                        </Grid>
 
                         <Border x:Name="AIChatInputBorder" Style="{StaticResource AIChatInputBorder}">
                             <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap0.5}">

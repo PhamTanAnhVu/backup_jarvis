@@ -165,9 +165,9 @@ public sealed class JarvisApi
                 dynamic responseObject = JsonConvert.DeserializeObject(responseContent);
 
                 int remainingUsage = responseObject.remainingUsage;
-                int curFuckingTokenPerQuery = (isFromChat) ? _tokensPerQuery : 1;
+                int curTokenPerQuery = (isFromChat) ? _tokensPerQuery : 1;
                 
-                remainingUsage = int.Parse(WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")) - _tokensPerQuery;
+                remainingUsage = int.Parse(WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")) - curTokenPerQuery;
                 
                 if (remainingUsage < 0) return "";
 
