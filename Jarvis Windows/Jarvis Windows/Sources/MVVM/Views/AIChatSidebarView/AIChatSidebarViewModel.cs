@@ -564,7 +564,7 @@ public class AIChatSidebarViewModel : ViewModelBase
             string message = AIChatMessages[i].Message;
             int messageIdx = AIChatMessages[i].Idx;
             bool isUser = AIChatMessages[i].IsUser;
-            AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser, AIChatMessages[i].SelectedModelName, AIChatMessages[i].SelectedModelImageSource, false);
+            AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser, AIChatMessages[i].SelectedModelIdx);
         }
     }
 
