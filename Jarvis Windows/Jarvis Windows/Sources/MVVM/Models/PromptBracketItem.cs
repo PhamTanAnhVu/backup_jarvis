@@ -21,6 +21,8 @@ public class PromptBracketItem : ViewModelBase
         {
             _inputText = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(IsEmptyInputText));
+
         }
     }
 

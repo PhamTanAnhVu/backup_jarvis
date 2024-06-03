@@ -29,6 +29,8 @@ public class PromptPopupViewModel : ViewModelBase
     private bool _isPublicPrompt;
     private bool _isShowLanguagePopup;
     private bool _isShowCategoryPopup;
+    private bool _isNotShowPromptUsageText;
+    private bool _isShowPromptUsageText;
     private string _feedbackInputMessage;
     private string _reportName;
     private string _languageName;
@@ -190,6 +192,27 @@ public class PromptPopupViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
+    
+    public bool IsNotShowPromptUsageText
+    {
+        get => _isNotShowPromptUsageText;
+        set
+        {
+            _isNotShowPromptUsageText = value;
+            IsShowPromptUsageText = !_isNotShowPromptUsageText;
+            OnPropertyChanged();
+        }
+    }
+    
+    public bool IsShowPromptUsageText
+    {
+        get => _isShowPromptUsageText;
+        set
+        {
+            _isShowPromptUsageText = value; 
+            OnPropertyChanged();
+        }
+    }
 
     public string FeedbackInputMessage
     {
@@ -342,6 +365,7 @@ public class PromptPopupViewModel : ViewModelBase
     public RelayCommand SaveEditPromptCommand { get; set; }
     public RelayCommand SelectPromptTypeCommand { get; set; }
     public RelayCommand ShowSelectionPopupCommand { get; set; }
+    public RelayCommand ViewPromptCommand { get; set; }
     #endregion
 
     public PromptPopupViewModel()
@@ -354,6 +378,7 @@ public class PromptPopupViewModel : ViewModelBase
         CopyPromptCommand = new RelayCommand(ExecuteCopyPromptCommand, o => true);
         SelectPromptTypeCommand = new RelayCommand(ExecuteSelectPromptTypeCommand, o => true);
         ShowSelectionPopupCommand = new RelayCommand(ExecuteShowSelectionPopupCommand, o => true);
+        ViewPromptCommand = new RelayCommand(o => { IsNotShowPromptUsageText = false; }, o => true);
 
         PromptHeader = "New Prompt";
         
@@ -363,7 +388,8 @@ public class PromptPopupViewModel : ViewModelBase
         LanguageButtons = InitButtonPopup("language_list");
         CategoryButtons = InitButtonPopup("category_list");
 
-        List<string> category = new List<string> { "Industry", "Competitors", "Target Market", "Price" };
+        List<string> category = new List<string> { "Industry", "Competitors", "Target Market", "Price", "Industry", "Competitors", "Target Market", "Price", "Location", "Tax", "ExpiryDate" };
+        // List<string> category = new List<string> { "Industry" };
         OnUsePrompt(category);
     }
 
@@ -474,16 +500,19 @@ public class PromptPopupViewModel : ViewModelBase
 
     public void OnUsePrompt(List<string> category)
     {
-        BracketItems = new ObservableCollection<PromptBracketItem>();
-        double minHeight = (category.Count > 1) ? 48 : 80;
+        IsNotShowPromptUsageText = true;
+        BracketItems = new ObservableCollection<PromptBracketItem>();    
+        List<string> uniqueCategory = new List<string>(new HashSet<string>(category));
+        
+        double minHeight = (uniqueCategory.Count > 1) ? 28 : 80;
         double maxHeight = minHeight + 40;
 
-        for (int idx = 0; idx < category.Count; idx++)
+        for (int idx = 0; idx < uniqueCategory.Count; idx++)
         {
-            var item = category[idx];
+            var item = uniqueCategory[idx];
             BracketItems.Add(new PromptBracketItem
             {
-                Margin = (idx < category.Count - 1) ? $"0 0 0 {12}" : "0",
+                Margin = (idx < uniqueCategory.Count - 1) ? $"0 0 0 {12}" : "0",
                 PreText = item,
                 InputText = "",
                 MinHeight = minHeight,
