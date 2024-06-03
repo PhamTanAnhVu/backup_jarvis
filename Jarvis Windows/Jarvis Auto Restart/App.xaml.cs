@@ -78,11 +78,8 @@ namespace Jarvis_Background_Service
                         jarvisWindows.Start();
                     }
                 }
-                }
-
                 Thread.Sleep(TEN_SECONDS);
             }
         }
     }
-
 }
