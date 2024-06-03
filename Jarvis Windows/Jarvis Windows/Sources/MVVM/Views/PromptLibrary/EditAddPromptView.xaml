@@ -125,8 +125,8 @@
 
                             <TextBox x:Name="PromptNameInputTextBox" Style="{StaticResource SmTextBox400}" IsReadOnly="False" VerticalAlignment="Center"
                                      Text="{Binding PromptPopupViewModel.PromptNameInputMessage, UpdateSourceTrigger=PropertyChanged}" MinHeight="20" MaxHeight="30"
-                                     VerticalScrollBarVisibility="Visible" PreviewMouseWheel="PromptInputTextBox_PreviewMouseWheel" Tag="PromptName" 
-                                     TextChanged="PromptInputTextBox_TextChanged" PreviewMouseDown="InputTextBox_PreviewMouseDown">
+                                     VerticalScrollBarVisibility="Visible" PreviewMouseWheel="InputTextBox_PreviewMouseWheel" Tag="PromptName" 
+                                     TextChanged="InputTextBox_TextChanged" PreviewMouseDown="InputTextBox_PreviewMouseDown">
                             </TextBox>
                         </Grid>
                     </Border>
@@ -171,8 +171,8 @@
 
                             <TextBox x:Name="PromptDescriptionInputTextBox" Style="{StaticResource SmTextBox400}" IsReadOnly="False"
                                      Text="{Binding PromptPopupViewModel.PromptDescriptionInputMessage, UpdateSourceTrigger=PropertyChanged}" MinHeight="40" MaxHeight="80"
-                                     VerticalScrollBarVisibility="Visible" PreviewMouseWheel="PromptInputTextBox_PreviewMouseWheel" Tag="PromptDescription"
-                                     TextChanged="PromptInputTextBox_TextChanged" PreviewMouseDown="InputTextBox_PreviewMouseDown">
+                                     VerticalScrollBarVisibility="Visible" PreviewMouseWheel="InputTextBox_PreviewMouseWheel" Tag="PromptDescription"
+                                     TextChanged="InputTextBox_TextChanged" PreviewMouseDown="InputTextBox_PreviewMouseDown">
                             </TextBox>
                         </Grid>
                     </Border>
@@ -196,8 +196,8 @@
 
                             <TextBox x:Name="PromptContentInputTextBox" Style="{StaticResource SmTextBox400}" IsReadOnly="False" VerticalAlignment="Top"
                                      Text="{Binding PromptPopupViewModel.PromptContentInputMessage, UpdateSourceTrigger=PropertyChanged}" MinHeight="80" MaxHeight="180"
-                                     VerticalScrollBarVisibility="Visible" PreviewMouseWheel="PromptInputTextBox_PreviewMouseWheel" Tag="PromptContent"
-                                     TextChanged="PromptInputTextBox_TextChanged" PreviewMouseDown="InputTextBox_PreviewMouseDown">
+                                     VerticalScrollBarVisibility="Visible" PreviewMouseWheel="InputTextBox_PreviewMouseWheel" Tag="PromptContent"
+                                     TextChanged="InputTextBox_TextChanged" PreviewMouseDown="InputTextBox_PreviewMouseDown">
                             </TextBox>
                         </Grid>
                     </Border>

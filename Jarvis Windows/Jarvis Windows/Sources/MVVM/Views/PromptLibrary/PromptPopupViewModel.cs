@@ -42,6 +42,7 @@ public class PromptPopupViewModel : ViewModelBase
     private ObservableCollection<PromptPopupItem> _reportButtons;
     private ObservableCollection<PromptPopupItem> _languageButtons;
     private ObservableCollection<PromptPopupItem> _categoryButtons;
+    private ObservableCollection<PromptBracketItem> _bracketItems;
     #endregion
 
     #region Properties
@@ -320,6 +321,16 @@ public class PromptPopupViewModel : ViewModelBase
         }
     }
 
+    public ObservableCollection<PromptBracketItem> BracketItems
+    {
+        get => _bracketItems;
+        set
+        {
+            _bracketItems = value;
+            OnPropertyChanged();
+        }
+    }
+
     #endregion
 
     #region Commands
@@ -351,6 +362,9 @@ public class PromptPopupViewModel : ViewModelBase
         ReportButtons = InitButtonPopup("report_list");
         LanguageButtons = InitButtonPopup("language_list");
         CategoryButtons = InitButtonPopup("category_list");
+
+        List<string> category = new List<string> { "Industry", "Competitors", "Target Market", "Price" };
+        OnUsePrompt(category);
     }
 
     private List<string> ReadFromJson(string fileName)
@@ -456,5 +470,25 @@ public class PromptPopupViewModel : ViewModelBase
     {
         string type = (string)obj;
         IsPrivatePrompt = (type == "Private") ? true : false;
+    }
+
+    public void OnUsePrompt(List<string> category)
+    {
+        BracketItems = new ObservableCollection<PromptBracketItem>();
+        double minHeight = (category.Count > 1) ? 48 : 80;
+        double maxHeight = minHeight + 40;
+
+        for (int idx = 0; idx < category.Count; idx++)
+        {
+            var item = category[idx];
+            BracketItems.Add(new PromptBracketItem
+            {
+                Margin = (idx < category.Count - 1) ? $"0 0 0 {12}" : "0",
+                PreText = item,
+                InputText = "",
+                MinHeight = minHeight,
+                MaxHeight = maxHeight,
+            });
+        }
     }
 }

@@ -34,37 +34,19 @@ public partial class EditAddPromptView : UserControl
             UseShellExecute = true
         });
     }
-    private void PromptInputTextBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    private void InputTextBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
         TextBox textBox = sender as TextBox;
-        string tag = (string)textBox.Tag;
-        if (tag == "PromptDescription") { PromptDescriptionInputTextBox.ScrollToVerticalOffset(PromptDescriptionInputTextBox.VerticalOffset - e.Delta); }
-        else if (tag == "PromptName") { PromptNameInputTextBox.ScrollToVerticalOffset(PromptNameInputTextBox.VerticalOffset - e.Delta); }
-        else { PromptContentInputTextBox.ScrollToVerticalOffset(PromptContentInputTextBox.VerticalOffset - e.Delta); }
-        
+        textBox.ScrollToVerticalOffset(textBox.VerticalOffset - e.Delta);
         e.Handled = true;
     }
 
-    private void PromptInputTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    private void InputTextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         TextBox textBox = sender as TextBox;
-        string tag = (string)textBox.Tag;
-        if (tag == "PromptDescription")
-        {
-            var caretRect = PromptDescriptionInputTextBox.GetRectFromCharacterIndex(PromptDescriptionInputTextBox.CaretIndex, true);
-            if (caretRect != Rect.Empty) PromptDescriptionInputTextBox.ScrollToVerticalOffset(PromptDescriptionInputTextBox.VerticalOffset + caretRect.Top);
-        }
-
-        else if (tag == "PromptName")
-        {
-            var caretRect = PromptNameInputTextBox.GetRectFromCharacterIndex(PromptNameInputTextBox.CaretIndex, true);
-            if (caretRect != Rect.Empty) PromptNameInputTextBox.ScrollToVerticalOffset(PromptNameInputTextBox.VerticalOffset + caretRect.Top);
-        }
-        else
-        {
-            var caretRect = PromptContentInputTextBox.GetRectFromCharacterIndex(PromptContentInputTextBox.CaretIndex, true);
-            if (caretRect != Rect.Empty) PromptContentInputTextBox.ScrollToVerticalOffset(PromptContentInputTextBox.VerticalOffset + caretRect.Top);
-        }
+  
+        var caretRect = textBox.GetRectFromCharacterIndex(textBox.CaretIndex, true);
+        if (caretRect != Rect.Empty) textBox.ScrollToVerticalOffset(textBox.VerticalOffset + caretRect.Top);
     }
 
     private void EditBorder_PreviewMouseDown(object sender, MouseEventArgs e)

@@ -1270,7 +1270,7 @@
 
                 <Popup x:Name="promptLibraryPopup" Placement="Center" StaysOpen="False" 
                        VerticalOffset="0" AllowsTransparency="True" PopupAnimation="Fade"
-                       IsOpen="{Binding IsShowPromptLibrary}">
+                       IsOpen="True">
                     <promptLibrary:PromptLibraryView/>
                 </Popup>
                               
