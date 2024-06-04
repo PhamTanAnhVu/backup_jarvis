@@ -83,31 +83,28 @@ public class AccessibilityService
     {
         _focusChangedEventHandler = new AutomationFocusChangedEventHandler(OnElementFocusChanged);
         Automation.AddAutomationFocusChangedEventHandler(_focusChangedEventHandler);
-        /*Thread tuningJarivsPositionThread = new Thread(TunningPositionThread);
+        Thread tuningJarivsPositionThread = new Thread(TunningPositionThread);
         tuningJarivsPositionThread.Name = "Jarvis Position Tuning";
-        tuningJarivsPositionThread.Start();*/
+        tuningJarivsPositionThread.Start();
     }
 
     private void TunningPositionThread(object? obj)
     {
-        /*if (_popupDictionaryService != null)
+        while (true)
         {
-            try
+            IntPtr currentAppHandle = NativeUser32API.GetForegroundWindow();
+            if(currentAppHandle == IntPtr.Zero)
             {
-                while (true)
-                {
-                    if (_focusingElement != null && IsUseAutoTuningPosition)
-                    {
-                        _popupDictionaryService.UpdateJarvisActionPosition(CalculateElementLocation());
-                        _popupDictionaryService.UpdateMenuOperationsPosition(CalculateElementLocation());
-                    }
-                    Thread.Sleep(500);
-                }
+                PopupDictionaryService.Instance().ShowJarvisAction(false);
+                PopupDictionaryService.Instance().ShowMenuOperations(false);
             }
-            catch (Exception)
+            else if (_focusingElement != null && IsUseAutoTuningPosition)
             {
+                PopupDictionaryService.Instance().UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
+                PopupDictionaryService.Instance().UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
             }
-        }*/
+            Thread.Sleep(100);
+        }
     }
 
     public void UnSubscribeToElementFocusChanged()
@@ -133,74 +130,85 @@ public class AccessibilityService
             _ = _sendEventGA4.SendEvent("inject_input_actions");       
     }
 
-    [DllImport("user32.dll")]
-    static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
-
     private static string GetActiveWindowTitle()
     {
         const int nChars = 256;
         StringBuilder Buff = new StringBuilder(nChars);
         IntPtr handle = NativeUser32API.GetForegroundWindow();
 
-        if (GetWindowText(handle, Buff, nChars) > 0)
+        if (NativeUser32API.GetWindowText(handle, Buff, nChars) > 0)
         {
             return Buff.ToString();
         }
         return String.Empty;
     }
 
+    private bool IsValidAutomationElement()
+    {
+        bool isValid = true;
+
+        IntPtr currentAppHandle = NativeUser32API.GetForegroundWindow();
+        if (currentAppHandle == IntPtr.Zero)
+        {
+            isValid = false;
+        }
+
+        AutomationElement rootElement = AutomationElement.FromHandle(currentAppHandle);
+        if (rootElement != null)
+        {
+            string appName = rootElement.Current.Name;
+            string appId = rootElement.Current.AutomationId;
+
+            if (appName.Equals("Jarvis MainView") || appName.Equals("MenuInjectionActionsView") 
+                || appName.Equals("MainNavigationView") || appName.Equals("AIChatSidebar_InputTextbox")
+                || appId.Equals("Jarvis MainView") || appId.Equals("MenuInjectionActionsView") 
+                || appId.Equals("MainNavigationView"))
+
+            {
+                isValid = false;
+            }
+        }
+            
+        return isValid;
+    }
+
     private void OnElementFocusChanged(object sender, AutomationFocusChangedEventArgs e)
     {
         AutomationElement? newFocusElement = sender as AutomationElement;
-        if(_storePreviousRect == newFocusElement?.Current.BoundingRectangle)
-            return;
-        else
-            _storePreviousRect = newFocusElement.Current.BoundingRectangle;
 
-
-        string appName = GetActiveWindowTitle();
-        if (_supportedAppSerice != null)
+        if(!IsValidAutomationElement())
         {
-            if (!_supportedAppSerice.IsSupportedInjectionApp(appName) &&
-                !string.IsNullOrEmpty(appName) && (appName != "MenuInjectionActionsView" || appName  == "MainNavigationView"))
-            {
-                PopupDictionaryService.Instance().ShowJarvisAction(false);
-                PopupDictionaryService.Instance().ShowMenuOperations(false);
-                return;
-            }
+            PopupDictionaryService.Instance().ShowJarvisAction(false);
+            PopupDictionaryService.Instance().ShowMenuOperations(false);
+            return;
         }
 
-        AutomationElement rootElement = AutomationElement.FromHandle(NativeUser32API.GetForegroundWindow());
-        if (rootElement.Current.AutomationId.Equals("MenuInjectionActionsView") ||
-            rootElement.Current.Name.Equals("MenuInjectionActionsView") ||
-            rootElement.Current.Name.Equals("MainNavigationView"))
+        /*if(_storePreviousRect == newFocusElement?.Current.BoundingRectangle)
             return;
-         
+        else
+            _storePreviousRect = newFocusElement.Current.BoundingRectangle;*/
+
         if (newFocusElement != null && newFocusElement != _focusingElement)
         {
-            if (newFocusElement.Current.AutomationId.Equals("MenuInjectionInputTextBox") ||
-                newFocusElement.Current.AutomationId.Equals("AIChatSidebar_InputTextbox"))
-            {
-                PopupDictionaryService.Instance().ShowJarvisAction(false);
-                return;
-            }
-
             if (IsEditableElement(newFocusElement))
             {
+                NativeUser32API.StartMonitoring();
                 _focusingElement = newFocusElement;
+                SubscribeToElementPropertyChanged(_focusingElement, AutomationElement.BoundingRectangleProperty);
                 if(_automationElementValueService != null)
                 {
                     PopupDictionaryService.Instance().ShowJarvisAction(true);
                     PopupDictionaryService.Instance().ShowMenuOperations(false);
                     PopupDictionaryService.Instance().UpdateJarvisActionPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
                     PopupDictionaryService.Instance().UpdateMenuOperationsPosition(CalculateElementLocation(), GetElementRectBounding(_focusingElement));
-                    //_popupDictionaryService.MainWindow.ResetBinding();
+                    PopupDictionaryService.Instance().PinJarvisButton();
                     ExecuteSendEventInject();
                     _automationElementValueService.CheckUndoRedo(_focusingElement);
                 }
             }
             else
             {
+                NativeUser32API.StopMonitoring();
                 try
                 {
                     IntPtr currentAppHandle = NativeUser32API.GetForegroundWindow();
@@ -213,7 +221,6 @@ public class AccessibilityService
                             return;
                     }
 
-                    //_focusingElement = null;
                     PopupDictionaryService.Instance().ShowJarvisAction(false);
                     PopupDictionaryService.Instance().ShowMenuOperations(false);
                 }

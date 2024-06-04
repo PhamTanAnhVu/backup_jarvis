@@ -352,7 +352,7 @@ public class PopupDictionaryService : ObserveralObject
 
     private void Timer_Tick(object? sender, EventArgs e)
     {
-        if (IsShowJarvisAction)
+        /*if (IsShowJarvisAction)
         {
             var storyboard = new Storyboard();
             var fadeOutAnimation = new DoubleAnimation
@@ -370,13 +370,13 @@ public class PopupDictionaryService : ObserveralObject
                 _timer.Stop();
             };
             storyboard.Begin();
-        }
+        }*/
     }
 
     public void ShowJarvisAction(bool isShow)
     {
         IsShowJarvisAction = isShow;
-        if(isShow)
+        /*if(isShow)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() => //Access to the UI thread
             {
@@ -397,7 +397,7 @@ public class PopupDictionaryService : ObserveralObject
                 };
                 storyboard.Begin();
             }));
-        }
+        }*/
     }
     private void JarvisButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
@@ -732,18 +732,22 @@ public class PopupDictionaryService : ObserveralObject
 
     public void PinJarvisButton()
     {
-        _injectionActionPopup.HorizontalOffset = JarvisActionPosition.X;
-        _injectionActionPopup.VerticalOffset = JarvisActionPosition.Y;
+        Application.Current.Dispatcher.Invoke(new Action(() =>
+        {
+            HasPinnedJarvisButton = true;
+            _injectionActionViewModel.CustomCornerRadius = new CornerRadius(15, 15, 15, 5);
+            _injectionActionPopup.HorizontalOffset = JarvisActionPosition.X;
+            _injectionActionPopup.VerticalOffset = JarvisActionPosition.Y;
 
-        //reset the position binding
-        Binding verticalBinding = new Binding("JarvisActionPosition.Y");
-        verticalBinding.NotifyOnSourceUpdated = true;
-        verticalBinding.Source = this;
-        _injectionActionPopup.SetBinding(Popup.VerticalOffsetProperty, verticalBinding);
+            Binding verticalBinding = new Binding("JarvisActionPosition.Y");
+            verticalBinding.NotifyOnSourceUpdated = true;
+            verticalBinding.Source = this;
+            _injectionActionPopup.SetBinding(Popup.VerticalOffsetProperty, verticalBinding);
 
-        Binding horizontalBinding = new Binding("JarvisActionPosition.X");
-        horizontalBinding.NotifyOnSourceUpdated = true;
-        horizontalBinding.Source = this;
-        _injectionActionPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
+            Binding horizontalBinding = new Binding("JarvisActionPosition.X");
+            horizontalBinding.NotifyOnSourceUpdated = true;
+            horizontalBinding.Source = this;
+            _injectionActionPopup.SetBinding(Popup.HorizontalOffsetProperty, horizontalBinding);
+        }));
     }
 }

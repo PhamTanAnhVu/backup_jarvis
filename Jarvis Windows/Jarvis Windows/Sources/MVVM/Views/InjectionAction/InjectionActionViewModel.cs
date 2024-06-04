@@ -120,11 +120,9 @@ namespace Jarvis_Windows.Sources.MVVM.Views.InjectionAction
             }
         }
 
-        private void ExecutePinJarvisButtonCommand(object obj)
+        public void ExecutePinJarvisButtonCommand(object? obj)
         {
             PopupDictionaryService.Instance().PinJarvisButton();
-            PopupDictionaryService.HasPinnedJarvisButton = true;
-            CustomCornerRadius = new CornerRadius(15, 15, 15, 5);
         }
     }
 }

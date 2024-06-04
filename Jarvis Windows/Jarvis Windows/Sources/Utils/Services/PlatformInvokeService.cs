@@ -1,5 +1,8 @@
+using Jarvis_Windows.Sources.Utils.Services;
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Jarvis_Windows.Sources.Utils.WindowsAPI
 {
@@ -81,5 +84,45 @@ namespace Jarvis_Windows.Sources.Utils.WindowsAPI
 
         [DllImport("kernel32.dll")]
         internal static extern int GetCurrentThreadId();
+
+        [DllImport("user32.dll")]
+        public static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
+        [DllImport("user32.dll")]
+        private static extern bool IsIconic(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc, WinEventDelegate lpfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);
+
+        [DllImport("user32.dll")]
+        private static extern bool UnhookWinEvent(IntPtr hWinEventHook);
+
+        private const uint EVENT_SYSTEM_MINIMIZESTART = 0x0016;
+        private const uint EVENT_SYSTEM_MINIMIZEEND = 0x0017;
+        private const uint EVENT_SYSTEM_FOREGROUND = 0x0003;
+        private const uint WINEVENT_OUTOFCONTEXT = 0;
+
+        private delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+
+        private static WinEventDelegate procDelegate = new WinEventDelegate(WinEventProc);
+        private static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            if (eventType == EVENT_SYSTEM_MINIMIZEEND)
+            {
+                PopupDictionaryService.Instance().ShowJarvisAction(false);
+                PopupDictionaryService.Instance().ShowMenuOperations(false);
+            }
+        }
+        private static IntPtr hWinEventHook;
+
+        public static void StartMonitoring()
+        {
+            hWinEventHook = SetWinEventHook(EVENT_SYSTEM_MINIMIZESTART, EVENT_SYSTEM_MINIMIZEEND, IntPtr.Zero, procDelegate, 0, 0, WINEVENT_OUTOFCONTEXT);
+        }
+
+        public static void StopMonitoring()
+        {
+            UnhookWinEvent(hWinEventHook);
+        }
     }
 }
