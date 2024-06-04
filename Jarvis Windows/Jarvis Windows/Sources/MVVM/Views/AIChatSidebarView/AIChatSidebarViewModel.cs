@@ -548,6 +548,8 @@ public class AIChatSidebarViewModel : ViewModelBase
             bool isUser = AIChatMessages[i].IsUser;
             AIChatMessages[i] = CreateChatMessage(messageIdx, message, isUser, AIChatMessages[i].SelectedModelIdx);
         }
+
+        UpdateLastMessage();
     }
 
     private AIChatMessage CreateChatMessage(int idx, string message, bool isUser, int selectedModelIdx, bool isLoading = false)
@@ -630,6 +632,8 @@ public class AIChatSidebarViewModel : ViewModelBase
         var responseMessage = CreateChatMessage(index + 1, "", false, selectedModelIdx, true);
         AIChatMessages.Insert(index + 1, responseMessage);
 
+        UpdateLastMessage();
+
         string? textResponse = await JarvisApi.Instance.ChatHandler(inputChatMessage, AIChatMessages, index);
         textResponse = (string.IsNullOrEmpty(textResponse)) ? "**There is something wrong. Please try again later.**" : textResponse;
         responseMessage = CreateChatMessage(index + 1, textResponse, false, selectedModelIdx);
@@ -641,6 +645,24 @@ public class AIChatSidebarViewModel : ViewModelBase
         RemainingAPIUsage = $"{WindowLocalStorage.ReadLocalStorage("ApiUsageRemaining")}";
         
         ChatHistoryViewModel.InitConversation(ConversationManager.Instance()._selectedIdx);
+        UpdateLastMessage();
+    }
+
+    private void UpdateLastMessage()
+    {
+        if (AIChatMessages is null || AIChatMessages.Count == 0) return;
+        for (int idx = 0; idx < AIChatMessages.Count - 1; idx++)
+        {
+            AIChatMessages[idx].IsLastMessage = "Hidden";
+        }
+
+        if (AIChatMessages[AIChatMessages.Count - 1].IsLoading || AIChatMessages[AIChatMessages.Count - 1].IsUser)
+        {
+            AIChatMessages[AIChatMessages.Count - 1].IsLastMessage = "Hidden";
+            return;
+        }
+
+        AIChatMessages[AIChatMessages.Count - 1].IsLastMessage = "Visible";
     }
 
     private async void ExecuteRedoCommand(object obj)

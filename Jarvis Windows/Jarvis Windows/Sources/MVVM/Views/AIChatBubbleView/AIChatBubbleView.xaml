@@ -138,15 +138,8 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0">
-                            <Image Source="/Assets/Icons/Vector.ico" RenderOptions.BitmapScalingMode="Linear"
-                                   Width="24" Height="24"/>
-                            <Viewbox Width="18" Height="18" Margin="0 3 0 0">
-                                <Grid>
-                                    <Path Fill="White" Data="M12.175 3.97188H14.5783C15.2119 3.97188 15.5946 4.71524 15.2542 5.28132L9.7072 14.4927C9.37682 15.0417 8.62137 15.0417 8.28998 14.4927L8.17012 14.2933L7.06213 12.453L12.175 3.97289V3.97188Z"/>
-                                    <Path Fill="White" Data="M7.26863 10.5545C6.95336 11.0773 6.23317 11.0773 5.9179 10.5545L0.452499 1.47806C0.0949212 0.883776 0.496818 0.104156 1.1606 0.104156H3.5045L8.52871 8.46643L7.26964 10.5555L7.26863 10.5545Z"/>
-                                    <Path Fill="White" Data="M17.5447 1.4769L16.5475 3.13384H6.26235L5.22789 1.41244C4.88743 0.845347 5.2712 0.102997 5.90376 0.102997H16.8366C17.5014 0.102997 17.9033 0.882617 17.5447 1.4769Z"/>
-                                </Grid>
-                            </Viewbox>
+                            <Image x:Name="img" Source="/Assets/Images/logo-new/logo96x96.png"
+                                    RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Grid>
 
                         <TextBlock Grid.Column="1" x:Name="BubbleButtonName" Margin="10 2 0 0" VerticalAlignment="Center"
@@ -158,11 +151,7 @@
             <Button x:Name="CloseBubbleButton" Style="{StaticResource CloseAIBubbleButton}"
                     Command="{Binding CloseAIBubbleCommand}">
                 <Button.Content>
-                    <Viewbox Width="6" Height="6">
-                        <Grid>
-                            <Path Fill="White" Data="M0.646447 0.646447C0.841709 0.451184 1.15829 0.451184 1.35355 0.646447L4 3.29289L6.64645 0.646447C6.84171 0.451184 7.15829 0.451184 7.35355 0.646447C7.54882 0.841709 7.54882 1.15829 7.35355 1.35355L4.70711 4L7.35355 6.64645C7.54882 6.84171 7.54882 7.15829 7.35355 7.35355C7.15829 7.54882 6.84171 7.54882 6.64645 7.35355L4 4.70711L1.35355 7.35355C1.15829 7.54882 0.841709 7.54882 0.646447 7.35355C0.451184 7.15829 0.451184 6.84171 0.646447 6.64645L3.29289 4L0.646447 1.35355C0.451184 1.15829 0.451184 0.841709 0.646447 0.646447Z"/>
-                        </Grid>
-                    </Viewbox>
+                    <Image Source="\Assets\Images\white_cross.png" Width="9" Height="9"/>
                 </Button.Content>
             </Button>
         </Grid>

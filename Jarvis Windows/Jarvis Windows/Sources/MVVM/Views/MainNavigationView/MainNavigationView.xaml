@@ -235,9 +235,31 @@
                                         </Grid.ColumnDefinitions>
 
                                         <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0 4" VerticalAlignment="Center">
-                                            <Path HorizontalAlignment="Center" 
-                                          VerticalAlignment="Center"
-                                          Data="M14.6389 0.888864C14.9073 0.620379 15.3426 0.620379 15.6111 0.888864L21.1111 6.38886C21.3796 6.65735 21.3796 7.09265 21.1111 7.36114L18.4958 9.97648L17.3567 14.533C17.1802 15.2387 16.6451 15.7992 15.9484 16.0083L1.72461 20.2754L5.99175 6.0516C6.20077 5.35486 6.76134 4.81975 7.46703 4.64333L12.0235 3.50421L14.6389 0.888864ZM12.1641 4.88638L7.80052 5.97728C7.56529 6.03609 7.37843 6.21446 7.30876 6.4467L3.77538 18.2246L15.5533 14.6912C15.7855 14.6216 15.9639 14.4347 16.0227 14.1995L17.1136 9.83589L12.1641 4.88638Z">
+                                            <Path HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Path.Data>
+                                                    <PathGeometry>
+                                                        <PathFigure StartPoint="14.6389,0.888864">
+                                                            <LineSegment Point="21.1111,6.38886"/>
+                                                            <LineSegment Point="18.4958,9.97648"/>
+                                                            <LineSegment Point="17.3567,14.533"/>
+                                                            <LineSegment Point="1.72461,20.2754"/>
+                                                            <LineSegment Point="5.99175,6.0516"/>
+                                                            <LineSegment Point="12.0235,3.50421"/>
+                                                            <LineSegment Point="14.6389,0.888864"/>
+                                                            <LineSegment Point="12.1641,4.88638"/>
+                                                            <LineSegment Point="7.80052,5.97728"/>
+                                                            <LineSegment Point="3.77538,18.2246"/>
+                                                            <LineSegment Point="15.5533,14.6912"/>
+                                                            <LineSegment Point="17.1136,9.83589"/>
+                                                            <LineSegment Point="12.1641,4.88638"/>
+                                                            <LineSegment Point="3.89394,18.189"/>
+                                                            <LineSegment Point="11.0001,12.375"/>
+                                                            <LineSegment Point="11.0001,9.625"/>
+                                                            <LineSegment Point="3.81094,18.1061"/>
+                                                            <LineSegment Point="3.89394,18.189"/>
+                                                        </PathFigure>
+                                                    </PathGeometry>
+                                                </Path.Data>
                                                 <Path.Fill>
                                                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                                         <GradientStop Color="{Binding NavButtonColors[3].C1}" Offset="1"/>
@@ -245,6 +267,7 @@
                                                     </LinearGradientBrush>
                                                 </Path.Fill>
                                             </Path>
+
 
                                             <TextBlock Text="Write" 
                                            Margin="0 5 0 0"

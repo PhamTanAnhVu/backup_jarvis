@@ -9,11 +9,22 @@ using System.Threading.Tasks;
 
 namespace Jarvis_Windows.Sources.MVVM.Models;
 
-public class AIChatMessage
+public class AIChatMessage : ViewModelBase
 {
+    private string _isLastMessage;
     public int Idx { get; set; }
     public bool IsServer { get; set; }
     public bool IsUser { get; set; }
+    public string IsLastMessage 
+    { 
+        get => _isLastMessage;
+        set
+        {
+            _isLastMessage = value;
+            OnPropertyChanged();
+        }
+    }
+
     public string Message { get; set; }
     public string SelectedModel { get; set; }
     public string SelectedModelName { get; set; }

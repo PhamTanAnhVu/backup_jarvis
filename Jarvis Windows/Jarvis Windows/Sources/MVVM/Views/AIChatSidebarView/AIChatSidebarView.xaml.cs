@@ -20,6 +20,7 @@ using Windows.Security.Authentication.Identity.Provider;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Threading;
+using System.Collections.Generic;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.AIChatSidebarView;
 
@@ -337,5 +338,45 @@ public partial class AIChatSidebarView : UserControl
             var currentAutomation = AutomationElement.FromHandle(handle);
             NativeUser32API.SetForegroundWindow(handle);
         }
+    }
+
+    public static List<T> FindChildrenList<T>(DependencyObject parent) where T : DependencyObject
+    {
+        var foundChildren = new List<T>();
+
+        if (parent == null)
+            return foundChildren;
+
+        int childCount = VisualTreeHelper.GetChildrenCount(parent);
+        for (int i = 0; i < childCount; i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T childOfType)
+            {
+                foundChildren.Add(childOfType);
+            }
+        }
+
+        return foundChildren;
+    }
+
+
+    private void ChatMessage_MouseEnter(object sender, MouseEventArgs e)
+    {
+        StackPanel st = (StackPanel)sender;
+        List<StackPanel> stList = FindChildrenList<StackPanel>(st);
+        st = stList[2];
+
+        st.SetCurrentValue(VisibilityProperty, Visibility.Visible);
+
+    }
+    private void ChatMessage_MouseLeave(object sender, MouseEventArgs e)
+    {
+        StackPanel st = (StackPanel)sender;
+        if ((string)st.Tag == "Visible") return;
+        List<StackPanel> stList = FindChildrenList<StackPanel>(st);
+        st = stList[2];
+
+        st.SetCurrentValue(VisibilityProperty, Visibility.Hidden);
     }
 }

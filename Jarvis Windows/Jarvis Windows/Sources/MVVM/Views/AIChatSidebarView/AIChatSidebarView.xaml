@@ -499,8 +499,9 @@
                                 
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap1}"
-                                                    Margin="0 0 0 16">
+                                        <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap1}" Tag="{Binding IsLastMessage}"
+                                                    Margin="0 0 0 16" MouseEnter="ChatMessage_MouseEnter" MouseLeave="ChatMessage_MouseLeave"
+                                                    Background="#FFF">
                                             <StackPanel Orientation="Horizontal" x:Name="UserLogo" style:MarginSetter.Margin="{StaticResource ColumnGap2}"
                                                         Visibility="{Binding IsUser, Converter={StaticResource VisibilityConverter}}">
                                                 <Grid>
@@ -606,8 +607,7 @@
                                             </Grid>
 
                                             <StackPanel x:Name="UnderMessageButton" Orientation="Horizontal" Margin="28 0 0 0"
-                                                        style:MarginSetter.Margin="{StaticResource ColumnGap1}"
-                                                        Visibility="{Binding IsServer, Converter={StaticResource VisibilityConverter}}">
+                                                        style:MarginSetter.Margin="{StaticResource ColumnGap1}" Visibility="{Binding IsLastMessage}">
                                                 <Grid x:Name="CopyButtonGrid">
                                                     <Button x:Name="CopyButton" Style="{StaticResource UnderChatMessageButton}"
                                                             Command="{Binding CopyCommand}" CommandParameter="{Binding Idx}"
@@ -631,7 +631,7 @@
                                                     </Popup>
                                                 </Grid>
 
-                                                <Grid x:Name="RedoButtonGrid">
+                                                <Grid x:Name="RedoButtonGrid" Visibility="{Binding IsServer, Converter={StaticResource VisibilityConverter}}">
                                                     <Button x:Name="RedoButton" Style="{StaticResource UnderChatMessageButton}"
                                                             Command="{Binding RedoCommand}" CommandParameter="{Binding Idx}"
                                                             VerticalAlignment="Center">
@@ -647,11 +647,11 @@
                                                     </Button>
 
                                                     <Popup Placement="Top" StaysOpen="True" AllowsTransparency="True" PopupAnimation="Fade"
-                                                           PlacementTarget="{Binding ElementName=RedoButton}" VerticalOffset="-5" HorizontalOffset="5"
+                                                           PlacementTarget="{Binding ElementName=RedoButton}" VerticalOffset="-5" HorizontalOffset="-20"
                                                            IsOpen="{Binding ElementName=RedoButton, Path=IsMouseOver, Mode=OneWay}">
                                                         <Border Style="{StaticResource UnderMessageBorder}">
                                                             <TextBlock Style="{StaticResource XsTextblock400}" Foreground="White"
-                                                                       Text="Redo"/>
+                                                                       Text="Regenerate"/>
                                                         </Border>
                                                     </Popup>
                                                 </Grid>
