@@ -48,15 +48,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.ContextMenuView
 
         private void QuitMenuItem_Click(object? sender, EventArgs e)
         {
-            try
-            {
-                _ = GoogleAnalyticService.Instance().SendEvent("quit_app");
-                Process.GetCurrentProcess().Kill();
-            }
-            catch
-            {
-                Process.GetCurrentProcess().Kill();
-            }
+            _ = GoogleAnalyticService.Instance().SendEvent("quit_app");
+
+            Process backgroundServiceProcess = Process.GetProcessesByName("Jarvis Background Service")[0];
+            if (backgroundServiceProcess != null)
+                backgroundServiceProcess.Kill();
+            Process.GetCurrentProcess().Kill();
         }
     }
 
