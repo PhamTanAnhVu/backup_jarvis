@@ -471,7 +471,7 @@
 
                             <!--Item Profile-->
                             <Button x:Name="btnNavigateProfile" Command="{Binding ShowAuthenticationPopupCommand}"
-                                    Style="{StaticResource ProfileButton}">
+                                    Style="{StaticResource ProfileButton}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Tag="Profile">
                                 <Button.Content>
                                     <Grid Width="26" Height="26">
                                         <Ellipse StrokeThickness="0" Fill="{StaticResource TailwindPrimary6}"/>
@@ -499,8 +499,8 @@
                 <aIChatBubble:AIChatBubbleView/>
             </Popup>
 
-            <Popup x:Name="AuthenticationViewPopup" Placement="Top" StaysOpen="True" PlacementTarget="{Binding ElementName=btnNavigateProfile}"
-                   VerticalOffset="0" HorizontalOffset="-285" AllowsTransparency="True" PopupAnimation="Fade"
+            <Popup x:Name="AuthenticationViewPopup" Placement="Left" StaysOpen="True" PlacementTarget="{Binding ElementName=btnNavigateProfile}"
+                   VerticalOffset="-25" HorizontalOffset="34" AllowsTransparency="True" PopupAnimation="Fade"
                    IsOpen="{Binding IsShowAuthenticationPopup}"
                    MouseEnter="Popup_MouseEnter" MouseLeave="Popup_MouseLeave" Tag="Authentication">
                 <local:AuthenticationView/>

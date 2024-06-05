@@ -477,6 +477,12 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                 await AuthenService.SignOut();
                 await JarvisApi.Instance.APIUsageHandler();
 
+                Account.Username = "Anonymous User";
+                Account.Role = "anonymous";
+                Account.Email = "example@gmail.com";
+                IsShowUsernameFirstLetter = false;
+                UsernameFirstLetter = "A";
+                Email = "No email available";
                 IsLogin = false;
             }
             catch (Exception ex) { }
