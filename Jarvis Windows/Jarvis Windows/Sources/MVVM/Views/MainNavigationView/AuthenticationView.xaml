@@ -19,7 +19,7 @@
     </UserControl.Resources>
 
     <Border BorderBrush="Transparent" BorderThickness="10" CornerRadius="{StaticResource BorderRadius2Xl}" Background="Transparent">
-        <Border x:Name="MainAuthenticationBorder" Style="{StaticResource MainAuthenticationBorder}">
+        <Border x:Name="MainAuthenticationBorder" Style="{StaticResource MainAuthenticationBorder}" Padding="16 16 8 16">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="4" Direction ="-90" RenderingBias="Quality" ShadowDepth="1" Color ="Black"/>
             </Border.Effect>
@@ -69,7 +69,7 @@
                     <Button Style="{StaticResource AuthenticationButton}"
                            Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://admin.jarvis.cx/pricing/overview">
                         <Button.Content>
-                            <Grid Width="248">
+                            <Grid Width="256">
                                 <TextBlock Style="{StaticResource SmTextblock500}" Text="Account and Billing" VerticalAlignment="Center"/>
                                 <Viewbox HorizontalAlignment="Right" Width="18" Height="18">
                                     <Grid>
@@ -84,7 +84,7 @@
                     <Button Style="{StaticResource AuthenticationButton}"
                            Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://help.jarvis.cx/">
                         <Button.Content>
-                            <Grid Width="248">
+                            <Grid Width="256">
                                 <TextBlock Style="{StaticResource SmTextblock500}" Text="Help Center" VerticalAlignment="Center"/>
                                 <Viewbox HorizontalAlignment="Right" Width="18" Height="18">
                                     <Grid>
@@ -99,7 +99,7 @@
                            Command="{Binding AuthenticationCommand}">
                         <Button.Content>
                             <Grid>
-                                <Grid Width="248" HorizontalAlignment="Left"
+                                <Grid Width="256" HorizontalAlignment="Left"
                                      Visibility="{Binding IsLogout, Converter={StaticResource VisibilityConverter}}">
                                     <TextBlock Style="{StaticResource SmTextblock500}" Text="Login" Foreground="{StaticResource PrimaryBrushColor5}"
                                            VerticalAlignment="Center"/>
@@ -111,7 +111,7 @@
                                     </Viewbox>
                                 </Grid>
 
-                                <Grid Width="248" Visibility="{Binding IsLogin, Converter={StaticResource VisibilityConverter}}">
+                                <Grid Width="256" Visibility="{Binding IsLogin, Converter={StaticResource VisibilityConverter}}">
                                     <TextBlock Style="{StaticResource SmTextblock500}" Text="Logout" Foreground="Red"/>
                                     <Viewbox HorizontalAlignment="Right" Width="18" Height="18">
                                         <Grid>
