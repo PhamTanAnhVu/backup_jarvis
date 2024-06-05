@@ -35,7 +35,8 @@
 
     <!--<Grid Visibility="{Binding IsShowMainNavigation, Converter={StaticResource VisibilityConverter}}">-->
     <Border Background="{StaticResource TailwindPrimary1}" Padding="{StaticResource Padding2}"
-            Visibility="{Binding IsShowMainNavigation, Converter={StaticResource VisibilityConverter}}">
+            Visibility="{Binding IsShowMainNavigation, Converter={StaticResource VisibilityConverter}}"
+            PreviewMouseDown="MainNavigationBorder_PreviewMouseDown">
         <Grid Background="Transparent" Height="auto" Width="auto">
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -469,10 +470,10 @@
                             </Grid>
 
                             <!--Item Profile-->
-                            <Button x:Name="btnNavigateProfile" Command="{Binding LoginCommand}"
+                            <Button x:Name="btnNavigateProfile" Command="{Binding ShowAuthenticationPopupCommand}"
                                     Style="{StaticResource ProfileButton}">
                                 <Button.Content>
-                                    <Grid Width="26" Height="26" Visibility="{Binding IsLogin, Converter={StaticResource VisibilityConverter}}">
+                                    <Grid Width="26" Height="26">
                                         <Ellipse StrokeThickness="0" Fill="{StaticResource TailwindPrimary6}"/>
                                         <TextBlock Style="{StaticResource MdTextblock600}" Text="{Binding UsernameFirstLetter}" 
                                                    HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"
@@ -496,6 +497,13 @@
                    PreviewMouseMove="MouseMove"
                    PreviewMouseUp="MouseUp">
                 <aIChatBubble:AIChatBubbleView/>
+            </Popup>
+
+            <Popup x:Name="AuthenticationViewPopup" Placement="Top" StaysOpen="True" PlacementTarget="{Binding ElementName=btnNavigateProfile}"
+                   VerticalOffset="0" HorizontalOffset="-285" AllowsTransparency="True" PopupAnimation="Fade"
+                   IsOpen="{Binding IsShowAuthenticationPopup}"
+                   MouseEnter="Popup_MouseEnter" MouseLeave="Popup_MouseLeave" Tag="Authentication">
+                <local:AuthenticationView/>
             </Popup>
         </Grid>
     </Border>

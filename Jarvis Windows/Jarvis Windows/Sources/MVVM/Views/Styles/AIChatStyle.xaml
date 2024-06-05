@@ -435,7 +435,7 @@
                             Padding="{TemplateBinding Padding}"
                             Height="{TemplateBinding Height}"
                             Width="{TemplateBinding Width}"
-                            CornerRadius="{StaticResource BorderRadiusMd}">
+                            CornerRadius="{StaticResource BorderRadiusXl}">
                         <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     </Border>
 				    <ControlTemplate.Triggers>

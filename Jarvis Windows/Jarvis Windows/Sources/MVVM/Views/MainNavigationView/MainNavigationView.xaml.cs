@@ -20,6 +20,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 {
     public partial class MainNavigationView : Window
     {
+        private bool _isMouseOverAuthenticationPopup;
         private bool _isBubbleClicked = false;
         private Point _bubbleClickedPosition;
         private NotifyIcon _notifyIcon;
@@ -98,6 +99,25 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             //{
             //    aIChatBubblePopup.HorizontalOffset = screenWidth - 44;
             //}
+        }
+
+        private void MainNavigationBorder_PreviewMouseDown(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (!_isMouseOverAuthenticationPopup) { AuthenticationViewPopup.SetCurrentValue(System.Windows.Controls.Primitives.Popup.IsOpenProperty, false); }
+        }
+
+        private void Popup_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Popup button = sender as Popup;
+            string tag = (string)button.Tag;
+            if (tag == "Authentication") { _isMouseOverAuthenticationPopup = true; }
+        }
+
+        private void Popup_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Popup button = sender as Popup;
+            string tag = (string)button.Tag;
+            if (tag == "Authentication") { _isMouseOverAuthenticationPopup = false; }
         }
     }
 }

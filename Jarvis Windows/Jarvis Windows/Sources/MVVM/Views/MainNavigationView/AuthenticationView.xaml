@@ -1,0 +1,131 @@
+﻿<UserControl x:Class="Jarvis_Windows.Sources.MVVM.Views.MainNavigationView.AuthenticationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:style="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.Styles"
+             xmlns:local="clr-namespace:Jarvis_Windows.Sources.MVVM.Views.MainNavigationView"
+             mc:Ignorable="d" 
+             Width="Auto" Height="Auto">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/JarvisStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/AIChatStyle.xaml"/>
+                <ResourceDictionary Source="/Jarvis Windows;component/Sources/MVVM/Views/Styles/ScrollBarStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border BorderBrush="Transparent" BorderThickness="10" CornerRadius="{StaticResource BorderRadius2Xl}" Background="Transparent">
+        <Border x:Name="MainAuthenticationBorder" Style="{StaticResource MainAuthenticationBorder}">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="4" Direction ="-90" RenderingBias="Quality" ShadowDepth="1" Color ="Black"/>
+            </Border.Effect>
+            
+            <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap5}">
+                <Grid>
+                    <StackPanel x:Name="AccountInfoPanel" Orientation="Horizontal" style:MarginSetter.Margin="{StaticResource ColumnGap2}">
+                        <Grid x:Name="AccountLogoGrid">
+                            <Ellipse StrokeThickness="0" Fill="{StaticResource TailwindPrimary6}" Width="40" Height="40"/>
+                            <TextBox Style="{StaticResource Header_TextBox3}" Text="A" FontWeight="Normal"
+                                    TextAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                        </Grid>
+
+                        <Grid x:Name="AccountInfoGrid" Height="35">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <TextBox Grid.Row="0" Style="{StaticResource SmTextBox500}" Text="{Binding Username}"/>
+                            <TextBox Grid.Row="1" Style="{StaticResource XsTextBox400}" Margin="0 4 0 0"  Text="{Binding Email}" 
+                                       Foreground="#868692"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+
+
+                <!--<Border Background="{StaticResource SolidColorBrushSlate200}" CornerRadius="15" Padding="12">
+                <StackPanel Orientation="Vertical">
+                    <Grid>
+                        <TextBox Style="{StaticResource SmTextBox600}" Text="Standard Queries" VerticalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBox Text="1/40" Style="{StaticResource SmTextBox600}" VerticalAlignment="Center"/>
+                            <TextBox Text="/day" Style="{StaticResource SmTextBox400}" VerticalAlignment="Center" Foreground="#868692"/>
+
+                        </StackPanel>
+
+                    </Grid>
+
+                    <Border Height="15" Width="{Binding UsageBarGray}" CornerRadius="5" Background="{StaticResource SolidColorBrushSlate100}" Margin="0 10 0 0">
+                        <Border Background="{StaticResource SolidColorBrushSlate300}" CornerRadius="{Binding UsageBarCornerRadius}" Width="32" HorizontalAlignment="Left"/>
+                    </Border>
+                </StackPanel>
+            </Border>-->
+
+                <StackPanel Orientation="Vertical" style:MarginSetter.Margin="{StaticResource RowGap1.5}">
+                    <Button Style="{StaticResource AuthenticationButton}"
+                           Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://admin.jarvis.cx/pricing/overview">
+                        <Button.Content>
+                            <Grid Width="248">
+                                <TextBlock Style="{StaticResource SmTextblock500}" Text="Account and Billing" VerticalAlignment="Center"/>
+                                <Viewbox HorizontalAlignment="Right" Width="18" Height="18">
+                                    <Grid>
+                                        <Path Fill="{StaticResource TailwindPrimary9}" Data="M11,6a3,3 0 1,1 -6,0 3,3 0 0,1 6,0"/>
+                                        <Path Fill="{StaticResource TailwindPrimary9}" Data="M0,8a8,8 0 1,1 16,0 8,8 0 0,1 -16,0m8,-7a7,7 0 0,0 -5.468,11.37C3.242,11.226 4.805,10 8,10s4.757,1.225 5.468,2.37A7,7 0 0,0 8,1"/>
+                                    </Grid>
+                                </Viewbox>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Style="{StaticResource AuthenticationButton}"
+                           Command="{Binding OpenJarvisWebsiteCommand}" CommandParameter="https://help.jarvis.cx/">
+                        <Button.Content>
+                            <Grid Width="248">
+                                <TextBlock Style="{StaticResource SmTextblock500}" Text="Help Center" VerticalAlignment="Center"/>
+                                <Viewbox HorizontalAlignment="Right" Width="18" Height="18">
+                                    <Grid>
+                                        <Path Fill="{StaticResource TailwindPrimary9}" Data="M16,8A8,8 0,1,1 0,8 8,8 0,0,1 16,8M5.496,6.033h0.825c0.138,0 0.248,-0.113 0.266,-0.25 0.09,-0.656 0.54,-1.134 1.342,-1.134 0.686,0 1.314,0.343 1.314,1.168 0,0.635 -0.374,0.927 -0.965,1.371 -0.673,0.489 -1.206,1.06 -1.168,1.987l0.003,0.217a0.25,0.25 0,0,0 0.25,0.246h0.811a0.25,0.25 0,0,0 0.25,-0.25v-0.105c0,-0.718 0.273,-0.927 1.01,-1.486 0.609,-0.463 1.244,-0.977 1.244,-2.056 0,-1.511 -1.276,-2.241 -2.673,-2.241 -1.267,0 -2.655,0.59 -2.75,2.286a0.237,0.237 0,0,0 0.241,0.247m2.325,6.443c0.61,0 1.029,-0.394 1.029,-0.927 0,-0.552 -0.42,-0.94 -1.029,-0.94 -0.584,0 -1.009,0.388 -1.009,0.94 0,0.533 0.425,0.927 1.01,0.927z"/>
+                                    </Grid>
+                                </Viewbox>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+
+                    <Button Style="{StaticResource AuthenticationButton}"
+                           Command="{Binding AuthenticationCommand}">
+                        <Button.Content>
+                            <Grid>
+                                <Grid Width="248" HorizontalAlignment="Left"
+                                     Visibility="{Binding IsLogout, Converter={StaticResource VisibilityConverter}}">
+                                    <TextBlock Style="{StaticResource SmTextblock500}" Text="Login" Foreground="{StaticResource TailwindPrimary8}"
+                                           VerticalAlignment="Center"/>
+                                    <Viewbox HorizontalAlignment="Right" Width="18" Height="18">
+                                        <Grid>
+                                            <Path Fill="{StaticResource TailwindPrimary8}" Data="M6,3.5a0.5,0.5,0,0,1,0.5-0.5h8a0.5,0.5,0,0,1,0.5,0.5v9a0.5,0.5,0,0,1-0.5,0.5h-8a0.5,0.5,0,0,1-0.5-0.5v-2a0.5,0.5,0,0,0-1,0v2A1.5,1.5,0,0,0,6.5,14h8A1.5,1.5,0,0,0,16,12.5v-9A1.5,1.5,0,0,0,14.5,2h-8A1.5,1.5,0,0,0,5,3.5v2a0.5,0.5,0,0,0,1,0Z"/>
+                                            <Path Fill="{StaticResource TailwindPrimary8}" Data="M11.854,8.354a0.5,0.5,0,0,0,0-0.708l-3-3a0.5,0.5,0,1,0-0.708,0.708L10.293,7.5H1.5a0.5,0.5,0,0,0,0,1h8.793l-2.147,2.146a0.5,0.5,0,0,0,0.708,0.708Z"/>
+                                        </Grid>
+                                    </Viewbox>
+                                </Grid>
+
+                                <Grid Width="248" Visibility="{Binding IsLogin, Converter={StaticResource VisibilityConverter}}">
+                                    <TextBlock Style="{StaticResource SmTextblock500}" Text="Logout" Foreground="Red"/>
+                                    <Viewbox HorizontalAlignment="Right" Width="18" Height="18">
+                                        <Grid>
+                                            <Path Fill="Red" Data="M10,12.5a0.5,0.5,0,0,1-0.5,0.5h-8a0.5,0.5,0,0,1-0.5-0.5v-9a0.5,0.5,0,0,1,0.5-0.5h8a0.5,0.5,0,0,1,0.5,0.5v2a0.5,0.5,0,0,0,1,0v-2A1.5,1.5,0,0,0,9.5,2h-8A1.5,1.5,0,0,0,0,3.5v9A1.5,1.5,0,0,0,1.5,14h8A1.5,1.5,0,0,0,11,12.5v-2a0.5,0.5,0,0,0-1,0Z"/>
+                                            <Path Fill="Red" Data="M15.854,8.354a0.5,0.5,0,0,0,0-0.708l-3-3a0.5,0.5,0,0,0-0.708,0.708L14.293,7.5H5.5a0.5,0.5,0,0,0,0,1h8.793l-2.147,2.146a0.5,0.5,0,0,0,.708,0.708z"/>
+                                        </Grid>
+                                    </Viewbox>
+                                </Grid>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Border>
+</UserControl>

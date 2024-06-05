@@ -21,6 +21,8 @@ using Jarvis_Windows.Sources.DataAccess.Network;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using Jarvis_Windows.Sources.DataAccess;
 using Jarvis_Windows.Sources.MVVM.Views.AIRead;
+using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
 {
@@ -43,10 +45,14 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         private IAuthenticationService _authenticationService;
         private Account? _account;
         private string _username;
+        private string _email;
         private bool _isShowUsernameFirstLetter;
+        private bool _isLogin;
+        private bool _isLogout;
         private string _usernameFirstLetter;
         private string _remainingAPIUsage;
         private string _authUrl;
+        private bool _isShowAuthenticationPopup;
 
         #endregion
 
@@ -194,6 +200,16 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                 OnPropertyChanged();
             }
         }
+        
+        public string Email
+        {
+            get { return _email; }
+            set
+            {
+                _email = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool IsShowUsernameFirstLetter
         {
@@ -201,6 +217,27 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             set
             {
                 _isShowUsernameFirstLetter = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public bool IsLogin
+        {
+            get => _isLogin;
+            set
+            {
+                _isLogin = value;
+                IsLogout = !_isLogin;
+                OnPropertyChanged();
+            }
+        }
+        
+        public bool IsLogout
+        {
+            get => _isLogout;
+            set
+            {
+                _isLogout = value;
                 OnPropertyChanged();
             }
         }
@@ -224,6 +261,15 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                 OnPropertyChanged();
             }
         }
+        public bool IsShowAuthenticationPopup
+        {
+            get => _isShowAuthenticationPopup;
+            set
+            {
+                _isShowAuthenticationPopup = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
         #region Commands
@@ -231,6 +277,9 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
         public RelayCommand CloseMainNavigationCommand { get; set; }
         public RelayCommand OpenJarvisWebsiteCommand { get; set; }
         public RelayCommand LoginCommand { get; set; }
+        public RelayCommand LogoutCommand { get; set; }
+        public RelayCommand AuthenticationCommand { get; set; }
+        public RelayCommand ShowAuthenticationPopupCommand { get; set; }
         #endregion
 
         public MainNavigationViewModel()
@@ -245,6 +294,10 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             CloseMainNavigationCommand = new RelayCommand(ExecuteCloseMainNavigationCommand, o => true);
             OpenJarvisWebsiteCommand = new RelayCommand(ExecuteOpenJarvisWebsiteCommand, o => true);
             LoginCommand = new RelayCommand(ExecuteLoginCommand, o => true);
+            LogoutCommand = new RelayCommand(ExecuteLogoutCommand, o => true);
+            AuthenticationCommand = new RelayCommand(ExecuteAuthenticationCommand, o => true);
+            ShowAuthenticationPopupCommand = new RelayCommand(o => { IsShowAuthenticationPopup = !IsShowAuthenticationPopup; }, o => true);
+            
 
             _viewModels.Add("Chat", new AIChatSidebarViewModel());
             _viewModels.Add("Read", new AIReadViewModel()); 
@@ -308,7 +361,7 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                 && Account != null)
             {
                 AuthenService.SignOut();
-                Account.Username = "Login";
+                Account.Username = "Anonymous User";
                 Account.Role = "anonymous";
                 Account.Email = "example@gmail.com";
                 IsShowUsernameFirstLetter = false;
@@ -319,8 +372,16 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             }
 
             Username = Account.Username;
+            Email = Account.Email;
             if (IsShowUsernameFirstLetter) UsernameFirstLetter = Username[0].ToString();
-            if (string.IsNullOrEmpty(UsernameFirstLetter)) UsernameFirstLetter = "A";
+            if (string.IsNullOrEmpty(UsernameFirstLetter))
+            {
+                UsernameFirstLetter = "A";
+                Email = "No email available";
+                IsLogin = false;
+            }
+
+            else { IsLogin = true; }
         }
 
         private void OnPropertyMessageChanged(object sender, EventArgs e)
@@ -409,6 +470,24 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
             { }
         }
 
+        private async void ExecuteLogoutCommand(object obj)
+        {
+            try
+            {
+                await AuthenService.SignOut();
+                await JarvisApi.Instance.APIUsageHandler();
+
+                IsLogin = false;
+            }
+            catch (Exception ex) { }
+        }
+        
+        private async void ExecuteAuthenticationCommand(object obj)
+        {
+            if (IsLogin) { LogoutCommand.Execute(null); }
+            else { LoginCommand.Execute(null); }
+        }
+
         private async void ExecuteOpenJarvisWebsiteCommand(object obj)
         {
             string websiteUrl = (string)obj;
@@ -417,6 +496,8 @@ namespace Jarvis_Windows.Sources.MVVM.Views.MainNavigationView
                 FileName = websiteUrl,
                 UseShellExecute = true
             });
+
+            IsShowAuthenticationPopup = false;
         }
 
         private void ExecuteCloseMainNavigationCommand(object obj)
